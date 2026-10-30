@@ -1,527 +1,1445 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Portales Salfa Montajes · Acceso Seguro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --rojo: #B01E24;
-      --burdeos: #5E0F13;
-      --grafito: #1E2229;
-      --fondo: #0F172A;
-      --card-bg: #1E293B;
-      --texto-mut: #94A3B8;
-      --linea: #334155;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Barlow', Arial, sans-serif;
-      background: var(--fondo);
-      color: #F8FAFC;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      background: linear-gradient(110deg, #1E2229 0%, #1E2229 55%, #5E0F13 90%, #8B1218 100%);
-      color: #fff;
-      border-top: 4px solid var(--rojo);
-      padding: 0 32px;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .logo-badge {
-      background: #fff;
-      color: var(--rojo);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 19px;
-      padding: 5px 16px;
-      clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
-      letter-spacing: 1px;
-    }
-    .brand-title {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 19px;
-      letter-spacing: 0.5px;
-    }
-    .header-user {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 13.5px;
-    }
-    .btn-logout {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #F87171;
-      padding: 6px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-    .btn-logout:hover { background: rgba(239,68,68,0.2); }
+<meta charset="utf-8">
+<title>Portales de Pilotaje · Salfa Montajes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E2229">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rojo:#B01E24;
+  --rojo-ficha:#C8242B;
+  --rojo-claro:#E23B42;
+  --burdeos:#5E0F13;
+  --grafito:#1E2229;
+  --grafito-claro:#3A414A;
+  --gris:#5A6771;
+  --linea:#D3D7DC;
+  --fondo:#EEF0F2;
+  --blanco:#FFFFFF;
+  --verde:#146A38;
+  --ambar:#F5B800;
+  --f-titulo:'Montserrat',sans-serif;
+  --f-cuerpo:'Barlow',Arial,sans-serif;
+  --f-rotulo:'Barlow Condensed',Arial,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:rgba(176,30,36,.18)}
+a,button,input{touch-action:manipulation}
+body{font-family:var(--f-cuerpo);color:var(--grafito);background:var(--fondo);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--rojo-claro);outline-offset:3px}
 
-    /* VISTA 1: LOGIN CARD */
-    .login-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--linea);
-      border-top: 5px solid var(--rojo);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 450px;
-      padding: 40px 32px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
-      text-align: center;
-    }
-    .login-card h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .login-card p.sub {
-      color: var(--texto-mut);
-      font-size: 14.5px;
-      margin-bottom: 24px;
-    }
-    .form-group {
-      text-align: left;
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 12.5px;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      color: #CBD5E1;
-      margin-bottom: 8px;
-    }
-    .form-group input {
-      width: 100%;
-      background: #0F172A;
-      border: 1.5px solid var(--linea);
-      border-radius: 6px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 15px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus {
-      border-color: var(--rojo);
-    }
-    .btn-submit {
-      width: 100%;
-      background: var(--rojo);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 13px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(176,30,36,0.4);
-      transition: all 0.2s;
-    }
-    .btn-submit:hover {
-      background: #8B1218;
-      transform: translateY(-2px);
-    }
-    .alert-box {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 13.5px;
-      display: none;
-    }
-    .alert-error {
-      background: rgba(239,68,68,0.15);
-      border: 1px solid rgba(239,68,68,0.3);
-      color: #FCA5A5;
-    }
+/* ===== Línea roja superior con destello ===== */
+.linea-top{position:fixed;top:0;left:0;right:0;height:6px;background:var(--rojo);z-index:50;transform-origin:left;overflow:hidden;animation:dibujar .9s var(--ease) both}
+.linea-top::after{content:"";position:absolute;top:0;bottom:0;width:180px;left:-200px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:destello 5.5s 1.4s ease-in-out infinite}
+@keyframes dibujar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes destello{0%{left:-200px}35%,100%{left:calc(100% + 200px)}}
 
-    /* VISTA 2: DASHBOARD DE PORTALES */
-    .dashboard {
-      display: none;
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
-      margin: 36px auto;
-      padding: 0 24px;
-    }
-    .dash-hero {
-      background: var(--card-bg);
-      border: 1px solid var(--linea);
-      border-left: 6px solid var(--rojo);
-      border-radius: 8px;
-      padding: 28px 32px;
-      margin-bottom: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .dash-hero h1 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 26px;
-      margin-bottom: 6px;
-    }
-    .dash-hero p {
-      color: var(--texto-mut);
-      font-size: 15px;
-    }
-    .user-pill {
-      background: #0F172A;
-      border: 1px solid var(--linea);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-    }
-    .user-pill strong { color: #F87171; }
+/* Barra de carga al ingresar */
+.carga{position:fixed;top:0;left:0;height:6px;width:0;z-index:60;background:linear-gradient(90deg,var(--rojo-claro),#fff,var(--rojo-claro));background-size:200% 100%;box-shadow:0 0 14px rgba(226,59,66,.9);opacity:0}
+.carga.on{opacity:1;animation:cargar .9s var(--ease) forwards,brillo .6s linear infinite}
+@keyframes cargar{from{width:0}to{width:100%}}
+@keyframes brillo{from{background-position:200% 0}to{background-position:0 0}}
 
-    .grid-portales {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 26px;
-    }
-    .card-portal {
-      background: var(--card-bg);
-      border: 1px solid var(--linea);
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .card-portal:hover {
-      transform: translateY(-4px);
-      border-color: var(--rojo);
-    }
-    .portal-head {
-      padding: 24px 24px 16px;
-      display: flex;
-      gap: 16px;
-    }
-    .portal-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      background: rgba(176,30,36,0.15);
-      color: #EF4444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-    .portal-meta h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 19px;
-      margin-bottom: 4px;
-    }
-    .portal-cat {
-      font-size: 11.5px;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: #F87171;
-      letter-spacing: 0.8px;
-    }
-    .portal-body {
-      padding: 0 24px 20px;
-      color: var(--texto-mut);
-      font-size: 14.5px;
-      line-height: 1.5;
-      flex: 1;
-    }
-    .portal-foot {
-      padding: 16px 24px;
-      background: #0F172A;
-      border-top: 1px solid var(--linea);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .badge-status {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 12px;
-    }
-    .status-ok { background: rgba(34,197,94,0.15); color: #4ADE80; }
-    .status-dev { background: rgba(234,179,8,0.15); color: #FACC15; }
-    .status-lock { background: rgba(100,116,139,0.2); color: #94A3B8; }
+/* ===== VISTA LOGIN (portada 2a Brasa) ===== */
+.portada{position:relative;flex:1;min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1.15fr minmax(340px,440px);align-items:center;gap:56px;padding:72px 7vw 64px;
+  background:linear-gradient(135deg,#2E343C 0%,#1A1D22 55%,#0F1113 100%);color:#fff;overflow:hidden}
+.portada::before{content:"";position:absolute;left:-18%;bottom:-38%;width:75vw;height:75vw;border-radius:50%;
+  background:radial-gradient(circle,rgba(176,30,36,.20) 0%,rgba(176,30,36,.08) 40%,transparent 68%);
+  animation:respirar 7s ease-in-out infinite;pointer-events:none}
+@keyframes respirar{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+.portada::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--rojo)}
+#brasas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.portada>*{position:relative;z-index:2}
 
-    .btn-portal {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--rojo);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 13.5px;
-      padding: 8px 18px;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .btn-portal:hover { background: #8B1218; }
-    .btn-locked {
-      background: #334155;
-      color: #64748B;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
+.logo{display:block;height:auto}
+.logo-portada{width:min(300px,62vw);opacity:0;animation:revelar 1s .5s var(--ease) forwards}
+@keyframes revelar{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.brillo-logo{position:relative;display:inline-block;overflow:hidden}
+.brillo-logo::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:pasada 1.1s 1.5s ease-out forwards}
+@keyframes pasada{to{left:110%}}
 
-    footer {
-      background: #090D16;
-      border-top: 1px solid var(--linea);
-      color: #64748B;
-      font-size: 12.5px;
-      text-align: center;
-      padding: 18px 24px;
-      margin-top: auto;
-    }
-  </style>
+.filete{display:block;width:72px;height:5px;background:var(--rojo);margin:52px 0 22px;transform-origin:left;transform:scaleX(0);animation:dibujar .6s 1s var(--ease) forwards}
+.titulo-portada{font-family:var(--f-titulo);font-weight:800;text-transform:uppercase;font-size:clamp(34px,4.6vw,64px);line-height:1.02;letter-spacing:-.5px}
+.titulo-portada span{display:block;overflow:hidden}
+.titulo-portada span i{display:block;font-style:normal;transform:translateY(105%);animation:subir .8s var(--ease) forwards}
+.titulo-portada span:nth-child(1) i{animation-delay:1.1s}
+.titulo-portada span:nth-child(2) i{animation-delay:1.22s}
+@keyframes subir{to{transform:translateY(0)}}
+.bajada{margin-top:18px;max-width:46ch;color:#C9CDD3;font-size:18px;line-height:1.5;opacity:0;animation:aparecer .8s 1.45s ease forwards}
+.rotulo{font-family:var(--f-rotulo);font-weight:600;text-transform:uppercase;letter-spacing:3px;font-size:13px}
+.portada .pie-portada{margin-top:56px;color:#fff;opacity:0;animation:aparecer .8s 1.7s ease forwards}
+.portada .pie-portada b{display:block;font-family:var(--f-titulo);font-size:15px;letter-spacing:0;text-transform:none;margin-bottom:4px}
+@keyframes aparecer{to{opacity:1}}
+
+/* Tarjeta de ingreso */
+.ingreso{background:var(--blanco);color:var(--grafito);padding:38px 34px 30px;box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  border-top:6px solid var(--rojo);opacity:0;transform:translateY(28px);animation:elevar .9s 1.25s var(--ease) forwards}
+@keyframes elevar{to{opacity:1;transform:none}}
+.ingreso .rotulo{color:var(--rojo)}
+.ingreso h2{font-family:var(--f-titulo);font-weight:800;font-size:24px;text-transform:uppercase;margin:6px 0 8px}
+.ingreso p.sub{color:var(--gris);font-size:15.5px;line-height:1.45;margin-bottom:26px}
+.campo{margin-bottom:18px}
+.campo label{display:block;font-family:var(--f-rotulo);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1.6px;color:var(--grafito-claro);margin-bottom:7px}
+.campo .caja{position:relative}
+.campo input{width:100%;padding:13px 14px 13px 40px;border:1px solid var(--linea);background:var(--fondo);font:16px var(--f-cuerpo);color:var(--grafito);outline:none;transition:border-color .2s,background .2s,box-shadow .2s}
+.campo input:focus{border-color:var(--rojo);background:#fff;box-shadow:0 0 0 4px rgba(176,30,36,.12)}
+.btn-ingresar{position:relative;overflow:hidden;width:100%;margin-top:6px;padding:15px;border:none;cursor:pointer;background:var(--rojo);color:#fff;
+  font-family:var(--f-titulo);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:1px;display:flex;gap:10px;align-items:center;justify-content:center;transition:background .2s,transform .15s}
+.btn-ingresar::after{content:"";position:absolute;top:0;bottom:0;width:70px;left:-90px;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent)}
+.btn-ingresar:hover{background:#951A1F}
+.btn-ingresar:hover::after{animation:pasada .7s ease-out}
+.btn-ingresar:active{transform:scale(.985)}
+.btn-ingresar .i-arrow-right{transition:transform .2s}
+.btn-ingresar:hover .i-arrow-right{transform:translateX(4px)}
+.alerta{display:none;margin-top:16px;padding:11px 14px;font-size:14.5px;border-left:4px solid var(--rojo);background:#FBEDEE;color:var(--burdeos)}
+.alerta.on{display:block;animation:sacudir .4s}
+@keyframes sacudir{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.nota{margin-top:22px;padding-top:16px;border-top:1px solid var(--linea);font-size:13.5px;color:var(--gris);display:flex;gap:8px;align-items:center}
+
+
+/* Ingreso con Google */
+.google-wrap{margin-top:6px;min-height:44px;display:flex;justify-content:center}
+.google-estado{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--gris);padding:12px 0}
+.spinner{width:16px;height:16px;border:2px solid var(--linea);border-top-color:var(--rojo);border-radius:50%;animation:giro .8s linear infinite}
+@keyframes giro{to{transform:rotate(360deg)}}
+.aviso-local{margin-top:18px;padding:11px 14px;font-size:13.5px;line-height:1.45;border-left:4px solid var(--ambar);background:#FFF8E0;color:#5A4500}
+.permitidos{margin-top:18px;font-size:13.5px;color:var(--gris);line-height:1.5}
+.permitidos b{color:var(--grafito)}
+.hero .rol img{width:34px;height:34px;border-radius:50%;vertical-align:middle;margin-right:10px;border:2px solid var(--rojo)}
+.etiqueta-piloto{font-family:var(--f-rotulo);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:var(--rojo);padding:3px 9px;margin-left:auto;align-self:flex-start}
+
+/* ===== VISTA DASHBOARD ===== */
+.vista-dash{display:none;flex:1;flex-direction:column}
+.vista-dash.on{display:flex}
+.banda{background:var(--grafito);color:#fff;height:68px;margin-top:6px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--rojo)}
+.banda .logo{height:30px;width:auto}
+.banda-der{display:flex;align-items:center;gap:22px;font-size:14px;color:#D5D8DD}
+.banda-der .fecha{font-family:var(--f-rotulo);letter-spacing:1.5px;text-transform:uppercase;font-size:13px;color:#9AA2AB}
+.btn-salir{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;cursor:pointer;font:600 13.5px var(--f-cuerpo);display:flex;gap:8px;align-items:center;transition:background .2s,border-color .2s}
+.btn-salir:hover{background:var(--rojo);border-color:var(--rojo)}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#2E343C 0%,#1A1D22 60%,#0F1113 100%);color:#fff}
+.hero::before{content:"";position:absolute;left:-10%;bottom:-140%;width:55vw;height:55vw;border-radius:50%;background:radial-gradient(circle,rgba(176,30,36,.22),transparent 65%);animation:respirar 7s ease-in-out infinite}
+.hero-in{position:relative;max-width:1200px;margin:0 auto;padding:40px 24px 44px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hero .filete{margin:0 0 16px;animation-delay:.15s}
+.hero h1{font-family:var(--f-titulo);font-weight:800;text-transform:uppercase;font-size:clamp(26px,3.4vw,40px);line-height:1.05}
+.hero p{color:#C9CDD3;margin-top:8px;font-size:17px}
+.rol{font-family:var(--f-rotulo);text-transform:uppercase;letter-spacing:2px;font-size:13px;color:#C9CDD3;border-left:4px solid var(--rojo);padding:6px 0 6px 12px}
+.rol b{display:block;font-family:var(--f-titulo);letter-spacing:0;font-size:17px;color:#fff;text-transform:none}
+
+.contenido{flex:1;max-width:1200px;width:100%;margin:0 auto;padding:36px 24px 56px}
+.contenido>.rotulo{color:var(--grafito-claro);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.contenido>.rotulo::after{content:"";flex:1;height:1px;background:var(--linea)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:24px}
+
+.tarjeta{position:relative;background:#fff;border:1px solid var(--linea);display:flex;flex-direction:column;opacity:0;transform:translateY(24px);
+  animation:elevar .7s var(--ease) forwards;transition:transform .25s var(--ease),box-shadow .25s}
+.tarjeta::before{content:"";position:absolute;left:0;top:0;height:4px;width:0;background:var(--rojo);transition:width .45s var(--ease)}
+.tarjeta:hover{transform:translateY(-6px);box-shadow:0 22px 40px -18px rgba(30,34,41,.45)}
+.tarjeta:hover::before{width:100%}
+.t-cab{background:var(--grafito);color:#fff;padding:18px 20px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden}
+.t-cab::after{content:"";position:absolute;top:0;bottom:0;width:80px;left:-100px;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
+.tarjeta:hover .t-cab::after{animation:pasada .8s ease-out}
+.ficha{width:50px;height:50px;flex-shrink:0;background:var(--rojo-ficha);display:flex;align-items:center;justify-content:center;font-family:var(--f-titulo);font-weight:800;font-size:20px}
+.tarjeta.bloq .ficha{background:var(--grafito-claro)}
+.t-cab .rotulo{color:#9AA2AB;font-size:12px;letter-spacing:2.2px}
+.t-cab h3{font-family:var(--f-titulo);font-weight:800;text-transform:uppercase;font-size:17px;line-height:1.2;margin-top:3px}
+.t-cab .ico{margin-left:auto;font-size:22px;color:var(--rojo-claro);transition:transform .3s var(--ease)}
+.tarjeta:hover .t-cab .ico{transform:scale(1.15) rotate(-6deg)}
+.t-cuerpo{padding:18px 20px;color:var(--gris);font-size:15.5px;line-height:1.5;flex:1}
+.t-pie{padding:14px 20px;border-top:1px solid var(--linea);background:var(--fondo);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.estado{font-family:var(--f-rotulo);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1.4px;display:flex;align-items:center;gap:8px;color:var(--grafito-claro)}
+.estado::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.estado.ok{--c:var(--verde)}
+.estado.ok::before{box-shadow:0 0 0 0 rgba(20,106,56,.6);animation:pulso 2s infinite}
+@keyframes pulso{70%{box-shadow:0 0 0 8px rgba(20,106,56,0)}100%{box-shadow:0 0 0 0 rgba(20,106,56,0)}}
+.estado.dev{--c:var(--ambar)}
+.estado.lock{--c:#9AA2AB}
+.btn-abrir{display:inline-flex;align-items:center;gap:8px;background:var(--rojo);color:#fff;text-decoration:none;font:700 13.5px var(--f-titulo);text-transform:uppercase;letter-spacing:.5px;padding:9px 16px;transition:background .2s}
+.btn-abrir:hover{background:#951A1F}
+.btn-abrir .i{transition:transform .2s}
+.btn-abrir:hover .i{transform:translate(2px,-2px)}
+.btn-abrir.off{background:#DADDE1;color:#7A828C;pointer-events:none}
+
+.pie{background:var(--grafito-claro);color:#C9CDD3;border-bottom:6px solid var(--rojo);padding:14px 32px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+
+/* Transición entre vistas */
+.salida{animation:salir .45s ease forwards}
+@keyframes salir{to{opacity:0;transform:scale(.985)}}
+
+
+/* ===== Pestañas, formularios y estados del ingreso ===== */
+.ingreso{--py:38px;--px:34px}
+.pestanas{display:flex;margin:calc(var(--py)*-1) calc(var(--px)*-1) 24px;border-bottom:1px solid var(--linea)}
+.pestanas button{flex:1;min-height:52px;background:var(--fondo);border:none;cursor:pointer;font:700 13.5px var(--f-titulo);text-transform:uppercase;letter-spacing:.6px;color:var(--gris);position:relative;transition:background .2s,color .2s}
+.pestanas button.on{background:#fff;color:var(--grafito)}
+.pestanas button.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--rojo)}
+.pestanas button:not(.on):hover{color:var(--rojo)}
+.chk{position:relative;display:flex;gap:12px;align-items:flex-start;margin-top:14px;cursor:pointer;font-size:15px;line-height:1.35;color:var(--grafito);min-height:44px;padding:6px 0}
+.chk input{position:absolute;opacity:0;width:1px;height:1px}
+.marca-chk{width:22px;height:22px;flex-shrink:0;border:2px solid var(--gris);background:#fff;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:1px}
+.marca-chk::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) scale(0);transition:transform .15s;margin-top:-2px}
+.chk input:checked + .marca-chk{background:var(--rojo);border-color:var(--rojo)}
+.chk input:checked + .marca-chk::after{transform:rotate(45deg) scale(1)}
+.chk input:focus-visible + .marca-chk{outline:3px solid var(--rojo-claro);outline-offset:2px}
+.chk small{display:block;color:var(--gris);font-size:13px;margin-top:2px}
+.campo textarea{width:100%;padding:12px 14px;border:1px solid var(--linea);background:var(--fondo);font:16px var(--f-cuerpo);color:var(--grafito);outline:none;resize:vertical;min-height:84px;-webkit-appearance:none;appearance:none;border-radius:0;transition:border-color .2s,background .2s,box-shadow .2s}
+.campo textarea:focus{border-color:var(--rojo);background:#fff;box-shadow:0 0 0 4px rgba(176,30,36,.12)}
+fieldset.campo{border:none;min-width:0}
+fieldset.campo legend{font-family:var(--f-rotulo);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1.6px;color:var(--grafito-claro);margin-bottom:7px}
+.pil-chk{display:flex;flex-wrap:wrap;gap:8px}
+.campo .pil-chk label{font:500 14.5px var(--f-cuerpo);text-transform:none;letter-spacing:0;color:var(--grafito);margin:0}
+.pil-chk label{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid var(--linea);background:#fff;cursor:pointer;font-size:14.5px}
+.campo .pil-chk input[type=checkbox],.pil-chk input[type=checkbox]{width:18px;height:18px;min-height:0;padding:0;margin:0;flex-shrink:0;accent-color:var(--rojo);-webkit-appearance:checkbox;appearance:auto;border:none;background:none;box-shadow:none}
+.btn-sec{width:100%;margin-top:10px;min-height:48px;background:transparent;border:1px solid var(--linea);color:var(--grafito);font:600 14.5px var(--f-cuerpo);cursor:pointer;transition:border-color .2s,color .2s}
+.btn-sec:hover{border-color:var(--rojo);color:var(--rojo)}
+.btn-mini{width:auto;margin:0;padding:0 16px;display:inline-flex;align-items:center;gap:8px;background:#fff}
+.estado-pane{text-align:center;padding:4px 0}
+.estado-pane .sub{margin-bottom:20px}
+.icono-estado{width:68px;height:68px;margin:2px auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;background:var(--grafito);border-bottom:4px solid var(--rojo)}
+.icono-estado.pend{background:var(--ambar);color:var(--grafito);border-bottom-color:#B58900}
+.icono-estado.ok{background:var(--verde);border-bottom-color:#0F5129}
+.cargando{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:linear-gradient(135deg,#2E343C,#1A1D22 55%,#0F1113);color:#C9CDD3;font-size:16px}
+.cargando img{width:min(240px,60vw);height:auto}
+.cargando .spinner{border-color:rgba(255,255,255,.2);border-top-color:var(--rojo-claro);width:26px;height:26px}
+.tag-demo{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:80;background:var(--ambar);color:#1E2229;font:700 12px var(--f-rotulo);letter-spacing:1.5px;text-transform:uppercase;padding:6px 10px;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--grafito);color:#fff;padding:12px 20px;border-left:4px solid var(--rojo);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:90;max-width:90vw;font-size:15px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Panel de administración de accesos ===== */
+.admin{margin-top:48px}
+.admin>.rotulo{color:var(--grafito-claro);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.admin>.rotulo::after{content:"";flex:1;height:1px;background:var(--linea)}
+.admin-cab{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.admin-tabs{display:flex;border:1px solid var(--linea);background:#fff}
+.admin-tabs button{min-height:44px;padding:0 16px;border:none;background:transparent;cursor:pointer;font:700 13px var(--f-titulo);text-transform:uppercase;letter-spacing:.5px;color:var(--gris);display:flex;align-items:center;gap:8px}
+.admin-tabs button.on{background:var(--grafito);color:#fff}
+.contador{background:var(--rojo);color:#fff;font:700 12px var(--f-cuerpo);min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.contador.gris{background:#9AA2AB}
+.contador.cero{display:none}
+.sol{background:#fff;border:1px solid var(--linea);border-left:5px solid var(--rojo);padding:18px 20px;margin-bottom:14px}
+.sol.apr{border-left-color:var(--verde)}
+.sol.cer{border-left-color:#9AA2AB}
+.sol-cab{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sol h4{font-family:var(--f-titulo);font-size:16px;text-transform:uppercase;line-height:1.2}
+.sol .mail{color:var(--gris);font-size:14.5px;word-break:break-all}
+.sol .meta{font-size:13px;color:var(--gris);text-align:right}
+.sol .motivo{margin:12px 0 4px;font-size:15px;line-height:1.5;background:var(--fondo);padding:10px 12px}
+.sol-ctrl{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;margin-top:12px}
+.sol-ctrl .t{font-family:var(--f-rotulo);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:1.4px;color:var(--grafito-claro);display:block;margin-bottom:6px}
+.sol-ctrl select{min-height:44px;padding:0 12px;border:1px solid var(--linea);background:var(--fondo);font:16px var(--f-cuerpo);color:var(--grafito);border-radius:0}
+.sol-acc{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn-ap,.btn-re{min-height:44px;padding:0 18px;border:none;cursor:pointer;font:700 13.5px var(--f-titulo);text-transform:uppercase;letter-spacing:.5px;color:#fff}
+.btn-ap{background:var(--verde)}
+.btn-ap:hover{background:#0F5129}
+.btn-re{background:var(--grafito)}
+.btn-re:hover{background:var(--rojo)}
+.vacio{padding:28px;text-align:center;color:var(--gris);background:#fff;border:1px dashed var(--linea)}
+@media (max-width:600px){
+  .admin-tabs{width:100%}
+  .admin-tabs button{flex:1;padding:0 6px;justify-content:center;font-size:12px}
+  .sol{padding:16px}
+  .sol .meta{text-align:left}
+  .sol-acc button{flex:1}
+  .btn-mini{width:100%;justify-content:center}
+}
+
+
+/* ===== Contacto ===== */
+.enlace-contacto{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;min-height:44px;background:none;border:none;cursor:pointer;color:var(--gris);font:15px var(--f-cuerpo)}
+.enlace-contacto b{color:var(--rojo);text-decoration:underline;text-underline-offset:3px}
+.enlace-contacto:hover b{color:#8B1218}
+.enlace-pie{background:none;border:none;color:#fff;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 2px;min-height:32px}
+.modal{position:fixed;inset:0;z-index:95;display:none;align-items:flex-start;justify-content:center;background:rgba(15,17,19,.74);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal.on{display:flex;animation:aparecer .2s ease forwards}
+.modal-card{position:relative;background:#fff;color:var(--grafito);width:100%;max-width:520px;margin:auto;border-top:6px solid var(--rojo);padding:30px 30px 26px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.modal-card .rotulo{color:var(--rojo)}
+.modal-card h2{font-family:var(--f-titulo);font-weight:800;font-size:24px;text-transform:uppercase;margin:6px 0 8px}
+.modal-card p.sub{color:var(--gris);font-size:15.5px;line-height:1.45;margin-bottom:22px}
+.modal-x{position:absolute;top:8px;right:8px;width:44px;height:44px;border:none;background:none;cursor:pointer;color:var(--gris);font-size:20px}
+.modal-x:hover{color:var(--rojo)}
+.campo select{width:100%;min-height:48px;padding:0 40px 0 14px;border:1px solid var(--linea);background:var(--fondo) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%235A6771' stroke-width='2'/></svg>") no-repeat right 14px center;font:16px var(--f-cuerpo);color:var(--grafito);outline:none;-webkit-appearance:none;appearance:none;border-radius:0;transition:border-color .2s,box-shadow .2s}
+.campo select:focus{border-color:var(--rojo);box-shadow:0 0 0 4px rgba(176,30,36,.12)}
+.cuenta-car{text-align:right;font-size:12.5px;color:var(--gris);margin-top:4px}
+.trampa{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+body.modal-abierto{overflow:hidden}
+@media (max-width:600px){
+  .modal-card{padding:26px 18px 20px}
+  .modal-card h2{font-size:21px}
+  .txt-btn{display:none}
+  .banda-der .btn-salir{min-width:44px;justify-content:center}
+}
+@media (max-height:520px) and (orientation:landscape){ .enlace-contacto{margin-top:4px} }
+
+#bannerServicio{margin-bottom:18px}
+/* ===== Íconos propios (sin dependencias externas) ===== */
+.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.125em;flex-shrink:0;display:inline-block}
+
+/* ===== Ingreso estándar ===== */
+.campo .caja>.i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gris);font-size:16px;transition:color .2s}
+.campo .caja:focus-within>.i{color:var(--rojo)}
+.campo input.sin-icono{padding-left:14px}
+.campo input.con-ojo{padding-right:50px}
+.ojo{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:46px;height:46px;border:none;background:none;cursor:pointer;color:var(--gris);display:flex;align-items:center;justify-content:center;font-size:19px}
+.ojo:hover{color:var(--rojo)}
+.fila-opciones{display:flex;justify-content:space-between;align-items:center;gap:0 14px;flex-wrap:wrap;margin:-4px 0 14px}
+.fila-opciones .chk{margin-top:0}
+.enlace{background:none;border:none;cursor:pointer;color:var(--gris);font:600 14px var(--f-cuerpo);text-decoration:underline;text-underline-offset:3px;padding:0 2px;min-height:44px;display:inline-flex;align-items:center}
+.enlace:hover{color:var(--rojo)}
+.enlace.fuerte{color:var(--rojo)}
+.enlace.fuerte:hover{color:#8B1218}
+.cambio{text-align:center;color:var(--gris);font-size:15px;margin-top:8px}
+.fila-enlaces{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0 12px;margin-top:8px}
+.separador{display:flex;align-items:center;gap:12px;margin:16px 0 14px;color:var(--gris);font-size:13.5px}
+.separador::before,.separador::after{content:"";flex:1;height:1px;background:var(--linea)}
+.hint-clave{font-size:13px;color:var(--gris);margin-top:6px}
+.campo input.codigo{letter-spacing:10px;font-size:22px;text-align:center;font-weight:700}
+.btn-google{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #DADCE0;color:#3C4043;font:500 15px 'Barlow',Arial,sans-serif;cursor:pointer;transition:background .15s,box-shadow .15s}
+.btn-google:hover{background:#F8F9FA;box-shadow:0 1px 3px rgba(60,64,67,.3)}
+.btn-google svg{width:20px;height:20px}
+.google-wrap{margin-top:0;min-height:46px}
+
+/* ===== RESPONSIVO: escritorio, tablet y móvil (Android / iOS) ===== */
+/* Áreas seguras (notch, barra inferior de iPhone) */
+.portada{padding-top:calc(72px + env(safe-area-inset-top,0px));padding-bottom:calc(64px + env(safe-area-inset-bottom,0px));
+  padding-left:max(7vw,env(safe-area-inset-left,0px));padding-right:max(7vw,env(safe-area-inset-right,0px))}
+.banda{height:calc(68px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);
+  padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+.hero-in,.contenido{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.pie{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+/* Controles cómodos para el dedo (mínimo 44 px) */
+.campo input{-webkit-appearance:none;appearance:none;border-radius:0;min-height:48px}
+.btn-ingresar{min-height:52px}
+.btn-abrir{min-height:44px;padding:10px 18px}
+.btn-salir{min-height:44px;padding:8px 16px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+
+/* Pie de tarjeta: los textos no se parten, los elementos pasan a otra línea si falta espacio */
+.t-pie{flex-wrap:wrap}
+.btn-abrir,.estado{white-space:nowrap}
+
+/* Pantallas táctiles: sin efectos hover pegados, con respuesta al toque */
+@media (hover:none){
+  .tarjeta:hover{transform:none;box-shadow:none}
+  .tarjeta:hover::before{width:0}
+  .tarjeta:hover .t-cab::after,.btn-ingresar:hover::after{animation:none}
+  .tarjeta:hover .t-cab .ico{transform:none}
+  .btn-abrir:hover .i,.btn-ingresar:hover .i-arrow-right{transform:none}
+  .tarjeta:active{transform:scale(.985)}
+  .btn-abrir:active,.btn-ingresar:active{background:#7A1519}
+  .btn-salir:active{background:var(--rojo);border-color:var(--rojo)}
+}
+
+/* Tablet vertical y móviles grandes */
+@media (max-width:860px){
+  .portada{grid-template-columns:1fr;gap:34px;align-items:start;
+    padding-top:calc(48px + env(safe-area-inset-top,0px));padding-bottom:calc(44px + env(safe-area-inset-bottom,0px));
+    padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+  .filete{margin:34px 0 18px}
+  .portada .pie-portada{display:none}
+  .ingreso{width:100%;max-width:520px}
+  .banda{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .banda-der .fecha{display:none}
+  .pie{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+}
+
+/* Móvil vertical: el formulario debe verse sin desplazarse */
+@media (max-width:600px){
+  .portada{gap:16px;padding-top:calc(26px + env(safe-area-inset-top,0px));
+    padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .logo-portada{width:min(210px,58vw)}
+  .filete{margin:16px 0 10px;width:56px}
+  .titulo-portada{font-size:clamp(24px,7.6vw,32px)}
+  .bajada{display:none}
+  .ingreso{--py:24px;--px:20px;max-width:none;padding:24px 20px 20px}
+  .ingreso h2{font-size:20px}
+  .ingreso p.sub{font-size:14.5px;margin-bottom:18px}
+  .permitidos{margin-top:14px;font-size:13px}
+  .nota{margin-top:16px;padding-top:12px;font-size:13px}
+  .banda{height:calc(60px + env(safe-area-inset-top,0px))}
+  .banda .logo{height:25px}
+  .banda-der #txtUser{display:none}
+  .hero-in{padding-top:26px;padding-bottom:28px}
+  .rol{width:100%}
+  .contenido{padding-top:24px;padding-bottom:36px}
+  .grid{grid-template-columns:1fr;gap:18px}
+  .t-cab{padding:16px}
+  .ficha{width:44px;height:44px;font-size:18px}
+  .t-cab h3{font-size:16px}
+  .t-cuerpo{padding:16px;font-size:15.5px}
+  .t-pie{padding:12px 16px;flex-wrap:wrap}
+  .pie{flex-direction:column;gap:4px;text-align:center}
+}
+
+/* Móvil horizontal (poca altura): dos columnas compactas */
+@media (max-height:520px) and (orientation:landscape){
+  .portada{grid-template-columns:1fr minmax(320px,400px);gap:28px;align-items:center;
+    padding-top:calc(26px + env(safe-area-inset-top,0px));padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+  .logo-portada{width:190px}
+  .filete{margin:16px 0 12px;width:56px}
+  .titulo-portada{font-size:clamp(26px,5.2vh,34px)}
+  .bajada,.portada .pie-portada,.ingreso p.sub,.ingreso .nota,.permitidos,.chk small{display:none}
+  .pestanas{margin-bottom:14px}
+  .pestanas button{min-height:44px}
+  .ingreso{--py:20px;--px:22px;padding:20px 22px;max-width:none}
+  .ingreso h2{font-size:19px;margin-bottom:14px}
+  .banda{height:calc(52px + env(safe-area-inset-top,0px))}
+  .banda .logo{height:24px}
+  .hero-in{padding-top:18px;padding-bottom:20px}
+  .hero h1{font-size:26px}
+  .hero p{font-size:15px}
+  .contenido{padding-top:20px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
+  #brasas{display:none}
+}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer onerror="window.GSI_ERROR=true"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3"/><path d="m16 7 3 3"/><path d="m14 9 2 2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M9.9 4.24A9.1 9.1 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2"/><path d="M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 0 1-4.2-4.2"/><path d="m2 2 20 20"/></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4A2 2 0 0 0 7 17.8V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4A2 2 0 0 0 17 6.2V2"/></symbol>
+<symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+<symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
+<symbol id="i-rotate-cw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
+<symbol id="i-contact" viewBox="0 0 24 24"><path d="M16 2v2"/><path d="M17.9 22a6 6 0 0 0-11.8 0"/><path d="M8 2v2"/><circle cx="12" cy="12" r="4"/><rect x="3" y="4" width="18" height="18" rx="2"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7z"/><path d="M12 22V12"/><path d="m3.3 7 7.7 4.7a2 2 0 0 0 2 0L20.7 7"/><path d="m7.5 4.3 9 5.2"/></symbol>
+</defs></svg>
 
-  <header>
-    <div class="brand">
-      <div class="logo-badge">SALFA</div>
-      <div class="brand-title">Salfa Montajes · Centro de Portales</div>
+<div class="linea-top" aria-hidden="true"></div>
+<div class="carga" id="carga" aria-hidden="true"></div>
+
+<!-- ===== LOGIN ===== -->
+<section class="portada" id="viewLogin">
+  <canvas id="brasas" aria-hidden="true"></canvas>
+  <div>
+    <span class="brillo-logo"><img class="logo logo-portada" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes"></span>
+    <span class="filete" aria-hidden="true"></span>
+    <h1 class="titulo-portada"><span><i>Portales de</i></span><span><i>pilotaje</i></span></h1>
+    <p class="bajada">Espacio de prueba para desarrollos estratégicos y mejoras de Salfa Montajes, antes de llevarlos a operación.</p>
+    <div class="pie-portada rotulo"><b>Portales Salfa Pilotos</b>Proyectos de P&amp;D · Actividades de área</div>
+  </div>
+  </div>
+
+  <div class="ingreso" id="tarjetaIngreso">
+
+    <!-- ===== Iniciar sesión ===== -->
+    <div id="paneLogin">
+      <span class="rotulo">Acceso corporativo</span>
+      <h2>Iniciar sesión</h2>
+      <p class="sub">Ingresa con tu cuenta para abrir los portales de pilotaje.</p>
+      <div class="aviso-local" id="bannerServicio" style="display:none"></div>
+      <form onsubmit="iniciarSesionClave(event)" novalidate>
+        <div class="campo">
+          <label for="lgEmail">Correo corporativo</label>
+          <div class="caja"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg>
+            <input type="email" id="lgEmail" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+        </div>
+        <div class="campo">
+          <label for="lgPass">Contraseña</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <input type="password" id="lgPass" class="con-ojo" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="ojo" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña"><svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+        </div>
+        <div class="fila-opciones">
+          <label class="chk" id="filaRecordar">
+            <input type="checkbox" id="chkRecordar">
+            <span class="marca-chk" aria-hidden="true"></span>
+            <span>Recordarme<small>30 días en este equipo</small></span>
+          </label>
+          <button type="button" class="enlace" onclick="irPane('Olvide')">¿Olvidaste tu contraseña?</button>
+        </div>
+        <button type="submit" class="btn-ingresar">Ingresar <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+      </form>
+      <div class="separador"><span>o</span></div>
+      <div class="google-wrap" id="googleBtn"></div>
+      <p class="cambio">¿No tienes cuenta? <button type="button" class="enlace fuerte" onclick="irPane('Registro')">Regístrate</button></p>
     </div>
-    <div class="header-user" id="userHeader" style="display:none">
+
+    <!-- ===== Crear cuenta ===== -->
+    <div id="paneRegistro" style="display:none">
+      <span class="rotulo">Nueva cuenta</span>
+      <h2>Crear cuenta</h2>
+      <p class="sub">Los pilotos no están abiertos a todos: un administrador aprueba cada cuenta. Primero confirmaremos tu correo.</p>
+      <form onsubmit="registrarse(event)" novalidate>
+        <div class="campo">
+          <label for="rgNombre">Nombre completo</label>
+          <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg><input type="text" id="rgNombre" maxlength="80" autocomplete="name"></div>
+        </div>
+        <div class="campo">
+          <label for="rgEmail">Correo corporativo</label>
+          <div class="caja"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg><input type="email" id="rgEmail" maxlength="120" placeholder="nombre@salfamontajes.com" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+        </div>
+        <div class="campo">
+          <label for="rgArea">Área y cargo</label>
+          <div class="caja"><svg class="i i-briefcase" aria-hidden="true"><use href="#i-briefcase"/></svg><input type="text" id="rgArea" maxlength="80" placeholder="Ej.: Ingeniería · Jefe de proyecto" autocomplete="organization-title"></div>
+        </div>
+        <div class="campo">
+          <label for="rgPass">Contraseña</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <input type="password" id="rgPass" class="con-ojo" autocomplete="new-password">
+            <button type="button" class="ojo" onclick="alternarClave('rgPass',this)" aria-label="Mostrar contraseña"><svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <div class="hint-clave">Mínimo 10 caracteres, con letras y números.</div>
+        </div>
+        <div class="campo">
+          <label for="rgPass2">Repite la contraseña</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg><input type="password" id="rgPass2" autocomplete="new-password"></div>
+        </div>
+        <fieldset class="campo">
+          <legend>Pilotos que necesitas</legend>
+          <div class="pil-chk" id="rgPilotos"></div>
+        </fieldset>
+        <div class="campo">
+          <label for="rgMotivo">¿Para qué necesitas el acceso?</label>
+          <textarea id="rgMotivo" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás."></textarea>
+        </div>
+        <button type="submit" class="btn-ingresar">Crear cuenta <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+      </form>
+      <div class="separador"><span>o regístrate con</span></div>
+      <div class="google-wrap" id="googleBtnReg"></div>
+      <p class="cambio">¿Ya tienes cuenta? <button type="button" class="enlace fuerte" onclick="irPane('Login')">Inicia sesión</button></p>
+    </div>
+
+    <!-- ===== Verificar correo ===== -->
+    <div id="paneVerificar" style="display:none">
+      <span class="rotulo">Verificación</span>
+      <h2>Revisa tu correo</h2>
+      <p class="sub" id="vfTexto"></p>
+      <div class="aviso-local" id="vfDemo" style="display:none"></div>
+      <form onsubmit="verificarCodigo(event)" novalidate>
+        <div class="campo">
+          <label for="vfCodigo">Código de 6 dígitos</label>
+          <div class="caja"><input type="text" id="vfCodigo" class="sin-icono codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" placeholder="000000"></div>
+        </div>
+        <button type="submit" class="btn-ingresar">Verificar <svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </form>
+      <div class="fila-enlaces">
+        <button type="button" class="enlace" id="btnReenviar" onclick="reenviarCodigo()">Reenviar código</button>
+        <button type="button" class="enlace" onclick="irPane('Login')">Volver a iniciar sesión</button>
+      </div>
+    </div>
+
+    <!-- ===== Olvidé mi contraseña ===== -->
+    <div id="paneOlvide" style="display:none">
+      <span class="rotulo">Recuperar acceso</span>
+      <h2>¿Olvidaste tu contraseña?</h2>
+      <p class="sub">Escribe tu correo y te enviaremos un código para crear una contraseña nueva.</p>
+      <form onsubmit="pedirReset(event)" novalidate>
+        <div class="campo">
+          <label for="olEmail">Correo corporativo</label>
+          <div class="caja"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg><input type="email" id="olEmail" placeholder="nombre@salfamontajes.com" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+        </div>
+        <button type="submit" class="btn-ingresar">Enviar código <svg class="i i-send" aria-hidden="true"><use href="#i-send"/></svg></button>
+      </form>
+      <p class="cambio"><button type="button" class="enlace fuerte" onclick="irPane('Login')">Volver a iniciar sesión</button></p>
+    </div>
+
+    <!-- ===== Nueva contraseña ===== -->
+    <div id="paneRestablecer" style="display:none">
+      <span class="rotulo">Recuperar acceso</span>
+      <h2>Crea una contraseña nueva</h2>
+      <p class="sub" id="rsTexto"></p>
+      <div class="aviso-local" id="rsDemo" style="display:none"></div>
+      <form onsubmit="restablecerClave(event)" novalidate>
+        <div class="campo">
+          <label for="rsCodigo">Código de 6 dígitos</label>
+          <div class="caja"><input type="text" id="rsCodigo" class="sin-icono codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" placeholder="000000"></div>
+        </div>
+        <div class="campo">
+          <label for="rsPass">Contraseña nueva</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <input type="password" id="rsPass" class="con-ojo" autocomplete="new-password">
+            <button type="button" class="ojo" onclick="alternarClave('rsPass',this)" aria-label="Mostrar contraseña"><svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <div class="hint-clave">Mínimo 10 caracteres, con letras y números.</div>
+        </div>
+        <div class="campo">
+          <label for="rsPass2">Repite la contraseña</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg><input type="password" id="rsPass2" autocomplete="new-password"></div>
+        </div>
+        <button type="submit" class="btn-ingresar">Cambiar contraseña <svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </form>
+      <div class="fila-enlaces">
+        <button type="button" class="enlace" onclick="irPane('Olvide')">Pedir otro código</button>
+        <button type="button" class="enlace" onclick="irPane('Login')">Volver a iniciar sesión</button>
+      </div>
+    </div>
+
+    <!-- ===== Solicitud de acceso (cuenta de Google sin solicitud) ===== -->
+    <div id="paneForm" style="display:none">
+      <span class="rotulo">Solicitud de acceso</span>
+      <h2>Cuéntanos de ti</h2>
+      <p class="sub" id="formCuenta"></p>
+      <form onsubmit="enviarSolicitud(event)" novalidate>
+        <div class="campo">
+          <label for="solNombre">Nombre completo</label>
+          <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg><input type="text" id="solNombre" required maxlength="80" autocomplete="name"></div>
+        </div>
+        <div class="campo">
+          <label for="solArea">Área y cargo</label>
+          <div class="caja"><svg class="i i-briefcase" aria-hidden="true"><use href="#i-briefcase"/></svg><input type="text" id="solArea" required maxlength="80" placeholder="Ej.: Ingeniería · Jefe de proyecto" autocomplete="organization-title"></div>
+        </div>
+        <fieldset class="campo">
+          <legend>Pilotos que necesitas</legend>
+          <div class="pil-chk" id="solPilotos"></div>
+        </fieldset>
+        <div class="campo">
+          <label for="solMotivo">¿Para qué necesitas el acceso?</label>
+          <textarea id="solMotivo" required minlength="10" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás."></textarea>
+        </div>
+        <button type="submit" class="btn-ingresar" id="btnEnviar">Enviar solicitud <svg class="i i-send" aria-hidden="true"><use href="#i-send"/></svg></button>
+        <button type="button" class="btn-sec" onclick="volverIngreso()">Cancelar</button>
+      </form>
+    </div>
+
+    <!-- ===== Estado ===== -->
+    <div id="paneEstado" class="estado-pane" style="display:none">
+      <div class="icono-estado" id="estIcono"><svg class="i i-hourglass" aria-hidden="true"><use href="#i-hourglass"/></svg></div>
+      <h2 id="estTitulo"></h2>
+      <p class="sub" id="estTexto"></p>
+      <button type="button" class="btn-sec" id="estVolver" onclick="volverIngreso()">Volver</button>
+    </div>
+
+    <div class="alerta" id="loginError" role="alert"></div>
+    <div class="nota"><svg class="i i-shield-check" aria-hidden="true"><use href="#i-shield-check"/></svg> Acceso restringido a cuentas autorizadas</div>
+    <button type="button" class="enlace-contacto" id="btnContactoLogin" onclick="abrirContacto()"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg> ¿Necesitas ayuda? <b>Escríbenos</b></button>
+  </div>
+</section>
+
+<div class="cargando" id="viewCargando" style="display:none" role="status" aria-live="polite">
+  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes"><span class="spinner"></span><span id="txtCargando">Verificando acceso…</span>
+</div>
+<div class="tag-demo" id="tagDemo" style="display:none">Modo demo local</div>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Contacto: el mensaje llega al servidor; el correo de destino nunca se muestra aquí -->
+<div class="modal" id="modalContacto" role="dialog" aria-modal="true" aria-labelledby="ctTitulo" onclick="if(event.target===this)cerrarContacto()">
+  <div class="modal-card">
+    <button type="button" class="modal-x" onclick="cerrarContacto()" aria-label="Cerrar"><svg class="i i-x" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div id="contactoForm">
+      <span class="rotulo">Contacto</span>
+      <h2 id="ctTitulo">Escríbenos</h2>
+      <p class="sub">Tu mensaje llega directamente al equipo de P&amp;D. Usaremos tu correo solo para responderte.</p>
+      <form onsubmit="enviarContacto(event)" novalidate>
+        <div class="campo">
+          <label for="ctNombre">Nombre</label>
+          <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg>
+            <input type="text" id="ctNombre" maxlength="80" autocomplete="name"></div>
+        </div>
+        <div class="campo">
+          <label for="ctEmail">Tu correo (para responderte)</label>
+          <div class="caja"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg>
+            <input type="email" id="ctEmail" maxlength="120" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="nombre@empresa.cl"></div>
+        </div>
+        <div class="campo">
+          <label for="ctMotivo">Motivo</label>
+          <select id="ctMotivo">
+            <option>Solicitud o problema de acceso</option>
+            <option>Consulta sobre un piloto</option>
+            <option>Sugerencia o mejora</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="ctMensaje">Mensaje</label>
+          <textarea id="ctMensaje" maxlength="1000" rows="4" placeholder="Cuéntanos en qué podemos ayudarte."></textarea>
+          <div class="cuenta-car" id="ctCuenta">0 / 1000</div>
+        </div>
+        <div class="trampa" aria-hidden="true"><label>No completar este campo <input type="text" id="ctWeb" tabindex="-1" autocomplete="off"></label></div>
+        <button type="submit" class="btn-ingresar" id="btnCt">Enviar mensaje <svg class="i i-send" aria-hidden="true"><use href="#i-send"/></svg></button>
+      </form>
+      <div class="alerta" id="ctError" role="alert"></div>
+      <p class="aviso-local" id="ctDemo" style="display:none;margin-top:14px">Modo demo: el mensaje no se envía; se guarda solo en este navegador.</p>
+    </div>
+    <div id="contactoOk" class="estado-pane" style="display:none">
+      <div class="icono-estado ok"><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+      <h2>Mensaje enviado</h2>
+      <p class="sub">Gracias. Te responderemos al correo que indicaste.</p>
+      <button type="button" class="btn-sec" onclick="cerrarContacto()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="vista-dash" id="viewDashboard">
+  <header class="banda">
+    <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes">
+    <div class="banda-der">
+      <span class="fecha" id="txtFecha"></span>
       <span id="txtUser"></span>
-      <button class="btn-logout" onclick="cerrarSesion()"><i class="fa-solid fa-power-off"></i> Salir</button>
+      <button class="btn-salir" onclick="abrirContacto()" aria-label="Contacto"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg> <span class="txt-btn">Contacto</span></button>
+      <button class="btn-salir" onclick="cerrarSesion()"><svg class="i i-power" aria-hidden="true"><use href="#i-power"/></svg> Salir</button>
     </div>
   </header>
 
-  <!-- VISTA 1: LOGIN -->
-  <div class="login-container" id="viewLogin">
-    <div class="login-card">
-      <div style="font-size:36px;color:var(--rojo);margin-bottom:16px"><i class="fa-solid fa-shield-halved"></i></div>
-      <h2>Acceso Corporativo</h2>
-      <p class="sub">Ingresa con tus credenciales asignadas para acceder a las herramientas operacionales.</p>
-
-      <form onsubmit="iniciarSesion(event)">
-        <div class="form-group">
-          <label>Correo Electrónico (@salfamontajes.com)</label>
-          <input type="email" id="txtEmail" placeholder="ejemplo@salfamontajes.com" required autocomplete="username">
-        </div>
-        <div class="form-group">
-          <label>Contraseña / PIN de Acceso</label>
-          <input type="password" id="txtPass" placeholder="••••••••" required autocomplete="current-password">
-        </div>
-        <button type="submit" class="btn-submit">
-          Ingresar al Portal <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </form>
-
-      <div class="alert-box alert-error" id="loginError"></div>
-      <div style="margin-top:24px;font-size:12px;color:#64748B">
-        <i class="fa-solid fa-lock"></i> Autenticación y navegación cifrada · SalfaCorp
-      </div>
-    </div>
-  </div>
-
-  <!-- VISTA 2: DASHBOARD -->
-  <main class="dashboard" id="viewDashboard">
-    <div class="dash-hero">
+  <section class="hero">
+    <div class="hero-in">
       <div>
+        <span class="filete" aria-hidden="true"></span>
         <h1 id="dashBienvenida">Bienvenido</h1>
-        <p>Selecciona la herramienta o portal operacional que necesitas consultar o gestionar.</p>
+        <p>Elige el piloto con el que quieres trabajar hoy.</p>
       </div>
-      <div class="user-pill" id="userPill"></div>
+      <div class="rol" id="userRol"></div>
     </div>
+  </section>
 
-    <div class="grid-portales" id="gridPortales"></div>
+  <main class="contenido">
+    <div class="rotulo">Pilotos disponibles</div>
+    <div class="grid" id="gridPortales"></div>
+
+    <section class="admin" id="adminPanel" style="display:none" aria-label="Gestión de accesos">
+      <div class="rotulo">Gestión de accesos</div>
+      <div class="admin-cab">
+        <div class="admin-tabs" role="tablist">
+          <button type="button" id="aTabPend" class="on" onclick="adminVista('pend')">Pendientes <span class="contador" id="contPend"></span></button>
+          <button type="button" id="aTabApr" onclick="adminVista('apr')">Con acceso <span class="contador gris" id="contApr"></span></button>
+          <button type="button" id="aTabCer" onclick="adminVista('cer')">Cerradas <span class="contador gris" id="contCer"></span></button>
+        </div>
+        <button type="button" class="btn-sec btn-mini" onclick="cargarAdmin()"><svg class="i i-rotate-cw" aria-hidden="true"><use href="#i-rotate-cw"/></svg> Actualizar</button>
+      </div>
+      <div id="adminLista"></div>
+    </section>
   </main>
 
-  <footer>
-    Salfa Montajes · Plataforma de Aplicaciones Web · Nivel de Seguridad: Confidencial
+  <footer class="pie">
+    <span>Salfa Montajes · Portales de pilotaje · Desarrollos estratégicos y mejoras</span>
+    <span><button type="button" class="enlace-pie" onclick="abrirContacto()">Contacto</button> · Información de uso interno</span>
   </footer>
+</div>
 
-  <script>
-    // BASE DE DATOS DE USUARIOS (Con hash SHA-256 para máxima seguridad)
-    // Claves por defecto: 'REDACTED-ROTATED' para todos inicialmente
-    var HASH_SALFA2026 = 'REDACTED_HASH';
+<script>
+// ===== CONFIGURACIÓN =====
+// Producción: pega el ID de cliente de Google y la URL del servicio de accesos (Apps Script).
+var GOOGLE_CLIENT_ID = 'PEGAR_AQUI_TU_CLIENT_ID.apps.googleusercontent.com';
+var API_URL = 'PEGAR_AQUI_URL_DEL_SERVICIO_DE_ACCESOS';
+var DOMINIO = '@salfamontajes.com';
+var RECORDAR_DIAS = 30, SESION_HORAS = 8;
+var KEY = 'salfa_auth_session', KEY_REC = 'salfa_recordar';
+// Solo modo demo local (sin servicio de accesos): administradores y clave de prueba.
+var ADMINS_DEMO_HASH = { 'ac6aeef630814097aed187576e9fc2e05fce844563e2cd1c8b02a22f31e07bb8': 'Sebastián Roca', '07285020f6732e3c7ec06624b61de7ca456a0cd5b216c550078742c91871c3e0': 'Sebastián Roca' };   // huellas SHA-256: los correos no se publican
+var HASH_CLAVE_PRUEBA = 'REDACTED_HASH';
 
-    var USUARIOS = {
-      'sjroca@salfamontajes.com': { nombre: 'Sebastián Roca', rol: 'Administrador', passHash: HASH_SALFA2026 },
-      'sroca.ot@gmail.com': { nombre: 'Sebastián Roca (Admin Personal)', rol: 'Administrador', passHash: HASH_SALFA2026 }
-    };
+var PORTALES = [
+  { id:'01', nombre:'Mapa de Procesos', categoria:'Operaciones y gestión',
+    descripcion:'Piloto para consultar y gestionar los procesos de Salfa, con trazabilidad de revisiones (Rev B / Rev C) y documentación técnica asociada.',
+    url:'https://script.google.com/macros/s/AKfycbxWCGH8Fh7qUEn3AwTm4i_Yq3gBxp9bUx6ZXHbm-cBTTiafHAhKsWnqWrLoIDu8Y8Wq/exec',
+    icono:'network', roles:['Administrador','Editor','Revisor','Visualizador','Colaborador'], estado:'Activo' },
+  { id:'02', nombre:'Control de CV', categoria:'Gestión de personas',
+    descripcion:'Piloto para registrar, revisar y dar seguimiento a currículums de postulantes y personal para la dotación de proyectos de montaje.',
+    url:'#', icono:'contact', roles:['Administrador','Editor'], estado:'En desarrollo' },
+  { id:'03', nombre:'Gestión AWP & Construcción', categoria:'Planificación y control',
+    descripcion:'Piloto de seguimiento de paquetes de ingeniería y construcción bajo metodología Advanced Work Packaging.',
+    url:'#', icono:'package', roles:['Administrador'], estado:'Próximamente' }
+];
 
-    var PORTALES = [
-      {
-        id: '01',
-        nombre: 'Mapa de Procesos',
-        categoria: 'Operaciones y Gestión',
-        descripcion: 'Gestión interactiva, trazabilidad de versiones (Rev B / Rev C) y documentación técnica de procesos Salfa.',
-        url: 'https://script.google.com/macros/s/AKfycbxWCGH8Fh7qUEn3AwTm4i_Yq3gBxp9bUx6ZXHbm-cBTTiafHAhKsWnqWrLoIDu8Y8Wq/exec',
-        icono: 'diagram-project',
-        roles: ['Administrador', 'Editor', 'Revisor', 'Visualizador', 'Colaborador'],
-        estado: 'Activo'
-      },
-      {
-        id: '02',
-        nombre: 'Matriz de Riesgos y Control',
-        categoria: 'Seguridad y Calidad',
-        descripcion: 'Evaluación preventiva, control de riesgos críticos y seguimiento en faenas y obras de montaje.',
-        url: '#',
-        icono: 'shield-halved',
-        roles: ['Administrador', 'Editor'],
-        estado: 'En desarrollo'
-      },
-      {
-        id: '03',
-        nombre: 'Gestión AWP & Construcción',
-        categoria: 'Planificación y Control',
-        descripcion: 'Seguimiento de paquetes de ingeniería y construcción bajo metodología Advanced Work Packaging.',
-        url: '#',
-        icono: 'boxes-stacked',
-        roles: ['Administrador'],
-        estado: 'Próximamente'
-      }
-    ];
+// ===== Modos de funcionamiento =====
+var CLIENT_ID_OK = GOOGLE_CLIENT_ID.indexOf('PEGAR_') !== 0;
+var API_OK = API_URL.indexOf('PEGAR_') !== 0;
+var ES_ARCHIVO = (location.protocol === 'file:');
+var ES_LOCAL = ES_ARCHIVO || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+var GOOGLE_LISTO = CLIENT_ID_OK && API_OK && !ES_ARCHIVO;
+var MODO_DEMO = !API_OK && ES_LOCAL;          // simulación local para revisar el diseño y el flujo
+var SIN_SERVICIO = !API_OK && !ES_LOCAL;      // publicado sin configurar: acceso cerrado
 
-    async function sha256(text) {
-      var buffer = new TextEncoder().encode(text);
-      var hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+// ===== Utilidades =====
+function $(id){ return document.getElementById(id); }
+function ic(n,c){ return '<svg class="i i-'+n+(c?' '+c:'')+'" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
+function escapar(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function error(msg){
+  var e=$('loginError'); e.classList.remove('on');
+  if(!msg) return;
+  void e.offsetWidth; e.textContent=msg; e.classList.add('on');
+}
+function toast(msg){
+  var t=$('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); },3200);
+}
+function cargando(on,msg){
+  $('viewCargando').style.display=on?'flex':'none';
+  if(msg) $('txtCargando').textContent=msg;
+}
+async function sha256(t){
+  var h=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+function decodeJwt(t){
+  try{
+    var p=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(decodeURIComponent(atob(p).split('').map(function(c){return '%'+('00'+c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+  }catch(e){ return {}; }
+}
+function fecha(iso){
+  var d=new Date(iso); if(isNaN(d)) return '';
+  return d.toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ===== Servicio de accesos (Apps Script) =====
+async function api(accion,datos){
+  datos=Object.assign({action:accion},datos||{});
+  if(!API_OK){
+    if(MODO_DEMO) return demoApi(accion,datos);
+    return {ok:false,mensaje:'El servicio de accesos aún no está activado en este sitio. Avisa al administrador del Hub.'};
+  }
+  var ctl=new AbortController(), to=setTimeout(function(){ctl.abort();},25000);
+  try{
+    var r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+                               body:JSON.stringify(datos),redirect:'follow',signal:ctl.signal});
+    return await r.json();
+  }catch(e){
+    return {ok:false,red:true,mensaje:'No se pudo conectar con el servicio de accesos. Revisa tu conexión e intenta de nuevo.'};
+  }finally{ clearTimeout(to); }
+}
+
+// ===== Servicio DEMO (solo local; datos en este navegador) =====
+var DEMO_KEY='salfa_demo_db_v1';
+async function adminDemo(email){ var h=await sha256(String(email||'').toLowerCase()); return ADMINS_DEMO_HASH[h]||null; }
+function dbLeer(){ try{ return JSON.parse(localStorage.getItem(DEMO_KEY))||{accesos:[],sesiones:{}}; }catch(e){ return {accesos:[],sesiones:{}}; } }
+function dbGuardar(d){ localStorage.setItem(DEMO_KEY,JSON.stringify(d)); }
+function tokenAleatorio(){ var a=new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
+function filtrarPil(a){ var ids=PORTALES.map(function(p){return p.id;}); return (a||[]).filter(function(x,i,r){return ids.indexOf(x)>=0 && r.indexOf(x)===i;}); }
+function sesionDemo(db,email,nombre,rol,pilotos){
+  var tk=tokenAleatorio(); db.sesiones[tk]={email:email,exp:Date.now()+RECORDAR_DIAS*864e5}; dbGuardar(db);
+  return {ok:true,estado:'Aprobado',token:tk,email:email,nombre:nombre,rol:rol,pilotos:pilotos};
+}
+async function demoApi(accion,d){
+  var db=dbLeer(); db.cred=db.cred||{}; db.codigos=db.codigos||{}; db.intentos=db.intentos||{};
+  var email=String(d.email||'').trim().toLowerCase();
+  var adminNom=await adminDemo(email), admin=!!adminNom;
+  function acc(e){ return db.accesos.filter(function(x){return x.email===e;})[0]; }
+  function sesion(tk){ var s=db.sesiones[tk]; return (s&&s.exp>Date.now())?s.email:null; }
+  var iso=new Date().toISOString(), todos=PORTALES.map(function(p){return p.id;}), mailOk=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function nuevoCodigo(tipo,e){ var a=new Uint32Array(1); crypto.getRandomValues(a); var c=('000000'+(a[0]%1000000)).slice(-6); db.codigos[tipo+':'+e]={c:c,exp:Date.now()+15*60000,n:0}; return c; }
+  function revisarCodigo(tipo,e,c){ var k=tipo+':'+e, o=db.codigos[k]; if(!o||o.exp<Date.now()||o.n>=5){ delete db.codigos[k]; return 'vencido'; } if(o.c===c){ delete db.codigos[k]; return 'ok'; } o.n++; return 'mal'; }
+  if(accion==='registrar'){
+    if(!mailOk.test(email)) return {ok:false,mensaje:'Escribe un correo válido.'};
+    if(!admin && email.slice(-DOMINIO.length)!==DOMINIO) return {ok:false,mensaje:'Solo se aceptan cuentas '+DOMINIO+'.'};
+    if(!d.nombre||!d.area||String(d.motivo||'').length<10) return {ok:false,mensaje:'Completa tu nombre, área y cargo, y el motivo de la solicitud.'};
+    var pil=filtrarPil(d.pilotos); if(!pil.length) return {ok:false,mensaje:'Elige al menos un piloto.'};
+    var er=validarClaveFront(String(d.clave||''),email); if(er) return {ok:false,mensaje:er};
+    var ex=acc(email); if(ex && ex.estado!=='SinVerificar') return {ok:false,mensaje:'Ya existe una cuenta o solicitud con ese correo. Inicia sesión o recupera tu contraseña.'};
+    var sal=tokenAleatorio(); db.cred[email]={sal:sal,hash:await sha256(sal+':'+d.clave)};
+    if(ex){ ex.nombre=d.nombre; ex.area=d.area; ex.motivo=d.motivo; ex.pilotosSolicitados=pil; }
+    else db.accesos.push({email:email,nombre:d.nombre,area:d.area,motivo:d.motivo,pilotosSolicitados:pil,estado:'SinVerificar',rol:'',pilotos:[],solicitado:iso,resuelto:'',resueltoPor:''});
+    var cod=nuevoCodigo('registro',email); dbGuardar(db); return {ok:true,estado:'SinVerificar',email:email,codigoDemo:cod};
+  }
+  if(accion==='verificar'){
+    var rv=revisarCodigo('registro',email,String(d.codigo||'')); dbGuardar(db);
+    if(rv==='vencido') return {ok:false,mensaje:'El código venció. Solicita uno nuevo.'};
+    if(rv!=='ok') return {ok:false,mensaje:'Código incorrecto. Revisa tu correo e inténtalo de nuevo.'};
+    var a1=acc(email); if(!a1) return {ok:false,mensaje:'No encontramos la solicitud. Regístrate de nuevo.'};
+    if(a1.estado==='SinVerificar'){
+      if(admin){ a1.estado='Aprobado'; a1.rol='Administrador'; a1.pilotos=todos; a1.resuelto=iso; a1.resueltoPor='automático'; }
+      else { a1.estado='Pendiente'; a1.solicitado=iso; }
+      dbGuardar(db);
     }
-
-    async function iniciarSesion(e) {
-      e.preventDefault();
-      var email = document.getElementById('txtEmail').value.trim().toLowerCase();
-      var pass = document.getElementById('txtPass').value.trim();
-      var errBox = document.getElementById('loginError');
-      errBox.style.display = 'none';
-
-      // Validación de dominio corporativo
-      var esSalfa = email.endsWith('@salfamontajes.com');
-      var esAdminPersonal = (email === 'sroca.ot@gmail.com');
-      if (!esSalfa && !esAdminPersonal) {
-        errBox.textContent = 'Acceso denegado: Solo se admiten correos @salfamontajes.com';
-        errBox.style.display = 'block';
-        return;
-      }
-
-      var passHash = await sha256(pass);
-      var user = USUARIOS[email];
-
-      // Si es un usuario corporativo de Salfa no registrado aún, entra por defecto como Colaborador con REDACTED-ROTATED
-      if (!user && esSalfa && passHash === HASH_SALFA2026) {
-        user = { nombre: email.split('@')[0], rol: 'Colaborador', passHash: HASH_SALFA2026 };
-      }
-
-      if (!user || user.passHash !== passHash) {
-        errBox.textContent = 'Correo o contraseña incorrectos. (Contraseña inicial de prueba: REDACTED-ROTATED)';
-        errBox.style.display = 'block';
-        return;
-      }
-
-      // Guardar sesión segura en el navegador
-      var sessionData = { email: email, nombre: user.nombre, rol: user.rol, time: Date.now() };
-      sessionStorage.setItem('salfa_auth_session', JSON.stringify(sessionData));
-      renderDashboard(sessionData);
+    return {ok:true,estado:(a1.estado==='Aprobado'?'Aprobado':'Pendiente'),email:email};
+  }
+  if(accion==='reenviarCodigo'){
+    var a2=acc(email);
+    if(a2 && a2.estado==='SinVerificar'){ var c2=nuevoCodigo('registro',email); dbGuardar(db); return {ok:true,codigoDemo:c2}; }
+    return {ok:true};
+  }
+  if(accion==='loginClave'){
+    var it=db.intentos[email]||{n:0,exp:0}; if(it.exp<Date.now()) it={n:0,exp:0};
+    if(it.n>=5) return {ok:false,mensaje:'Demasiados intentos fallidos. Espera 15 minutos o recupera tu contraseña.'};
+    var okc=false;
+    if(admin) okc=((await sha256(d.clave||''))===HASH_CLAVE_PRUEBA);
+    if(!okc){ var cr=db.cred[email]; if(cr) okc=((await sha256(cr.sal+':'+(d.clave||'')))===cr.hash); }
+    if(!okc){ it.n++; it.exp=Date.now()+15*60000; db.intentos[email]=it; dbGuardar(db); return {ok:false,mensaje:'Correo o contraseña incorrectos.'}; }
+    delete db.intentos[email];
+    if(admin) return sesionDemo(db,email,adminNom,'Administrador',todos);
+    var a3=acc(email); if(!a3) return {ok:false,mensaje:'Tu cuenta no tiene una solicitud de acceso activa. Escríbenos desde Contacto.'};
+    dbGuardar(db);
+    if(a3.estado!=='Aprobado') return {ok:true,estado:a3.estado,email:email};
+    return sesionDemo(db,email,a3.nombre,a3.rol,a3.pilotos);
+  }
+  if(accion==='olvide'){
+    var a4=acc(email), cd; if(mailOk.test(email) && (a4||admin)){ cd=nuevoCodigo('reset',email); dbGuardar(db); }
+    return {ok:true,codigoDemo:cd};
+  }
+  if(accion==='restablecer'){
+    var ep=validarClaveFront(String(d.clave||''),email); if(ep) return {ok:false,mensaje:ep};
+    var rr=revisarCodigo('reset',email,String(d.codigo||'')); dbGuardar(db);
+    if(rr==='vencido') return {ok:false,mensaje:'El código venció. Solicita uno nuevo.'};
+    if(rr!=='ok') return {ok:false,mensaje:'Código incorrecto. Revisa tu correo e inténtalo de nuevo.'};
+    var s2=tokenAleatorio(); db.cred[email]={sal:s2,hash:await sha256(s2+':'+d.clave)};
+    Object.keys(db.sesiones).forEach(function(k){ if(db.sesiones[k].email===email) delete db.sesiones[k]; });
+    delete db.intentos[email];
+    var a5=acc(email); if(a5 && a5.estado==='SinVerificar'){ a5.estado='Pendiente'; a5.solicitado=iso; }
+    dbGuardar(db); return {ok:true};
+  }
+  if(accion==='solicitar'){
+    if(!admin && email.slice(-DOMINIO.length)!==DOMINIO) return {ok:false,mensaje:'Solo se aceptan solicitudes de cuentas '+DOMINIO+'.'};
+    if(!d.nombre||!d.area||String(d.motivo||'').length<10) return {ok:false,mensaje:'Completa tu nombre, área y cargo, y el motivo de la solicitud.'};
+    var pil=filtrarPil(d.pilotos); if(!pil.length) return {ok:false,mensaje:'Elige al menos un piloto.'};
+    var ex=acc(email); if(ex) return {ok:true,estado:ex.estado,email:email};
+    db.accesos.push({email:email,nombre:d.nombre,area:d.area,motivo:d.motivo,pilotosSolicitados:pil,estado:'Pendiente',rol:'',pilotos:[],solicitado:new Date().toISOString(),resuelto:'',resueltoPor:''});
+    dbGuardar(db); return {ok:true,estado:'Pendiente',email:email};
+  }
+  if(accion==='validar'){
+    var em=sesion(d.token); if(!em) return {ok:false,estado:'SesionInvalida',mensaje:'Tu sesión expiró. Ingresa de nuevo.'};
+    var nomA=await adminDemo(em);
+    if(nomA) return {ok:true,estado:'Aprobado',email:em,nombre:nomA,rol:'Administrador',pilotos:PORTALES.map(function(p){return p.id;})};
+    var ac=acc(em); if(!ac||ac.estado!=='Aprobado') return {ok:false,estado:ac?ac.estado:'SinSolicitud',mensaje:'Tu acceso ya no está vigente.'};
+    return {ok:true,estado:'Aprobado',email:em,nombre:ac.nombre,rol:ac.rol,pilotos:ac.pilotos};
+  }
+  if(accion==='cerrar'){ delete db.sesiones[d.token]; dbGuardar(db); return {ok:true}; }
+  if(accion==='contacto'){
+    var cts=[]; try{ cts=JSON.parse(localStorage.getItem('salfa_demo_contactos'))||[]; }catch(e){}
+    cts.push({fecha:new Date().toISOString(),nombre:d.nombre,email:d.email,motivo:d.motivo,mensaje:d.mensaje});
+    localStorage.setItem('salfa_demo_contactos',JSON.stringify(cts)); return {ok:true};
+  }
+  var quien=sesion(d.token);
+  if(!quien||!(await adminDemo(quien))) return {ok:false,mensaje:'No tienes permiso para esta acción.'};
+  if(accion==='listar') return {ok:true,solicitudes:db.accesos.filter(function(x){return x.estado!=='SinVerificar';})};
+  if(accion==='resolver'){
+    var x=acc(String(d.email).toLowerCase()); if(!x) return {ok:false,mensaje:'La solicitud no existe.'};
+    if(d.decision==='Aprobar'){
+      var ps=filtrarPil(d.pilotos); if(!ps.length) return {ok:false,mensaje:'Elige al menos un piloto para aprobar.'};
+      x.estado='Aprobado'; x.rol=d.rol||'Colaborador'; x.pilotos=ps;
+    } else {
+      x.estado=(d.decision==='Rechazar')?'Rechazado':'Revocado'; x.rol=''; x.pilotos=[];
+      Object.keys(db.sesiones).forEach(function(k){ if(db.sesiones[k].email===x.email) delete db.sesiones[k]; });
     }
+    x.resuelto=new Date().toISOString(); x.resueltoPor=quien; dbGuardar(db); return {ok:true};
+  }
+  return {ok:false,mensaje:'Acción no válida.'};
+}
 
-    function renderDashboard(user) {
-      document.getElementById('viewLogin').style.display = 'none';
-      document.getElementById('viewDashboard').style.display = 'block';
-      document.getElementById('userHeader').style.display = 'flex';
-      document.getElementById('txtUser').innerHTML = '<strong>' + user.email + '</strong> (' + user.rol + ')';
-      document.getElementById('dashBienvenida').textContent = 'Hola, ' + user.nombre;
-      document.getElementById('userPill').innerHTML = 'Rol asignado: <strong>' + user.rol + '</strong>';
+// ===== Pantallas del ingreso =====
+var PANES=['Login','Registro','Verificar','Olvide','Restablecer','Form','Estado'];
+var CRED={idToken:'',email:'',nombre:'',foto:''};
+var CTX={email:''};
+var SESION=null;
+var GLOGO='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 
-      var grid = document.getElementById('gridPortales');
-      grid.innerHTML = '';
+function irPane(p){
+  PANES.forEach(function(n){ var e=$('pane'+n); if(e) e.style.display=(n===p)?'block':'none'; });
+  error('');
+  if(p==='Login'||p==='Registro') pintarBotonesGoogle();
+  var f={Login:'lgEmail',Registro:'rgNombre',Olvide:'olEmail',Verificar:'vfCodigo',Restablecer:'rsCodigo'}[p];
+  // El cursor se coloca solo en equipos con mouse; en celulares evita abrir el teclado sin querer
+  if(f && window.matchMedia('(hover:hover)').matches) setTimeout(function(){ var e=$(f); if(e) e.focus(); },60);
+}
+var verPane=irPane;
 
-      PORTALES.forEach(function(p) {
-        var card = document.createElement('div');
-        card.className = 'card-portal';
+function alternarClave(id,btn){
+  var i=$(id), ver=(i.type==='password');
+  i.type=ver?'text':'password';
+  btn.innerHTML=ic(ver?'eye-off':'eye');
+  btn.setAttribute('aria-label',ver?'Ocultar contraseña':'Mostrar contraseña');
+}
+function validarClaveFront(clave,email){
+  if(clave.length<10) return 'La contraseña debe tener al menos 10 caracteres.';
+  if(!/[A-Za-z]/.test(clave)||!/[0-9]/.test(clave)) return 'La contraseña debe incluir letras y números.';
+  var local=String(email||'').split('@')[0].toLowerCase();
+  if(local.length>=4 && clave.toLowerCase().indexOf(local)>=0) return 'La contraseña no puede contener tu correo.';
+  return '';
+}
+function pilotosCheck(idDestino){
+  $(idDestino).innerHTML=PORTALES.map(function(p){
+    return '<label><input type="checkbox" value="'+p.id+'"> '+p.id+' · '+escapar(p.nombre)+'</label>';
+  }).join('');
+}
+function elegidos(idDestino){
+  return Array.prototype.map.call($(idDestino).querySelectorAll('input:checked'),function(i){return i.value;});
+}
 
-        var tienePermiso = (user.rol === 'Administrador') || (p.roles.indexOf(user.rol) >= 0);
-        var isActivo = p.estado === 'Activo' && tienePermiso;
+function mostrarEstado(estado,texto){
+  var M={
+    Pendiente:{i:'hourglass',c:'pend',t:'Cuenta en revisión',x:'Tu cuenta '+CRED.email+' está pendiente de aprobación. Un administrador la revisa y te avisaremos por correo cuando se resuelva.'},
+    Enviada:{i:'send',c:'ok',t:'Solicitud enviada',x:'Verificamos tu correo y recibimos tu solicitud. Un administrador la revisará y te avisaremos a '+(CRED.email||CTX.email)+'. Los pilotos se habilitan de forma individual.'},
+    Rechazado:{i:'circle-x',c:'',t:'Solicitud no aprobada',x:'Por ahora tu solicitud no fue aprobada. Si necesitas acceso, escríbenos desde Contacto.'},
+    Revocado:{i:'ban',c:'',t:'Acceso retirado',x:'Tu acceso a los pilotos fue retirado. Escríbenos desde Contacto si necesitas recuperarlo.'},
+    Bloqueado:{i:'lock',c:'',t:'Acceso no disponible',x:texto||''}
+  };
+  var m=M[estado]||M.Bloqueado;
+  $('estIcono').className='icono-estado '+m.c; $('estIcono').innerHTML=ic(m.i);
+  $('estTitulo').textContent=m.t; $('estTexto').textContent=m.x;
+  irPane('Estado');
+}
+function volverIngreso(){
+  CRED={idToken:'',email:'',nombre:'',foto:''};
+  if(window.google && google.accounts && google.accounts.id && google.accounts.id.disableAutoSelect){ google.accounts.id.disableAutoSelect(); }
+  irPane('Login');
+}
 
-        var statusClass = isActivo ? 'status-ok' : (p.estado === 'En desarrollo' ? 'status-dev' : 'status-lock');
-        var btnClass = isActivo ? 'btn-portal' : 'btn-portal btn-locked';
-        
-        var btnText = 'Próximamente';
-        var statusText = p.estado;
+// ===== Preparación de la pantalla =====
+function prepararIngreso(){
+  try{ $('chkRecordar').checked=(localStorage.getItem(KEY_REC)==='1'); }catch(e){}
+  var b=$('bannerServicio');
+  if(SIN_SERVICIO){
+    b.style.display='block';
+    b.textContent='El servicio de accesos aún no está activado en este sitio, por lo que todavía no es posible ingresar ni registrarse. Avisa al administrador del Hub.';
+  } else if(MODO_DEMO){
+    b.style.display='block';
+    b.textContent='Modo demo local: las cuentas se guardan solo en este navegador. Los administradores ingresan con su correo y la clave de prueba.';
+    $('tagDemo').style.display='block';
+  }
+  pilotosCheck('rgPilotos');
+  irPane('Login');
+  prepararGoogle();
+}
 
-        if (p.estado === 'Activo') {
-          if (tienePermiso) {
-            btnText = 'Ingresar <i class="fa-solid fa-arrow-right"></i>';
-          } else {
-            statusText = 'Restringido';
-            btnText = '<i class="fa-solid fa-lock"></i> No asignado';
-          }
-        }
-
-        card.innerHTML = 
-          '<div class="portal-head">' +
-            '<div class="portal-icon"><i class="fa-solid fa-' + p.icono + '"></i></div>' +
-            '<div class="portal-meta">' +
-              '<span class="portal-cat">' + p.categoria + '</span>' +
-              '<h3>' + p.nombre + '</h3>' +
-            '</div>' +
-          '</div>' +
-          '<div class="portal-body">' +
-            '<p>' + p.descripcion + '</p>' +
-          '</div>' +
-          '<div class="portal-foot">' +
-            '<span class="badge-status ' + statusClass + '">' + statusText + '</span>' +
-            '<a href="' + (isActivo ? p.url : '#') + '" target="_blank" class="' + btnClass + '">' + btnText + '</a>' +
-          '</div>';
-
-        grid.appendChild(card);
+// ===== Google (opcional: aparece completo cuando está configurado) =====
+var _gw={};
+function prepararGoogle(){
+  if(!GOOGLE_LISTO){
+    ['googleBtn','googleBtnReg'].forEach(function(id){
+      $(id).innerHTML='<button type="button" class="btn-google" onclick="googleNoDisponible()">'+GLOGO+'<span>Continuar con Google</span></button>';
+    });
+    return;
+  }
+  ['googleBtn','googleBtnReg'].forEach(function(id){ $(id).innerHTML='<div class="google-estado"><span class="spinner"></span> Conectando con Google…</div>'; });
+  var intentos=0, espera=setInterval(function(){
+    intentos++;
+    if(window.google && google.accounts && google.accounts.id){ clearInterval(espera); iniciarGoogle(); }
+    else if(window.GSI_ERROR || intentos>40){
+      clearInterval(espera);
+      ['googleBtn','googleBtnReg'].forEach(function(id){
+        $(id).innerHTML='<button type="button" class="btn-google" onclick="googleNoDisponible()">'+GLOGO+'<span>Continuar con Google</span></button>';
       });
     }
+  },200);
+}
+function googleNoDisponible(){
+  error(ES_ARCHIVO ? 'El ingreso con Google funciona solo desde la dirección web oficial del Hub (https).'
+        : (!CLIENT_ID_OK ? 'El ingreso con Google se activará cuando se configure el ID de cliente de Google.'
+        : 'No se pudo conectar con Google. Revisa tu conexión y recarga la página.'));
+}
+function pintarBotonesGoogle(){
+  if(!GOOGLE_LISTO || !window.google || !google.accounts || !google.accounts.id) return;
+  ['googleBtn','googleBtnReg'].forEach(function(id){
+    var c=$(id); if(!c || !c.clientWidth) return;
+    var w=Math.max(200, Math.min(372, c.clientWidth));
+    if(_gw[id]===w && c.querySelector('div[role=button],iframe')) return;
+    _gw[id]=w; c.innerHTML='';
+    google.accounts.id.renderButton(c,{type:'standard',theme:'outline',size:'large',
+      text:(id==='googleBtnReg'?'signup_with':'continue_with'),shape:'rectangular',logo_alignment:'left',locale:'es',width:w});
+  });
+}
+var _rt=null;
+window.addEventListener('resize',function(){
+  clearTimeout(_rt);
+  _rt=setTimeout(function(){ if(GOOGLE_LISTO && $('viewLogin').style.display!=='none') pintarBotonesGoogle(); },250);
+});
+function iniciarGoogle(){
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:alRecibirCredencial,auto_select:true,cancel_on_tap_outside:false});
+  ['googleBtn','googleBtnReg'].forEach(function(id){ $(id).innerHTML=''; });
+  pintarBotonesGoogle();
+  google.accounts.id.prompt();
+}
+async function alRecibirCredencial(resp){
+  error('');
+  var p=decodeJwt(resp.credential);   // solo para mostrar nombre y foto; el servicio revalida el token
+  CRED={idToken:resp.credential,email:String(p.email||'').toLowerCase(),nombre:p.name||'',foto:p.picture||''};
+  cargando(true,'Verificando acceso…');
+  var r=await api('login',{idToken:CRED.idToken});
+  cargando(false);
+  procesarLogin(r);
+}
 
-    function cerrarSesion() {
-      sessionStorage.removeItem('salfa_auth_session');
-      window.location.reload();
+// ===== Correo y contraseña =====
+async function iniciarSesionClave(ev){
+  ev.preventDefault(); error('');
+  var email=$('lgEmail').value.trim().toLowerCase(), clave=$('lgPass').value;
+  if(!email||!clave){ error('Escribe tu correo y tu contraseña.'); return; }
+  CRED={idToken:'',email:email,nombre:'',foto:''};
+  cargando(true,'Verificando acceso…');
+  var r=await api('loginClave',{email:email,clave:clave});
+  cargando(false);
+  procesarLogin(r);
+}
+function procesarLogin(r){
+  if(!r || !r.ok){ error((r&&r.mensaje)||'No se pudo validar tu cuenta.'); return; }
+  if(r.estado==='Aprobado'){
+    abrirSesion({token:r.token,email:r.email||CRED.email,nombre:r.nombre||CRED.nombre||CRED.email.split('@')[0],
+                 rol:r.rol,pilotos:r.pilotos||[],foto:CRED.foto}, $('chkRecordar').checked);
+  } else if(r.estado==='SinSolicitud'){ abrirFormulario(); }
+  else if(r.estado==='SinVerificar'){ irVerificar(r.email||CRED.email,false); }
+  else { mostrarEstado(r.estado); }
+}
+
+// Crear cuenta
+async function registrarse(ev){
+  ev.preventDefault(); error('');
+  var nombre=$('rgNombre').value.trim(), email=$('rgEmail').value.trim().toLowerCase(), area=$('rgArea').value.trim();
+  var clave=$('rgPass').value, clave2=$('rgPass2').value, motivo=$('rgMotivo').value.trim(), pilotos=elegidos('rgPilotos');
+  if(!nombre){ error('Escribe tu nombre completo.'); $('rgNombre').focus(); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ error('Escribe un correo válido.'); $('rgEmail').focus(); return; }
+  if(!area){ error('Escribe tu área y cargo.'); $('rgArea').focus(); return; }
+  var e1=validarClaveFront(clave,email); if(e1){ error(e1); $('rgPass').focus(); return; }
+  if(clave!==clave2){ error('Las contraseñas no coinciden.'); $('rgPass2').focus(); return; }
+  if(!pilotos.length){ error('Elige al menos un piloto.'); return; }
+  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué necesitas el acceso.'); $('rgMotivo').focus(); return; }
+  cargando(true,'Creando tu cuenta…');
+  var r=await api('registrar',{nombre:nombre,email:email,area:area,motivo:motivo,pilotos:pilotos,clave:clave});
+  cargando(false);
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo crear la cuenta.'); return; }
+  CRED.email=email; $('rgPass').value=''; $('rgPass2').value='';
+  irVerificar(email,true,r.codigoDemo);
+}
+var _cdTimer=null;
+function irVerificar(email,enviado,codigoDemo){
+  CTX.email=email;
+  $('vfTexto').textContent=enviado ? 'Enviamos un código de 6 dígitos a '+email+'. Vence en 15 minutos.'
+                                   : 'Tu correo '+email+' aún no está verificado. Pide un código nuevo para continuar.';
+  avisoDemo('vfDemo',codigoDemo);
+  $('vfCodigo').value='';
+  irPane('Verificar');
+  if(!enviado) reenviarCodigo(true); else enfriarReenvio();
+}
+function avisoDemo(id,codigo){
+  var e=$(id);
+  if(MODO_DEMO && codigo){ e.style.display='block'; e.textContent='Modo demo: tu código es '+codigo+'. En producción llega por correo.'; }
+  else e.style.display='none';
+}
+function enfriarReenvio(){
+  var b=$('btnReenviar'), seg=30; clearInterval(_cdTimer); b.disabled=true;
+  _cdTimer=setInterval(function(){
+    seg--; if(seg<=0){ clearInterval(_cdTimer); b.disabled=false; b.textContent='Reenviar código'; }
+    else b.textContent='Reenviar código ('+seg+' s)';
+  },1000);
+  b.textContent='Reenviar código (30 s)';
+}
+async function reenviarCodigo(silencioso){
+  var r=await api('reenviarCodigo',{email:CTX.email});
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo reenviar el código.'); return; }
+  avisoDemo('vfDemo',r.codigoDemo);
+  if(!silencioso) toast('Te enviamos un código nuevo.');
+  enfriarReenvio();
+}
+async function verificarCodigo(ev){
+  ev.preventDefault(); error('');
+  var codigo=$('vfCodigo').value.replace(/\D/g,'');
+  if(codigo.length!==6){ error('Escribe el código de 6 dígitos que enviamos a tu correo.'); return; }
+  cargando(true,'Verificando código…');
+  var r=await api('verificar',{email:CTX.email,codigo:codigo});
+  cargando(false);
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo verificar el código.'); return; }
+  if(r.estado==='Aprobado'){
+    toast('Correo verificado. Ya puedes iniciar sesión.');
+    $('lgEmail').value=CTX.email; $('lgPass').value=''; irPane('Login');
+  } else { CRED.email=CTX.email; mostrarEstado('Enviada'); }
+}
+
+// Olvidé mi contraseña
+async function pedirReset(ev){
+  ev.preventDefault(); error('');
+  var email=$('olEmail').value.trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ error('Escribe un correo válido.'); return; }
+  cargando(true,'Enviando código…');
+  var r=await api('olvide',{email:email});
+  cargando(false);
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo enviar el código.'); return; }
+  CTX.email=email;
+  $('rsTexto').textContent='Si existe una cuenta con '+email+', te enviamos un código de 6 dígitos. Vence en 15 minutos.';
+  avisoDemo('rsDemo',r.codigoDemo);
+  $('rsCodigo').value=''; $('rsPass').value=''; $('rsPass2').value='';
+  irPane('Restablecer');
+}
+async function restablecerClave(ev){
+  ev.preventDefault(); error('');
+  var codigo=$('rsCodigo').value.replace(/\D/g,''), c1=$('rsPass').value, c2=$('rsPass2').value;
+  if(codigo.length!==6){ error('Escribe el código de 6 dígitos que enviamos a tu correo.'); return; }
+  var e1=validarClaveFront(c1,CTX.email); if(e1){ error(e1); return; }
+  if(c1!==c2){ error('Las contraseñas no coinciden.'); return; }
+  cargando(true,'Guardando tu contraseña…');
+  var r=await api('restablecer',{email:CTX.email,codigo:codigo,clave:c1});
+  cargando(false);
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo cambiar la contraseña.'); return; }
+  toast('Contraseña actualizada. Ya puedes iniciar sesión.');
+  $('lgEmail').value=CTX.email; $('lgPass').value=''; irPane('Login');
+}
+
+// ===== Solicitud de acceso (cuenta de Google que aún no tiene solicitud) =====
+function abrirFormulario(){
+  $('formCuenta').textContent='Cuenta: '+CRED.email;
+  $('solNombre').value=CRED.nombre||'';
+  $('solArea').value=''; $('solMotivo').value='';
+  pilotosCheck('solPilotos');
+  irPane('Form');
+}
+async function enviarSolicitud(ev){
+  ev.preventDefault(); error('');
+  var nombre=$('solNombre').value.trim(), area=$('solArea').value.trim(), motivo=$('solMotivo').value.trim();
+  var pilotos=elegidos('solPilotos');
+  if(!nombre||!area){ error('Completa tu nombre y tu área y cargo.'); return; }
+  if(!pilotos.length){ error('Elige al menos un piloto.'); return; }
+  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué necesitas el acceso.'); return; }
+  cargando(true,'Enviando solicitud…');
+  var r=await api('solicitar',{idToken:CRED.idToken,email:CRED.email,nombre:nombre,area:area,motivo:motivo,pilotos:pilotos});
+  cargando(false);
+  if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo enviar la solicitud.'); return; }
+  mostrarEstado(r.estado==='Pendiente'?'Enviada':r.estado);
+}
+
+// ===== Sesión (con opción "Recordarme") =====
+function guardarSesion(s,recordar,mantenerHora){
+  if(!mantenerHora) s.time=Date.now();
+  s.recordar=!!recordar;
+  var A=recordar?localStorage:sessionStorage, B=recordar?sessionStorage:localStorage;
+  try{ A.setItem(KEY,JSON.stringify(s)); B.removeItem(KEY); }catch(e){}
+  try{ localStorage.setItem(KEY_REC,recordar?'1':'0'); }catch(e){}
+}
+function leerSesion(){
+  var raw=null; try{ raw=localStorage.getItem(KEY)||sessionStorage.getItem(KEY); }catch(e){}
+  if(!raw) return null;
+  try{
+    var s=JSON.parse(raw), max=(s.recordar?RECORDAR_DIAS*24:SESION_HORAS)*3600*1000;
+    if(!s.token || Date.now()-s.time>max){ borrarSesion(); return null; }
+    return s;
+  }catch(e){ borrarSesion(); return null; }
+}
+function borrarSesion(){ try{ localStorage.removeItem(KEY); sessionStorage.removeItem(KEY); }catch(e){} }
+
+function abrirSesion(s,recordar){
+  guardarSesion(s,recordar); SESION=s;
+  var barra=$('carga'); barra.classList.add('on');
+  $('viewLogin').classList.add('salida');
+  setTimeout(function(){ renderDashboard(s); barra.classList.remove('on'); },900);
+}
+
+// ===== Panel de pilotos =====
+function renderDashboard(user){
+  SESION=user; detenerBrasas();
+  $('viewLogin').style.display='none';
+  $('viewDashboard').classList.add('on');
+  $('txtUser').textContent=user.email;
+  $('dashBienvenida').textContent='Hola, '+String(user.nombre).split(' ')[0];
+  var foto=(user.foto && /^https:\/\/[a-z0-9.-]*googleusercontent\.com\//i.test(user.foto))
+           ? '<img src="'+escapar(user.foto)+'" alt="" referrerpolicy="no-referrer">' : '';
+  $('userRol').innerHTML='Rol asignado<b>'+foto+escapar(user.rol)+'</b>';
+  $('txtFecha').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  var grid=$('gridPortales'); grid.innerHTML='';
+  PORTALES.forEach(function(p,i){
+    var esAdmin=(user.rol==='Administrador');
+    var autorizado=esAdmin || ((user.pilotos||[]).indexOf(p.id)>=0 && p.roles.indexOf(user.rol)>=0);
+    var activo=p.estado==='Activo' && autorizado;
+    var cls=activo?'ok':(p.estado==='En desarrollo'?'dev':'lock');
+    var est=(p.estado==='Activo')?'Piloto activo':p.estado, btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> No disponible';
+    if(p.estado==='Activo'){
+      if(autorizado){ btn='Abrir <svg class="i i-external-link" aria-hidden="true"><use href="#i-external-link"/></svg>'; }
+      else { est='Sin acceso'; btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> No autorizado'; }
     }
+    var t=document.createElement('article');
+    t.className='tarjeta'+(activo?'':' bloq');
+    t.style.animationDelay=(0.25+i*0.12)+'s';
+    t.innerHTML=
+      '<div class="t-cab"><div class="ficha">'+p.id+'</div>'+
+        '<div><span class="rotulo">'+p.categoria+'</span><h3>'+p.nombre+'</h3></div>'+
+        ic(p.icono,'ico')+'</div>'+
+      '<div class="t-cuerpo">'+p.descripcion+'</div>'+
+      '<div class="t-pie"><span class="estado '+cls+'">'+est+'</span>'+
+        '<a class="btn-abrir'+(activo?'':' off')+'" href="'+(activo?p.url:'#')+'" target="_blank" rel="noopener">'+btn+'</a></div>';
+    grid.appendChild(t);
+  });
 
-    // Auto-login si la sesión está abierta en esta pestaña
-    window.addEventListener('DOMContentLoaded', function() {
-      var s = sessionStorage.getItem('salfa_auth_session');
-      if (s) {
-        try {
-          renderDashboard(JSON.parse(s));
-        } catch(e) {}
-      }
+  if(user.rol==='Administrador'){ $('adminPanel').style.display='block'; cargarAdmin(); }
+}
+
+async function cerrarSesion(){
+  var s=SESION||leerSesion();
+  if(s && s.token){ await Promise.race([api('cerrar',{token:s.token}), new Promise(function(r){setTimeout(r,1500);})]); }
+  borrarSesion();
+  try{ localStorage.setItem(KEY_REC,'0'); }catch(e){}   // al salir, la próxima persona no hereda "Recordarme"
+  if(window.google && google.accounts && google.accounts.id && google.accounts.id.disableAutoSelect){ google.accounts.id.disableAutoSelect(); }
+  window.location.reload();
+}
+
+// ===== Gestión de accesos (solo administradores) =====
+var ADMIN={lista:[],vista:'pend'};
+var ROLES_ASIGNABLES=['Colaborador','Editor','Revisor','Visualizador'];
+async function cargarAdmin(){
+  $('adminLista').innerHTML='<div class="vacio">Cargando solicitudes…</div>';
+  var r=await api('listar',{token:SESION.token});
+  if(!r || !r.ok){ $('adminLista').innerHTML='<div class="vacio">'+escapar((r&&r.mensaje)||'No se pudo cargar la lista.')+'</div>'; return; }
+  ADMIN.lista=r.solicitudes||[]; pintarAdmin();
+}
+function adminVista(v){ ADMIN.vista=v; pintarAdmin(); }
+function pintarAdmin(){
+  var L=ADMIN.lista;
+  var pend=L.filter(function(x){return x.estado==='Pendiente';});
+  var apr=L.filter(function(x){return x.estado==='Aprobado';});
+  var cer=L.filter(function(x){return x.estado==='Rechazado'||x.estado==='Revocado';});
+  [['contPend',pend],['contApr',apr],['contCer',cer]].forEach(function(c){
+    $(c[0]).textContent=c[1].length; $(c[0]).classList.toggle('cero',c[1].length===0);
+  });
+  ['Pend','Apr','Cer'].forEach(function(n){ $('aTab'+n).classList.toggle('on',ADMIN.vista===n.toLowerCase()); });
+  var items=ADMIN.vista==='pend'?pend:(ADMIN.vista==='apr'?apr:cer);
+  var vacio={pend:'No hay solicitudes pendientes.',apr:'Aún no hay cuentas con acceso.',cer:'No hay solicitudes cerradas.'}[ADMIN.vista];
+  $('adminLista').innerHTML=items.length?items.map(tarjetaSol).join(''):'<div class="vacio">'+vacio+'</div>';
+}
+function tarjetaSol(x){
+  var clase=x.estado==='Aprobado'?'apr':(x.estado==='Pendiente'?'':'cer');
+  var marcados=(x.estado==='Aprobado'?x.pilotos:x.pilotosSolicitados)||[];
+  var rolSel=x.rol||'Colaborador';
+  var pil=PORTALES.map(function(p){
+    return '<label><input type="checkbox" value="'+p.id+'"'+(marcados.indexOf(p.id)>=0?' checked':'')+'> '+p.id+' · '+escapar(p.nombre)+'</label>';
+  }).join('');
+  var roles=ROLES_ASIGNABLES.map(function(r){ return '<option'+(r===rolSel?' selected':'')+'>'+r+'</option>'; }).join('');
+  var botones;
+  if(x.estado==='Pendiente') botones='<button type="button" class="btn-ap" data-acc="Aprobar">Aprobar acceso</button><button type="button" class="btn-re" data-acc="Rechazar">Rechazar</button>';
+  else if(x.estado==='Aprobado') botones='<button type="button" class="btn-ap" data-acc="Aprobar">Guardar cambios</button><button type="button" class="btn-re" data-acc="Revocar">Revocar acceso</button>';
+  else botones='<button type="button" class="btn-ap" data-acc="Aprobar">Aprobar de nuevo</button>';
+  var meta=(x.estado==='Pendiente'||!x.resuelto)?('Solicitado '+fecha(x.solicitado)):(x.estado+' '+fecha(x.resuelto)+(x.resueltoPor?' · '+escapar(x.resueltoPor):''));
+  return '<article class="sol '+clase+'" data-email="'+escapar(x.email)+'">'+
+    '<div class="sol-cab"><div><h4>'+escapar(x.nombre)+'</h4><div class="mail">'+escapar(x.email)+' · '+escapar(x.area)+'</div></div>'+
+    '<div class="meta">'+meta+'</div></div>'+
+    '<div class="motivo">'+escapar(x.motivo)+'</div>'+
+    '<div class="sol-ctrl"><div><span class="t">Rol</span><select>'+roles+'</select></div>'+
+    '<div><span class="t">Pilotos autorizados</span><div class="pil-chk">'+pil+'</div></div></div>'+
+    '<div class="sol-acc">'+botones+'</div></article>';
+}
+document.addEventListener('click',async function(ev){
+  var b=ev.target.closest && ev.target.closest('#adminLista button[data-acc]'); if(!b) return;
+  var art=b.closest('.sol'), email=art.getAttribute('data-email'), decision=b.getAttribute('data-acc');
+  if(decision==='Revocar' && !confirm('¿Revocar el acceso de '+email+'? Perderá su sesión de inmediato.')) return;
+  if(decision==='Rechazar' && !confirm('¿Rechazar la solicitud de '+email+'?')) return;
+  var rol=art.querySelector('select').value;
+  var pilotos=Array.prototype.map.call(art.querySelectorAll('.pil-chk input:checked'),function(i){return i.value;});
+  b.disabled=true;
+  var r=await api('resolver',{token:SESION.token,email:email,decision:decision,rol:rol,pilotos:pilotos});
+  if(!r||!r.ok){ b.disabled=false; toast((r&&r.mensaje)||'No se pudo completar la acción.'); return; }
+  toast({Aprobar:'Acceso aprobado para ',Rechazar:'Solicitud rechazada: ',Revocar:'Acceso revocado a '}[decision]+email);
+  cargarAdmin();
+});
+
+// ===== Brasas (partículas ascendentes en la portada) =====
+var rafId=null;
+function iniciarBrasas(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c=$('brasas'), ctx=c.getContext('2d'), tactil=window.matchMedia('(pointer:coarse)').matches,
+      dpr=Math.min(window.devicePixelRatio||1,tactil?1.5:2), W,H, ps=[];
+  var colores=['226,59,66','200,36,43','176,30,36','255,140,110'];
+  function medir(){ W=c.clientWidth; H=c.clientHeight; c.width=W*dpr; c.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  function nueva(inicio){
+    return { x:Math.random()*W*0.85, y:inicio?Math.random()*H:H+10, r:Math.random()*1.8+0.6,
+      vy:Math.random()*0.55+0.25, vx:(Math.random()-0.3)*0.25, fase:Math.random()*6.28,
+      vida:1, dec:Math.random()*0.0025+0.0012, col:colores[Math.floor(Math.random()*colores.length)] };
+  }
+  medir(); window.addEventListener('resize',medir);
+  var n=Math.round(Math.min(70, W/18)*(tactil?0.6:1));
+  for(var i=0;i<n;i++) ps.push(nueva(true));
+  function cuadro(){
+    ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='lighter';
+    ps.forEach(function(p,i){
+      p.fase+=0.03; p.y-=p.vy; p.x+=p.vx+Math.sin(p.fase)*0.25; p.vida-=p.dec;
+      if(p.vida<=0 || p.y<-10){ ps[i]=nueva(false); return; }
+      var a=Math.max(0,p.vida)*0.85*(0.6+0.4*Math.sin(p.fase*2));
+      var g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
+      g.addColorStop(0,'rgba('+p.col+','+a+')'); g.addColorStop(1,'rgba('+p.col+',0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*5,0,6.283); ctx.fill();
     });
-  </script>
+    rafId=requestAnimationFrame(cuadro);
+  }
+  cuadro();
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){ cancelAnimationFrame(rafId); rafId=null; }
+    else if(rafId===null && $('viewLogin').style.display!=='none'){ cuadro(); }
+  });
+}
+function detenerBrasas(){ if(rafId){ cancelAnimationFrame(rafId); rafId=-1; } }
+
+// ===== Contacto =====
+var _ctAbiertoEn=0, _ctFoco=null;
+function abrirContacto(){
+  _ctFoco=document.activeElement;
+  $('contactoForm').style.display='block'; $('contactoOk').style.display='none';
+  $('ctError').classList.remove('on'); $('ctDemo').style.display=MODO_DEMO?'block':'none';
+  var s=SESION||{};
+  if(!$('ctNombre').value) $('ctNombre').value=s.nombre||CRED.nombre||'';
+  if(!$('ctEmail').value) $('ctEmail').value=s.email||CRED.email||'';
+  $('ctCuenta').textContent=$('ctMensaje').value.length+' / 1000';
+  $('modalContacto').classList.add('on'); document.body.classList.add('modal-abierto');
+  _ctAbiertoEn=Date.now();
+  setTimeout(function(){ ($('ctNombre').value?$('ctMensaje'):$('ctNombre')).focus(); },60);
+}
+function cerrarContacto(){
+  $('modalContacto').classList.remove('on'); document.body.classList.remove('modal-abierto');
+  if(_ctFoco && _ctFoco.focus) _ctFoco.focus();
+}
+function errorContacto(m){ var e=$('ctError'); e.classList.remove('on'); void e.offsetWidth; e.textContent=m; e.classList.add('on'); }
+async function enviarContacto(ev){
+  ev.preventDefault();
+  var nombre=$('ctNombre').value.trim(), email=$('ctEmail').value.trim(), motivo=$('ctMotivo').value, mensaje=$('ctMensaje').value.trim();
+  $('ctError').classList.remove('on');
+  if(!nombre){ errorContacto('Escribe tu nombre.'); $('ctNombre').focus(); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ errorContacto('Escribe un correo válido para poder responderte.'); $('ctEmail').focus(); return; }
+  if(mensaje.length<10){ errorContacto('Escribe un mensaje de al menos 10 caracteres.'); $('ctMensaje').focus(); return; }
+  var b=$('btnCt'); b.disabled=true;
+  var r=await api('contacto',{nombre:nombre,email:email,motivo:motivo,mensaje:mensaje,web:$('ctWeb').value,t:Date.now()-_ctAbiertoEn});
+  b.disabled=false;
+  if(!r||!r.ok){ errorContacto((r&&r.mensaje)||'No se pudo enviar el mensaje. Intenta de nuevo.'); return; }
+  $('ctMensaje').value=''; $('ctWeb').value='';
+  $('contactoForm').style.display='none'; $('contactoOk').style.display='block';
+}
+document.addEventListener('input',function(e){ if(e.target&&e.target.id==='ctMensaje') $('ctCuenta').textContent=e.target.value.length+' / 1000'; });
+document.addEventListener('keydown',function(e){
+  var m=$('modalContacto'); if(!m.classList.contains('on')) return;
+  if(e.key==='Escape'){ cerrarContacto(); return; }
+  if(e.key==='Tab'){   // mantiene el foco dentro del cuadro de contacto
+    var f=Array.prototype.filter.call(m.querySelectorAll('button,input,select,textarea,a[href]'),function(x){ return x.offsetParent!==null && x.tabIndex!==-1 && !x.disabled; });
+    if(!f.length) return;
+    var p=f[0], u=f[f.length-1];
+    if(e.shiftKey && document.activeElement===p){ e.preventDefault(); u.focus(); }
+    else if(!e.shiftKey && document.activeElement===u){ e.preventDefault(); p.focus(); }
+  }
+});
+
+// ===== Arranque =====
+window.addEventListener('DOMContentLoaded',async function(){
+  var s=leerSesion();
+  if(s && (API_OK||MODO_DEMO)){
+    cargando(true,'Verificando acceso…');
+    var r=await api('validar',{token:s.token});
+    cargando(false);
+    if(r && r.ok && r.estado==='Aprobado'){
+      s.rol=r.rol; s.pilotos=r.pilotos||[]; s.nombre=r.nombre||s.nombre; s.email=r.email||s.email;
+      guardarSesion(s,s.recordar,true);
+      renderDashboard(s); return;
+    }
+    iniciarBrasas(); prepararIngreso();
+    if(r && r.red){ error(r.mensaje); return; }
+    borrarSesion();
+    error('Tu sesión expiró o tu acceso ya no está vigente. Ingresa de nuevo.');
+    return;
+  }
+  iniciarBrasas(); prepararIngreso();
+});
+</script>
+
+
 </body>
 </html>
