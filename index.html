@@ -545,16 +545,16 @@ html,body{height:100%}
         </div>
         <button type="submit" class="btn-ingresar">Ingresar <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
       </form>
-      <div class="separador"><span>o</span></div>
-      <div class="google-wrap" id="googleBtn"></div>
-      <p class="cambio">¿No tienes cuenta? <button type="button" class="enlace fuerte" onclick="irPane('Registro')">Regístrate</button></p>
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--linea);text-align:center">
+        <p class="cambio" style="margin:0">¿No tienes acceso? <button type="button" class="enlace fuerte" onclick="irPane('Registro')">Solicitar acceso</button></p>
+      </div>
     </div>
 
-    <!-- ===== Crear cuenta ===== -->
+    <!-- ===== Solicitar acceso a portales ===== -->
     <div id="paneRegistro" style="display:none">
-      <span class="rotulo">Nueva cuenta</span>
-      <h2>Crear cuenta</h2>
-      <p class="sub">Los pilotos no están abiertos a todos: un administrador aprueba cada cuenta. Primero confirmaremos tu correo.</p>
+      <span class="rotulo">Solicitud de acceso</span>
+      <h2>Solicitar acceso a portales</h2>
+      <p class="sub">Los portales de pilotaje son de uso corporativo restringido. Completa tus datos para que el administrador evalúe tu habilitación.</p>
       <form onsubmit="registrarse(event)" novalidate>
         <div class="campo">
           <label for="rgNombre">Nombre completo</label>
@@ -585,13 +585,11 @@ html,body{height:100%}
         </fieldset>
         <div class="campo">
           <label for="rgMotivo">¿Para qué necesitas el acceso?</label>
-          <textarea id="rgMotivo" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás."></textarea>
+          <textarea id="rgMotivo" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás y en qué área o proyecto colaboras."></textarea>
         </div>
-        <button type="submit" class="btn-ingresar">Crear cuenta <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+        <button type="submit" class="btn-ingresar">Enviar Solicitud de Acceso <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
       </form>
-      <div class="separador"><span>o regístrate con</span></div>
-      <div class="google-wrap" id="googleBtnReg"></div>
-      <p class="cambio">¿Ya tienes cuenta? <button type="button" class="enlace fuerte" onclick="irPane('Login')">Inicia sesión</button></p>
+      <p class="cambio" style="margin-top:20px;text-align:center">¿Ya tienes acceso habilitado? <button type="button" class="enlace fuerte" onclick="irPane('Login')">Inicia sesión</button></p>
     </div>
 
     <!-- ===== Verificar correo ===== -->
@@ -800,6 +798,7 @@ html,body{height:100%}
     <div class="banda-der">
       <span class="fecha" id="txtFecha"></span>
       <span id="txtUser"></span>
+      <a id="btnIrAdmin" href="admin.html" class="btn-salir" style="display:none;background:var(--rojo);border-color:var(--rojo);text-decoration:none" title="Abrir Consola de Administración"><svg class="i i-shield" aria-hidden="true"><use href="#i-shield"/></svg> <span>Panel Admin</span></a>
       <button class="btn-salir" onclick="abrirContacto()" aria-label="Contacto"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg> <span class="txt-btn">Contacto</span></button>
       <button class="btn-salir" onclick="cerrarSesion()"><svg class="i i-power" aria-hidden="true"><use href="#i-power"/></svg> Salir</button>
     </div>
@@ -817,6 +816,18 @@ html,body{height:100%}
   </section>
 
   <main class="contenido">
+    <div id="bannerAdminHub" style="display:none;margin-bottom:28px;background:#fff;border-left:6px solid var(--rojo);padding:20px 28px;box-shadow:0 4px 14px rgba(0,0,0,0.06);align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-family:var(--f-rotulo);font-weight:700;font-size:12px;color:var(--rojo);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">Perfil Administrador Central</div>
+        <h3 style="font-family:var(--f-titulo);font-weight:800;font-size:18px;text-transform:uppercase;color:var(--grafito)">Consola Central de Administración</h3>
+        <p style="color:var(--gris);font-size:14.5px;margin-top:2px">Gestiona accesos por portal, revisa solicitudes y habilita colaboradores con autocompletado institucional.</p>
+      </div>
+      <a href="admin.html" class="btn-pri" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px;padding:12px 22px;font-size:14px">
+        <svg class="i i-shield" aria-hidden="true"><use href="#i-shield"/></svg>
+        Abrir Consola de Administración →
+      </a>
+    </div>
+
     <div class="rotulo">Pilotos disponibles</div>
     <div class="grid" id="gridPortales"></div>
 
@@ -951,7 +962,7 @@ async function demoApi(accion,d){
     var rv=revisarCodigo('registro',email,String(d.codigo||'')); dbGuardar(db);
     if(rv==='vencido') return {ok:false,mensaje:'El código venció. Solicita uno nuevo.'};
     if(rv!=='ok') return {ok:false,mensaje:'Código incorrecto. Revisa tu correo e inténtalo de nuevo.'};
-    var a1=acc(email); if(!a1) return {ok:false,mensaje:'No encontramos la solicitud. Regístrate de nuevo.'};
+    var a1=acc(email); if(!a1) return {ok:false,mensaje:'No encontramos la solicitud. Envía una nueva solicitud de acceso.'};
     if(a1.estado==='SinVerificar'){
       if(admin){ a1.estado='Aprobado'; a1.rol='Administrador'; a1.pilotos=todos; a1.resuelto=iso; a1.resueltoPor='automático'; }
       else { a1.estado='Pendiente'; a1.solicitado=iso; }
@@ -1063,7 +1074,6 @@ var GLOGO='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M
 function irPane(p){
   PANES.forEach(function(n){ var e=$('pane'+n); if(e) e.style.display=(n===p)?'block':'none'; });
   error('');
-  if(p==='Login'||p==='Registro') pintarBotonesGoogle();
   var f={Login:'lgEmail',Registro:'rgNombre',Olvide:'olEmail',Verificar:'vfCodigo',Restablecer:'rsCodigo'}[p];
   // El cursor se coloca solo en equipos con mouse; en celulares evita abrir el teclado sin querer
   if(f && window.matchMedia('(hover:hover)').matches) setTimeout(function(){ var e=$(f); if(e) e.focus(); },60);
@@ -1121,10 +1131,10 @@ function prepararIngreso(){
   }
   pilotosCheck('rgPilotos');
   irPane('Login');
-  prepararGoogle();
 }
 
-// ===== Google (opcional: aparece completo cuando está configurado) =====
+// ===== Ingreso Corporativo =====
+function prepararGoogle(){ /* Deshabilitado */ }
 var _gw={};
 function prepararGoogle(){
   if(!GOOGLE_LISTO){
@@ -1377,7 +1387,10 @@ function renderDashboard(user){
     grid.appendChild(t);
   });
 
-  if(user.rol==='Administrador'){ $('adminPanel').style.display='block'; cargarAdmin(); }
+  if(user.rol==='Administrador'){
+    if($('btnIrAdmin')) $('btnIrAdmin').style.display='inline-flex';
+    if($('bannerAdminHub')) $('bannerAdminHub').style.display='flex';
+  }
 }
 
 async function cerrarSesion(){

@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Consola de Administración · Ecosistema de Portales Salfa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E2229">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rojo:#B01E24;
+  --rojo-oscuro:#951A1F;
+  --rojo-claro:#E23B42;
+  --burdeos:#5E0F13;
+  --grafito:#1E2229;
+  --grafito-medio:#2A303A;
+  --grafito-claro:#3A414A;
+  --gris:#5A6771;
+  --linea:#D3D7DC;
+  --linea-suave:#E5E8EB;
+  --fondo:#EEF0F2;
+  --blanco:#FFFFFF;
+  --verde:#146A38;
+  --verde-bg:#E8F5E9;
+  --ambar:#D97706;
+  --ambar-bg:#FEF3C7;
+  --azul:#1D4ED8;
+  --azul-bg:#EFF6FF;
+  --f-titulo:'Montserrat',sans-serif;
+  --f-cuerpo:'Barlow',Arial,sans-serif;
+  --f-rotulo:'Barlow Condensed',Arial,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--f-cuerpo);
+  background:var(--fondo);
+  color:var(--grafito);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* Barra superior */
+.linea-top{position:fixed;top:0;left:0;right:0;height:5px;background:var(--rojo);z-index:100}
+.header{
+  background:var(--grafito);
+  color:#fff;
+  height:70px;
+  margin-top:5px;
+  padding:0 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:3px solid var(--rojo);
+  box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  position:sticky;
+  top:5px;
+  z-index:90;
+}
+.header-left{display:flex;align-items:center;gap:20px}
+.header-left .logo{height:30px;width:auto}
+.badge-admin{
+  background:rgba(176,30,36,0.2);
+  border:1px solid rgba(226,59,66,0.6);
+  color:#FF8A8E;
+  font-family:var(--f-rotulo);
+  font-weight:700;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  padding:4px 10px;
+  border-radius:2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.header-right{display:flex;align-items:center;gap:14px}
+.btn-nav{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.25);
+  color:#fff;
+  padding:8px 16px;
+  cursor:pointer;
+  font-family:var(--f-cuerpo);
+  font-weight:600;
+  font-size:13.5px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  transition:all .2s;
+}
+.btn-nav:hover{background:rgba(255,255,255,0.1);border-color:#fff}
+.btn-nav.pri{background:var(--rojo);border-color:var(--rojo)}
+.btn-nav.pri:hover{background:var(--rojo-oscuro)}
+
+/* Contenedor principal */
+.main-wrapper{
+  max-width:1300px;
+  width:100%;
+  margin:0 auto;
+  padding:32px 24px 64px;
+  flex:1;
+}
+
+/* Banner de cabecera */
+.admin-banner{
+  background:linear-gradient(135deg, #2A303A 0%, #1A1D22 65%, #0F1113 100%);
+  color:#fff;
+  padding:32px 36px;
+  box-shadow:0 12px 30px -10px rgba(0,0,0,0.3);
+  margin-bottom:28px;
+  border-left:6px solid var(--rojo);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.admin-banner h1{
+  font-family:var(--f-titulo);
+  font-weight:800;
+  font-size:28px;
+  text-transform:uppercase;
+  letter-spacing:-0.5px;
+  margin-bottom:6px;
+}
+.admin-banner p{color:#C9CDD3;font-size:15.5px}
+.admin-meta{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  text-align:right;
+}
+.admin-meta .nombre{font-family:var(--f-titulo);font-weight:700;font-size:16px;color:#fff}
+.admin-meta .correo{font-size:13.5px;color:#9AA2AB}
+
+/* KPI Cards */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:18px;
+  margin-bottom:28px;
+}
+.kpi-card{
+  background:#fff;
+  padding:20px 24px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  border-top:4px solid var(--rojo);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.kpi-num{
+  font-family:var(--f-titulo);
+  font-weight:800;
+  font-size:32px;
+  color:var(--grafito);
+  line-height:1;
+}
+.kpi-label{
+  font-family:var(--f-rotulo);
+  font-weight:700;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:var(--gris);
+  margin-top:6px;
+}
+.kpi-icon{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:rgba(176,30,36,0.08);
+  color:var(--rojo);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Pestañas de navegación */
+.tabs-container{
+  display:flex;
+  background:#fff;
+  border-bottom:2px solid var(--linea);
+  margin-bottom:24px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.04);
+}
+.tab-btn{
+  padding:16px 24px;
+  font-family:var(--f-titulo);
+  font-weight:700;
+  font-size:13.5px;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  color:var(--gris);
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:3px solid transparent;
+  margin-bottom:-2px;
+  transition:all .2s;
+}
+.tab-btn:hover{color:var(--grafito);background:#F8F9FA}
+.tab-btn.active{
+  color:var(--rojo);
+  border-bottom-color:var(--rojo);
+  background:#fff;
+}
+.tab-badge{
+  background:var(--linea);
+  color:var(--grafito);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 7px;
+  border-radius:10px;
+}
+.tab-btn.active .tab-badge{
+  background:var(--rojo);
+  color:#fff;
+}
+
+/* Paneles de Contenido */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Tarjetas y Secciones */
+.panel-card{
+  background:#fff;
+  padding:28px 32px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);
+  margin-bottom:24px;
+}
+.panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--linea-suave);
+  flex-wrap:wrap;
+  gap:12px;
+}
+.panel-title{
+  font-family:var(--f-titulo);
+  font-weight:800;
+  font-size:18px;
+  text-transform:uppercase;
+  color:var(--grafito);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* Formulario con Autocompletado Predictivo */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  position:relative;
+}
+.form-group.full{grid-column:1 / -1}
+.form-group label{
+  font-family:var(--f-rotulo);
+  font-weight:700;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--grafito-claro);
+}
+.form-input{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--linea);
+  background:#FAFBFB;
+  font:15px var(--f-cuerpo);
+  color:var(--grafito);
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.form-input:focus{
+  border-color:var(--rojo);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(176,30,36,0.12);
+}
+
+/* DROPDOWN DE AUTOCOMPLETADO PREDICTIVO (ESTILO OUTLOOK / GMAIL) */
+.autocomplete-container{position:relative}
+.autocomplete-dropdown{
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  right:0;
+  background:#fff;
+  border:1px solid var(--linea);
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+  max-height:280px;
+  overflow-y:auto;
+  z-index:1000;
+  display:none;
+}
+.autocomplete-dropdown.show{display:block}
+.autocomplete-item{
+  padding:10px 14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  border-bottom:1px solid var(--linea-suave);
+  transition:background .15s;
+}
+.autocomplete-item:hover, .autocomplete-item.active{
+  background:#F5F7F9;
+}
+.auto-avatar{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--grafito);
+  color:#fff;
+  font-family:var(--f-titulo);
+  font-weight:700;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.auto-info{display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.auto-name{font-weight:700;font-size:14px;color:var(--grafito);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.auto-meta{font-size:12.5px;color:var(--gris);display:flex;gap:8px}
+.auto-domain{color:var(--rojo);font-weight:600}
+
+/* Botones de acción */
+.btn-submit{
+  background:var(--rojo);
+  color:#fff;
+  border:none;
+  padding:13px 28px;
+  font-family:var(--f-titulo);
+  font-weight:700;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:background .2s;
+}
+.btn-submit:hover{background:var(--rojo-oscuro)}
+
+/* Tabla de Solicitudes y Usuarios */
+.table-responsive{overflow-x:auto}
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14.5px;
+  text-align:left;
+}
+.data-table th{
+  background:#F4F6F8;
+  padding:12px 16px;
+  font-family:var(--f-rotulo);
+  font-weight:700;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--grafito-claro);
+  border-bottom:2px solid var(--linea);
+}
+.data-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--linea-suave);
+  vertical-align:middle;
+}
+.data-table tr:hover td{background:#F9FAFB}
+
+/* Badges de estado y roles */
+.badge-role{
+  display:inline-block;
+  padding:3px 9px;
+  font-family:var(--f-rotulo);
+  font-weight:700;
+  font-size:11.5px;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  border-radius:2px;
+}
+.badge-role.admin{background:#FEE2E2;color:var(--rojo)}
+.badge-role.editor{background:var(--azul-bg);color:var(--azul)}
+.badge-role.colab{background:#E0E7FF;color:#3730A3}
+.badge-role.revisor{background:var(--ambar-bg);color:var(--ambar)}
+.badge-role.visor{background:#F3F4F6;color:var(--gris)}
+
+.badge-status{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 8px;
+  font-size:12px;
+  font-weight:600;
+  border-radius:12px;
+}
+.badge-status.aprobado{background:var(--verde-bg);color:var(--verde)}
+.badge-status.pendiente{background:var(--ambar-bg);color:var(--ambar)}
+.badge-status.rechazado{background:#FEE2E2;color:var(--rojo)}
+
+/* Controles de portal en tabla */
+.portales-pills{display:flex;gap:6px;flex-wrap:wrap}
+.portal-pill{
+  font-size:11px;
+  font-weight:700;
+  padding:2px 7px;
+  background:#EDF2F7;
+  color:var(--grafito);
+  border:1px solid var(--linea);
+  border-radius:3px;
+}
+
+/* Acciones en fila */
+.actions-cell{display:flex;gap:8px;align-items:center}
+.btn-action{
+  padding:6px 12px;
+  font-size:12.5px;
+  font-weight:600;
+  cursor:pointer;
+  border:1px solid var(--linea);
+  background:#fff;
+  color:var(--grafito);
+  transition:all .15s;
+}
+.btn-action:hover{background:#F3F4F6;border-color:var(--gris)}
+.btn-action.approve{background:var(--verde);color:#fff;border-color:var(--verde)}
+.btn-action.approve:hover{background:#0F512B}
+.btn-action.reject{background:#fff;color:var(--rojo);border-color:#FCA5A5}
+.btn-action.reject:hover{background:#FEE2E2}
+
+/* SVG icons */
+.i{width:16px;height:16px;vertical-align:middle;fill:currentColor}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;background:var(--grafito);color:#fff;
+  padding:14px 22px;border-left:5px solid var(--rojo);box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  font-size:14.5px;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s var(--ease);
+}
+.toast.on{transform:translateY(0);opacity:1}
+
+/* Pantalla de acceso denegado */
+.denied-screen{
+  display:none;
+  max-width:540px;
+  margin:100px auto;
+  background:#fff;
+  padding:40px 32px;
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.1);
+  border-top:6px solid var(--rojo);
+}
+.denied-screen.show{display:block}
+.denied-icon{
+  width:64px;height:64px;border-radius:50%;background:#FEE2E2;color:var(--rojo);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;
+}
+.denied-screen h2{font-family:var(--f-titulo);font-size:22px;margin-bottom:10px;text-transform:uppercase}
+.denied-screen p{color:var(--gris);font-size:15px;line-height:1.5;margin-bottom:24px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3"/><path d="m16 7 3 3"/><path d="m14 9 2 2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M9.9 4.24A9.1 9.1 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2"/><path d="M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 0 1-4.2-4.2"/><path d="m2 2 20 20"/></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4A2 2 0 0 0 7 17.8V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4A2 2 0 0 0 17 6.2V2"/></symbol>
+<symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+<symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
+<symbol id="i-rotate-cw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
+<symbol id="i-contact" viewBox="0 0 24 24"><path d="M16 2v2"/><path d="M17.9 22a6 6 0 0 0-11.8 0"/><path d="M8 2v2"/><circle cx="12" cy="12" r="4"/><rect x="3" y="4" width="18" height="18" rx="2"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7z"/><path d="M12 22V12"/><path d="m3.3 7 7.7 4.7a2 2 0 0 0 2 0L20.7 7"/><path d="m7.5 4.3 9 5.2"/></symbol>
+</defs></svg>
+
+<div class="linea-top"></div>
+
+<!-- PANTALLA ACCESO DENEGADO (SI NO ES sjroca@salfamontajes.com) -->
+<div id="pantallaDenegado" class="denied-screen">
+  <div class="denied-icon"><svg class="i" style="width:32px;height:32px"><use href="#i-ban"/></svg></div>
+  <h2>Acceso Restringido</h2>
+  <p>Esta Consola de Administración es de uso exclusivo para la Jefatura y Administrador Central de Salfa Montajes. Tu cuenta no cuenta con permisos administrativos.</p>
+  <a href="index.html" class="btn-submit" style="text-decoration:none">Volver al Hub Principal</a>
+</div>
+
+<!-- VISTA PRINCIPAL DE ADMINISTRACIÓN -->
+<div id="vistaAdmin" style="display:none;flex-direction:column;min-height:100vh">
+
+  <header class="header">
+    <div class="header-left">
+      <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes">
+      <div class="badge-admin">
+        <svg class="i" style="width:14px;height:14px"><use href="#i-shield"/></svg>
+        Consola Central de Administración
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="btn-nav">
+        <svg class="i"><use href="#i-arrow-left"/></svg>
+        Volver al Hub de Portales
+      </a>
+      <button type="button" class="btn-nav" onclick="cerrarSesionAdmin()">
+        <svg class="i"><use href="#i-power"/></svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <!-- Banner superior -->
+    <div class="admin-banner">
+      <div>
+        <h1>Gestión Integral de Accesos y Portales</h1>
+        <p>Control centralizado de colaboradores, perfiles de seguridad y permisos de pilotaje Salfa Montajes.</p>
+      </div>
+      <div class="admin-meta">
+        <span class="nombre" id="txtAdminNombre">Sebastián Roca</span>
+        <span class="correo" id="txtAdminCorreo">sjroca@salfamontajes.com · Administrador General</span>
+      </div>
+    </div>
+
+    <!-- Indicadores KPI -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-num" id="kpiUsuarios">0</div>
+          <div class="kpi-label">Colaboradores Habilitados</div>
+        </div>
+        <div class="kpi-icon"><svg class="i" style="width:24px;height:24px"><use href="#i-user"/></svg></div>
+      </div>
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-num" id="kpiPendientes" style="color:var(--rojo)">0</div>
+          <div class="kpi-label">Solicitudes Pendientes</div>
+        </div>
+        <div class="kpi-icon" style="color:var(--ambar);background:var(--ambar-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-hourglass"/></svg></div>
+      </div>
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-num" id="kpiPortales">3</div>
+          <div class="kpi-label">Portales en Catálogo</div>
+        </div>
+        <div class="kpi-icon"><svg class="i" style="width:24px;height:24px"><use href="#i-network"/></svg></div>
+      </div>
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-num" id="kpiDirectorio">0</div>
+          <div class="kpi-label">Contactos en Directorio Salfa</div>
+        </div>
+        <div class="kpi-icon" style="color:var(--azul);background:var(--azul-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-contact"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Pestañas principales -->
+    <div class="tabs-container">
+      <button type="button" class="tab-btn active" onclick="cambiarTab('solicitudes')">
+        <svg class="i"><use href="#i-user"/></svg>
+        Control de Accesos y Usuarios
+        <span class="tab-badge" id="badgeTotalAccesos">0</span>
+      </button>
+      <button type="button" class="tab-btn" onclick="cambiarTab('habilitar')">
+        <svg class="i"><use href="#i-user-plus"/></svg>
+        + Habilitar Colaborador (Predictivo)
+      </button>
+      <button type="button" class="tab-btn" onclick="cambiarTab('directorio')">
+        <svg class="i"><use href="#i-contact"/></svg>
+        Directorio Salfa Montajes
+        <span class="tab-badge" id="badgeDirectorio">0</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: SOLICITUDES Y USUARIOS -->
+    <section id="tab-solicitudes" class="tab-panel active">
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="panel-title">
+            <svg class="i" style="color:var(--rojo)"><use href="#i-shield"/></svg>
+            Colaboradores y Permisos por Portal
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button type="button" class="btn-action" onclick="cargarTodo()"><svg class="i"><use href="#i-rotate-cw"/></svg> Refrescar</button>
+            <button type="button" class="btn-submit" style="padding:8px 16px;font-size:13px" onclick="cambiarTab('habilitar')">+ Nuevo Acceso</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Colaborador</th>
+                <th>Área / Cargo</th>
+                <th>Estado</th>
+                <th>Rol Asignado</th>
+                <th>Portales Autorizados</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaUsuariosBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: HABILITAR COLABORADOR CON AUTOCOMPLETADO PREDICTIVO -->
+    <section id="tab-habilitar" class="tab-panel">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-head">
+          <div class="panel-title">
+            <svg class="i" style="color:var(--rojo)"><use href="#i-user-plus"/></svg>
+            Habilitar Acceso con Autocompletado Predictivo
+          </div>
+        </div>
+        <p style="color:var(--gris);font-size:14.5px;margin-bottom:22px;line-height:1.5">
+          Escribe el nombre o correo del colaborador. El sistema buscará coincidencias en el directorio institucional de Salfa Montajes completando los datos automáticamente, tal como al redactar un correo corporativo.
+        </p>
+
+        <form id="formHabilitar" onsubmit="ejecutarHabilitar(event)" class="form-grid">
+          <!-- Campo con Autocompletado -->
+          <div class="form-group full autocomplete-container">
+            <label for="inputCorreo">Correo Institucional Salfa (@salfamontajes.com)</label>
+            <input type="text" id="inputCorreo" class="form-input" placeholder="Comienza a escribir: nombre, apellido o usuario..." autocomplete="off" required oninput="manejarInputCorreo(this.value)">
+            <!-- Menú flotante desplegable -->
+            <div id="dropdownCorreo" class="autocomplete-dropdown"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputNombre">Nombre Completo</label>
+            <input type="text" id="inputNombre" class="form-input" placeholder="Ej: Patricia González Valdés" required>
+          </div>
+
+          <div class="form-group">
+            <label for="inputArea">Área / Gerencia / Cargo</label>
+            <input type="text" id="inputArea" class="form-input" placeholder="Ej: Oficina Técnica / Jefe de Calidad" required>
+          </div>
+
+          <div class="form-group">
+            <label for="selectRol">Perfil / Rol en Portales</label>
+            <select id="selectRol" class="form-input">
+              <option value="Colaborador">Colaborador (Acceso estándar)</option>
+              <option value="Visualizador">Visualizador (Solo lectura)</option>
+              <option value="Editor">Editor (Carga y edición de datos)</option>
+              <option value="Revisor">Revisor (Aprobación técnica)</option>
+              <option value="Administrador">Administrador (Control total)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Portales Habilitados</label>
+            <div id="checkPortalesHabilitar" style="display:flex;flex-direction:column;gap:8px;padding-top:6px">
+              <!-- Render de portales -->
+            </div>
+          </div>
+
+          <div class="form-group full" style="margin-top:10px">
+            <button type="submit" class="btn-submit">
+              <svg class="i"><use href="#i-check"/></svg>
+              Guardar y Habilitar Colaborador
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: DIRECTORIO CORPORATIVO SALFA -->
+    <section id="tab-directorio" class="tab-panel">
+      <div class="panel-card">
+        <div class="panel-head">
+          <div class="panel-title">
+            <svg class="i" style="color:var(--rojo)"><use href="#i-contact"/></svg>
+            Directorio de Colaboradores Salfa Montajes
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="text" id="buscarDirectorio" class="form-input" placeholder="Buscar por nombre o correo..." style="width:260px;padding:8px 12px" oninput="filtrarDirectorio(this.value)">
+            <button type="button" class="btn-action" onclick="abrirModalImportar()"><svg class="i"><use href="#i-upload"/></svg> Importar / Pegar Lista</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo Corporativo</th>
+                <th>Área / Cargo</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tablaDirectorioBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MODAL IMPORTAR DIRECTORIO -->
+<div id="modalImportar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)cerrarModalImportar()">
+  <div style="background:#fff;max-width:580px;width:100%;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,0.4);border-top:5px solid var(--rojo)">
+    <h3 style="font-family:var(--f-titulo);font-size:18px;margin-bottom:8px;text-transform:uppercase">Importar Lista de Contactos Salfa</h3>
+    <p style="font-size:14px;color:var(--gris);margin-bottom:16px;line-height:1.4">
+      Pega un listado de correos o nombres (uno por línea o separados por coma). Puedes copiar directamente desde un correo de Outlook o un archivo Excel.
+    </p>
+    <textarea id="textoImportar" class="form-input" rows="8" placeholder="Ejemplo:&#10;juan.perez@salfamontajes.com, Juan Pérez, Oficina Técnica&#10;maria.soto@salfamontajes.com, María Soto, Control de Gestión"></textarea>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:18px">
+      <button type="button" class="btn-action" onclick="cerrarModalImportar()">Cancelar</button>
+      <button type="button" class="btn-submit" onclick="procesarImportacion()">Guardar en Directorio</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+var ADMIN_CORPORATIVO = 'sjroca@salfamontajes.com';
+var DB_KEY = 'salfa_corp_db_v2';
+var DIR_KEY = 'salfa_directorio_contactos_v1';
+var AUTH_KEY = 'salfa_auth_session';
+
+var PORTALES = [
+  { id:'01', nombre:'Mapa de Procesos', url:'https://sjroca-salfa.github.io/portal-mapa-procesos/' },
+  { id:'02', nombre:'Control de CV', url:'#' },
+  { id:'03', nombre:'Gestión AWP & Construcción', url:'#' }
+];
+
+// Directorio base inicial de Salfa Montajes para autocompletado instantáneo
+var DIRECTORIO_BASE = [
+  { nombre:'Sebastián Roca', email:'sjroca@salfamontajes.com', area:'Jefatura de Procesos & Mejora Continua' },
+  { nombre:'Carlos Morales', email:'cmorales@salfamontajes.com', area:'Gerencia de Operaciones' },
+  { nombre:'Patricia Soto', email:'psoto@salfamontajes.com', area:'Control de Gestión y Planificación' },
+  { nombre:'Rodrigo Henríquez', email:'rhenriquez@salfamontajes.com', area:'Oficina Técnica Central' },
+  { nombre:'Daniela Contreras', email:'dcontreras@salfamontajes.com', area:'Aseguramiento de Calidad (QA/QC)' },
+  { nombre:'Mauricio Valenzuela', email:'mvalenzuela@salfamontajes.com', area:'Prevención de Riesgos y Medio Ambiente' },
+  { nombre:'Felipe Araya', email:'faraya@salfamontajes.com', area:'Ingeniería y Construcción AWP' },
+  { nombre:'Andrea Muñoz', email:'amunoz@salfamontajes.com', area:'Gestión de Personas y Dotación' }
+];
+
+function $(id){ return document.getElementById(id); }
+function toast(m){
+  var t=$('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); }, 3200);
+}
+
+// Lectura de DB
+function dbLeer(){
+  try{ return JSON.parse(localStorage.getItem(DB_KEY)) || {accesos:[],sesiones:{}}; }catch(e){ return {accesos:[],sesiones:{}}; }
+}
+function dbGuardar(d){ localStorage.setItem(DB_KEY, JSON.stringify(d)); }
+
+function directorioLeer(){
+  try{
+    var d = JSON.parse(localStorage.getItem(DIR_KEY));
+    if(d && Array.isArray(d) && d.length) return d;
+    localStorage.setItem(DIR_KEY, JSON.stringify(DIRECTORIO_BASE));
+    return DIRECTORIO_BASE;
+  }catch(e){ return DIRECTORIO_BASE; }
+}
+function directorioGuardar(list){ localStorage.setItem(DIR_KEY, JSON.stringify(list)); }
+
+// Validación de sesión de Administrador
+function verificarSesionAdmin(){
+  var raw = localStorage.getItem(AUTH_KEY);
+  if(!raw){ mostrarDenegado(); return false; }
+  try{
+    var s = JSON.parse(raw);
+    var email = (s.email||'').trim().toLowerCase();
+    if(email === ADMIN_CORPORATIVO || s.rol === 'Administrador'){
+      $('pantallaDenegado').classList.remove('show');
+      $('vistaAdmin').style.display = 'flex';
+      $('txtAdminNombre').textContent = s.nombre || 'Sebastián Roca';
+      $('txtAdminCorreo').textContent = email + ' · Administrador General';
+      return true;
+    }
+  }catch(e){}
+  mostrarDenegado();
+  return false;
+}
+
+function mostrarDenegado(){
+  $('pantallaDenegado').classList.add('show');
+  $('vistaAdmin').style.display = 'none';
+}
+
+function cerrarSesionAdmin(){
+  localStorage.removeItem(AUTH_KEY);
+  window.location.href = 'index.html';
+}
+
+// Navegación por pestañas
+function cambiarTab(nombre){
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  if(nombre === 'solicitudes'){
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    $('tab-solicitudes').classList.add('active');
+  } else if(nombre === 'habilitar'){
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    $('tab-habilitar').classList.add('active');
+    $('inputCorreo').focus();
+  } else if(nombre === 'directorio'){
+    document.querySelectorAll('.tab-btn')[2].classList.add('active');
+    $('tab-directorio').classList.add('active');
+    renderDirectorio();
+  }
+}
+
+// Carga de datos y KPIs
+function cargarTodo(){
+  var db = dbLeer();
+  var accesos = db.accesos || [];
+  var directorio = directorioLeer();
+
+  // Si no está el administrador en accesos, asegurarlo
+  var adm = accesos.find(function(x){ return x.email === ADMIN_CORPORATIVO; });
+  if(!adm){
+    accesos.unshift({
+      email: ADMIN_CORPORATIVO,
+      nombre: 'Sebastián Roca',
+      area: 'Jefatura de Procesos & Mejora Continua',
+      estado: 'Aprobado',
+      rol: 'Administrador',
+      pilotos: ['01','02','03'],
+      solicitado: new Date().toISOString(),
+      resuelto: new Date().toISOString(),
+      resueltoPor: 'Sistema'
+    });
+    db.accesos = accesos;
+    dbGuardar(db);
+  }
+
+  // KPIs
+  var aprobados = accesos.filter(function(x){ return x.estado === 'Aprobado'; });
+  var pendientes = accesos.filter(function(x){ return x.estado === 'Pendiente' || x.estado === 'SinVerificar'; });
+  $('kpiUsuarios').textContent = aprobados.length;
+  $('kpiPendientes').textContent = pendientes.length;
+  $('kpiPortales').textContent = PORTALES.length;
+  $('kpiDirectorio').textContent = directorio.length;
+  $('badgeTotalAccesos').textContent = accesos.length;
+  $('badgeDirectorio').textContent = directorio.length;
+
+  renderTablaUsuarios(accesos);
+  renderCheckPortales();
+  renderDirectorio();
+}
+
+function renderCheckPortales(){
+  $('checkPortalesHabilitar').innerHTML = PORTALES.map(function(p){
+    return '<label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer"><input type="checkbox" value="'+p.id+'" checked> <span style="font-weight:600">'+p.id+' · '+p.nombre+'</span></label>';
+  }).join('');
+}
+
+function renderTablaUsuarios(lista){
+  var tbody = $('tablaUsuariosBody');
+  if(!lista.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--gris)">No hay registros de usuarios.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = lista.map(function(u){
+    var stCls = u.estado === 'Aprobado' ? 'aprobado' : (u.estado === 'Pendiente' ? 'pendiente' : 'rechazado');
+    var rolCls = (u.rol === 'Administrador' ? 'admin' : (u.rol === 'Editor' ? 'editor' : (u.rol === 'Revisor' ? 'revisor' : 'colab')));
+    var pills = (u.pilotos || u.pilotosSolicitados || []).map(function(pid){
+      var port = PORTALES.find(function(p){ return p.id === pid; });
+      return '<span class="portal-pill">'+pid+' · '+(port ? port.nombre : pid)+'</span>';
+    }).join(' ') || '<span style="color:#999;font-size:12px">Ninguno</span>';
+
+    var btnAcciones = '';
+    if(u.email === ADMIN_CORPORATIVO){
+      btnAcciones = '<span style="font-size:12px;color:var(--gris);font-weight:600">Admin Maestro</span>';
+    } else if(u.estado === 'Pendiente'){
+      btnAcciones = '<button class="btn-action approve" onclick="resolverUsuario(\''+u.email+'\', \'Aprobar\')">Aprobar</button>' +
+                    '<button class="btn-action reject" onclick="resolverUsuario(\''+u.email+'\', \'Rechazar\')">Rechazar</button>';
+    } else if(u.estado === 'Aprobado'){
+      btnAcciones = '<button class="btn-action" onclick="editarUsuario(\''+u.email+'\')">Editar Permisos</button>' +
+                    '<button class="btn-action reject" onclick="resolverUsuario(\''+u.email+'\', \'Revocar\')">Revocar</button>';
+    } else {
+      btnAcciones = '<button class="btn-action approve" onclick="resolverUsuario(\''+u.email+'\', \'Aprobar\')">Reactivar</button>';
+    }
+
+    return '<tr>' +
+      '<td><b>'+escaparHtml(u.nombre)+'</b><br><span style="font-size:12.5px;color:var(--gris)">'+escaparHtml(u.email)+'</span></td>' +
+      '<td>'+escaparHtml(u.area || '—')+'</td>' +
+      '<td><span class="badge-status '+stCls+'">'+escaparHtml(u.estado)+'</span></td>' +
+      '<td><span class="badge-role '+rolCls+'">'+escaparHtml(u.rol || 'Colaborador')+'</span></td>' +
+      '<td><div class="portales-pills">'+pills+'</div></td>' +
+      '<td><div class="actions-cell">'+btnAcciones+'</div></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function escaparHtml(t){
+  return String(t||'').replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function resolverUsuario(email, decision){
+  if(decision === 'Revocar' && !confirm('¿Deseas revocar el acceso a '+email+'?')) return;
+  if(decision === 'Rechazar' && !confirm('¿Deseas rechazar la solicitud de '+email+'?')) return;
+  var db = dbLeer();
+  var u = db.accesos.find(function(x){ return x.email === email; });
+  if(!u) return;
+  if(decision === 'Aprobar'){
+    u.estado = 'Aprobado';
+    if(!u.rol) u.rol = 'Colaborador';
+    if(!u.pilotos || !u.pilotos.length) u.pilotos = u.pilotosSolicitados || ['01'];
+  } else if(decision === 'Rechazar'){
+    u.estado = 'Rechazado';
+    u.pilotos = [];
+  } else if(decision === 'Revocar'){
+    u.estado = 'Revocado';
+    u.pilotos = [];
+  }
+  u.resuelto = new Date().toISOString();
+  u.resueltoPor = ADMIN_CORPORATIVO;
+  dbGuardar(db);
+  toast('Acceso actualizado para ' + email);
+  cargarTodo();
+}
+
+function editarUsuario(email){
+  var db = dbLeer();
+  var u = db.accesos.find(function(x){ return x.email === email; });
+  if(!u) return;
+  var nuevoRol = prompt('Modificar Rol para ' + email + ':\n(Colaborador, Visualizador, Editor, Revisor, Administrador)', u.rol || 'Colaborador');
+  if(!nuevoRol) return;
+  u.rol = nuevoRol;
+  dbGuardar(db);
+  toast('Rol actualizado a ' + nuevoRol);
+  cargarTodo();
+}
+
+// ===== AUTOCOMPLETADO PREDICTIVO TIPO GMAIL / OUTLOOK =====
+function manejarInputCorreo(val){
+  var query = val.trim().toLowerCase();
+  var dropdown = $('dropdownCorreo');
+  if(!query || query.length < 1){
+    dropdown.classList.remove('show');
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  var directorio = directorioLeer();
+  var db = dbLeer();
+  // Combinar directorio con usuarios registrados
+  (db.accesos || []).forEach(function(acc){
+    if(!directorio.some(function(d){ return d.email === acc.email; })){
+      directorio.push({ nombre: acc.nombre, email: acc.email, area: acc.area });
+    }
+  });
+
+  // Si el usuario escribe sin @, podemos sugerir el dominio
+  var sugerirDominio = (!query.includes('@') && query.length >= 2);
+
+  var coincidencias = directorio.filter(function(item){
+    return item.email.toLowerCase().includes(query) ||
+           item.nombre.toLowerCase().includes(query) ||
+           (item.area && item.area.toLowerCase().includes(query));
+  });
+
+  var html = '';
+  if(sugerirDominio){
+    var emailSugerido = query + '@salfamontajes.com';
+    html += '<div class="autocomplete-item" onclick="seleccionarContacto(\''+emailSugerido+'\', \'\', \'Salfa Montajes\')">' +
+      '<div class="auto-avatar" style="background:var(--rojo)">@</div>' +
+      '<div class="auto-info">' +
+        '<div class="auto-name"><span class="auto-domain">'+emailSugerido+'</span></div>' +
+        '<div class="auto-meta">Autocompletar con dominio institucional @salfamontajes.com</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  coincidencias.slice(0, 6).forEach(function(item){
+    var iniciales = item.nombre.split(' ').map(function(p){ return p[0]; }).slice(0,2).join('').toUpperCase();
+    html += '<div class="autocomplete-item" onclick="seleccionarContacto(\''+item.email+'\', \''+escaparHtml(item.nombre)+'\', \''+escaparHtml(item.area||'')+'\')">' +
+      '<div class="auto-avatar">'+iniciales+'</div>' +
+      '<div class="auto-info">' +
+        '<div class="auto-name">'+escaparHtml(item.nombre)+'</div>' +
+        '<div class="auto-meta">' +
+          '<span class="auto-domain">'+escaparHtml(item.email)+'</span> · ' +
+          '<span>'+escaparHtml(item.area||'Salfa Montajes')+'</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  if(!html){
+    dropdown.classList.remove('show');
+    dropdown.innerHTML = '';
+  } else {
+    dropdown.innerHTML = html;
+    dropdown.classList.add('show');
+  }
+}
+
+function seleccionarContacto(email, nombre, area){
+  $('inputCorreo').value = email;
+  if(nombre) $('inputNombre').value = nombre;
+  if(area) $('inputArea').value = area;
+  $('dropdownCorreo').classList.remove('show');
+  $('dropdownCorreo').innerHTML = '';
+  if(!nombre) $('inputNombre').focus();
+  else if(!area) $('inputArea').focus();
+}
+
+// Ocultar dropdown al hacer click afuera
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.autocomplete-container')){
+    $('dropdownCorreo').classList.remove('show');
+  }
+});
+
+// Guardar y Habilitar Colaborador
+function ejecutarHabilitar(e){
+  e.preventDefault();
+  var email = $('inputCorreo').value.trim().toLowerCase();
+  var nombre = $('inputNombre').value.trim();
+  var area = $('inputArea').value.trim();
+  var rol = $('selectRol').value;
+  var pilotos = Array.from($('checkPortalesHabilitar').querySelectorAll('input:checked')).map(function(i){ return i.value; });
+
+  if(!email.endsWith('@salfamontajes.com')){
+    alert('El correo debe pertenecer al dominio institucional @salfamontajes.com');
+    return;
+  }
+  if(!pilotos.length){
+    alert('Debes seleccionar al menos un portal.');
+    return;
+  }
+
+  var db = dbLeer();
+  var u = db.accesos.find(function(x){ return x.email === email; });
+  var iso = new Date().toISOString();
+
+  if(u){
+    u.nombre = nombre;
+    u.area = area;
+    u.rol = rol;
+    u.pilotos = pilotos;
+    u.estado = 'Aprobado';
+    u.resuelto = iso;
+    u.resueltoPor = ADMIN_CORPORATIVO;
+  } else {
+    db.accesos.push({
+      email: email,
+      nombre: nombre,
+      area: area,
+      rol: rol,
+      pilotos: pilotos,
+      estado: 'Aprobado',
+      solicitado: iso,
+      resuelto: iso,
+      resueltoPor: ADMIN_CORPORATIVO
+    });
+  }
+  dbGuardar(db);
+
+  // Agregar al directorio si no está
+  var dir = directorioLeer();
+  if(!dir.some(function(d){ return d.email === email; })){
+    dir.push({ email: email, nombre: nombre, area: area });
+    directorioGuardar(dir);
+  }
+
+  toast('¡Colaborador ' + nombre + ' habilitado exitosamente!');
+  $('formHabilitar').reset();
+  renderCheckPortales();
+  cargarTodo();
+  cambiarTab('solicitudes');
+}
+
+// ===== GESTIÓN DE DIRECTORIO =====
+function renderDirectorio(filtro){
+  var dir = directorioLeer();
+  if(filtro){
+    var q = filtro.trim().toLowerCase();
+    dir = dir.filter(function(d){
+      return d.nombre.toLowerCase().includes(q) || d.email.toLowerCase().includes(q) || (d.area && d.area.toLowerCase().includes(q));
+    });
+  }
+  var tbody = $('tablaDirectorioBody');
+  if(!dir.length){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--gris)">No se encontraron contactos en el directorio.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = dir.map(function(c){
+    return '<tr>' +
+      '<td><b>'+escaparHtml(c.nombre)+'</b></td>' +
+      '<td><span style="color:var(--rojo);font-weight:600">'+escaparHtml(c.email)+'</span></td>' +
+      '<td>'+escaparHtml(c.area||'Salfa Montajes')+'</td>' +
+      '<td><button type="button" class="btn-action approve" onclick="darAccesoDesdeDirectorio(\''+c.email+'\', \''+escaparHtml(c.nombre)+'\', \''+escaparHtml(c.area||'')+'\')">+ Habilitar Portales</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function filtrarDirectorio(q){ renderDirectorio(q); }
+
+function darAccesoDesdeDirectorio(email, nombre, area){
+  cambiarTab('habilitar');
+  seleccionarContacto(email, nombre, area);
+}
+
+function abrirModalImportar(){ $('modalImportar').style.display = 'flex'; $('textoImportar').focus(); }
+function cerrarModalImportar(){ $('modalImportar').style.display = 'none'; }
+
+function procesarImportacion(){
+  var raw = $('textoImportar').value.trim();
+  if(!raw){ alert('Pega al menos un correo o contacto.'); return; }
+  var lineas = raw.split(/\r?\n/);
+  var dir = directorioLeer();
+  var count = 0;
+
+  lineas.forEach(function(l){
+    var partes = l.split(/[,;\t]/).map(function(s){ return s.trim(); });
+    var email = partes.find(function(s){ return s.includes('@'); });
+    if(email){
+      email = email.toLowerCase();
+      var nombre = partes.find(function(s){ return s !== email && s.length > 2; }) || email.split('@')[0];
+      var area = partes.filter(function(s){ return s !== email && s !== nombre; }).join(' - ') || 'Salfa Montajes';
+      if(!dir.some(function(d){ return d.email === email; })){
+        dir.push({ email: email, nombre: nombre, area: area });
+        count++;
+      }
+    }
+  });
+
+  directorioGuardar(dir);
+  cerrarModalImportar();
+  $('textoImportar').value = '';
+  toast('Se importaron ' + count + ' nuevos colaboradores al Directorio Salfa.');
+  cargarTodo();
+  renderDirectorio();
+}
+
+// Iniciar al cargar
+window.addEventListener('DOMContentLoaded', function(){
+  if(verificarSesionAdmin()){
+    cargarTodo();
+  }
+});
+</script>
+</body>
+</html>
