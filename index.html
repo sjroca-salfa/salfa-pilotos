@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Portales Salfa Montajes · Acceso Seguro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rojo: #B01E24;
+      --burdeos: #5E0F13;
+      --grafito: #1E2229;
+      --fondo: #0F172A;
+      --card-bg: #1E293B;
+      --texto-mut: #94A3B8;
+      --linea: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Barlow', Arial, sans-serif;
+      background: var(--fondo);
+      color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(110deg, #1E2229 0%, #1E2229 55%, #5E0F13 90%, #8B1218 100%);
+      color: #fff;
+      border-top: 4px solid var(--rojo);
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-badge {
+      background: #fff;
+      color: var(--rojo);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 19px;
+      padding: 5px 16px;
+      clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+      letter-spacing: 1px;
+    }
+    .brand-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: 0.5px;
+    }
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13.5px;
+    }
+    .btn-logout {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #F87171;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-logout:hover { background: rgba(239,68,68,0.2); }
+
+    /* VISTA 1: LOGIN CARD */
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--linea);
+      border-top: 5px solid var(--rojo);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      padding: 40px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    .login-card h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .login-card p.sub {
+      color: var(--texto-mut);
+      font-size: 14.5px;
+      margin-bottom: 24px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #CBD5E1;
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      background: #0F172A;
+      border: 1.5px solid var(--linea);
+      border-radius: 6px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--rojo);
+    }
+    .btn-submit {
+      width: 100%;
+      background: var(--rojo);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 13px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(176,30,36,0.4);
+      transition: all 0.2s;
+    }
+    .btn-submit:hover {
+      background: #8B1218;
+      transform: translateY(-2px);
+    }
+    .alert-box {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      display: none;
+    }
+    .alert-error {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #FCA5A5;
+    }
+
+    /* VISTA 2: DASHBOARD DE PORTALES */
+    .dashboard {
+      display: none;
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 36px auto;
+      padding: 0 24px;
+    }
+    .dash-hero {
+      background: var(--card-bg);
+      border: 1px solid var(--linea);
+      border-left: 6px solid var(--rojo);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dash-hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+    .dash-hero p {
+      color: var(--texto-mut);
+      font-size: 15px;
+    }
+    .user-pill {
+      background: #0F172A;
+      border: 1px solid var(--linea);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+    .user-pill strong { color: #F87171; }
+
+    .grid-portales {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 26px;
+    }
+    .card-portal {
+      background: var(--card-bg);
+      border: 1px solid var(--linea);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card-portal:hover {
+      transform: translateY(-4px);
+      border-color: var(--rojo);
+    }
+    .portal-head {
+      padding: 24px 24px 16px;
+      display: flex;
+      gap: 16px;
+    }
+    .portal-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: rgba(176,30,36,0.15);
+      color: #EF4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .portal-meta h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 19px;
+      margin-bottom: 4px;
+    }
+    .portal-cat {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #F87171;
+      letter-spacing: 0.8px;
+    }
+    .portal-body {
+      padding: 0 24px 20px;
+      color: var(--texto-mut);
+      font-size: 14.5px;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .portal-foot {
+      padding: 16px 24px;
+      background: #0F172A;
+      border-top: 1px solid var(--linea);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badge-status {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .status-ok { background: rgba(34,197,94,0.15); color: #4ADE80; }
+    .status-dev { background: rgba(234,179,8,0.15); color: #FACC15; }
+    .status-lock { background: rgba(100,116,139,0.2); color: #94A3B8; }
+
+    .btn-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--rojo);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 8px 18px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .btn-portal:hover { background: #8B1218; }
+    .btn-locked {
+      background: #334155;
+      color: #64748B;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    footer {
+      background: #090D16;
+      border-top: 1px solid var(--linea);
+      color: #64748B;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="logo-badge">SALFA</div>
+      <div class="brand-title">Salfa Montajes · Centro de Portales</div>
+    </div>
+    <div class="header-user" id="userHeader" style="display:none">
+      <span id="txtUser"></span>
+      <button class="btn-logout" onclick="cerrarSesion()"><i class="fa-solid fa-power-off"></i> Salir</button>
+    </div>
+  </header>
+
+  <!-- VISTA 1: LOGIN -->
+  <div class="login-container" id="viewLogin">
+    <div class="login-card">
+      <div style="font-size:36px;color:var(--rojo);margin-bottom:16px"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2>Acceso Corporativo</h2>
+      <p class="sub">Ingresa con tus credenciales asignadas para acceder a las herramientas operacionales.</p>
+
+      <form onsubmit="iniciarSesion(event)">
+        <div class="form-group">
+          <label>Correo Electrónico (@salfamontajes.com)</label>
+          <input type="email" id="txtEmail" placeholder="ejemplo@salfamontajes.com" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label>Contraseña / PIN de Acceso</label>
+          <input type="password" id="txtPass" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-submit">
+          Ingresar al Portal <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="alert-box alert-error" id="loginError"></div>
+      <div style="margin-top:24px;font-size:12px;color:#64748B">
+        <i class="fa-solid fa-lock"></i> Autenticación y navegación cifrada · SalfaCorp
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA 2: DASHBOARD -->
+  <main class="dashboard" id="viewDashboard">
+    <div class="dash-hero">
+      <div>
+        <h1 id="dashBienvenida">Bienvenido</h1>
+        <p>Selecciona la herramienta o portal operacional que necesitas consultar o gestionar.</p>
+      </div>
+      <div class="user-pill" id="userPill"></div>
+    </div>
+
+    <div class="grid-portales" id="gridPortales"></div>
+  </main>
+
+  <footer>
+    Salfa Montajes · Plataforma de Aplicaciones Web · Nivel de Seguridad: Confidencial
+  </footer>
+
+  <script>
+    // BASE DE DATOS DE USUARIOS (Con hash SHA-256 para máxima seguridad)
+    // Claves por defecto: 'REDACTED-ROTATED' para todos inicialmente
+    var HASH_SALFA2026 = 'c3c0f4f9d270dd962b146e5b4104d49d99723ec0b1f80451a5e18406ca769a7b';
+
+    var USUARIOS = {
+      'sjroca@salfamontajes.com': { nombre: 'Sebastián Roca', rol: 'Administrador', passHash: HASH_SALFA2026 },
+      'sroca.ot@gmail.com': { nombre: 'Sebastián Roca (Admin Personal)', rol: 'Administrador', passHash: HASH_SALFA2026 }
+    };
+
+    var PORTALES = [
+      {
+        id: '01',
+        nombre: 'Mapa de Procesos',
+        categoria: 'Operaciones y Gestión',
+        descripcion: 'Gestión interactiva, trazabilidad de versiones (Rev B / Rev C) y documentación técnica de procesos Salfa.',
+        url: 'https://script.google.com/macros/s/AKfycbxWCGH8Fh7qUEn3AwTm4i_Yq3gBxp9bUx6ZXHbm-cBTTiafHAhKsWnqWrLoIDu8Y8Wq/exec',
+        icono: 'diagram-project',
+        roles: ['Administrador', 'Editor', 'Revisor', 'Visualizador', 'Colaborador'],
+        estado: 'Activo'
+      },
+      {
+        id: '02',
+        nombre: 'Matriz de Riesgos y Control',
+        categoria: 'Seguridad y Calidad',
+        descripcion: 'Evaluación preventiva, control de riesgos críticos y seguimiento en faenas y obras de montaje.',
+        url: '#',
+        icono: 'shield-halved',
+        roles: ['Administrador', 'Editor'],
+        estado: 'En desarrollo'
+      },
+      {
+        id: '03',
+        nombre: 'Gestión AWP & Construcción',
+        categoria: 'Planificación y Control',
+        descripcion: 'Seguimiento de paquetes de ingeniería y construcción bajo metodología Advanced Work Packaging.',
+        url: '#',
+        icono: 'boxes-stacked',
+        roles: ['Administrador'],
+        estado: 'Próximamente'
+      }
+    ];
+
+    async function sha256(text) {
+      var buffer = new TextEncoder().encode(text);
+      var hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function iniciarSesion(e) {
+      e.preventDefault();
+      var email = document.getElementById('txtEmail').value.trim().toLowerCase();
+      var pass = document.getElementById('txtPass').value.trim();
+      var errBox = document.getElementById('loginError');
+      errBox.style.display = 'none';
+
+      // Validación de dominio corporativo
+      var esSalfa = email.endsWith('@salfamontajes.com');
+      var esAdminPersonal = (email === 'sroca.ot@gmail.com');
+      if (!esSalfa && !esAdminPersonal) {
+        errBox.textContent = 'Acceso denegado: Solo se admiten correos @salfamontajes.com';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      var passHash = await sha256(pass);
+      var user = USUARIOS[email];
+
+      // Si es un usuario corporativo de Salfa no registrado aún, entra por defecto como Colaborador con REDACTED-ROTATED
+      if (!user && esSalfa && passHash === HASH_SALFA2026) {
+        user = { nombre: email.split('@')[0], rol: 'Colaborador', passHash: HASH_SALFA2026 };
+      }
+
+      if (!user || user.passHash !== passHash) {
+        errBox.textContent = 'Correo o contraseña incorrectos. (Contraseña inicial de prueba: REDACTED-ROTATED)';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      // Guardar sesión segura en el navegador
+      var sessionData = { email: email, nombre: user.nombre, rol: user.rol, time: Date.now() };
+      sessionStorage.setItem('salfa_auth_session', JSON.stringify(sessionData));
+      renderDashboard(sessionData);
+    }
+
+    function renderDashboard(user) {
+      document.getElementById('viewLogin').style.display = 'none';
+      document.getElementById('viewDashboard').style.display = 'block';
+      document.getElementById('userHeader').style.display = 'flex';
+      document.getElementById('txtUser').innerHTML = '<strong>' + user.email + '</strong> (' + user.rol + ')';
+      document.getElementById('dashBienvenida').textContent = 'Hola, ' + user.nombre;
+      document.getElementById('userPill').innerHTML = 'Rol asignado: <strong>' + user.rol + '</strong>';
+
+      var grid = document.getElementById('gridPortales');
+      grid.innerHTML = '';
+
+      PORTALES.forEach(function(p) {
+        var card = document.createElement('div');
+        card.className = 'card-portal';
+
+        var tienePermiso = (user.rol === 'Administrador') || (p.roles.indexOf(user.rol) >= 0);
+        var isActivo = p.estado === 'Activo' && tienePermiso;
+
+        var statusClass = isActivo ? 'status-ok' : (p.estado === 'En desarrollo' ? 'status-dev' : 'status-lock');
+        var btnClass = isActivo ? 'btn-portal' : 'btn-portal btn-locked';
+        
+        var btnText = 'Próximamente';
+        var statusText = p.estado;
+
+        if (p.estado === 'Activo') {
+          if (tienePermiso) {
+            btnText = 'Ingresar <i class="fa-solid fa-arrow-right"></i>';
+          } else {
+            statusText = 'Restringido';
+            btnText = '<i class="fa-solid fa-lock"></i> No asignado';
+          }
+        }
+
+        card.innerHTML = 
+          '<div class="portal-head">' +
+            '<div class="portal-icon"><i class="fa-solid fa-' + p.icono + '"></i></div>' +
+            '<div class="portal-meta">' +
+              '<span class="portal-cat">' + p.categoria + '</span>' +
+              '<h3>' + p.nombre + '</h3>' +
+            '</div>' +
+          '</div>' +
+          '<div class="portal-body">' +
+            '<p>' + p.descripcion + '</p>' +
+          '</div>' +
+          '<div class="portal-foot">' +
+            '<span class="badge-status ' + statusClass + '">' + statusText + '</span>' +
+            '<a href="' + (isActivo ? p.url : '#') + '" target="_blank" class="' + btnClass + '">' + btnText + '</a>' +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    }
+
+    function cerrarSesion() {
+      sessionStorage.removeItem('salfa_auth_session');
+      window.location.reload();
+    }
+
+    // Auto-login si la sesión está abierta en esta pestaña
+    window.addEventListener('DOMContentLoaded', function() {
+      var s = sessionStorage.getItem('salfa_auth_session');
+      if (s) {
+        try {
+          renderDashboard(JSON.parse(s));
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>
