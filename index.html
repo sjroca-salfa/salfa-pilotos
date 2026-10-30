@@ -752,6 +752,47 @@ html,body{height:100%}
   </div>
 </div>
 
+<!-- Modal: Invitar / Habilitar Colaborador -->
+<div class="modal" id="modalInvitar" role="dialog" aria-modal="true" aria-labelledby="invTitulo" onclick="if(event.target===this)cerrarInvitar()">
+  <div class="modal-card" style="max-width:480px">
+    <button type="button" class="modal-x" onclick="cerrarInvitar()" aria-label="Cerrar"><svg class="i i-x" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="modal-head">
+      <div class="icono-estado" style="margin:0 auto 12px;background:rgba(176,30,36,.12);color:var(--rojo);width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg></div>
+      <h3 id="invTitulo">Habilitar Colaborador</h3>
+      <p class="sub">Autoriza a un colaborador de Salfa Montajes para acceder a los portales seleccionados.</p>
+    </div>
+    <form id="formInvitar" onsubmit="guardarInvitar(event)" style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
+      <div class="campo">
+        <label for="invNombre">Nombre completo</label>
+        <input type="text" id="invNombre" required placeholder="Ej: Juan Pérez">
+      </div>
+      <div class="campo">
+        <label for="invEmail">Correo institucional (@salfamontajes.com)</label>
+        <input type="email" id="invEmail" required placeholder="usuario@salfamontajes.com">
+      </div>
+      <div class="campo">
+        <label for="invArea">Área / Cargo</label>
+        <input type="text" id="invArea" required placeholder="Ej: Oficina Técnica / Control de Gestión">
+      </div>
+      <div class="campo">
+        <label for="invRol">Perfil / Rol asignado</label>
+        <select id="invRol">
+          <option value="Colaborador">Colaborador</option>
+          <option value="Visualizador">Visualizador</option>
+          <option value="Editor">Editor</option>
+          <option value="Revisor">Revisor</option>
+          <option value="Administrador">Administrador</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Portales habilitados</label>
+        <div id="invPilotos" class="pil-chk" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
+      </div>
+      <button type="submit" class="btn-pri" style="width:100%;margin-top:8px">Guardar y Habilitar</button>
+    </form>
+  </div>
+</div>
+
 <!-- ===== DASHBOARD ===== -->
 <div class="vista-dash" id="viewDashboard">
   <header class="banda">
@@ -787,7 +828,10 @@ html,body{height:100%}
           <button type="button" id="aTabApr" onclick="adminVista('apr')">Con acceso <span class="contador gris" id="contApr"></span></button>
           <button type="button" id="aTabCer" onclick="adminVista('cer')">Cerradas <span class="contador gris" id="contCer"></span></button>
         </div>
-        <button type="button" class="btn-sec btn-mini" onclick="cargarAdmin()"><svg class="i i-rotate-cw" aria-hidden="true"><use href="#i-rotate-cw"/></svg> Actualizar</button>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" class="btn-pri btn-mini" onclick="abrirInvitar()"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg> + Habilitar Colaborador</button>
+          <button type="button" class="btn-sec btn-mini" onclick="cargarAdmin()"><svg class="i i-rotate-cw" aria-hidden="true"><use href="#i-rotate-cw"/></svg> Actualizar</button>
+        </div>
       </div>
       <div id="adminLista"></div>
     </section>
@@ -811,7 +855,7 @@ var CLAVE_ADMIN_HASH = 'REDACTED_HASH';
 var PORTALES = [
   { id:'01', nombre:'Mapa de Procesos', categoria:'Operaciones y gestión',
     descripcion:'Piloto para consultar y gestionar los procesos de Salfa, con trazabilidad de revisiones (Rev B / Rev C) y documentación técnica asociada.',
-    url:'https://script.google.com/macros/s/AKfycbxWCGH8Fh7qUEn3AwTm4i_Yq3gBxp9bUx6ZXHbm-cBTTiafHAhKsWnqWrLoIDu8Y8Wq/exec',
+    url:'https://sjroca-salfa.github.io/portal-mapa-procesos/',
     icono:'network', roles:['Administrador','Editor','Revisor','Visualizador','Colaborador'], estado:'Activo' },
   { id:'02', nombre:'Control de CV', categoria:'Gestión de personas',
     descripcion:'Piloto para registrar, revisar y dar seguimiento a currículums de postulantes y personal para la dotación de proyectos de montaje.',
@@ -990,6 +1034,21 @@ async function demoApi(accion,d){
       Object.keys(db.sesiones).forEach(function(k){ if(db.sesiones[k].email===x.email) delete db.sesiones[k]; });
     }
     x.resuelto=new Date().toISOString(); x.resueltoPor=quien; dbGuardar(db); return {ok:true};
+  }
+  if(accion==='invitar'){
+    var em=String(d.email||'').trim().toLowerCase();
+    if(!em || !em.endsWith(DOMINIO)) return {ok:false,mensaje:'El correo debe pertenecer al dominio '+DOMINIO};
+    var ps=filtrarPil(d.pilotos); if(!ps.length) ps=['01'];
+    var ex=acc(em);
+    if(ex){
+      ex.estado='Aprobado'; ex.rol=d.rol||'Colaborador'; ex.pilotos=ps;
+      if(d.nombre) ex.nombre=d.nombre; if(d.area) ex.area=d.area;
+      ex.resuelto=new Date().toISOString(); ex.resueltoPor=quien;
+    } else {
+      db.accesos.push({email:em, nombre:d.nombre||em.split('@')[0], area:d.area||'Salfa Montajes', estado:'Aprobado', rol:d.rol||'Colaborador', pilotos:ps, solicitado:new Date().toISOString(), resuelto:new Date().toISOString(), resueltoPor:quien});
+    }
+    dbGuardar(db);
+    return {ok:true, mensaje:'Colaborador '+em+' habilitado con éxito.'};
   }
   return {ok:false,mensaje:'Acción no válida.'};
 }
@@ -1332,7 +1391,33 @@ async function cerrarSesion(){
 
 // ===== Gestión de accesos (solo administradores) =====
 var ADMIN={lista:[],vista:'pend'};
-var ROLES_ASIGNABLES=['Colaborador','Editor','Revisor','Visualizador'];
+var ROLES_ASIGNABLES=['Administrador','Editor','Revisor','Colaborador','Visualizador'];
+
+function abrirInvitar(){
+  $('invPilotos').innerHTML=PORTALES.map(function(p){
+    return '<label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer"><input type="checkbox" value="'+p.id+'" checked> <span>'+p.id+' · '+escapar(p.nombre)+'</span></label>';
+  }).join('');
+  $('modalInvitar').classList.add('on');
+}
+function cerrarInvitar(){ $('modalInvitar').classList.remove('on'); }
+async function guardarInvitar(ev){
+  ev.preventDefault();
+  var nombre=$('invNombre').value.trim();
+  var email=$('invEmail').value.trim().toLowerCase();
+  var area=$('invArea').value.trim();
+  var rol=$('invRol').value;
+  var pilotos=Array.prototype.map.call($('invPilotos').querySelectorAll('input:checked'),function(i){return i.value;});
+  if(!pilotos.length){ toast('Selecciona al menos un portal.'); return; }
+  var r=await api('invitar',{email:email,nombre:nombre,area:area,rol:rol,pilotos:pilotos,token:SESION.token});
+  if(r && r.ok){
+    toast('Colaborador '+email+' habilitado correctamente.');
+    cerrarInvitar();
+    $('formInvitar').reset();
+    cargarAdmin();
+  } else {
+    toast((r&&r.mensaje)||'Error al habilitar colaborador.');
+  }
+}
 async function cargarAdmin(){
   $('adminLista').innerHTML='<div class="vacio">Cargando solicitudes…</div>';
   var r=await api('listar',{token:SESION.token});
