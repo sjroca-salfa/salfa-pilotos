@@ -751,12 +751,12 @@ body:has(#viewDashboard.on){overflow:hidden}
       <p class="lead">Ingresa con tu cuenta para abrir los portales de pilotaje.</p>
       <div class="aviso-local" id="bannerServicio" style="display:none"></div>
 
-      <form id="formLoginReal" onsubmit="iniciarSesionClave(event)" novalidate>
+      <form id="formLoginReal" method="post" action="javascript:void(0);" autocomplete="on" onsubmit="iniciarSesionClave(event)">
         <div class="campo">
           <label for="lgEmail">Correo corporativo</label>
           <div class="in" id="g-correo">
             <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
-            <input type="email" id="lgEmail" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+            <input type="email" id="lgEmail" name="username" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" required>
           </div>
         </div>
 
@@ -764,7 +764,7 @@ body:has(#viewDashboard.on){overflow:hidden}
           <label for="lgPass">Contraseña</label>
           <div class="in" id="g-pass">
             <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-            <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password" required>
+            <input type="password" id="lgPass" name="password" placeholder="••••••••" autocomplete="current-password" required>
             <button type="button" class="ojo" id="btnOjoPass" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña">
               <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -773,7 +773,7 @@ body:has(#viewDashboard.on){overflow:hidden}
 
         <div class="fila-rec">
           <label class="rec-lbl" id="filaRecordar">
-            <input type="checkbox" id="chkRecordar">
+            <input type="checkbox" id="chkRecordar" name="remember">
             <span class="rec-caja">
               <svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg>
             </span>
@@ -1130,7 +1130,7 @@ body:has(#viewDashboard.on){overflow:hidden}
 // ===== AUTENTICACIÓN CORPORATIVA NATIVA (GitHub Pages Salfa) =====
 var DOMINIO = '@salfamontajes.com';
 var RECORDAR_DIAS = 30, SESION_HORAS = 8;
-var KEY = 'salfa_auth_session', KEY_REC = 'salfa_recordar';
+var KEY = 'salfa_auth_session', KEY_REC = 'salfa_recordar', KEY_REC_EMAIL = 'salfa_recordar_email';
 var ADMIN_CORPORATIVO = 'sjroca@salfamontajes.com';
 // Hash criptográfico SHA-256 de la contraseña 'REDACTED-ROTATED'
 var CLAVE_ADMIN_HASH = 'REDACTED_HASH';
@@ -1481,7 +1481,20 @@ function volverIngreso(){
 
 // ===== Preparación de la pantalla =====
 function prepararIngreso(){
-  try{ $('chkRecordar').checked=(localStorage.getItem(KEY_REC)==='1'); }catch(e){}
+  try{
+    var rec = (localStorage.getItem(KEY_REC) === '1');
+    var chk = $('chkRecordar');
+    if(chk) chk.checked = rec;
+    var savedMail = localStorage.getItem(KEY_REC_EMAIL);
+    if(savedMail && $('lgEmail')){
+      $('lgEmail').value = savedMail;
+      if(rec && $('lgPass') && window.matchMedia('(hover:hover)').matches){
+        setTimeout(function(){
+          try{ $('lgPass').focus(); }catch(e){}
+        }, 120);
+      }
+    }
+  }catch(e){}
   var b=$('bannerServicio');
   if(SIN_SERVICIO && !MODO_DEMO){
     b.style.display='block';
@@ -1573,6 +1586,29 @@ async function iniciarSesionClave(ev){
   if(btn) btn.classList.remove('cargando');
   if(!r || !r.ok){
     var gp=$('g-pass'); if(gp){ void gp.offsetWidth; gp.classList.add('error'); }
+  } else if(r.estado === 'Aprobado'){
+    var rec = !!($('chkRecordar') && $('chkRecordar').checked);
+    try{
+      if(rec){
+        localStorage.setItem(KEY_REC, '1');
+        localStorage.setItem(KEY_REC_EMAIL, email);
+      } else {
+        localStorage.setItem(KEY_REC, '0');
+        localStorage.removeItem(KEY_REC_EMAIL);
+      }
+    }catch(e){}
+
+    // Notificar al gestor de contraseñas del navegador (Chrome / Edge / Safari PasswordCredential API)
+    try{
+      if(window.PasswordCredential && navigator.credentials && navigator.credentials.store){
+        var cred = new PasswordCredential({
+          id: email,
+          password: clave,
+          name: r.nombre || email.split('@')[0]
+        });
+        navigator.credentials.store(cred).catch(function(){});
+      }
+    }catch(e){}
   }
   procesarLogin(r);
 }
@@ -1711,7 +1747,14 @@ function guardarSesion(s,recordar,mantenerHora){
   s.recordar=!!recordar;
   var A=recordar?localStorage:sessionStorage, B=recordar?sessionStorage:localStorage;
   try{ A.setItem(KEY,JSON.stringify(s)); B.removeItem(KEY); }catch(e){}
-  try{ localStorage.setItem(KEY_REC,recordar?'1':'0'); }catch(e){}
+  try{
+    localStorage.setItem(KEY_REC,recordar?'1':'0');
+    if(recordar && s.email){
+      localStorage.setItem(KEY_REC_EMAIL, s.email);
+    } else if(!recordar){
+      localStorage.removeItem(KEY_REC_EMAIL);
+    }
+  }catch(e){}
 }
 function leerSesion(){
   var raw=null; try{ raw=localStorage.getItem(KEY)||sessionStorage.getItem(KEY); }catch(e){}
@@ -1776,12 +1819,18 @@ function renderDashboard(user){
   if(typeof actualizarPresencia==='function') actualizarPresencia();
 }
 
-function cerrarSesion(){
+async function cerrarSesion(){
   var s=SESION||leerSesion();
-  if(s && s.token){ await Promise.race([api('cerrar',{token:s.token}), new Promise(function(r){setTimeout(r,1500);})]); }
+  if(s && s.token){
+    try{
+      await Promise.race([api('cerrar',{token:s.token}), new Promise(function(r){setTimeout(r,1500);})]);
+    }catch(e){}
+  }
   borrarSesion();
-  try{ localStorage.setItem(KEY_REC,'0'); }catch(e){}   // al salir, la próxima persona no hereda "Recordarme"
-  if(window.google && google.accounts && google.accounts.id && google.accounts.id.disableAutoSelect){ google.accounts.id.disableAutoSelect(); }
+  // Se conserva el correo recordado y la casilla si el usuario eligió 'Recordarme'
+  if(window.google && google.accounts && google.accounts.id && google.accounts.id.disableAutoSelect){
+    google.accounts.id.disableAutoSelect();
+  }
   window.location.reload();
 }
 
@@ -1970,6 +2019,34 @@ window.addEventListener('DOMContentLoaded',async function(){
     return;
   }
   iniciarBrasas(); prepararIngreso();
+
+  // Escuchar cambios inmediatos en Recordarme y Correo para persistencia fluida
+  var chkEl = $('chkRecordar');
+  if(chkEl){
+    chkEl.addEventListener('change', function(){
+      try{
+        if(this.checked){
+          localStorage.setItem(KEY_REC, '1');
+          var em = $('lgEmail') ? $('lgEmail').value.trim() : '';
+          if(em) localStorage.setItem(KEY_REC_EMAIL, em);
+        } else {
+          localStorage.setItem(KEY_REC, '0');
+          localStorage.removeItem(KEY_REC_EMAIL);
+        }
+      }catch(e){}
+    });
+  }
+  var lgEmailEl = $('lgEmail');
+  if(lgEmailEl){
+    lgEmailEl.addEventListener('input', function(){
+      try{
+        if($('chkRecordar') && $('chkRecordar').checked){
+          var em = this.value.trim();
+          if(em) localStorage.setItem(KEY_REC_EMAIL, em);
+        }
+      }catch(e){}
+    });
+  }
 });
 </script>
 
