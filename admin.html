@@ -134,7 +134,7 @@ tbody tr.clk:hover{background:color-mix(in srgb,var(--grafito) 8%,var(--blanco))
 .tl time{display:block;color:var(--gris);font-size:12.5px}
 
 /* Gráfico */
-.chart{width:100%;height:190px;display:block}
+.chart{width:100%;height:250px;display:block}
 .legend{display:flex;gap:18px;font-size:13px;color:var(--gris);margin-top:8px;flex-wrap:wrap}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 
@@ -277,35 +277,52 @@ section.view.on{display:block}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* Selector de Portales */
-.salfa-menu-wrap{position:relative}
-.salfa-dropdown-menu{
-  position:absolute;top:calc(100% + 8px);right:0;width:320px;max-width:92vw;
-  background:#fff;color:var(--grafito);border-radius:14px;border:1px solid rgba(0,0,0,.1);
-  box-shadow:0 16px 38px -10px rgba(0,0,0,.35);z-index:99999;overflow:hidden;animation:ddFadeIn .2s ease-out;
+/* Modal Selector de Portales Universal */
+.salfa-modal-portales {
+  position: fixed; inset: 0; z-index: 9999999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 17, 19, 0.78); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  animation: ddModalIn .2s ease-out forwards;
 }
-@keyframes ddFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.salfa-dd-header{padding:14px 16px;background:#1E2229;color:#fff;border-bottom:2px solid #B01E24}
-.salfa-dd-header b{display:block;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
-.salfa-dd-header span{display:block;font-size:11px;color:#aab2ba;margin-top:2px}
-.salfa-dd-list{padding:8px 0;max-height:360px;overflow-y:auto}
-.salfa-dd-item{display:flex;align-items:center;gap:12px;padding:9px 16px;text-decoration:none;color:inherit;transition:background .15s}
-.salfa-dd-item:hover:not(.off){background:#f1f5f9}
-.salfa-dd-item.activo{background:#fdf2f2;border-left:3px solid #B01E24}
-.salfa-dd-item.off{opacity:.6;cursor:not-allowed}
-.salfa-dd-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:#1E2229;color:#fff;font-family:var(--f-rotulo, sans-serif);font-weight:700;font-size:12px;flex:none}
-.salfa-dd-num.adm{background:#B01E24}
-.salfa-dd-num.off{background:#94a3b8}
-.salfa-dd-info{flex:1;min-width:0}
-.salfa-dd-info b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1e293b}
-.salfa-dd-info span{display:block;font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.salfa-dd-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap;flex:none}
-.salfa-dd-tag.ok{background:#dcfce7;color:#166534}
-.salfa-dd-tag.adm{background:#fee2e2;color:#991b1b}
-.salfa-dd-tag.aqui{background:#e2e8f0;color:#334155}
-.salfa-dd-tag.dev{background:#f1f5f9;color:#64748b}
-.salfa-dd-tag.prox{background:#f8fafc;color:#94a3b8}
-.salfa-dd-divider{height:1px;background:#e2e8f0;margin:6px 0}
+@keyframes ddModalIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.salfa-modal-portales-dialog {
+  position: relative; width: 100%; max-width: 440px; background: #fff;
+  border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 24px 60px -15px rgba(0,0,0,0.6); overflow: hidden;
+  display: flex; flex-direction: column; max-height: calc(100dvh - 32px);
+}
+.salfa-modal-portales-header {
+  padding: 16px 20px; background: #1E2229; color: #fff;
+  display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #B01E24;
+}
+.salfa-modal-portales-header b {
+  display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+}
+.salfa-modal-portales-header span { display: block; font-size: 12px; color: #9AA2AB; margin-top: 2px; }
+.salfa-modal-portales-header .btn-close-modal {
+  background: rgba(255,255,255,.1); border: none; color: #fff; width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; transition: background .15s;
+}
+.salfa-modal-portales-header .btn-close-modal:hover { background: #B01E24; }
+.salfa-modal-portales-body { padding: 10px 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.salfa-dd-item { display: flex; align-items: center; gap: 14px; padding: 12px 20px; text-decoration: none; color: #1E2229; transition: background .15s; }
+.salfa-dd-item:hover:not(.off) { background: #f1f5f9; }
+.salfa-dd-item.activo { background: #fdf2f2; border-left: 4px solid #B01E24; }
+.salfa-dd-item.off { opacity: .55; cursor: not-allowed; }
+.salfa-dd-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 7px; background: #1E2229; color: #fff; font-weight: 700; font-size: 12px; flex: none; }
+.salfa-dd-num.adm { background: #B01E24; }
+.salfa-dd-num.off { background: #94a3b8; }
+.salfa-dd-info { flex: 1; min-width: 0; }
+.salfa-dd-info b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1e293b; }
+.salfa-dd-info span { display: block; font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.salfa-dd-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; white-space: nowrap; flex: none; }
+.salfa-dd-tag.ok { background: #dcfce7; color: #166534; }
+.salfa-dd-tag.adm { background: #fee2e2; color: #991b1b; }
+.salfa-dd-tag.aqui { background: #e2e8f0; color: #334155; }
+.salfa-dd-tag.dev { background: #f1f5f9; color: #64748b; }
+.salfa-dd-tag.prox { background: #f8fafc; color: #94a3b8; }
+.salfa-dd-divider { height: 1px; background: #e2e8f0; margin: 6px 0; }
 
 </style>
 </head>
@@ -324,7 +341,7 @@ section.view.on{display:block}
   <aside class="side" id="side" aria-label="Navegación principal">
     <div class="brand">
       <a href="index.html" class="brand-link" title="Volver al Hub Central" style="display:inline-block;text-decoration:none">
-        <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfa-montajes-oscuro.svg" width="176" height="22">
+        <img class="logo-img" alt="Salfa Montajes" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" width="176" height="22">
       </a>
       <span class="rot">Consola Central de Administración</span>
     </div>
@@ -356,58 +373,11 @@ section.view.on{display:block}
         <div class="sub" id="sub">Estado del ecosistema de portales</div>
       </div>
       <div class="sp"></div>
-      <!-- Selector desplegable de portales habilitados -->
-      <div class="salfa-menu-wrap" id="menuPortalesWrap">
-        <button type="button" class="btn sm" id="btnSelectorPortales" onclick="salfaToggleMenuPortales(event)" aria-expanded="false" title="Navegar a otros portales sin volver al Hub" style="display:inline-flex;align-items:center;gap:6px">
-          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
-          <span class="tx">Portales</span>
-          <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5" id="chevPortales"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="salfa-dropdown-menu" id="dropdownPortalesMenu" style="display:none">
-          <div class="salfa-dd-header">
-            <b>Ecosistema Salfa Pilotos</b>
-            <span>Acceso directo entre portales</span>
-          </div>
-          <div class="salfa-dd-list">
-            <a href="index.html" class="salfa-dd-item">
-              <span class="salfa-dd-num">HUB</span>
-              <div class="salfa-dd-info"><b>Hub Central de Pilotos</b><span>Portal principal de acceso</span></div>
-              <span class="salfa-dd-tag ok">Hub</span>
-            </a>
-            <a href="https://sjroca-salfa.github.io/portal-mapa-procesos/" class="salfa-dd-item" data-p="01">
-              <span class="salfa-dd-num">01</span>
-              <div class="salfa-dd-info"><b>Mapa de Procesos</b><span>Operaciones y gestión</span></div>
-              <span class="salfa-dd-tag ok">Activo</span>
-            </a>
-            <a href="https://sjroca-salfa.github.io/portal-gestion-informacion/" class="salfa-dd-item" data-p="05">
-              <span class="salfa-dd-num">05</span>
-              <div class="salfa-dd-info"><b>Gestión de la Información</b><span>Series documentales O, D, P</span></div>
-              <span class="salfa-dd-tag ok">Activo</span>
-            </a>
-            <a href="admin.html" class="salfa-dd-item activo">
-              <span class="salfa-dd-num adm">ADM</span>
-              <div class="salfa-dd-info"><b>Consola de Administración</b><span>Gestión de accesos y métricas</span></div>
-              <span class="salfa-dd-tag aqui">Aquí</span>
-            </a>
-            <div class="salfa-dd-divider"></div>
-            <div class="salfa-dd-item off">
-              <span class="salfa-dd-num off">02</span>
-              <div class="salfa-dd-info"><b>Control de CV</b><span>Gestión de personas</span></div>
-              <span class="salfa-dd-tag dev">En desarrollo</span>
-            </div>
-            <div class="salfa-dd-item off">
-              <span class="salfa-dd-num off">03</span>
-              <div class="salfa-dd-info"><b>Gestión AWP & Construcción</b><span>Planificación y control</span></div>
-              <span class="salfa-dd-tag prox">Próximamente</span>
-            </div>
-            <div class="salfa-dd-item off">
-              <span class="salfa-dd-num off">04</span>
-              <div class="salfa-dd-info"><b>Indicadores OKR</b><span>Desarrollo estratégico</span></div>
-              <span class="salfa-dd-tag dev">En desarrollo</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Selector de Portales Universal (Modal) -->
+      <button type="button" class="btn sm" id="btnSelectorPortales" onclick="salfaAbrirMenuPortales(event)" title="Navegar a otros portales sin volver al Hub" style="display:inline-flex;align-items:center;gap:6px">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span class="tx">Portales</span>
+      </button>
       <a class="btn sm rojo" id="lnkHub" href="index.html" title="Regresar al Hub Principal" style="background:var(--rojo);border-color:var(--rojo);color:#fff;display:inline-flex;align-items:center;gap:6px">
         <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span class="tx">Volver al Hub</span>
@@ -689,7 +659,7 @@ function cargarBaseDatosLimpia(){
   const portales = [
     {id:'hub',nombre:'Hub de Portales',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/salfa-pilotos/'},
     {id:'mapa',nombre:'Mapa de Procesos',tipo:'GitHub Pages · Portal 01',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-mapa-procesos/'},
-    {id:'p02',nombre:'Portal 02 · Control de CV',tipo:'Por definir',estado:'En desarrollo',url:''},
+    {id:'p02',nombre:'Portal 02 · Control de CV',tipo:'Frontend / WebApp · Portal 02',estado:'Operativo',url:'02-portal-cv/index.html'},
     {id:'p03',nombre:'Portal 03 · Gestión AWP',tipo:'Por definir',estado:'Próximamente',url:''},
     {id:'p04',nombre:'Portal 04 · Indicadores OKR',tipo:'Por definir',estado:'En desarrollo',url:''},
     {id:'p05',nombre:'Portal 05 · Gestión de la Información',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-gestion-informacion/'}
@@ -885,7 +855,7 @@ function renderKpis(anim=true){
 function bump(k){const el=$(`#kpis [data-k="${k}"]`);if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
 
 function drawChart(anim=true){
-  const d=S.db,W=700,H=190,m={l:34,b:26,t:10,r:6},dd=d.diarias,mx=Math.max(4,...dd),bw=(W-m.l-m.r)/dd.length;
+  const d=S.db,W=700,H=250,m={l:34,b:26,t:10,r:6},dd=d.diarias,mx=Math.max(4,...dd),bw=(W-m.l-m.r)/dd.length;
   let g='';for(let i=0;i<=4;i++){const v=Math.round(mx/4*i),y=H-m.b-(H-m.b-m.t)*i/4;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="#D3D7DC" stroke-width="1"/><text x="${m.l-6}" y="${y+4}" text-anchor="end" font-size="11" fill="#5A6771">${v}</text>`}
   dd.forEach((v,i)=>{const bh=(H-m.b-m.t)*v/mx,x=m.l+i*bw+2,dt=new Date(Date.now()-(dd.length-1-i)*864e5),hoy=i===dd.length-1;g+=`<rect class="${anim?'cb':'cn'}${hoy&&anim?' hoy':''}" style="--d:${i*24}ms" x="${x.toFixed(1)}" y="${(H-m.b-bh).toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${hoy?'#B01E24':'#3A414A'}"><title>${pad(dt.getDate())}-${pad(dt.getMonth()+1)}: ${v} visitas</title></rect>`;if(i%5===0||hoy)g+=`<text x="${(x+bw/2-2).toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="11" fill="#5A6771">${pad(dt.getDate())}/${pad(dt.getMonth()+1)}</text>`});
   $('#chVis').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#chVis').innerHTML=g;
@@ -1336,6 +1306,104 @@ function registrarPresenciaAdmin(email){
     if(mut) mut.textContent = 'No fue posible validar tu sesión: ' + e.message;
   }
 })();
+// Selector de Portales Universal (Modal)
+window.salfaAbrirMenuPortales = function(ev){
+  if(ev) ev.stopPropagation();
+  var modal = document.getElementById('modalPortales');
+  if(modal) modal.style.display = 'flex';
+};
+window.salfaCerrarMenuPortales = function(){
+  var modal = document.getElementById('modalPortales');
+  if(modal) modal.style.display = 'none';
+};
+window.salfaToggleMenuPortales = function(ev){
+  var modal = document.getElementById('modalPortales');
+  if(!modal) return;
+  if(modal.style.display === 'none'){ window.salfaAbrirMenuPortales(ev); }
+  else { window.salfaCerrarMenuPortales(); }
+};
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ window.salfaCerrarMenuPortales(); }
+});
+
+// Control de Inactividad (15 minutos)
+var TIEMPO_INACTIVIDAD_MS = 15 * 60 * 1000;
+var KEY_ACTIVIDAD = 'salfa_last_activity';
+function registrarActividad(){
+  try { localStorage.setItem(KEY_ACTIVIDAD, String(Date.now())); } catch(e){}
+}
+var _lastActThrottle = 0;
+function alInteractuar(){
+  var ahora = Date.now();
+  if(ahora - _lastActThrottle > 2000){
+    _lastActThrottle = ahora;
+    registrarActividad();
+  }
+}
+['mousedown','pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(ev){
+  window.addEventListener(ev, alInteractuar, {passive:true});
+});
+setInterval(function(){
+  var rawSession = localStorage.getItem('salfa_auth_session');
+  if(!rawSession) return;
+  var ultima = parseInt(localStorage.getItem(KEY_ACTIVIDAD) || '0', 10);
+  if(ultima > 0 && (Date.now() - ultima) > TIEMPO_INACTIVIDAD_MS){
+    localStorage.removeItem('salfa_auth_session');
+    alert('Tu sesión ha expirado tras 15 minutos de inactividad por razones de seguridad.\nPor favor ingresa nuevamente.');
+    location.href = 'index.html';
+  }
+}, 5000);
 </script>
+
+<!-- Modal Selector de Portales Universal -->
+<div class="salfa-modal-portales" id="modalPortales" style="display:none" onclick="if(event.target===this)salfaCerrarMenuPortales()">
+  <div class="salfa-modal-portales-dialog">
+    <div class="salfa-modal-portales-header">
+      <div>
+        <b>Ecosistema Salfa Pilotos</b>
+        <span>Acceso directo entre portales</span>
+      </div>
+      <button type="button" class="btn-close-modal" onclick="salfaCerrarMenuPortales()" title="Cerrar ventana">✕</button>
+    </div>
+    <div class="salfa-modal-portales-body">
+      <a href="index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">HUB</span>
+        <div class="salfa-dd-info"><b>Hub Central de Pilotos</b><span>Portal principal de acceso</span></div>
+        <span class="salfa-dd-tag ok">Hub</span>
+      </a>
+      <a href="https://sjroca-salfa.github.io/portal-mapa-procesos/" class="salfa-dd-item" data-p="01">
+        <span class="salfa-dd-num">01</span>
+        <div class="salfa-dd-info"><b>Mapa de Procesos</b><span>Operaciones y gestión</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="https://sjroca-salfa.github.io/portal-gestion-informacion/" class="salfa-dd-item" data-p="05">
+        <span class="salfa-dd-num">05</span>
+        <div class="salfa-dd-info"><b>Gestión de la Información</b><span>Series documentales O, D, P</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="admin.html" class="salfa-dd-item activo">
+        <span class="salfa-dd-num adm">ADM</span>
+        <div class="salfa-dd-info"><b>Consola de Administración</b><span>Gestión de accesos y métricas</span></div>
+        <span class="salfa-dd-tag aqui">Aquí</span>
+      </a>
+      <div class="salfa-dd-divider"></div>
+      <a href="02-portal-cv/index.html" class="salfa-dd-item" data-p="02">
+        <span class="salfa-dd-num">02</span>
+        <div class="salfa-dd-info"><b>Control de CV</b><span>Gestión de personas</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <div class="salfa-dd-item off">
+        <span class="salfa-dd-num off">03</span>
+        <div class="salfa-dd-info"><b>Gestión AWP & Construcción</b><span>Planificación y control</span></div>
+        <span class="salfa-dd-tag prox">Próximamente</span>
+      </div>
+      <div class="salfa-dd-item off">
+        <span class="salfa-dd-num off">04</span>
+        <div class="salfa-dd-info"><b>Indicadores OKR</b><span>Desarrollo estratégico</span></div>
+        <span class="salfa-dd-tag dev">En desarrollo</span>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

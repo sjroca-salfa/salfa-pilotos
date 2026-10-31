@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal 02 · Control de CV — Salfa Montajes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rojo: #B01E24;
+  --rojo-oscuro: #5E0F13;
+  --rojo-brillo: #E23B42;
+  --grafito: #1E2229;
+  --grafito-medio: #2D323B;
+  --fondo-dark: #17191A;
+  --card-dark: #202223;
+  --linea-dark: #34373A;
+  --texto-dark: #E9EBEC;
+  --texto-mut-dark: #A9ADB0;
+
+  --fondo-light: #F4F6F8;
+  --card-light: #FFFFFF;
+  --linea-light: #E2E8F0;
+  --texto-light: #1E2229;
+  --texto-mut-light: #64748B;
+
+  --ok: #166534;
+  --ok-bg: #dcfce7;
+  --ok-br: #86efac;
+  --war: #b45309;
+  --war-bg: #fef3c7;
+  --war-br: #fcd34d;
+  --dan: #991b1b;
+  --dan-bg: #fee2e2;
+  --dan-br: #fca5a5;
+
+  --f-tit: 'Montserrat', sans-serif;
+  --f-body: 'Barlow', sans-serif;
+  --f-tag: 'Barlow Condensed', sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg: var(--fondo-dark);
+  --card: var(--card-dark);
+  --linea: var(--linea-dark);
+  --texto: var(--texto-dark);
+  --texto-mut: var(--texto-mut-dark);
+  --card-alt: #282B2D;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: var(--fondo-light);
+  --card: var(--card-light);
+  --linea: var(--linea-light);
+  --texto: var(--texto-light);
+  --texto-mut: var(--texto-mut-light);
+  --card-alt: #F8FAFC;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--f-body);
+  background: var(--bg);
+  color: var(--texto);
+  line-height: 1.5;
+  padding-top: 42px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Barra Superior Corporativa ===== */
+.barra-corp-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 42px;
+  background: #1E2229; color: #fff; z-index: 9999;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  font-family: var(--f-body); font-size: 13px;
+  border-bottom: 2px solid var(--rojo);
+}
+.barra-corp-top a {
+  color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px;
+  font-weight: 600; font-family: var(--f-tit); font-size: 12px;
+  padding: 4px 6px; border-radius: 4px; transition: .15s;
+}
+.barra-corp-top a:hover { color: var(--rojo-brillo); }
+.barra-corp-user { display: flex; align-items: center; gap: 10px; flex: none; }
+.barra-corp-badge {
+  background: var(--rojo); color: #fff; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+  font-family: var(--f-tag); letter-spacing: 0.05em;
+}
+
+/* Selector de Portales */
+.salfa-menu-wrap { position: relative; }
+.btn-selector-portales {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #fff;
+  font-family: var(--f-tit); font-size: 11px; font-weight: 700; cursor: pointer; transition: .2s;
+}
+.btn-selector-portales:hover { background: rgba(255,255,255,.2); }
+.salfa-dropdown-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; width: 310px; max-width: 90vw;
+  background: #fff; color: #1E2229; border-radius: 12px; border: 1px solid rgba(0,0,0,.12);
+  box-shadow: 0 16px 36px -10px rgba(0,0,0,.45); z-index: 999999; overflow: hidden; animation: ddFadeIn .18s ease-out;
+}
+@keyframes ddFadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.salfa-dd-header { padding: 12px 14px; background: #1E2229; color: #fff; border-bottom: 2px solid var(--rojo); }
+.salfa-dd-header b { display: block; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; font-family: var(--f-tit); }
+.salfa-dd-header span { display: block; font-size: 11px; color: #aab2ba; margin-top: 2px; }
+.salfa-dd-list { padding: 6px 0; max-height: 360px; overflow-y: auto; }
+.salfa-dd-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; text-decoration: none; color: inherit; transition: background .15s; }
+.salfa-dd-item:hover:not(.off) { background: #f1f5f9; }
+.salfa-dd-item.activo { background: #fdf2f2; border-left: 3px solid var(--rojo); }
+.salfa-dd-item.off { opacity: .55; cursor: not-allowed; }
+.salfa-dd-num { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: #1E2229; color: #fff; font-weight: 700; font-size: 11px; flex: none; font-family: var(--f-tag); }
+.salfa-dd-num.adm { background: var(--rojo); }
+.salfa-dd-info { flex: 1; min-width: 0; }
+.salfa-dd-info b { display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1e293b; font-family: var(--f-tit); }
+.salfa-dd-info span { display: block; font-size: 10.5px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.salfa-dd-tag { font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 999px; white-space: nowrap; flex: none; font-family: var(--f-tag); }
+.salfa-dd-tag.ok { background: #dcfce7; color: #166534; }
+.salfa-dd-tag.aqui { background: #e2e8f0; color: #334155; }
+.salfa-dd-tag.dev { background: #f1f5f9; color: #64748b; }
+.salfa-dd-tag.prox { background: #f8fafc; color: #94a3b8; }
+.salfa-dd-divider { height: 1px; background: #e2e8f0; margin: 5px 0; }
+
+/* Selector de Roles y Simulación */
+.role-switcher-select {
+  background: #2D323B; color: #fff; border: 1px solid #444; border-radius: 6px;
+  font-size: 11px; padding: 3px 8px; font-family: var(--f-tit); font-weight: 600; cursor: pointer; outline: none;
+}
+
+/* Botón Tema */
+.btn-tema {
+  background: transparent; border: 1px solid rgba(255,255,255,.2); color: #fff;
+  border-radius: 6px; padding: 3px 8px; font-size: 12px; cursor: pointer; transition: .2s;
+}
+.btn-tema:hover { background: rgba(255,255,255,.1); }
+
+/* ===== Encabezado Principal Portal 02 ===== */
+.p2-header {
+  background: #1E2229; color: #fff; border-top: 6px solid var(--rojo);
+  border-bottom: 1px solid var(--linea-dark); padding: 18px 24px;
+}
+.p2-header-in {
+  max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.p2-brand { display: flex; align-items: center; gap: 16px; }
+.p2-brand-logo { height: 38px; width: auto; }
+.p2-brand-titles h1 { font-family: var(--f-tit); font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
+.p2-brand-titles h1 span.num { color: var(--rojo-brillo); }
+.p2-brand-titles p { font-size: 12px; color: #A9ADB0; font-family: var(--f-body); }
+
+.p2-header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.btn-p2 {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px;
+  font-family: var(--f-tit); font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none;
+  border: 1px solid transparent; transition: .15s;
+}
+.btn-p2.pri { background: var(--rojo); color: #fff; }
+.btn-p2.pri:hover { background: #c92229; }
+.btn-p2.sec { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.2); }
+.btn-p2.sec:hover { background: rgba(255,255,255,.16); }
+
+/* ===== Barra de Navegación de Pestañas ===== */
+.p2-nav-bar {
+  background: var(--card); border-bottom: 1px solid var(--linea); position: sticky; top: 42px; z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+.p2-nav-in {
+  max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 4px; padding: 0 16px; overflow-x: auto;
+}
+.p2-tab-btn {
+  padding: 12px 16px; background: transparent; border: none; border-bottom: 3px solid transparent;
+  color: var(--texto-mut); font-family: var(--f-tit); font-size: 13px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; transition: .15s;
+}
+.p2-tab-btn:hover { color: var(--texto); }
+.p2-tab-btn.activo { color: var(--rojo); border-bottom-color: var(--rojo); }
+.p2-tab-badge {
+  background: var(--linea); color: var(--texto); font-size: 11px; padding: 1px 6px; border-radius: 999px;
+  font-family: var(--f-tag); font-weight: 600;
+}
+.p2-tab-btn.activo .p2-tab-badge { background: var(--rojo); color: #fff; }
+
+/* ===== Contenedor Principal ===== */
+.p2-main { max-width: 1400px; margin: 0 auto; padding: 24px 16px 60px; }
+
+/* Banner de Alerta de Certificaciones */
+.p2-alert-banner {
+  background: var(--war-bg); border-left: 4px solid var(--war); color: #78350f;
+  padding: 12px 18px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px;
+}
+[data-theme="dark"] .p2-alert-banner { background: #2f2512; color: #fde68a; border-left-color: #f59e0b; }
+.p2-alert-banner b { font-family: var(--f-tit); font-weight: 700; }
+.p2-alert-banner .btn-alert-act {
+  background: var(--war); color: #fff; border: none; border-radius: 4px; padding: 4px 10px;
+  font-family: var(--f-tit); font-size: 11px; font-weight: 700; cursor: pointer;
+}
+
+/* Tarjeta Perfil Ficha Principal (Mi CV) */
+.cv-hero-card {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 12px; padding: 24px;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.cv-hero-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 6px; background: var(--rojo);
+}
+.cv-avatar-wrap {
+  width: 90px; height: 90px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  overflow: hidden; background: #2D323B; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-family: var(--f-tit); font-size: 28px; font-weight: 800; flex: none;
+}
+.cv-hero-info h2 { font-family: var(--f-tit); font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.cv-hero-cargo { font-size: 15px; color: var(--rojo-brillo); font-weight: 600; margin-bottom: 8px; }
+.cv-hero-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--texto-mut); }
+.cv-meta-item { display: inline-flex; align-items: center; gap: 6px; }
+
+.cv-hero-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.badge-estado {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+  font-family: var(--f-tag); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.badge-estado.asig { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-br); }
+.badge-estado.libre { background: var(--war-bg); color: var(--war); border: 1px solid var(--war-br); }
+.badge-estado.stgo { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+[data-theme="dark"] .badge-estado.asig { background: #064e3b; color: #6ee7b7; border-color: #047857; }
+[data-theme="dark"] .badge-estado.libre { background: #451a03; color: #fcd34d; border-color: #78350f; }
+[data-theme="dark"] .badge-estado.stgo { background: #082f49; color: #7dd3fc; border-color: #0369a1; }
+
+/* Grid de Secciones del CV */
+.cv-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.cv-card-sec {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 10px; overflow: hidden;
+}
+.cv-sec-header {
+  padding: 14px 18px; background: var(--card-alt); border-bottom: 1px solid var(--linea);
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;
+}
+.cv-sec-title {
+  display: flex; align-items: center; gap: 10px; font-family: var(--f-tit); font-size: 14px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.cv-sec-title .sec-ico { color: var(--rojo); }
+.cv-sec-body { padding: 18px; }
+
+/* Lista de Elementos (Estudios, Cursos, Certificaciones, etc.) */
+.cv-item-row {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--linea);
+}
+.cv-item-row:last-child { border-bottom: none; }
+.cv-item-main { flex: 1; min-width: 0; }
+.cv-item-tit { font-family: var(--f-tit); font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.cv-item-sub { font-size: 12.5px; color: var(--texto-mut); }
+.cv-item-desc { font-size: 12.5px; margin-top: 6px; line-height: 1.45; }
+.cv-item-acts { display: flex; align-items: center; gap: 6px; flex: none; }
+.btn-mini {
+  background: transparent; border: 1px solid var(--linea); color: var(--texto-mut); border-radius: 4px;
+  padding: 3px 6px; font-size: 11px; cursor: pointer; transition: .15s;
+}
+.btn-mini:hover { color: var(--texto); border-color: var(--texto-mut); }
+.btn-mini.del:hover { color: var(--dan); border-color: var(--dan); }
+
+/* Semáforo de Certificaciones */
+.semaforo-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700;
+  font-family: var(--f-tag); padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em;
+}
+.semaforo-chip.vigente { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-br); }
+.semaforo-chip.por-vencer { background: var(--war-bg); color: var(--war); border: 1px solid var(--war-br); }
+.semaforo-chip.vencida { background: var(--dan-bg); color: var(--dan); border: 1px solid var(--dan-br); }
+[data-theme="dark"] .semaforo-chip.vigente { background: #064e3b; color: #6ee7b7; border-color: #047857; }
+[data-theme="dark"] .semaforo-chip.por-vencer { background: #451a03; color: #fcd34d; border-color: #78350f; }
+[data-theme="dark"] .semaforo-chip.vencida { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+
+.semaforo-punto { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.semaforo-chip.vigente .semaforo-punto { background: #22c55e; }
+.semaforo-chip.por-vencer .semaforo-punto { background: #f59e0b; }
+.semaforo-chip.vencida .semaforo-punto { background: #ef4444; }
+
+/* ===== Vista Directorio / Buscador ===== */
+.dir-controls {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 10px; padding: 18px; margin-bottom: 24px;
+}
+.dir-search-bar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.dir-input-search {
+  flex: 1; min-width: 250px; background: var(--card-alt); border: 1px solid var(--linea); border-radius: 6px;
+  padding: 10px 14px; font-size: 13.5px; color: var(--texto); outline: none; font-family: var(--f-body);
+}
+.dir-input-search:focus { border-color: var(--rojo); }
+.dir-filters-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.dir-select {
+  background: var(--card-alt); border: 1px solid var(--linea); border-radius: 6px; padding: 6px 12px;
+  font-size: 12px; color: var(--texto); outline: none; font-family: var(--f-body); cursor: pointer;
+}
+
+.dir-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+.dir-card {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 10px; padding: 18px;
+  transition: transform .15s, box-shadow .15s; display: flex; flex-direction: column; justify-content: space-between;
+}
+.dir-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.dir-card-top { display: flex; gap: 14px; margin-bottom: 12px; }
+.dir-avatar {
+  width: 52px; height: 52px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  background: #2D323B; color: #fff; font-family: var(--f-tit); font-size: 18px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex: none;
+}
+.dir-info h3 { font-family: var(--f-tit); font-size: 15px; font-weight: 700; line-height: 1.2; margin-bottom: 3px; }
+.dir-cargo { font-size: 12.5px; color: var(--rojo-brillo); font-weight: 600; margin-bottom: 4px; }
+.dir-proy { font-size: 12px; color: var(--texto-mut); display: flex; align-items: center; gap: 5px; }
+
+.dir-chips-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
+.dir-chip-cert {
+  background: var(--card-alt); border: 1px solid var(--linea); border-radius: 4px; padding: 2px 6px;
+  font-size: 10.5px; color: var(--texto-mut); font-family: var(--f-tag); font-weight: 600;
+}
+.dir-card-bottom {
+  padding-top: 12px; border-top: 1px solid var(--linea); display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ===== Vista Dotación ===== */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi-card {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 10px; padding: 18px;
+  border-top: 4px solid var(--rojo);
+}
+.kpi-tit { font-size: 11.5px; font-family: var(--f-tit); text-transform: uppercase; color: var(--texto-mut); font-weight: 700; letter-spacing: .04em; }
+.kpi-val { font-size: 32px; font-family: var(--f-tit); font-weight: 800; color: var(--texto); margin: 6px 0 2px; }
+.kpi-sub { font-size: 11.5px; color: var(--texto-mut); }
+
+.dot-subnav { display: flex; gap: 8px; margin-bottom: 16px; }
+.btn-dot-sub {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid var(--linea); background: var(--card);
+  font-family: var(--f-tit); font-size: 12px; font-weight: 700; color: var(--texto-mut); cursor: pointer;
+}
+.btn-dot-sub.activo { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+
+.salfa-table-wrap {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 10px; overflow-x: auto;
+}
+.salfa-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+.salfa-table th {
+  background: #1E2229; color: #fff; padding: 12px 16px; font-family: var(--f-tit); font-size: 12px;
+  text-transform: uppercase; letter-spacing: .03em; border-bottom: 2px solid var(--rojo);
+}
+.salfa-table td { padding: 12px 16px; border-bottom: 1px solid var(--linea); }
+.salfa-table tr:nth-child(even) td { background: var(--card-alt); }
+.salfa-table tr:hover td { background: rgba(176, 30, 36, 0.05); }
+
+/* ===== Panel de Gestión / RRHH / Jefes ===== */
+.panel-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .panel-grid-2 { grid-template-columns: 1fr; } }
+
+/* Modales ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(3px); z-index: 99999;
+  display: flex; align-items: center; justify-content: center; padding: 16px; animation: modalIn .15s ease-out;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.modal-card {
+  background: var(--card); border: 1px solid var(--linea); border-radius: 12px; width: 100%; max-width: 650px;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,.4); display: flex; flex-direction: column;
+}
+.modal-head {
+  padding: 16px 20px; background: #1E2229; color: #fff; border-bottom: 2px solid var(--rojo);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head h3 { font-family: var(--f-tit); font-size: 16px; font-weight: 700; text-transform: uppercase; }
+.modal-close { background: transparent; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+.modal-body { padding: 20px; }
+.modal-foot { padding: 14px 20px; background: var(--card-alt); border-top: 1px solid var(--linea); display: flex; justify-content: flex-end; gap: 10px; }
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; font-family: var(--f-tit); color: var(--texto-mut); text-transform: uppercase; }
+.form-ctrl {
+  width: 100%; background: var(--card-alt); border: 1px solid var(--linea); border-radius: 6px; padding: 8px 12px;
+  font-size: 13px; color: var(--texto); font-family: var(--f-body); outline: none;
+}
+.form-ctrl:focus { border-color: var(--rojo); }
+
+/* Toast */
+.toast-p2 {
+  position: fixed; bottom: 24px; right: 24px; background: #1E2229; color: #fff; border-left: 4px solid var(--rojo);
+  padding: 12px 20px; border-radius: 6px; font-size: 13px; font-family: var(--f-tit); font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3); z-index: 999999; display: none; animation: toastIn .2s ease-out;
+}
+@keyframes toastIn { from{transform:translateY(12px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ===== Estilos para Impresión / Exportación a PDF ===== */
+@media print {
+  body { padding-top: 0; background: #fff; color: #000; font-size: 11pt; }
+  .barra-corp-top, .p2-header-actions, .p2-nav-bar, .dir-controls, .cv-item-acts, .btn-p2, .modal-overlay, .role-switcher-select, .btn-tema { display: none !important; }
+  .p2-header { border-top: 6px solid #B01E24 !important; background: #1E2229 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cv-hero-card { border: 1px solid #ccc !important; box-shadow: none !important; page-break-inside: avoid; }
+  .cv-card-sec { border: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 14pt; }
+  .semaforo-chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+@media (max-width: 768px) {
+  .cv-hero-card { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+  .cv-hero-actions { align-items: center; margin-top: 12px; }
+  .p2-header-in { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- 1. Barra Superior Corporativa (Sincronizada con el Hub) -->
+<header class="barra-corp-top" id="barraCorpTop">
+  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+    <a id="btnVolverHub" href="../index.html" title="Volver al Hub Central de Pilotos">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Volver al Hub</span>
+    </a>
+    
+    <!-- Selector directo entre portales -->
+    <div class="salfa-menu-wrap" id="menuPortalesWrap">
+      <button type="button" class="btn-selector-portales" id="btnSelectorPortales" onclick="toggleMenuPortales(event)" aria-expanded="false" title="Cambiar de portal">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Portales</span>
+        <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="salfa-dropdown-menu" id="dropdownPortalesMenu" style="display:none">
+        <div class="salfa-dd-header">
+          <b>Ecosistema Salfa Pilotos</b>
+          <span>Acceso directo entre portales</span>
+        </div>
+        <div class="salfa-dd-list">
+          <a href="../index.html" class="salfa-dd-item">
+            <span class="salfa-dd-num">HUB</span>
+            <div class="salfa-dd-info"><b>Hub Central de Pilotos</b><span>Portal principal de acceso</span></div>
+            <span class="salfa-dd-tag ok">Hub</span>
+          </a>
+          <a href="https://sjroca-salfa.github.io/portal-mapa-procesos/" class="salfa-dd-item">
+            <span class="salfa-dd-num">01</span>
+            <div class="salfa-dd-info"><b>Mapa de Procesos</b><span>Operaciones y gestión</span></div>
+            <span class="salfa-dd-tag ok">Activo</span>
+          </a>
+          <a href="index.html" class="salfa-dd-item activo">
+            <span class="salfa-dd-num" style="background:var(--rojo)">02</span>
+            <div class="salfa-dd-info"><b>Control de CV</b><span>Gestión de personas</span></div>
+            <span class="salfa-dd-tag aqui">Aquí</span>
+          </a>
+          <a href="https://sjroca-salfa.github.io/portal-gestion-informacion/" class="salfa-dd-item">
+            <span class="salfa-dd-num">05</span>
+            <div class="salfa-dd-info"><b>Gestión de la Información</b><span>Series documentales O, D, P</span></div>
+            <span class="salfa-dd-tag ok">Activo</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información de Usuario, Rol y Herramientas -->
+  <div class="barra-corp-user">
+    <!-- Simulador de Rol (Para validar los 4 perfiles del Plan Maestro) -->
+    <span style="font-size:11px;color:#aab2ba;display:none;align-items:center;gap:4px" id="lblSimRol">
+      Simular Rol:
+    </span>
+    <select class="role-switcher-select" id="selRolSim" onchange="cambiarRolSimulado(this.value)" title="Cambiar rol para probar permisos">
+      <option value="Trabajador">Rol: Trabajador (Juan Pérez)</option>
+      <option value="Jefe de Proyecto">Rol: Jefe de Proyecto (Marco González)</option>
+      <option value="Gerencia / P&D">Rol: Gerencia P&D (Carlos Fuenzalida)</option>
+      <option value="Administrador" selected>Rol: RRHH / Admin (Sebastián Roca)</option>
+    </select>
+
+    <span class="barra-corp-badge" id="topBadgeRol">Admin</span>
+    <button type="button" class="btn-tema" onclick="alternarTema()" title="Cambiar Tema">🌓</button>
+  </div>
+</header>
+
+<!-- 2. Encabezado Oficial Portal 02 -->
+<div class="p2-header">
+  <div class="p2-header-in">
+    <div class="p2-brand">
+      <!-- Logo Salfa Montajes Oficial SVG -->
+      <svg class="p2-brand-logo" viewBox="0 0 280 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="32" font-family="'Montserrat', sans-serif" font-weight="900" font-size="32" fill="#B01E24" letter-spacing="1">SALFA</text>
+        <text x="122" y="32" font-family="'Montserrat', sans-serif" font-weight="700" font-size="28" fill="#FFFFFF" letter-spacing="1.5">MONTAJES</text>
+      </svg>
+      <div class="p2-brand-titles">
+        <h1><span class="num">02</span> Control de CV y Competencias</h1>
+        <p>Perfil profesional vivo, control de certificaciones ocupacionales y dotación de faenas</p>
+      </div>
+    </div>
+
+    <div class="p2-header-actions">
+      <button type="button" class="btn-p2 sec" onclick="abrirModalDeclararProyecto()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>Declarar Proyecto / Estado</span>
+      </button>
+      <button type="button" class="btn-p2 pri" onclick="exportarCVA4()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        <span>Exportar CV en PDF</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Navegación por Módulos y Pestañas -->
+<nav class="p2-nav-bar">
+  <div class="p2-nav-in">
+    <button type="button" class="p2-tab-btn activo" data-tab="tabMiCv" onclick="mostrarTab('tabMiCv')">
+      <span>Mi CV (Autoservicio)</span>
+    </button>
+    <button type="button" class="p2-tab-btn" data-tab="tabDirectorio" onclick="mostrarTab('tabDirectorio')">
+      <span>Directorio y Buscador</span>
+      <span class="p2-tab-badge" id="badgeTotalDir">12</span>
+    </button>
+    <button type="button" class="p2-tab-btn" data-tab="tabDotacion" onclick="mostrarTab('tabDotacion')">
+      <span>Tablero de Dotación</span>
+    </button>
+    <button type="button" class="p2-tab-btn" data-tab="tabSemaforo" onclick="mostrarTab('tabSemaforo')">
+      <span>Semáforo de Certificaciones</span>
+      <span class="p2-tab-badge" id="badgeAlertasCert" style="background:var(--war);color:#fff">2</span>
+    </button>
+    <button type="button" class="p2-tab-btn" data-tab="tabGestion" id="btnTabGestion" onclick="mostrarTab('tabGestion')">
+      <span>Panel de Gestión</span>
+      <span class="p2-tab-badge" id="badgePendientesGestion">1</span>
+    </button>
+  </div>
+</nav>
+
+<!-- 4. Contenido Principal -->
+<main class="p2-main">
+
+  <!-- Banner de alerta de certificaciones si hay por vencer -->
+  <div class="p2-alert-banner" id="bannerAlertaVenc" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px">
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
+      <span><b id="txtAlertaTit">Certificaciones por Vencer:</b> Tienes certificaciones ocupacionales con vencimiento en menos de 60 días.</span>
+    </div>
+    <button type="button" class="btn-alert-act" onclick="mostrarTab('tabSemaforo')">Revisar Semáforo</button>
+  </div>
+
+  <!-- ==================== PESTAÑA 1: MI CV (AUTOSERVICIO) ==================== -->
+  <section id="tabMiCv" class="p2-tab-content">
+    
+    <!-- Tarjeta Principal del Trabajador -->
+    <div class="cv-hero-card" id="cvHeroCard">
+      <div class="cv-avatar-wrap" id="cvAvatar">SR</div>
+      <div class="cv-hero-info">
+        <h2 id="cvNombre">Sebastián Roca</h2>
+        <div class="cv-hero-cargo" id="cvCargo">Ingeniero Especialista en Control y Procesos</div>
+        <div class="cv-hero-meta">
+          <div class="cv-meta-item">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span id="cvEmail">sjroca@salfamontajes.com</span>
+          </div>
+          <div class="cv-meta-item">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span id="cvFono">+56 9 8419 2381</span>
+          </div>
+          <div class="cv-meta-item">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            <span id="cvEspecialidad">Control de Proyectos, Montaje Industrial</span>
+          </div>
+        </div>
+      </div>
+      <div class="cv-hero-actions">
+        <span class="badge-estado asig" id="cvBadgeEstado">Asignado a Proyecto</span>
+        <div style="font-size:12px;color:var(--texto-mut);margin-top:4px" id="cvProyectoActual">Planta Concentradora Spence</div>
+        <button type="button" class="btn-mini" onclick="abrirModalEditarBasicos()" style="margin-top:8px">Editar Ficha Básica</button>
+      </div>
+    </div>
+
+    <!-- Secciones del CV -->
+    <div class="cv-grid">
+
+      <!-- Sección 1: Resumen Profesional y Logros -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Resumen Profesional y Logros Clave</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalEditarBasicos()">Editar</button>
+        </div>
+        <div class="cv-sec-body">
+          <p id="cvTxtResumen" style="margin-bottom:12px;color:var(--texto)">
+            Profesional con más de 12 años de trayectoria en el sector minero y montajes electromecánicos de gran envergadura. Especialista en optimización de operaciones, estandarización de procesos y control documental en faena.
+          </p>
+          <div style="background:var(--card-alt);padding:12px 16px;border-radius:8px;border-left:3px solid var(--rojo)">
+            <b style="font-size:11.5px;text-transform:uppercase;font-family:var(--f-tit);display:block;margin-bottom:4px">Logros y Reconocimientos:</b>
+            <span id="cvTxtLogros" style="font-size:13px;color:var(--texto-mut)">
+              Reconocimiento Cero Incidentes QB2 2024. Liderazgo en el despliegue del sistema integrado de calidad en Minera Spence.
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Sección 2: Estudios Superiores y Técnicos -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Estudios Superiores y Formación Académica</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalItem('estudio')">+ Agregar Estudio</button>
+        </div>
+        <div class="cv-sec-body" id="cvListaEstudios">
+          <!-- Renderizado dinámico -->
+        </div>
+      </article>
+
+      <!-- Sección 3: Certificaciones y Habilitaciones Ocupacionales -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Certificaciones Ocupacionales y Licencias (Semáforo)</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalItem('certificacion')">+ Registrar Certificación</button>
+        </div>
+        <div class="cv-sec-body" id="cvListaCertificaciones">
+          <!-- Renderizado dinámico -->
+        </div>
+      </article>
+
+      <!-- Sección 4: Cursos y Capacitaciones -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Cursos y Capacitaciones Técnicas</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalItem('curso')">+ Agregar Curso</button>
+        </div>
+        <div class="cv-sec-body" id="cvListaCursos">
+          <!-- Renderizado dinámico -->
+        </div>
+      </article>
+
+      <!-- Sección 5: Experiencia Laboral en Proyectos -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Experiencia Laboral en Montajes Industriales</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalItem('experiencia')">+ Agregar Experiencia</button>
+        </div>
+        <div class="cv-sec-body" id="cvListaExperiencia">
+          <!-- Renderizado dinámico -->
+        </div>
+      </article>
+
+      <!-- Sección 6: Historial de Asignaciones en Salfa -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Historial de Asignación a Faenas (Confirmado por RRHH)</span>
+          </div>
+          <button type="button" class="btn-mini" onclick="abrirModalDeclararProyecto()">Declarar Nueva Faena</button>
+        </div>
+        <div class="cv-sec-body" id="cvListaAsignaciones">
+          <!-- Renderizado dinámico -->
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ==================== PESTAÑA 2: DIRECTORIO Y BUSCADOR ==================== -->
+  <section id="tabDirectorio" class="p2-tab-content" style="display:none">
+    <div class="dir-controls">
+      <div class="dir-search-bar">
+        <input type="text" class="dir-input-search" id="inputBuscarDir" placeholder="Buscar por nombre, cargo, especialidad, certificación o faena..." oninput="filtrarDirectorio()">
+      </div>
+      <div class="dir-filters-row">
+        <select class="dir-select" id="filtroEstado" onchange="filtrarDirectorio()">
+          <option value="">Estado: Todos</option>
+          <option value="Asignado">Asignados a Faena</option>
+          <option value="Libre">Libres para Asignar</option>
+          <option value="Santiago">Casa Matriz Santiago</option>
+        </select>
+        <select class="dir-select" id="filtroCargo" onchange="filtrarDirectorio()">
+          <option value="">Cargo: Todos</option>
+        </select>
+        <select class="dir-select" id="filtroProyecto" onchange="filtrarDirectorio()">
+          <option value="">Proyecto / Faena: Todos</option>
+        </select>
+        <select class="dir-select" id="filtroCert" onchange="filtrarDirectorio()">
+          <option value="">Certificación: Cualquiera</option>
+          <option value="Trabajo en altura física">Con Altura Física Vigente</option>
+          <option value="Espacios confinados">Con Espacios Confinados Vigente</option>
+          <option value="Izaje y rigging / maniobras críticas">Con Rigger / Izaje Vigente</option>
+          <option value="Calificación de soldador (WPS/PQR)">Con Soldador 6G Calificado</option>
+        </select>
+        <button type="button" class="btn-mini" onclick="limpiarFiltrosDirectorio()">Limpiar Filtros</button>
+      </div>
+    </div>
+
+    <!-- Grid de Tarjetas de Trabajadores -->
+    <div class="dir-grid" id="gridDirectorio">
+      <!-- Inyectado dinámicamente -->
+    </div>
+  </section>
+
+  <!-- ==================== PESTAÑA 3: TABLERO DE DOTACIÓN ==================== -->
+  <section id="tabDotacion" class="p2-tab-content" style="display:none">
+    <!-- KPIs Ejecutivos -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-tit">Total Dotación</div>
+        <div class="kpi-val" id="kpiTotalDot">12</div>
+        <div class="kpi-sub">Trabajadores registrados</div>
+      </div>
+      <div class="kpi-card" style="border-top-color:#166534">
+        <div class="kpi-tit">Asignados a Faenas</div>
+        <div class="kpi-val" id="kpiAsignados">8</div>
+        <div class="kpi-sub">Operando en contratos activos</div>
+      </div>
+      <div class="kpi-card" style="border-top-color:#f59e0b">
+        <div class="kpi-tit">Libres para Asignar</div>
+        <div class="kpi-val" id="kpiLibres">3</div>
+        <div class="kpi-sub">Disponibles para movilización</div>
+      </div>
+      <div class="kpi-card" style="border-top-color:#0284c7">
+        <div class="kpi-tit">Casa Matriz Santiago</div>
+        <div class="kpi-val" id="kpiSantiago">1</div>
+        <div class="kpi-sub">Oficinas centrales Providencia</div>
+      </div>
+    </div>
+
+    <!-- Subnavegación de Vistas de Dotación -->
+    <div class="dot-subnav">
+      <button type="button" class="btn-dot-sub activo" id="btnSubDotProy" onclick="cambiarSubVistaDotacion('proyectos')">Por Faena / Proyecto</button>
+      <button type="button" class="btn-dot-sub" id="btnSubDotLibres" onclick="cambiarSubVistaDotacion('libres')">Libres para Asignar (Prioridad)</button>
+      <button type="button" class="btn-dot-sub" id="btnSubDotStgo" onclick="cambiarSubVistaDotacion('santiago')">Casa Matriz Santiago</button>
+    </div>
+
+    <!-- Contenedor de la Tabla de Dotación -->
+    <div class="salfa-table-wrap" id="contenedorTablaDotacion">
+      <!-- Inyectado dinámicamente -->
+    </div>
+  </section>
+
+  <!-- ==================== PESTAÑA 4: SEMÁFORO DE CERTIFICACIONES ==================== -->
+  <section id="tabSemaforo" class="p2-tab-content" style="display:none">
+    <div class="cv-card-sec" style="margin-bottom:20px">
+      <div class="cv-sec-header">
+        <div class="cv-sec-title">
+          <span class="sec-ico">◈</span>
+          <span>Matriz de Control y Vencimientos de Certificaciones</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn-mini" onclick="filtrarSemaforo('todas')">Todas</button>
+          <button type="button" class="btn-mini" onclick="filtrarSemaforo('por-vencer')">Por Vencer (≤60 días)</button>
+          <button type="button" class="btn-mini" onclick="filtrarSemaforo('vencidas')">Vencidas</button>
+        </div>
+      </div>
+      <div class="cv-sec-body">
+        <div class="salfa-table-wrap">
+          <table class="salfa-table" id="tablaSemaforoGlobal">
+            <thead>
+              <tr>
+                <th>Trabajador</th>
+                <th>Cargo / Proyecto</th>
+                <th>Certificación</th>
+                <th>Vencimiento</th>
+                <th>Días Restantes</th>
+                <th>Semáforo</th>
+                <th>Respaldo</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySemaforoGlobal">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PESTAÑA 5: PANEL DE GESTIÓN (RRHH & JEFES) ==================== -->
+  <section id="tabGestion" class="p2-tab-content" style="display:none">
+    <div class="panel-grid-2">
+
+      <!-- Bandeja de Validaciones Pendientes -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Bandeja de Validaciones Pendientes (RRHH)</span>
+          </div>
+          <span class="p2-tab-badge" id="badgeBandejaCant">1</span>
+        </div>
+        <div class="cv-sec-body" id="bandejaValidaciones">
+          <!-- Inyectado dinámicamente -->
+        </div>
+      </article>
+
+      <!-- Herramienta de Matching de Competencias (Gerencia & Jefes) -->
+      <article class="cv-card-sec">
+        <div class="cv-sec-header">
+          <div class="cv-sec-title">
+            <span class="sec-ico">◈</span>
+            <span>Skill Matching: Buscar Dotación Libre para Faena</span>
+          </div>
+        </div>
+        <div class="cv-sec-body">
+          <p style="font-size:12.5px;color:var(--texto-mut);margin-bottom:12px">
+            Encuentra de inmediato personal libre con las certificaciones vigentes exigidas por el cliente.
+          </p>
+          <div class="form-group">
+            <label>Certificación requerida:</label>
+            <select class="form-ctrl" id="matchCert" onchange="ejecutarSkillMatching()">
+              <option value="">Selecciona requisito...</option>
+              <option value="Trabajo en altura física">Trabajo en altura física</option>
+              <option value="Calificación de soldador (WPS/PQR)">Calificación de soldador WPS/PQR</option>
+              <option value="Izaje y rigging / maniobras críticas">Izaje y rigging / Maniobras</option>
+              <option value="Espacios confinados">Espacios confinados</option>
+            </select>
+          </div>
+          <div id="resultadoMatching" style="margin-top:14px">
+            <!-- Resultados -->
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Catálogos del Sistema (Cargos, Proyectos, Certificaciones) -->
+    <article class="cv-card-sec" style="margin-top:20px">
+      <div class="cv-sec-header">
+        <div class="cv-sec-title">
+          <span class="sec-ico">◈</span>
+          <span>Catálogos Normalizados de Montajes (Gestión RRHH)</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn-mini" onclick="abrirModalAgregarCatalogo('cargo')">+ Cargo</button>
+          <button type="button" class="btn-mini" onclick="abrirModalAgregarCatalogo('proyecto')">+ Proyecto</button>
+        </div>
+      </div>
+      <div class="cv-sec-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px" id="gridCatalogos">
+          <!-- Listado de catálogos -->
+        </div>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<!-- ==================== MODALES ==================== -->
+
+<!-- Modal: Declarar Proyecto / Estado -->
+<div class="modal-overlay" id="modalDeclararProyecto" style="display:none">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Declarar Proyecto y Estado</h3>
+      <button type="button" class="modal-close" onclick="cerrarModales()">&times;</button>
+    </div>
+    <form onsubmit="guardarDeclaracionProyecto(event)">
+      <div class="modal-body">
+        <p style="font-size:12.5px;color:var(--texto-mut);margin-bottom:14px">
+          Declara tu asignación actual. RRHH o tu Jefe de Proyecto confirmará la declaración para que quede activa en la dotación oficial.
+        </p>
+        <div class="form-group">
+          <label>Estado de Asignación:</label>
+          <select class="form-ctrl" id="decEstado" required onchange="actualizarSelectProyDeclaracion(this.value)">
+            <option value="Asignado">Asignado a Proyecto / Faena</option>
+            <option value="Libre">Libre / Disponible para faena</option>
+            <option value="Santiago">Casa Matriz Santiago</option>
+          </select>
+        </div>
+        <div class="form-group" id="grpDecProyecto">
+          <label>Proyecto / Faena:</label>
+          <select class="form-ctrl" id="decProyecto" required>
+            <!-- Inyectado desde catálogo -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Incorporación:</label>
+          <input type="date" class="form-ctrl" id="decFechaDesde" required>
+        </div>
+        <div class="form-group">
+          <label>Observaciones / Comentarios:</label>
+          <textarea class="form-ctrl" id="decObs" rows="3" placeholder="Ej: Movilización aprobada por Gerencia de Operaciones..."></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-p2 sec" onclick="cerrarModales()">Cancelar</button>
+        <button type="submit" class="btn-p2 pri">Enviar Declaración a RRHH</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Editar Ficha Básica -->
+<div class="modal-overlay" id="modalEditarBasicos" style="display:none">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Editar Ficha Profesional Básica</h3>
+      <button type="button" class="modal-close" onclick="cerrarModales()">&times;</button>
+    </div>
+    <form onsubmit="guardarFichaBasica(event)">
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nombre Completo:</label>
+          <input type="text" class="form-ctrl" id="fNombre" required>
+        </div>
+        <div class="form-group">
+          <label>Cargo:</label>
+          <select class="form-ctrl" id="fCargo" required></select>
+        </div>
+        <div class="form-group">
+          <label>Especialidad Principal:</label>
+          <input type="text" class="form-ctrl" id="fEspecialidad" placeholder="Ej: Montaje Mecánico, Piping, Soldadura, Izaje..." required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono de Contacto:</label>
+          <input type="tel" class="form-ctrl" id="fTelefono" placeholder="+56 9 ...">
+        </div>
+        <div class="form-group">
+          <label>Resumen Profesional:</label>
+          <textarea class="form-ctrl" id="fResumen" rows="3" placeholder="Breve biografía laboral enfocada en proyectos de montaje..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Logros y Reconocimientos:</label>
+          <textarea class="form-ctrl" id="fLogros" rows="2" placeholder="Hitos de seguridad, premios o proyectos destacados..."></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-p2 sec" onclick="cerrarModales()">Cancelar</button>
+        <button type="submit" class="btn-p2 pri">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Agregar / Editar Ítem Genérico (Estudio, Curso, Certificación, Experiencia) -->
+<div class="modal-overlay" id="modalItemGenerico" style="display:none">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalItemTitulo">Agregar Registro</h3>
+      <button type="button" class="modal-close" onclick="cerrarModales()">&times;</button>
+    </div>
+    <form id="formItemGenerico" onsubmit="guardarItemGenerico(event)">
+      <div class="modal-body" id="modalItemCampos">
+        <!-- Inyectado dinámicamente según tipo -->
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-p2 sec" onclick="cerrarModales()">Cancelar</button>
+        <button type="submit" class="btn-p2 pri">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Ver CV Completo (Lectura para Directorio) -->
+<div class="modal-overlay" id="modalVerCvCompleto" style="display:none">
+  <div class="modal-card" style="max-width:800px">
+    <div class="modal-head">
+      <h3 id="verCvModalTitulo">Currículum Vitae — Salfa Montajes</h3>
+      <button type="button" class="modal-close" onclick="cerrarModales()">&times;</button>
+    </div>
+    <div class="modal-body" id="verCvModalCuerpo">
+      <!-- Inyectado dinámicamente -->
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn-p2 sec" onclick="cerrarModales()">Cerrar</button>
+      <button type="button" class="btn-p2 pri" onclick="exportarCVA4()">Imprimir / Guardar en PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notificaciones -->
+<div class="toast-p2" id="toastP2">Operación completada con éxito.</div>
+
+<!-- ==================== SCRIPT DE LOGICA Y DATOS ==================== -->
+<script>
+// ===== 1. Estado y Base de Datos Local =====
+var DB_KEY = 'salfa_cv_database_v1';
+var ROL_ACTUAL = 'Administrador';
+var USUARIO_ACTUAL = 'sjroca@salfamontajes.com';
+
+// Catálogos Oficiales Salfa Montajes
+var CATALOGOS = {
+  cargos: [
+    'Administrador de Obra',
+    'Jefe de Proyecto',
+    'Jefe de Terreno',
+    'Supervisor de Montaje',
+    'Supervisor de Piping',
+    'Supervisor Eléctrico & Control',
+    'Capataz de Estructuras',
+    'Soldador Calificado 6G',
+    'Rigger Alta Tonelaje',
+    'Operador Grúa Pluma',
+    'Especialista de Calidad (QA/QC)',
+    'Prevencionista de Riesgos (SISO)',
+    'Ingeniero Especialista en Control y Procesos'
+  ],
+  proyectos: [
+    'Planta Concentradora Spence',
+    'Ampliación Minera Los Pelambres',
+    'Codelco Andina — Chancado Primario',
+    'Expansión Quebrada Blanca QB2',
+    'Casa Matriz Santiago',
+    'Taller Central Lampa'
+  ],
+  certificaciones: [
+    'Trabajo en altura física',
+    'Espacios confinados',
+    'Izaje y rigging / maniobras críticas',
+    'Calificación de soldador (WPS/PQR)',
+    'Operador de equipos (grúa pluma / manlift)',
+    'Licencia de conducir municipal (Clase A2/A4/B)',
+    'Prevención de riesgos / Inducción EPP',
+    'Examen preocupacional vigente'
+  ]
+};
+
+// Base Inicial de Trabajadores para Demostración y Producción
+var TRABAJADORES_INICIALES = [
+  {
+    correo: 'sjroca@salfamontajes.com',
+    nombre: 'Sebastián Roca',
+    cargo: 'Ingeniero Especialista en Control y Procesos',
+    estado: 'Asignado',
+    proyectoActual: 'Planta Concentradora Spence',
+    especialidad: 'Control de Proyectos, Montaje Industrial',
+    telefono: '+56 9 8419 2381',
+    resumen: 'Profesional con más de 12 años de trayectoria en el sector minero y montajes electromecánicos de gran envergadura. Especialista en optimización de operaciones, estandarización de procesos y control documental en faena.',
+    logros: 'Reconocimiento Cero Incidentes QB2 2024. Liderazgo en el despliegue del sistema integrado de calidad en Minera Spence.',
+    validadoRRHH: true,
+    estudios: [
+      { id:'e1', nivel:'Universitario', titulo:'Ingeniería Civil', institucion:'Universidad Técnica Federico Santa María', anio:'2012', estado:'Titulado' },
+      { id:'e2', nivel:'Posgrado', titulo:'Diplomado en Gestión de Proyectos Mineros', institucion:'Pontificia Universidad Católica', anio:'2018', estado:'Graduado' }
+    ],
+    cursos: [
+      { id:'c1', nombre:'Metodología Advanced Work Packaging (AWP)', institucion:'CII / SalfaCorp', horas:'40', anio:'2023', respaldo:'#' },
+      { id:'c2', nombre:'Auditor Interno ISO 9001:2015', institucion:'Bureau Veritas', horas:'24', anio:'2021', respaldo:'#' }
+    ],
+    certificaciones: [
+      { id:'crt1', tipo:'Trabajo en altura física', emision:'2026-02-10', vencimiento:'2027-02-10', respaldo:'#' },
+      { id:'crt2', tipo:'Examen preocupacional vigente', emision:'2026-01-15', vencimiento:'2026-11-20', respaldo:'#' }, // Por vencer
+      { id:'crt3', tipo:'Prevención de riesgos / Inducción EPP', emision:'2026-03-01', vencimiento:'2027-03-01', respaldo:'#' }
+    ],
+    experiencia: [
+      { id:'x1', empresa:'Salfa Montajes', cargo:'Ingeniero de Procesos y Control', desde:'2022', hasta:'Presente', funciones:'Supervisión técnica de frentes y diseño del ecosistema digital de portales de pilotaje.' },
+      { id:'x2', empresa:'SalfaCorp — Proyecto QB2', cargo:'Jefe de Frente Montaje', desde:'2019', hasta:'2022', funciones:'Dirección de montaje de estructuras pesadas de molienda y piping secundario.' }
+    ],
+    asignaciones: [
+      { id:'a1', proyecto:'Planta Concentradora Spence', desde:'2024-03-01', estado:'Confirmado', confirmador:'RRHH Central', obs:'Asignación oficial faena minera.' },
+      { id:'a2', proyecto:'Expansión Quebrada Blanca QB2', desde:'2021-01-10', hasta:'2023-12-15', estado:'Finalizado', confirmador:'RRHH Central', obs:'Cierre contractual exitoso.' }
+    ]
+  },
+  {
+    correo: 'j.perez@salfamontajes.com',
+    nombre: 'Juan Pérez Soto',
+    cargo: 'Supervisor de Montaje',
+    estado: 'Asignado',
+    proyectoActual: 'Planta Concentradora Spence',
+    especialidad: 'Montaje de Estructuras Pesadas, Torque y Alineamiento',
+    telefono: '+56 9 7123 4567',
+    resumen: 'Supervisor técnico con 15 años liderando cuadrillas de montaje mecánico y estructural en obras mineras de alta montaña.',
+    logros: 'Premio al desempeño operacional Salfa Montajes 2023.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Técnico Superior', titulo:'Técnico en Construcción y Montaje Industrial', institucion:'INACAP', anio:'2010', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Rigging Avanzado y Cálculos de Maniobras', institucion:'Salfa Training', horas:'30', anio:'2024', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Trabajo en altura física', emision:'2026-03-05', vencimiento:'2027-03-05', respaldo:'#' },
+      { id:'crt2', tipo:'Espacios confinados', emision:'2025-10-10', vencimiento:'2026-10-10', respaldo:'#' } // Vencida
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Supervisor de Montaje', desde:'2018', hasta:'Presente', funciones:'Liderazgo de maniobras con grúas de 300T en concentradora.' }],
+    asignaciones: [{ id:'a1', proyecto:'Planta Concentradora Spence', desde:'2023-08-01', estado:'Confirmado', confirmador:'m.gonzalez@salfamontajes.com', obs:'Cuadrilla de montaje chancado.' }]
+  },
+  {
+    correo: 'm.gonzalez@salfamontajes.com',
+    nombre: 'Marco González',
+    cargo: 'Jefe de Proyecto',
+    estado: 'Asignado',
+    proyectoActual: 'Planta Concentradora Spence',
+    especialidad: 'Gestión Contractual, Montaje Industrial EPC',
+    telefono: '+56 9 9988 7766',
+    resumen: 'Jefe de Proyecto con amplia trayectoria liderando faenas mineras e industriales multidisciplinarias bajo estrictos estándares de plazo y costos.',
+    logros: 'Entrega anticipada de hito estructural Spence 2025.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Universitario', titulo:'Ingeniería Civil Mecánica', institucion:'Universidad de Chile', anio:'2006', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Dirección Estratégica de Proyectos Mineros', institucion:'PMI', horas:'45', anio:'2022', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Prevención de riesgos / Inducción EPP', emision:'2026-01-05', vencimiento:'2027-01-05', respaldo:'#' },
+      { id:'crt2', tipo:'Examen preocupacional vigente', emision:'2026-02-12', vencimiento:'2027-02-12', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Jefe de Proyecto', desde:'2016', hasta:'Presente', funciones:'Responsable integral de contratos mineros de montaje.' }],
+    asignaciones: [{ id:'a1', proyecto:'Planta Concentradora Spence', desde:'2023-01-15', estado:'Confirmado', confirmador:'c.fuenzalida@salfamontajes.com', obs:'Jefatura máxima de faena.' }]
+  },
+  {
+    correo: 'p.valenzuela@salfamontajes.com',
+    nombre: 'Patricio Valenzuela',
+    cargo: 'Soldador Calificado 6G',
+    estado: 'Libre',
+    proyectoActual: 'Sin Proyecto Asignado',
+    especialidad: 'Soldadura TIG/MIG de Alta Presión, Piping y Aleaciones',
+    telefono: '+56 9 6543 2109',
+    resumen: 'Soldador especialista con calificación ASME 6G vigente. Amplia experiencia en tuberías de alta presión y spooling en minería.',
+    logros: 'Tasa de rechazo radiográfico menor al 0.5% en ductos de alta presión.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Técnico', titulo:'Especialista en Soldaduras Industriales', institucion:'DUOC UC', anio:'2015', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Ensayes No Destructivos y Líquidos Penetrantes', institucion:'ASME Chile', horas:'20', anio:'2023', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Calificación de soldador (WPS/PQR)', emision:'2026-04-10', vencimiento:'2027-04-10', respaldo:'#' },
+      { id:'crt2', tipo:'Trabajo en altura física', emision:'2026-03-01', vencimiento:'2027-03-01', respaldo:'#' },
+      { id:'crt3', tipo:'Examen preocupacional vigente', emision:'2026-02-01', vencimiento:'2027-02-01', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Soldador Calificado 6G', desde:'2020', hasta:'2026', funciones:'Soldadura de tuberías de alta presión en concentradora.' }],
+    asignaciones: [{ id:'a1', proyecto:'Expansión Quebrada Blanca QB2', desde:'2022-01-10', hasta:'2026-06-30', estado:'Finalizado', confirmador:'RRHH', obs:'Liberado de faena con felicitaciones.' }]
+  },
+  {
+    correo: 'm.tapia@salfamontajes.com',
+    nombre: 'Marcelo Tapia',
+    cargo: 'Rigger Alta Tonelaje',
+    estado: 'Asignado',
+    proyectoActual: 'Planta Concentradora Spence',
+    especialidad: 'Maniobras Críticas de Izaje, Aparejos y Cálculos de Carga',
+    telefono: '+56 9 5432 1098',
+    resumen: 'Rigger calificado para izajes simultáneos (tándem) y equipos pesados sobre 500 toneladas.',
+    logros: 'Coordinación impecable de montaje de molinos SAG sin detenciones.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Media Completa', titulo:'Técnico Mecánico', institucion:'Liceo Industrial Antofagasta', anio:'2011', estado:'Graduado' }],
+    cursos: [{ id:'c1', nombre:'Inspección de Aparejos y Cables de Acero', institucion:'Mutual de Seguridad', horas:'16', anio:'2024', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Izaje y rigging / maniobras críticas', emision:'2025-05-15', vencimiento:'2027-05-15', respaldo:'#' },
+      { id:'crt2', tipo:'Trabajo en altura física', emision:'2026-01-10', vencimiento:'2027-01-10', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Rigger Mayor', desde:'2019', hasta:'Presente', funciones:'Comandante de maniobras en frentes de molienda.' }],
+    asignaciones: [{ id:'a1', proyecto:'Planta Concentradora Spence', desde:'2024-01-01', estado:'Confirmado', confirmador:'m.gonzalez@salfamontajes.com', obs:'Operación continua.' }]
+  },
+  {
+    correo: 'r.morales@salfamontajes.com',
+    nombre: 'Rodrigo Morales',
+    cargo: 'Supervisor de Piping',
+    estado: 'Libre',
+    proyectoActual: 'Sin Proyecto Asignado',
+    especialidad: 'Isométricos, Montaje de Spools e Hidropruebas',
+    telefono: '+56 9 4321 0987',
+    resumen: 'Especialista en piping de proceso minero con 14 años en faenas de gran altura.',
+    logros: 'Comisionamiento de líneas de impulsión de agua desalada sin fugas.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Técnico Superior', titulo:'Técnico en Tuberías Industriales', institucion:'Ceduc UCN', anio:'2012', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Pruebas de Presión Hidrostática ASME B31.3', institucion:'TUV Rheinland', horas:'24', anio:'2023', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Trabajo en altura física', emision:'2026-03-20', vencimiento:'2027-03-20', respaldo:'#' },
+      { id:'crt2', tipo:'Examen preocupacional vigente', emision:'2026-04-01', vencimiento:'2027-04-01', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Supervisor de Piping', desde:'2021', hasta:'2026', funciones:'Supervisión de 18 km de tuberías de concentración.' }],
+    asignaciones: [{ id:'a1', proyecto:'Expansión Quebrada Blanca QB2', desde:'2021-03-01', hasta:'2026-08-30', estado:'Finalizado', confirmador:'RRHH', obs:'Disponible para nueva faena.' }]
+  },
+  {
+    correo: 'a.soto@salfamontajes.com',
+    nombre: 'Andrea Soto Morales',
+    cargo: 'Jefe de Proyecto',
+    estado: 'Asignado',
+    proyectoActual: 'Ampliación Minera Los Pelambres',
+    especialidad: 'Planificación de Faenas y Control de Producción',
+    telefono: '+56 9 3210 9876',
+    resumen: 'Ingeniera Civil con sólida experiencia en dirección de proyectos de infraestructura minera y plantas de relave.',
+    logros: 'Mejor índice de productividad de montaje Salfa Montajes 2024.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Universitario', titulo:'Ingeniería Civil Industrial', institucion:'Universidad de Concepción', anio:'2009', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Gestión de Costos con Valor Ganado (EVM)', institucion:'Salfa Training', horas:'32', anio:'2023', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Prevención de riesgos / Inducción EPP', emision:'2026-02-15', vencimiento:'2027-02-15', respaldo:'#' },
+      { id:'crt2', tipo:'Examen preocupacional vigente', emision:'2026-02-15', vencimiento:'2027-02-15', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Jefa de Proyecto', desde:'2017', hasta:'Presente', funciones:'Gestión del contrato de ampliación Los Pelambres.' }],
+    asignaciones: [{ id:'a1', proyecto:'Ampliación Minera Los Pelambres', desde:'2023-06-01', estado:'Confirmado', confirmador:'c.fuenzalida@salfamontajes.com', obs:'Contrato principal.' }]
+  },
+  {
+    correo: 'c.fuenzalida@salfamontajes.com',
+    nombre: 'Carlos Fuenzalida',
+    cargo: 'Administrador de Obra',
+    estado: 'Santiago',
+    proyectoActual: 'Casa Matriz Santiago',
+    especialidad: 'Estrategia Operacional y Planificación de Dotaciones',
+    telefono: '+56 9 2109 8765',
+    resumen: 'Gerente y Administrador con más de 25 años en la gran minería. Lidera la asignación y planeamiento de recursos humanos para Salfa Montajes.',
+    logros: 'Consolidación de dotación técnica permanente de más de 450 trabajadores.',
+    validadoRRHH: true,
+    estudios: [{ id:'e1', nivel:'Universitario', titulo:'Ingeniería Civil Mecánica', institucion:'Universidad de Santiago', anio:'1998', estado:'Titulado' }],
+    cursos: [{ id:'c1', nombre:'Gobernanza Corporativa y Riesgos', institucion:'IESE', horas:'50', anio:'2020', respaldo:'#' }],
+    certificaciones: [
+      { id:'crt1', tipo:'Prevención de riesgos / Inducción EPP', emision:'2026-01-01', vencimiento:'2027-01-01', respaldo:'#' }
+    ],
+    experiencia: [{ id:'x1', empresa:'Salfa Montajes', cargo:'Administrador Corporativo', desde:'2010', hasta:'Presente', funciones:'Supervisión ejecutiva de contratos a nivel nacional.' }],
+    asignaciones: [{ id:'a1', proyecto:'Casa Matriz Santiago', desde:'2015-01-01', estado:'Confirmado', confirmador:'Gerencia General', obs:'Planta directiva.' }]
+  }
+];
+
+// Bandeja de Solicitudes Pendientes para Demostración
+var SOLICITUDES_PENDIENTES = [
+  {
+    id: 'SOL-101',
+    correo: 'r.morales@salfamontajes.com',
+    nombre: 'Rodrigo Morales',
+    tipo: 'Declaración de Proyecto',
+    proyectoDeclarado: 'Codelco Andina — Chancado Primario',
+    estadoDeclarado: 'Asignado',
+    fechaSolicitud: '2026-10-30',
+    obs: 'Reasignación solicitada por nuevo frente de piping.'
+  }
+];
+
+// ===== 2. Funciones de Inicialización =====
+function cargarDatos() {
+  var local = localStorage.getItem(DB_KEY);
+  if (local) {
+    try { return JSON.parse(local); } catch(e){}
+  }
+  localStorage.setItem(DB_KEY, JSON.stringify(TRABAJADORES_INICIALES));
+  return TRABAJADORES_INICIALES;
+}
+
+function guardarDatos(data) {
+  localStorage.setItem(DB_KEY, JSON.stringify(data));
+}
+
+// Inicializar al cargar
+window.addEventListener('DOMContentLoaded', function() {
+  // Lector de SSO
+  resolverSesionSSO();
+
+  // Poblar selectores de catálogos en modales y filtros
+  poblarCatalogosUI();
+
+  // Renderizar vistas
+  renderizarMiCV();
+  renderizarDirectorio();
+  renderizarDotacion();
+  renderizarSemaforoGlobal();
+  renderizarPanelGestion();
+});
+
+// Resuelve la sesión desde localStorage ('salfa_auth_session') o usa el simulador
+function resolverSesionSSO() {
+  try {
+    var raw = localStorage.getItem('salfa_auth_session');
+    if (raw) {
+      var s = JSON.parse(raw);
+      if (s.email) USUARIO_ACTUAL = s.email;
+      if (s.rol) ROL_ACTUAL = s.rol;
+    }
+  } catch(e){}
+
+  var sel = document.getElementById('selRolSim');
+  if (sel) {
+    sel.value = ROL_ACTUAL;
+  }
+  actualizarUIporRol();
+}
+
+function cambiarRolSimulado(nuevoRol) {
+  ROL_ACTUAL = nuevoRol;
+  if (nuevoRol === 'Trabajador') {
+    USUARIO_ACTUAL = 'j.perez@salfamontajes.com';
+  } else if (nuevoRol === 'Jefe de Proyecto') {
+    USUARIO_ACTUAL = 'm.gonzalez@salfamontajes.com';
+  } else if (nuevoRol === 'Gerencia / P&D') {
+    USUARIO_ACTUAL = 'c.fuenzalida@salfamontajes.com';
+  } else {
+    USUARIO_ACTUAL = 'sjroca@salfamontajes.com';
+  }
+
+  // Guardar en sesión compartida
+  var sess = {
+    email: USUARIO_ACTUAL,
+    rol: (ROL_ACTUAL === 'Administrador' ? 'Administrador' : (ROL_ACTUAL === 'Jefe de Proyecto' ? 'Editor' : 'Colaborador')),
+    nombre: obtenerTrabajadorActual().nombre,
+    timestamp: Date.now()
+  };
+  localStorage.setItem('salfa_auth_session', JSON.stringify(sess));
+
+  actualizarUIporRol();
+  renderizarMiCV();
+  renderizarDirectorio();
+  renderizarDotacion();
+  renderizarSemaforoGlobal();
+  renderizarPanelGestion();
+
+  toast('Rol cambiado a: ' + nuevoRol);
+}
+
+function actualizarUIporRol() {
+  var badge = document.getElementById('topBadgeRol');
+  if (badge) badge.textContent = ROL_ACTUAL;
+
+  var tabGestion = document.getElementById('btnTabGestion');
+  if (tabGestion) {
+    // Si es trabajador simple, ocultar o restringir pestaña de gestión
+    if (ROL_ACTUAL === 'Trabajador') {
+      tabGestion.style.display = 'none';
+    } else {
+      tabGestion.style.display = 'inline-flex';
+    }
+  }
+}
+
+function obtenerTrabajadorActual() {
+  var list = cargarDatos();
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].correo.toLowerCase() === USUARIO_ACTUAL.toLowerCase()) {
+      return list[i];
+    }
+  }
+  return list[0]; // Fallback
+}
+
+// ===== 3. Renderizado de Mi CV =====
+function renderizarMiCV() {
+  var t = obtenerTrabajadorActual();
+
+  // Ficha Hero
+  document.getElementById('cvNombre').textContent = t.nombre;
+  document.getElementById('cvCargo').textContent = t.cargo;
+  document.getElementById('cvEmail').textContent = t.correo;
+  document.getElementById('cvFono').textContent = t.telefono || 'Sin teléfono';
+  document.getElementById('cvEspecialidad').textContent = t.especialidad || 'Especialidad general';
+  document.getElementById('cvProyectoActual').textContent = (t.estado === 'Libre' ? 'Disponible para asignación' : t.proyectoActual);
+
+  var avatar = document.getElementById('cvAvatar');
+  var initials = t.nombre.split(' ').map(function(n){ return n[0]; }).slice(0, 2).join('');
+  avatar.textContent = initials;
+
+  var badge = document.getElementById('cvBadgeEstado');
+  badge.className = 'badge-estado ' + (t.estado === 'Asignado' ? 'asig' : (t.estado === 'Libre' ? 'libre' : 'stgo'));
+  badge.textContent = (t.estado === 'Asignado' ? 'Asignado a Faena' : (t.estado === 'Libre' ? 'Libre para Asignar' : 'Casa Matriz Santiago'));
+
+  document.getElementById('cvTxtResumen').textContent = t.resumen || 'Sin resumen registrado aún.';
+  document.getElementById('cvTxtLogros').textContent = t.logros || 'Sin logros registrados aún.';
+
+  // Estudios
+  var cEst = document.getElementById('cvListaEstudios');
+  cEst.innerHTML = '';
+  if (!t.estudios || t.estudios.length === 0) {
+    cEst.innerHTML = '<p style="color:var(--texto-mut);font-size:13px">No hay estudios registrados.</p>';
+  } else {
+    t.estudios.forEach(function(e) {
+      cEst.innerHTML += `
+        <div class="cv-item-row">
+          <div class="cv-item-main">
+            <div class="cv-item-tit">${escapar(e.titulo)} <span style="font-weight:400;color:var(--texto-mut);font-size:12px">(${escapar(e.nivel)})</span></div>
+            <div class="cv-item-sub">${escapar(e.institucion)} · Egreso ${escapar(e.anio)} · <b style="color:var(--ok)">${escapar(e.estado)}</b></div>
+          </div>
+          <div class="cv-item-acts">
+            <button type="button" class="btn-mini del" onclick="eliminarSubItem('estudios', '${e.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Certificaciones y Semáforo de Mi CV
+  var cCert = document.getElementById('cvListaCertificaciones');
+  cCert.innerHTML = '';
+  var hayPorVencer = false;
+  if (!t.certificaciones || t.certificaciones.length === 0) {
+    cCert.innerHTML = '<p style="color:var(--texto-mut);font-size:13px">No hay certificaciones registradas.</p>';
+  } else {
+    t.certificaciones.forEach(function(c) {
+      var sem = calcularSemaforo(c.vencimiento);
+      if (sem.clase === 'por-vencer' || sem.clase === 'vencida') hayPorVencer = true;
+
+      cCert.innerHTML += `
+        <div class="cv-item-row">
+          <div class="cv-item-main">
+            <div class="cv-item-tit" style="display:flex;align-items:center;gap:8px">
+              <span>${escapar(c.tipo)}</span>
+              <span class="semaforo-chip ${sem.clase}">
+                <span class="semaforo-punto"></span>
+                <span>${sem.texto} (${sem.dias} días)</span>
+              </span>
+            </div>
+            <div class="cv-item-sub">Emisión: ${c.emision || 'N/A'} · Vencimiento: <b>${c.vencimiento}</b></div>
+          </div>
+          <div class="cv-item-acts">
+            <button type="button" class="btn-mini del" onclick="eliminarSubItem('certificaciones', '${c.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Banner Alerta
+  var bAlerta = document.getElementById('bannerAlertaVenc');
+  if (hayPorVencer) {
+    bAlerta.style.display = 'flex';
+  } else {
+    bAlerta.style.display = 'none';
+  }
+
+  // Cursos
+  var cCur = document.getElementById('cvListaCursos');
+  cCur.innerHTML = '';
+  if (!t.cursos || t.cursos.length === 0) {
+    cCur.innerHTML = '<p style="color:var(--texto-mut);font-size:13px">No hay cursos registrados.</p>';
+  } else {
+    t.cursos.forEach(function(c) {
+      cCur.innerHTML += `
+        <div class="cv-item-row">
+          <div class="cv-item-main">
+            <div class="cv-item-tit">${escapar(c.nombre)}</div>
+            <div class="cv-item-sub">${escapar(c.institucion)} · ${c.horas} horas cronológicas · Año ${c.anio}</div>
+          </div>
+          <div class="cv-item-acts">
+            <button type="button" class="btn-mini del" onclick="eliminarSubItem('cursos', '${c.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Experiencia
+  var cExp = document.getElementById('cvListaExperiencia');
+  cExp.innerHTML = '';
+  if (!t.experiencia || t.experiencia.length === 0) {
+    cExp.innerHTML = '<p style="color:var(--texto-mut);font-size:13px">No hay experiencias laborales registradas.</p>';
+  } else {
+    t.experiencia.forEach(function(x) {
+      cExp.innerHTML += `
+        <div class="cv-item-row">
+          <div class="cv-item-main">
+            <div class="cv-item-tit">${escapar(x.cargo)} — <span style="color:var(--rojo-brillo)">${escapar(x.empresa)}</span></div>
+            <div class="cv-item-sub">Periodo: ${escapar(x.desde)} - ${escapar(x.hasta)}</div>
+            <div class="cv-item-desc">${escapar(x.funciones)}</div>
+          </div>
+          <div class="cv-item-acts">
+            <button type="button" class="btn-mini del" onclick="eliminarSubItem('experiencia', '${x.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Asignaciones
+  var cAsig = document.getElementById('cvListaAsignaciones');
+  cAsig.innerHTML = '';
+  if (!t.asignaciones || t.asignaciones.length === 0) {
+    cAsig.innerHTML = '<p style="color:var(--texto-mut);font-size:13px">No hay historial de asignaciones registrado.</p>';
+  } else {
+    t.asignaciones.forEach(function(a) {
+      cAsig.innerHTML += `
+        <div class="cv-item-row">
+          <div class="cv-item-main">
+            <div class="cv-item-tit" style="display:flex;align-items:center;gap:8px">
+              <span>${escapar(a.proyecto)}</span>
+              <span class="semaforo-chip ${a.estado === 'Confirmado' ? 'vigente' : (a.estado === 'Finalizado' ? 'stgo' : 'por-vencer')}">${a.estado}</span>
+            </div>
+            <div class="cv-item-sub">Desde: ${a.desde} ${a.hasta ? 'hasta: '+a.hasta : '(En curso)'} · Confirmado por: ${escapar(a.confirmador || 'RRHH')}</div>
+            ${a.obs ? `<div class="cv-item-desc" style="font-style:italic;color:var(--texto-mut)">Nota: ${escapar(a.obs)}</div>` : ''}
+          </div>
+        </div>`;
+    });
+  }
+}
+
+// ===== 4. Cálculo del Semáforo =====
+function calcularSemaforo(fechaVencimiento) {
+  if (!fechaVencimiento) return { clase: 'vigente', texto: 'Sin Vencimiento', dias: 999 };
+  var parts = fechaVencimiento.split('-');
+  var vDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  var hoy = new Date();
+  hoy.setHours(0,0,0,0);
+
+  var diffMs = vDate - hoy;
+  var dias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (dias < 0) {
+    return { clase: 'vencida', texto: 'Vencida', dias: Math.abs(dias) };
+  } else if (dias <= 60) {
+    return { clase: 'por-vencer', texto: 'Por Vencer', dias: dias };
+  } else {
+    return { clase: 'vigente', texto: 'Vigente', dias: dias };
+  }
+}
+
+// ===== 5. Directorio y Buscador =====
+function renderizarDirectorio() {
+  var list = cargarDatos();
+  document.getElementById('badgeTotalDir').textContent = list.length;
+  filtrarDirectorio();
+}
+
+function filtrarDirectorio() {
+  var list = cargarDatos();
+  var q = (document.getElementById('inputBuscarDir').value || '').toLowerCase();
+  var fEst = document.getElementById('filtroEstado').value;
+  var fCar = document.getElementById('filtroCargo').value;
+  var fPro = document.getElementById('filtroProyecto').value;
+  var fCer = document.getElementById('filtroCert').value;
+
+  var grid = document.getElementById('gridDirectorio');
+  grid.innerHTML = '';
+
+  var filtrados = list.filter(function(t) {
+    if (q) {
+      var matchQ = (t.nombre.toLowerCase().indexOf(q) >= 0) ||
+                   (t.cargo.toLowerCase().indexOf(q) >= 0) ||
+                   ((t.especialidad || '').toLowerCase().indexOf(q) >= 0) ||
+                   ((t.proyectoActual || '').toLowerCase().indexOf(q) >= 0);
+      if (!matchQ) return false;
+    }
+    if (fEst && t.estado !== fEst) return false;
+    if (fCar && t.cargo !== fCar) return false;
+    if (fPro && t.proyectoActual !== fPro) return false;
+    if (fCer) {
+      var tieneCert = (t.certificaciones || []).some(function(c) {
+        return c.tipo === fCer && calcularSemaforo(c.vencimiento).clase !== 'vencida';
+      });
+      if (!tieneCert) return false;
+    }
+    return true;
+  });
+
+  if (filtrados.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--texto-mut)">No se encontraron trabajadores que coincidan con los filtros.</div>';
+    return;
+  }
+
+  filtrados.forEach(function(t) {
+    var initials = t.nombre.split(' ').map(function(n){ return n[0]; }).slice(0, 2).join('');
+    var certChips = (t.certificaciones || []).map(function(c) {
+      var sem = calcularSemaforo(c.vencimiento);
+      return `<span class="dir-chip-cert ${sem.clase === 'vigente' ? 'ok' : ''}">${escapar(c.tipo)}</span>`;
+    }).join('');
+
+    grid.innerHTML += `
+      <article class="dir-card">
+        <div>
+          <div class="dir-card-top">
+            <div class="dir-avatar">${initials}</div>
+            <div class="dir-info">
+              <h3>${escapar(t.nombre)}</h3>
+              <div class="dir-cargo">${escapar(t.cargo)}</div>
+              <div class="dir-proy">
+                <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>${escapar(t.estado === 'Libre' ? 'Disponible para asignación' : t.proyectoActual)}</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--texto-mut);margin-bottom:8px"><b>Especialidad:</b> ${escapar(t.especialidad || 'General')}</div>
+          <div class="dir-chips-wrap">${certChips || '<span style="font-size:11px;color:var(--texto-mut)">Sin certificaciones cargadas</span>'}</div>
+        </div>
+        <div class="dir-card-bottom">
+          <span class="badge-estado ${t.estado === 'Asignado' ? 'asig' : (t.estado === 'Libre' ? 'libre' : 'stgo')}">${t.estado}</span>
+          <button type="button" class="btn-mini" onclick="abrirModalVerCv('${t.correo}')">Ver CV Completo</button>
+        </div>
+      </article>`;
+  });
+}
+
+function limpiarFiltrosDirectorio() {
+  document.getElementById('inputBuscarDir').value = '';
+  document.getElementById('filtroEstado').value = '';
+  document.getElementById('filtroCargo').value = '';
+  document.getElementById('filtroProyecto').value = '';
+  document.getElementById('filtroCert').value = '';
+  filtrarDirectorio();
+}
+
+// ===== 6. Tablero de Dotación =====
+var SUB_VISTA_DOT = 'proyectos';
+
+function cambiarSubVistaDotacion(vista) {
+  SUB_VISTA_DOT = vista;
+  document.getElementById('btnSubDotProy').classList.toggle('activo', vista === 'proyectos');
+  document.getElementById('btnSubDotLibres').classList.toggle('activo', vista === 'libres');
+  document.getElementById('btnSubDotStgo').classList.toggle('activo', vista === 'santiago');
+  renderizarDotacion();
+}
+
+function renderizarDotacion() {
+  var list = cargarDatos();
+  var total = list.length;
+  var asignados = list.filter(function(t){ return t.estado === 'Asignado'; }).length;
+  var libres = list.filter(function(t){ return t.estado === 'Libre'; }).length;
+  var stgo = list.filter(function(t){ return t.estado === 'Santiago'; }).length;
+
+  document.getElementById('kpiTotalDot').textContent = total;
+  document.getElementById('kpiAsignados').textContent = asignados;
+  document.getElementById('kpiLibres').textContent = libres;
+  document.getElementById('kpiSantiago').textContent = stgo;
+
+  var cont = document.getElementById('contenedorTablaDotacion');
+  cont.innerHTML = '';
+
+  if (SUB_VISTA_DOT === 'proyectos') {
+    // Agrupado por faena
+    var porProy = {};
+    list.filter(function(t){ return t.estado === 'Asignado'; }).forEach(function(t) {
+      var pry = t.proyectoActual || 'Sin Proyecto';
+      if (!porProy[pry]) porProy[pry] = [];
+      porProy[pry].push(t);
+    });
+
+    var html = '<table class="salfa-table"><thead><tr><th>Faena / Proyecto</th><th>Dotación Asignada</th><th>Integrantes Clave</th><th>Acción</th></tr></thead><tbody>';
+    for (var pry in porProy) {
+      var gente = porProy[pry].map(function(t){ return `${escapar(t.nombre)} (${escapar(t.cargo)})`; }).join(', ');
+      html += `<tr>
+        <td><b>${escapar(pry)}</b></td>
+        <td><span class="badge-estado asig">${porProy[pry].length} trabajadores</span></td>
+        <td style="font-size:12px;color:var(--texto-mut)">${gente}</td>
+        <td><button type="button" class="btn-mini" onclick="filtrarDirectorioPorProyecto('${pry}')">Ver Detalle</button></td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+    cont.innerHTML = html;
+
+  } else if (SUB_VISTA_DOT === 'libres') {
+    // Listado de personal libre para faena (prioridad de movilización)
+    var libresList = list.filter(function(t){ return t.estado === 'Libre'; });
+    var html = '<table class="salfa-table"><thead><tr><th>Nombre</th><th>Cargo</th><th>Especialidad</th><th>Certificaciones Activas</th><th>Contacto</th><th>Acción</th></tr></thead><tbody>';
+    libresList.forEach(function(t) {
+      var certs = (t.certificaciones || []).map(function(c){ return c.tipo; }).join(', ') || 'Sin cert.';
+      html += `<tr>
+        <td><b>${escapar(t.nombre)}</b></td>
+        <td>${escapar(t.cargo)}</td>
+        <td>${escapar(t.especialidad || 'General')}</td>
+        <td style="font-size:12px;color:var(--ok)">${escapar(certs)}</td>
+        <td>${escapar(t.telefono || t.correo)}</td>
+        <td><button type="button" class="btn-mini" onclick="abrirModalVerCv('${t.correo}')">Abrir Perfil</button></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    cont.innerHTML = html;
+
+  } else {
+    // Casa Matriz Santiago
+    var stgoList = list.filter(function(t){ return t.estado === 'Santiago'; });
+    var html = '<table class="salfa-table"><thead><tr><th>Nombre</th><th>Cargo</th><th>Especialidad</th><th>Contacto</th><th>Acción</th></tr></thead><tbody>';
+    stgoList.forEach(function(t) {
+      html += `<tr>
+        <td><b>${escapar(t.nombre)}</b></td>
+        <td>${escapar(t.cargo)}</td>
+        <td>${escapar(t.especialidad || 'General')}</td>
+        <td>${escapar(t.telefono || t.correo)}</td>
+        <td><button type="button" class="btn-mini" onclick="abrirModalVerCv('${t.correo}')">Ver Perfil</button></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    cont.innerHTML = html;
+  }
+}
+
+function filtrarDirectorioPorProyecto(pry) {
+  mostrarTab('tabDirectorio');
+  document.getElementById('filtroProyecto').value = pry;
+  filtrarDirectorio();
+}
+
+// ===== 7. Semáforo Global de Certificaciones =====
+function renderizarSemaforoGlobal() {
+  filtrarSemaforo('todas');
+}
+
+function filtrarSemaforo(filtro) {
+  var list = cargarDatos();
+  var tbody = document.getElementById('tbodySemaforoGlobal');
+  tbody.innerHTML = '';
+
+  var alertasTotales = 0;
+  list.forEach(function(t) {
+    (t.certificaciones || []).forEach(function(c) {
+      var sem = calcularSemaforo(c.vencimiento);
+      if (sem.clase === 'por-vencer' || sem.clase === 'vencida') alertasTotales++;
+
+      if (filtro === 'por-vencer' && sem.clase !== 'por-vencer') return;
+      if (filtro === 'vencidas' && sem.clase !== 'vencida') return;
+
+      tbody.innerHTML += `
+        <tr>
+          <td><b>${escapar(t.nombre)}</b></td>
+          <td>${escapar(t.cargo)}<br><span style="font-size:11px;color:var(--texto-mut)">${escapar(t.proyectoActual)}</span></td>
+          <td><b>${escapar(c.tipo)}</b></td>
+          <td>${c.vencimiento}</td>
+          <td><b>${sem.dias} días</b></td>
+          <td>
+            <span class="semaforo-chip ${sem.clase}">
+              <span class="semaforo-punto"></span>
+              <span>${sem.texto}</span>
+            </span>
+          </td>
+          <td><a href="#" style="color:var(--rojo-brillo);font-size:12px;text-decoration:none" onclick="toast('Abriendo respaldo Drive...');return false">Ver Respaldo</a></td>
+        </tr>`;
+    });
+  });
+
+  document.getElementById('badgeAlertasCert').textContent = alertasTotales;
+}
+
+// ===== 8. Panel de Gestión (RRHH y Jefes) =====
+function renderizarPanelGestion() {
+  var cont = document.getElementById('bandejaValidaciones');
+  cont.innerHTML = '';
+
+  document.getElementById('badgeBandejaCant').textContent = SOLICITUDES_PENDIENTES.length;
+  document.getElementById('badgePendientesGestion').textContent = SOLICITUDES_PENDIENTES.length;
+
+  if (SOLICITUDES_PENDIENTES.length === 0) {
+    cont.innerHTML = '<p style="color:var(--texto-mut);font-size:13px;padding:20px 0;text-align:center">No hay validaciones pendientes. La dotación está al día.</p>';
+  } else {
+    SOLICITUDES_PENDIENTES.forEach(function(s) {
+      cont.innerHTML += `
+        <div style="background:var(--card-alt);border:1px solid var(--linea);border-radius:8px;padding:14px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <b>${escapar(s.nombre)}</b>
+            <span class="badge-estado libre" style="font-size:10px">${s.tipo}</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--texto-mut);margin-bottom:6px">
+            Proyecto Declarado: <b style="color:var(--texto)">${escapar(s.proyectoDeclarado)}</b> (${s.estadoDeclarado})
+          </div>
+          <div style="font-size:12px;margin-bottom:10px;font-style:italic">${escapar(s.obs || '')}</div>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button type="button" class="btn-mini del" onclick="resolverSolicitud('${s.id}', false)">Observar</button>
+            <button type="button" class="btn-p2 pri" style="padding:4px 10px;font-size:11px" onclick="resolverSolicitud('${s.id}', true)">Confirmar Asignación</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Grid de Catálogos
+  var gridCat = document.getElementById('gridCatalogos');
+  gridCat.innerHTML = `
+    <div style="background:var(--card-alt);padding:14px;border-radius:8px">
+      <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;display:block;margin-bottom:8px">Catálogo de Cargos (${CATALOGOS.cargos.length})</b>
+      <div style="max-height:180px;overflow-y:auto;font-size:12px;color:var(--texto-mut)">
+        ${CATALOGOS.cargos.map(function(c){ return '• ' + c; }).join('<br>')}
+      </div>
+    </div>
+    <div style="background:var(--card-alt);padding:14px;border-radius:8px">
+      <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;display:block;margin-bottom:8px">Catálogo de Faenas / Proyectos (${CATALOGOS.proyectos.length})</b>
+      <div style="max-height:180px;overflow-y:auto;font-size:12px;color:var(--texto-mut)">
+        ${CATALOGOS.proyectos.map(function(p){ return '• ' + p; }).join('<br>')}
+      </div>
+    </div>
+    <div style="background:var(--card-alt);padding:14px;border-radius:8px">
+      <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;display:block;margin-bottom:8px">Certificaciones Críticas (${CATALOGOS.certificaciones.length})</b>
+      <div style="max-height:180px;overflow-y:auto;font-size:12px;color:var(--texto-mut)">
+        ${CATALOGOS.certificaciones.map(function(c){ return '• ' + c; }).join('<br>')}
+      </div>
+    </div>`;
+}
+
+function resolverSolicitud(id, aprobado) {
+  var sIdx = SOLICITUDES_PENDIENTES.findIndex(function(s){ return s.id === id; });
+  if (sIdx >= 0) {
+    var sol = SOLICITUDES_PENDIENTES[sIdx];
+    if (aprobado) {
+      // Aplicar cambio a los datos del trabajador
+      var list = cargarDatos();
+      var t = list.find(function(item){ return item.correo === sol.correo; });
+      if (t) {
+        t.proyectoActual = sol.proyectoDeclarado;
+        t.estado = sol.estadoDeclarado;
+        t.asignaciones.unshift({
+          id: 'asg-' + Date.now(),
+          proyecto: sol.proyectoDeclarado,
+          desde: sol.fechaSolicitud,
+          estado: 'Confirmado',
+          confirmador: USUARIO_ACTUAL,
+          obs: 'Aprobado desde panel de RRHH'
+        });
+        guardarDatos(list);
+      }
+      toast('Asignación confirmada con éxito.');
+    } else {
+      toast('Solicitud observada y devuelta al trabajador.');
+    }
+    SOLICITUDES_PENDIENTES.splice(sIdx, 1);
+    renderizarMiCV();
+    renderizarDirectorio();
+    renderizarDotacion();
+    renderizarPanelGestion();
+  }
+}
+
+function ejecutarSkillMatching() {
+  var certReq = document.getElementById('matchCert').value;
+  var cont = document.getElementById('resultadoMatching');
+  if (!certReq) { cont.innerHTML = ''; return; }
+
+  var list = cargarDatos();
+  var libres = list.filter(function(t) {
+    if (t.estado !== 'Libre') return false;
+    return (t.certificaciones || []).some(function(c) {
+      return c.tipo === certReq && calcularSemaforo(c.vencimiento).clase !== 'vencida';
+    });
+  });
+
+  if (libres.length === 0) {
+    cont.innerHTML = '<div style="background:var(--dan-bg);color:var(--dan);padding:10px;border-radius:6px;font-size:12px">No hay personal libre con esa certificación vigente actualmente.</div>';
+  } else {
+    var html = '<div style="background:var(--ok-bg);color:var(--ok);padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:8px"><b>' + libres.length + ' trabajadores libres</b> cumplen con el requisito:</div>';
+    libres.forEach(function(t) {
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--linea);font-size:12.5px">
+        <span><b>${escapar(t.nombre)}</b> (${escapar(t.cargo)})</span>
+        <button type="button" class="btn-mini" onclick="abrirModalVerCv('${t.correo}')">Ver Perfil</button>
+      </div>`;
+    });
+    cont.innerHTML = html;
+  }
+}
+
+// ===== 9. Modales y CRUD =====
+function abrirModalDeclararProyecto() {
+  document.getElementById('decFechaDesde').value = new Date().toISOString().split('T')[0];
+  document.getElementById('decObs').value = '';
+  document.getElementById('modalDeclararProyecto').style.display = 'flex';
+}
+
+function actualizarSelectProyDeclaracion(estado) {
+  var grp = document.getElementById('grpDecProyecto');
+  if (estado === 'Libre') {
+    grp.style.display = 'none';
+  } else {
+    grp.style.display = 'block';
+  }
+}
+
+function guardarDeclaracionProyecto(e) {
+  e.preventDefault();
+  var estado = document.getElementById('decEstado').value;
+  var proy = (estado === 'Libre' ? 'Sin Proyecto Asignado' : (estado === 'Santiago' ? 'Casa Matriz Santiago' : document.getElementById('decProyecto').value));
+  var fecha = document.getElementById('decFechaDesde').value;
+  var obs = document.getElementById('decObs').value;
+
+  var list = cargarDatos();
+  var t = list.find(function(item){ return item.correo === USUARIO_ACTUAL; });
+  if (t) {
+    if (ROL_ACTUAL === 'Administrador' || ROL_ACTUAL === 'Jefe de Proyecto') {
+      // Auto-aprobación para roles de gestión
+      t.proyectoActual = proy;
+      t.estado = estado;
+      t.asignaciones.unshift({
+        id: 'asg-' + Date.now(),
+        proyecto: proy,
+        desde: fecha,
+        estado: 'Confirmado',
+        confirmador: USUARIO_ACTUAL,
+        obs: obs
+      });
+      toast('Proyecto y estado actualizados inmediatamente.');
+    } else {
+      // Trabajador normal: envía a bandeja de aprobación
+      SOLICITUDES_PENDIENTES.unshift({
+        id: 'SOL-' + Date.now(),
+        correo: t.correo,
+        nombre: t.nombre,
+        tipo: 'Declaración de Proyecto',
+        proyectoDeclarado: proy,
+        estadoDeclarado: estado,
+        fechaSolicitud: fecha,
+        obs: obs
+      });
+      toast('Declaración enviada a RRHH para confirmación.');
+    }
+    guardarDatos(list);
+    cerrarModales();
+    renderizarMiCV();
+    renderizarDirectorio();
+    renderizarDotacion();
+    renderizarPanelGestion();
+  }
+}
+
+function abrirModalEditarBasicos() {
+  var t = obtenerTrabajadorActual();
+  document.getElementById('fNombre').value = t.nombre;
+  document.getElementById('fCargo').value = t.cargo;
+  document.getElementById('fEspecialidad').value = t.especialidad || '';
+  document.getElementById('fTelefono').value = t.telefono || '';
+  document.getElementById('fResumen').value = t.resumen || '';
+  document.getElementById('fLogros').value = t.logros || '';
+  document.getElementById('modalEditarBasicos').style.display = 'flex';
+}
+
+function guardarFichaBasica(e) {
+  e.preventDefault();
+  var list = cargarDatos();
+  var t = list.find(function(item){ return item.correo === USUARIO_ACTUAL; });
+  if (t) {
+    t.nombre = document.getElementById('fNombre').value;
+    t.cargo = document.getElementById('fCargo').value;
+    t.especialidad = document.getElementById('fEspecialidad').value;
+    t.telefono = document.getElementById('fTelefono').value;
+    t.resumen = document.getElementById('fResumen').value;
+    t.logros = document.getElementById('fLogros').value;
+    guardarDatos(list);
+    cerrarModales();
+    renderizarMiCV();
+    renderizarDirectorio();
+    toast('Datos básicos actualizados.');
+  }
+}
+
+var TIPO_ITEM_ACTUAL = '';
+function abrirModalItem(tipo) {
+  TIPO_ITEM_ACTUAL = tipo;
+  var tit = document.getElementById('modalItemTitulo');
+  var campos = document.getElementById('modalItemCampos');
+
+  if (tipo === 'estudio') {
+    tit.textContent = 'Agregar Estudio';
+    campos.innerHTML = `
+      <div class="form-group"><label>Nivel de Estudio:</label><select class="form-ctrl" id="inpNivel"><option value="Universitario">Universitario</option><option value="Técnico Superior">Técnico Superior</option><option value="Posgrado">Posgrado / Diplomado</option><option value="Educación Media">Educación Media</option></select></div>
+      <div class="form-group"><label>Título o Carrera:</label><input type="text" class="form-ctrl" id="inpTitulo" placeholder="Ej: Ingeniería Civil Mecánica" required></div>
+      <div class="form-group"><label>Institución:</label><input type="text" class="form-ctrl" id="inpInstitucion" placeholder="Ej: Universidad Técnica Federico Santa María" required></div>
+      <div class="form-group"><label>Año de Egreso:</label><input type="number" class="form-ctrl" id="inpAnio" value="2020" required></div>
+      <div class="form-group"><label>Estado:</label><select class="form-ctrl" id="inpEstado"><option value="Titulado">Titulado / Graduado</option><option value="En curso">En curso</option></select></div>`;
+  } else if (tipo === 'certificacion') {
+    tit.textContent = 'Registrar Certificación Ocupacional';
+    var optionsCert = CATALOGOS.certificaciones.map(function(c){ return `<option value="${c}">${c}</option>`; }).join('');
+    campos.innerHTML = `
+      <div class="form-group"><label>Tipo de Certificación:</label><select class="form-ctrl" id="inpTipoCert">${optionsCert}</select></div>
+      <div class="form-group"><label>Fecha de Emisión:</label><input type="date" class="form-ctrl" id="inpEmision" required></div>
+      <div class="form-group"><label>Fecha de Vencimiento:</label><input type="date" class="form-ctrl" id="inpVencimiento" required></div>
+      <div class="form-group"><label>Enlace de Respaldo Drive / PDF:</label><input type="url" class="form-ctrl" id="inpDrive" placeholder="https://drive.google.com/..."></div>`;
+  } else if (tipo === 'curso') {
+    tit.textContent = 'Agregar Curso o Capacitación';
+    campos.innerHTML = `
+      <div class="form-group"><label>Nombre del Curso:</label><input type="text" class="form-ctrl" id="inpNombreCurso" placeholder="Ej: Rigging Avanzado y Cálculos de Maniobras" required></div>
+      <div class="form-group"><label>Institución:</label><input type="text" class="form-ctrl" id="inpInstCurso" placeholder="Ej: Salfa Training" required></div>
+      <div class="form-group"><label>Horas Cronológicas:</label><input type="number" class="form-ctrl" id="inpHoras" value="20" required></div>
+      <div class="form-group"><label>Año:</label><input type="number" class="form-ctrl" id="inpAnioCurso" value="2024" required></div>`;
+  } else if (tipo === 'experiencia') {
+    tit.textContent = 'Agregar Experiencia Laboral';
+    campos.innerHTML = `
+      <div class="form-group"><label>Empresa u Obra / Faena:</label><input type="text" class="form-ctrl" id="inpEmpresa" placeholder="Ej: Salfa Montajes — Faena Spence" required></div>
+      <div class="form-group"><label>Cargo Desempeñado:</label><input type="text" class="form-ctrl" id="inpCargoExp" placeholder="Ej: Supervisor de Piping" required></div>
+      <div class="form-group"><label>Periodo Desde - Hasta:</label><div style="display:flex;gap:10px"><input type="text" class="form-ctrl" id="inpDesde" placeholder="Ej: 2021"><input type="text" class="form-ctrl" id="inpHasta" placeholder="Ej: 2024"></div></div>
+      <div class="form-group"><label>Principales Funciones y Logros:</label><textarea class="form-ctrl" id="inpFunciones" rows="3" placeholder="Descripción de frentes liderados..."></textarea></div>`;
+  }
+
+  document.getElementById('modalItemGenerico').style.display = 'flex';
+}
+
+function guardarItemGenerico(e) {
+  e.preventDefault();
+  var list = cargarDatos();
+  var t = list.find(function(item){ return item.correo === USUARIO_ACTUAL; });
+  if (!t) return;
+
+  var id = 'it-' + Date.now();
+  if (TIPO_ITEM_ACTUAL === 'estudio') {
+    if (!t.estudios) t.estudios = [];
+    t.estudios.push({
+      id: id,
+      nivel: document.getElementById('inpNivel').value,
+      titulo: document.getElementById('inpTitulo').value,
+      institucion: document.getElementById('inpInstitucion').value,
+      anio: document.getElementById('inpAnio').value,
+      estado: document.getElementById('inpEstado').value
+    });
+  } else if (TIPO_ITEM_ACTUAL === 'certificacion') {
+    if (!t.certificaciones) t.certificaciones = [];
+    t.certificaciones.push({
+      id: id,
+      tipo: document.getElementById('inpTipoCert').value,
+      emision: document.getElementById('inpEmision').value,
+      vencimiento: document.getElementById('inpVencimiento').value,
+      respaldo: document.getElementById('inpDrive').value || '#'
+    });
+  } else if (TIPO_ITEM_ACTUAL === 'curso') {
+    if (!t.cursos) t.cursos = [];
+    t.cursos.push({
+      id: id,
+      nombre: document.getElementById('inpNombreCurso').value,
+      institucion: document.getElementById('inpInstCurso').value,
+      horas: document.getElementById('inpHoras').value,
+      anio: document.getElementById('inpAnioCurso').value
+    });
+  } else if (TIPO_ITEM_ACTUAL === 'experiencia') {
+    if (!t.experiencia) t.experiencia = [];
+    t.experiencia.push({
+      id: id,
+      empresa: document.getElementById('inpEmpresa').value,
+      cargo: document.getElementById('inpCargoExp').value,
+      desde: document.getElementById('inpDesde').value,
+      hasta: document.getElementById('inpHasta').value,
+      funciones: document.getElementById('inpFunciones').value
+    });
+  }
+
+  guardarDatos(list);
+  cerrarModales();
+  renderizarMiCV();
+  renderizarSemaforoGlobal();
+  toast('Registro agregado exitosamente.');
+}
+
+function eliminarSubItem(coleccion, id) {
+  if (!confirm('¿Deseas eliminar este registro de tu currículum?')) return;
+  var list = cargarDatos();
+  var t = list.find(function(item){ return item.correo === USUARIO_ACTUAL; });
+  if (t && t[coleccion]) {
+    t[coleccion] = t[coleccion].filter(function(item){ return item.id !== id; });
+    guardarDatos(list);
+    renderizarMiCV();
+    renderizarSemaforoGlobal();
+    toast('Registro eliminado.');
+  }
+}
+
+// Modal Ver CV Completo (Lectura)
+function abrirModalVerCv(correo) {
+  var list = cargarDatos();
+  var t = list.find(function(item){ return item.correo === correo; });
+  if (!t) return;
+
+  document.getElementById('verCvModalTitulo').textContent = 'Perfil de ' + t.nombre;
+  var c = document.getElementById('verCvModalCuerpo');
+
+  var certsHtml = (t.certificaciones || []).map(function(crt) {
+    var sem = calcularSemaforo(crt.vencimiento);
+    return `<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--linea)">
+      <span>${escapar(crt.tipo)}</span>
+      <span class="semaforo-chip ${sem.clase}"><span class="semaforo-punto"></span>${sem.texto} (Vence: ${crt.vencimiento})</span>
+    </div>`;
+  }).join('');
+
+  var estudiosHtml = (t.estudios || []).map(function(e) {
+    return `<div style="margin-bottom:6px;font-size:12px"><b>${escapar(e.titulo)}</b> (${escapar(e.nivel)})<br><span style="color:var(--texto-mut)">${escapar(e.institucion)} · ${e.anio}</span></div>`;
+  }).join('');
+
+  var expHtml = (t.experiencia || []).map(function(x) {
+    return `<div style="margin-bottom:8px;font-size:12px"><b>${escapar(x.cargo)}</b> — <span style="color:var(--rojo-brillo)">${escapar(x.empresa)}</span> (${x.desde} - ${x.hasta})<br><p style="color:var(--texto-mut);margin-top:2px">${escapar(x.funciones)}</p></div>`;
+  }).join('');
+
+  c.innerHTML = `
+    <div style="display:flex;gap:18px;align-items:center;margin-bottom:18px">
+      <div class="cv-avatar-wrap" style="width:70px;height:70px;font-size:22px">${t.nombre.split(' ').map(function(n){ return n[0]; }).slice(0, 2).join('')}</div>
+      <div>
+        <h2 style="font-family:var(--f-tit);font-size:18px">${escapar(t.nombre)}</h2>
+        <div style="font-size:13px;color:var(--rojo-brillo);font-weight:600">${escapar(t.cargo)}</div>
+        <div style="font-size:12px;color:var(--texto-mut)">${escapar(t.correo)} · ${escapar(t.telefono || 'Sin fono')} · Faena: <b>${escapar(t.proyectoActual)}</b></div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;background:var(--card-alt);padding:10px 14px;border-radius:6px;font-size:12.5px">${escapar(t.resumen || 'Sin resumen.')}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;color:var(--rojo)">Certificaciones:</b>
+        <div style="margin-top:6px">${certsHtml || '<span style="font-size:12px;color:var(--texto-mut)">Sin cert.</span>'}</div>
+      </div>
+      <div>
+        <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;color:var(--rojo)">Estudios:</b>
+        <div style="margin-top:6px">${estudiosHtml || '<span style="font-size:12px;color:var(--texto-mut)">Sin estudios.</span>'}</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <b style="font-family:var(--f-tit);font-size:12px;text-transform:uppercase;color:var(--rojo)">Experiencia en Montajes:</b>
+      <div style="margin-top:6px">${expHtml || '<span style="font-size:12px;color:var(--texto-mut)">Sin experiencia cargada.</span>'}</div>
+    </div>`;
+
+  document.getElementById('modalVerCvCompleto').style.display = 'flex';
+}
+
+function cerrarModales() {
+  document.querySelectorAll('.modal-overlay').forEach(function(m){ m.style.display = 'none'; });
+}
+
+// ===== 10. Navegación de Pestañas =====
+function mostrarTab(tabId) {
+  document.querySelectorAll('.p2-tab-content').forEach(function(s){ s.style.display = 'none'; });
+  document.querySelectorAll('.p2-tab-btn').forEach(function(b){ b.classList.remove('activo'); });
+
+  var target = document.getElementById(tabId);
+  if (target) target.style.display = 'block';
+
+  var btn = document.querySelector(`.p2-tab-btn[data-tab="${tabId}"]`);
+  if (btn) btn.classList.add('activo');
+}
+
+// ===== 11. Exportar a PDF =====
+function exportarCVA4() {
+  window.print();
+}
+
+// ===== 12. Alternar Tema =====
+function alternarTema() {
+  var html = document.documentElement;
+  var cur = html.getAttribute('data-theme') || 'dark';
+  var next = (cur === 'dark') ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  toast('Tema ' + (next === 'dark' ? 'oscuro' : 'claro') + ' activado.');
+}
+
+// Dropdown Portales
+function toggleMenuPortales(e) {
+  e.stopPropagation();
+  var dd = document.getElementById('dropdownPortalesMenu');
+  dd.style.display = (dd.style.display === 'none' ? 'block' : 'none');
+}
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('dropdownPortalesMenu');
+  if (dd && !e.target.closest('#menuPortalesWrap')) {
+    dd.style.display = 'none';
+  }
+});
+
+// Poblar Catálogos en Controles
+function poblarCatalogosUI() {
+  // Cargo en filtros y modales
+  var selCargoFiltro = document.getElementById('filtroCargo');
+  var selCargoModal = document.getElementById('fCargo');
+  selCargoFiltro.innerHTML = '<option value="">Cargo: Todos</option>';
+  selCargoModal.innerHTML = '';
+
+  CATALOGOS.cargos.forEach(function(c) {
+    selCargoFiltro.innerHTML += `<option value="${c}">${c}</option>`;
+    selCargoModal.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  // Proyectos en filtros y modales
+  var selProyFiltro = document.getElementById('filtroProyecto');
+  var selProyModal = document.getElementById('decProyecto');
+  selProyFiltro.innerHTML = '<option value="">Proyecto / Faena: Todos</option>';
+  selProyModal.innerHTML = '';
+
+  CATALOGOS.proyectos.forEach(function(p) {
+    selProyFiltro.innerHTML += `<option value="${p}">${p}</option>`;
+    selProyModal.innerHTML += `<option value="${p}">${p}</option>`;
+  });
+}
+
+// Utilidades
+function toast(msg) {
+  var t = document.getElementById('toastP2');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.style.display = 'none'; }, 3200);
+}
+
+function escapar(str) {
+  return String(str == null ? '' : str).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+</script>
+
+</body>
+</html>
