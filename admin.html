@@ -306,7 +306,7 @@ section.view.on{display:block}
   </aside>
 
   <div class="main">
-    <div class="demo" id="demo" role="status">Modo demostración: los datos son ficticios y no se guarda nada. Para conectar el backend define la URL del servicio en la constante CONFIG.API_URL.</div>
+    
     <header class="top">
       <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <div>
@@ -556,33 +556,21 @@ function csv(nombre,filas){const t=filas.map(f=>f.map(c=>`"${String(c??'').repla
      admin.sesion, admin.datos, admin.guardarUsuario, admin.guardarPermisos,
      admin.resolverSolicitud, admin.guardarPortal
    ===================================================================== */
-const Datos = {
-  demo: !CONFIG.API_URL,
-  db: null,
-  async llamar(accion, payload={}){
-    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,...payload}),redirect:'follow'});
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error||'Error del servicio');
-    return j.data;
-  },
-  async sesion(){
-    if(this.demo) return {nombre:'Administrador Demo',rol:CONFIG.ROL_ADMIN};
-    return this.llamar('admin.sesion');
-  },
-  async cargar(){
-    if(this.demo){ if(!this.db) this.db = generarDemo(); return this.db; }
-    this.db = await this.llamar('admin.datos'); return this.db;
-  },
-  async guardarUsuario(u){ if(this.demo) return; return this.llamar('admin.guardarUsuario',{usuario:u}); },
-  async guardarPermisos(c){ if(this.demo) return; return this.llamar('admin.guardarPermisos',{cambios:c}); },
-  async resolverSolicitud(id,ok){ if(this.demo) return; return this.llamar('admin.resolverSolicitud',{id,aprobada:ok}); },
-  async guardarPortal(p){ if(this.demo) return; return this.llamar('admin.guardarPortal',{portal:p}); }
-};
+const DB_STORAGE_KEY = 'salfa_admin_db_v4';
 
-/* ---------- Datos de demostración (ficticios) ---------- */
-function generarDemo(){
-  let s=42;const R=()=>{s=(s*16807)%2147483647;return s/2147483647};
-  const portales=[
+function cargarBaseDatosLimpia(){
+  try {
+    const raw = localStorage.getItem(DB_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.usuarios) && parsed.usuarios.length) {
+        return parsed;
+      }
+    }
+  } catch(e) {}
+
+  const ahora = Date.now();
+  const portales = [
     {id:'hub',nombre:'Hub de Portales',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/salfa-pilotos/'},
     {id:'mapa',nombre:'Mapa de Procesos',tipo:'GitHub Pages · Portal 01',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-mapa-procesos/'},
     {id:'p02',nombre:'Portal 02 · Control de CV',tipo:'Por definir',estado:'En desarrollo',url:''},
@@ -590,42 +578,155 @@ function generarDemo(){
     {id:'p04',nombre:'Portal 04 · Indicadores OKR',tipo:'Por definir',estado:'En desarrollo',url:''},
     {id:'p05',nombre:'Portal 05 · Gestión de la Información',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-gestion-informacion/'}
   ];
-  const nombres=[['Camila Rojas','Calidad','Revisor'],['Matías Soto','Operaciones','Editor'],['Valentina Pérez','Prevención de Riesgos','Colaborador'],['Diego Fuentes','Ingeniería','Editor'],['Francisca Núñez','Gestión Documental','Administrador'],['Joaquín Araya','Proyectos','Visualizador'],['Constanza Vera','Calidad','Colaborador'],['Sebastián Mora','Planificación','Revisor'],['Antonia Silva','Recursos Humanos','Visualizador'],['Ignacio Pizarro','Operaciones','Colaborador'],['Paula Contreras','Ingeniería','Editor'],['Felipe Godoy','Abastecimiento','Colaborador']];
-  const ahora=Date.now();
-  const usuarios=nombres.map((n,i)=>{
-    const correo=n[0].toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ /g,'.')+CONFIG.DOMINIO;
-    const perm={};portales.forEach((p,j)=>{perm[p.id]=j<2?Math.min(3,[1,2,3][Math.floor(R()*3)]+(n[2]==='Visualizador'?-1:0)):(R()>.8?1:0);if(perm[p.id]<0)perm[p.id]=1});
-    perm.hub=Math.max(perm.hub,1);
-    const estado=i===8?'Suspendido':i===11?'Pendiente':'Activo';
-    const dias=Array.from({length:30},()=>estado==='Activo'&&R()>.35?Math.floor(R()*5)+(R()>.8?3:0):0);
-    const visitas=dias.reduce((a,b)=>a+b,0);
-    const ult=estado==='Pendiente'?null:ahora-Math.floor(R()*(i<4?8:200))*36e5*(i<4?.4:1);
-    return {id:'u'+i,nombre:n[0],correo,area:n[1],rol:n[2],estado,perm,dias,visitas,
-      minutos:visitas*(6+R()*14),acciones:visitas*(2+Math.floor(R()*6)),ultimo:ult,
-      ultimoPortal:R()>.4?'Mapa de Procesos':'Hub de Portales',
-      creado:ahora-(30+R()*300)*864e5};
-  });
-  const tipos=[['login','Ingreso al portal'],['uso','Abrió el flujo de versiones'],['uso','Descargó documento'],['uso','Editó un proceso'],['admin','Cambió de rol'],['denied','Acceso denegado'],['uso','Validó una versión'],['uso','Consultó el mapa']];
-  const bitacora=[];
-  for(let k=0;k<420;k++){
-    const u=usuarios[Math.floor(R()*usuarios.length)];const t=tipos[Math.floor(R()*tipos.length)];
-    const p=portales[Math.floor(R()*2)];
-    let d=new Date(ahora-Math.floor(R()*30)*864e5);
-    if([0,6].includes(d.getDay())&&R()<.8)d=new Date(d.getTime()-2*864e5);
-    const hr=R()<.88?8+Math.floor(R()*10):Math.floor(R()*24);d.setHours(hr,Math.floor(R()*60),0,0);
-    let f=d.getTime();if(f>ahora)f-=864e5;
-    bitacora.push({fecha:f,usuario:u.nombre,correo:u.correo,portal:p.nombre,tipo:t[0],evento:t[1],detalle:t[0]==='admin'?'Rol modificado por el Administrador del Sistema':t[0]==='denied'?'Intento sin permiso sobre '+p.nombre:t[1]+' en '+p.nombre});
-  }
-  bitacora.sort((a,b)=>b.fecha-a.fecha);
-  [0,1,2].forEach(i=>{usuarios[i].ultimo=ahora-(2+R()*9)*6e4});
-  const solicitudes=[
-    {id:'s1',nombre:'Felipe Godoy',correo:usuarios[11].correo,portal:'Mapa de Procesos',motivo:'Consultar procesos de abastecimiento',fecha:ahora-5*36e5},
-    {id:'s2',nombre:'Rodrigo Vidal',correo:'rodrigo.vidal'+CONFIG.DOMINIO,portal:'Hub de Portales',motivo:'Nuevo ingreso al área de Proyectos',fecha:ahora-30*36e5}
-  ];
-  const diarias=Array.from({length:30},(_,i)=>usuarios.reduce((a,u)=>a+u.dias[i],0));
-  const historial=[['Rodrigo Vidal','Hub de Portales','Aprobada',3],['Marcela Ibáñez','Mapa de Procesos','Aprobada',6],['Tomás Rivas','Mapa de Procesos','Rechazada',9],['Daniela Cruz','Hub de Portales','Aprobada',12],['Pablo Leiva','Mapa de Procesos','Aprobada',17],['Karen Soto','Hub de Portales','Rechazada',21]].map((h,i)=>({id:'h'+i,nombre:h[0],correo:h[0].toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ /g,'.')+CONFIG.DOMINIO,portal:h[1],motivo:h[2]==='Aprobada'?'Requerido por su cargo':'Sin justificación suficiente',resolucion:h[2],fecha:ahora-(h[3]+1)*864e5,fechaRes:ahora-h[3]*864e5+(2+i)*36e5}));
-  return {portales,usuarios,bitacora,solicitudes,historial,diarias};
+
+  const adminUser = {
+    id: 'u0',
+    nombre: 'Sebastián Roca',
+    correo: 'sjroca@salfamontajes.com',
+    area: 'Jefatura de Procesos & Mejora Continua',
+    rol: CONFIG.ROL_ADMIN,
+    estado: 'Activo',
+    perm: { hub: 3, mapa: 3, p02: 3, p03: 3, p04: 3, p05: 3 },
+    dias: Array(30).fill(0),
+    visitas: 1,
+    minutos: 20,
+    acciones: 5,
+    ultimo: ahora,
+    ultimoPortal: 'Hub de Portales',
+    creado: ahora - 30 * 864e5
+  };
+  adminUser.dias[29] = 1;
+
+  const db = {
+    portales: portales,
+    usuarios: [adminUser],
+    bitacora: [{
+      fecha: ahora,
+      usuario: 'Sebastián Roca',
+      correo: 'sjroca@salfamontajes.com',
+      portal: 'Hub de Portales',
+      tipo: 'admin',
+      evento: 'Acceso de Administrador',
+      detalle: 'Apertura de la consola de administración institucional'
+    }],
+    solicitudes: [],
+    historial: [],
+    diarias: Array.from({length:30}, (_,i) => i === 29 ? 1 : 0)
+  };
+
+  try { localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(db)); } catch(e) {}
+  return db;
 }
+
+const Datos = {
+  demo: !CONFIG.API_URL,
+  db: null,
+  guardarLocal(){
+    try { localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(this.db)); } catch(e) {}
+  },
+  async llamar(accion, payload={}){
+    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,...payload}),redirect:'follow'});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error||'Error del servicio');
+    return j.data;
+  },
+  async sesion(){
+    try{
+      const s = JSON.parse(localStorage.getItem('salfa_auth_session')||sessionStorage.getItem('salfa_auth_session'));
+      if(s && s.nombre) return {nombre: s.nombre, rol: s.rol || CONFIG.ROL_ADMIN, correo: s.email};
+    }catch(e){}
+    return {nombre:'Sebastián Roca', rol:CONFIG.ROL_ADMIN, correo:'sjroca@salfamontajes.com'};
+  },
+  async cargar(){
+    if(this.demo){
+      if(!this.db) this.db = cargarBaseDatosLimpia();
+      return this.db;
+    }
+    this.db = await this.llamar('admin.datos'); return this.db;
+  },
+  async guardarUsuario(u){
+    if(this.demo){
+      const idx = this.db.usuarios.findIndex(x => x.id === u.id || x.correo === u.correo);
+      if(idx >= 0){
+        Object.assign(this.db.usuarios[idx], u);
+      } else {
+        u.id = 'u' + Date.now();
+        u.dias = Array(30).fill(0);
+        u.visitas = 0;
+        u.minutos = 0;
+        u.acciones = 0;
+        u.ultimo = null;
+        u.creado = Date.now();
+        this.db.usuarios.push(u);
+      }
+      this.guardarLocal();
+      return;
+    }
+    return this.llamar('admin.guardarUsuario',{usuario:u});
+  },
+  async guardarPermisos(cambios){
+    if(this.demo){
+      Object.keys(cambios).forEach(k => {
+        const [uid, pid] = k.split(':');
+        const usr = this.db.usuarios.find(u => u.id === uid);
+        if(usr){
+          usr.perm = usr.perm || {};
+          usr.perm[pid] = cambios[k];
+        }
+      });
+      this.guardarLocal();
+      return;
+    }
+    return this.llamar('admin.guardarPermisos',{cambios});
+  },
+  async resolverSolicitud(id, ok){
+    if(this.demo){
+      const idx = this.db.solicitudes.findIndex(s => s.id === id);
+      if(idx >= 0){
+        const sol = this.db.solicitudes.splice(idx, 1)[0];
+        sol.resolucion = ok ? 'Aprobada' : 'Rechazada';
+        sol.fechaRes = Date.now();
+        this.db.historial.unshift(sol);
+        if(ok){
+          let usr = this.db.usuarios.find(u => u.correo === sol.correo);
+          if(!usr){
+            usr = {
+              id: 'u' + Date.now(),
+              nombre: sol.nombre,
+              correo: sol.correo,
+              area: 'Área general',
+              rol: 'Colaborador',
+              estado: 'Activo',
+              perm: { hub: 1, mapa: 1 },
+              dias: Array(30).fill(0),
+              visitas: 0,
+              minutos: 0,
+              acciones: 0,
+              ultimo: null,
+              creado: Date.now()
+            };
+            this.db.usuarios.push(usr);
+          } else {
+            usr.estado = 'Activo';
+          }
+        }
+        this.guardarLocal();
+      }
+      return;
+    }
+    return this.llamar('admin.resolverSolicitud',{id,aprobada:ok});
+  },
+  async guardarPortal(p){
+    if(this.demo){
+      const idx = this.db.portales.findIndex(x => x.id === p.id);
+      if(idx >= 0) Object.assign(this.db.portales[idx], p);
+      else this.db.portales.push(p);
+      this.guardarLocal();
+      return;
+    }
+    return this.llamar('admin.guardarPortal',{portal:p});
+  }
+};
 
 /* =====================================================================
    ESTADO Y RENDER
@@ -717,17 +818,7 @@ function renderResumen(){renderKpis(true);drawChart(true);renderPorPortal();rend
 /* Simulación en vivo (solo demo) y sondeo (modo real) */
 const EVT_USO=['Descargó documento','Editó un proceso','Validó una versión','Consultó el mapa','Abrió el flujo de versiones'];
 function setUpd(){const d=new Date();$('#liveTxt').textContent=`En vivo · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
-function tickDemo(){
-  if(!document.hidden&&S.db){
-    const act=S.db.usuarios.filter(u=>u.estado==='Activo'),u=act[Math.floor(Math.random()*act.length)],login=Math.random()<.4,portal=Math.random()<.5?'Hub de Portales':'Mapa de Procesos',ev=login?'Ingreso al portal':EVT_USO[Math.floor(Math.random()*EVT_USO.length)];
-    const b={fecha:Date.now(),usuario:u.nombre,correo:u.correo,portal,tipo:login?'login':'uso',evento:ev,detalle:`${ev} en ${portal}`};
-    S.db.bitacora.unshift(b);u.ultimo=Date.now();u.ultimoPortal=portal;u.acciones++;
-    if(login){u.visitas++;u.dias[29]++;S.db.diarias[29]++}
-    if(S.vista==='resumen'){pushFeed(b);renderOnline();if(login){renderKpis(false);drawChart(false);renderUltimos(true)}}
-    setUpd();
-  }
-  setTimeout(tickDemo,3500+Math.random()*3000);
-}
+function tickDemo(){ /* simulacion desactivada */ }
 function sondear(){
   setInterval(async()=>{
     if(document.hidden)return;
@@ -1002,13 +1093,28 @@ function enlazar(){
 (async function(){
   try{
     const ses=await Datos.sesion();
-    if(ses.rol!==CONFIG.ROL_ADMIN){$('#deny').classList.add('on');return}
-    $('#meNom').textContent=ses.nombre||'Administrador';$('#meAv').textContent=ini(ses.nombre||'AS');
-    S.db=await Datos.cargar();
-    $('#app').hidden=false;if(Datos.demo)$('#demo').classList.add('on');
-    iniciarFiltros();enlazar();ir(location.hash.slice(1));setUpd();
-    if(Datos.demo)setTimeout(tickDemo,4000);else sondear();
-  }catch(e){$('#deny').classList.add('on');$('#deny .muted').textContent='No fue posible validar tu sesión: '+e.message}
+    const esAdmin = (ses.rol === 'Administrador' || ses.rol === 'Administrador del Sistema' || !ses.rol);
+    if(!esAdmin){
+      $('#deny').classList.add('on');
+      return;
+    }
+    $('#meNom').textContent = ses.nombre || 'Sebastián Roca';
+    $('#meAv').textContent = ini(ses.nombre || 'SR');
+    S.db = await Datos.cargar();
+    $('#app').hidden = false;
+    const demoEl = $('#demo');
+    if(demoEl) demoEl.remove();
+    iniciarFiltros();
+    enlazar();
+    ir(location.hash.slice(1) || 'resumen');
+    setUpd();
+    sondear();
+  }catch(e){
+    console.error('Error en arranque:', e);
+    $('#deny').classList.add('on');
+    const mut = $('#deny .muted');
+    if(mut) mut.textContent = 'No fue posible validar tu sesión: ' + e.message;
+  }
 })();
 </script>
 </body>
