@@ -2313,6 +2313,18 @@ function cancelarEdicionOrden(){
   if(s) renderDashboard(s);
 }
 
+function actualizarNumerosFichas(grid){
+  if(!grid) grid = $('gridPortales');
+  if(!grid) return;
+  var cards = grid.querySelectorAll('.tarjeta');
+  cards.forEach(function(c, idx){
+    var ficha = c.querySelector('.ficha');
+    if(ficha){
+      ficha.textContent = (idx + 1 < 10 ? '0' : '') + (idx + 1);
+    }
+  });
+}
+
 function habilitarDnDGrid(grid){
   var cards = grid.querySelectorAll('.tarjeta');
   cards.forEach(function(card){
@@ -2328,6 +2340,7 @@ function habilitarDnDGrid(grid){
     card.ondragend = function(){
       card.classList.remove('dragging');
       grid.querySelectorAll('.tarjeta').forEach(function(c){ c.classList.remove('drag-over'); });
+      actualizarNumerosFichas(grid);
     };
     card.ondragover = function(e){
       if(!MODO_EDICION_ORDEN) return;
@@ -2342,6 +2355,7 @@ function habilitarDnDGrid(grid){
       } else {
         grid.insertBefore(dragging, card.nextSibling);
       }
+      actualizarNumerosFichas(grid);
     };
     
     // Touch Drag & Drop (Móviles y Tablets)
@@ -2365,10 +2379,12 @@ function habilitarDnDGrid(grid){
         } else {
           grid.insertBefore(card, targetCard.nextSibling);
         }
+        actualizarNumerosFichas(grid);
       }
     };
     card.ontouchend = function(){
       card.classList.remove('dragging');
+      actualizarNumerosFichas(grid);
     };
   });
 }
@@ -2488,11 +2504,12 @@ function renderDashboard(user){
       if(autorizado){ btn='Abrir <svg class="i i-external-link" aria-hidden="true" style="width:14px;height:14px"><use href="#i-external-link"/></svg>'; }
       else { est='Sin acceso'; btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> No autorizado'; }
     }
+    var numAuto = (i + 1 < 10 ? '0' : '') + (i + 1);
     var t=document.createElement('article');
     t.className='tarjeta'+(activo?'':' inactiva')+(activo?'':' bloq');
     t.setAttribute('data-portal-id', p.id);
     t.innerHTML=
-      '<div class="t-cab"><div class="ficha">'+p.num+'</div>'+
+      '<div class="t-cab"><div class="ficha">'+numAuto+'</div>'+
         '<div><span class="rotulo">'+escapar(p.categoria)+'</span><h3>'+escapar(p.nombre)+'</h3><span class="t-est '+cls+'">'+est+'</span></div>'+
         ic(p.icono,'ico')+'<span class="t-chev" aria-hidden="true"></span></div>'+
       '<div class="t-det"><div class="t-det-in">'+
