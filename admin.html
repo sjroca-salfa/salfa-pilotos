@@ -382,6 +382,11 @@ section.view.on{display:block}
         <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span class="tx">Volver al Hub</span>
       </a>
+      <!-- Semáforo de sesión e inactividad (Verde / Amarillo <= 3m / Rojo desconectado) -->
+      <span class="chip-sesion-tiempo" id="chipSesionTiempo" title="Tiempo antes de desconexión por inactividad" style="display:inline-flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;transition:.3s">
+        <i id="dotSesionTiempo" style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 2px rgba(34,197,94,.3);transition:background .3s,box-shadow .3s"></i>
+        <span id="txtSesionTiempo">15:00</span>
+      </span>
       <span class="chip-admin-online" id="chipPresenciaAdmin" title="Usuarios en línea en este panel" style="display:inline-flex;align-items:center;gap:6px;background:#f0fbf4;border:1px solid #bbf7d0;color:#166534;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700">
         <i style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 3px rgba(34,197,94,.25)"></i>
         <b id="onlineCountAdmin">1</b> en línea
@@ -1327,6 +1332,7 @@ document.addEventListener('keydown', function(e){
 });
 
 // Control de Inactividad (15 minutos)
+// Control de Inactividad y Semáforo (15 minutos)
 var TIEMPO_INACTIVIDAD_MS = 15 * 60 * 1000;
 var KEY_ACTIVIDAD = 'salfa_last_activity';
 function registrarActividad(){
@@ -1335,24 +1341,80 @@ function registrarActividad(){
 var _lastActThrottle = 0;
 function alInteractuar(){
   var ahora = Date.now();
-  if(ahora - _lastActThrottle > 2000){
+  if(ahora - _lastActThrottle > 1500){
     _lastActThrottle = ahora;
     registrarActividad();
+    actualizarSemaforoInactividadAdmin();
   }
 }
 ['mousedown','pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(ev){
   window.addEventListener(ev, alInteractuar, {passive:true});
 });
-setInterval(function(){
+
+function actualizarSemaforoInactividadAdmin(){
+  var dot = document.getElementById('dotSesionTiempo');
+  var txt = document.getElementById('txtSesionTiempo');
+  var chip = document.getElementById('chipSesionTiempo');
+  
   var rawSession = localStorage.getItem('salfa_auth_session');
   if(!rawSession) return;
+  
   var ultima = parseInt(localStorage.getItem(KEY_ACTIVIDAD) || '0', 10);
-  if(ultima > 0 && (Date.now() - ultima) > TIEMPO_INACTIVIDAD_MS){
-    localStorage.removeItem('salfa_auth_session');
-    alert('Tu sesión ha expirado tras 15 minutos de inactividad por razones de seguridad.\nPor favor ingresa nuevamente.');
-    location.href = 'index.html';
+  if(!ultima) {
+    ultima = Date.now();
+    try { localStorage.setItem(KEY_ACTIVIDAD, String(ultima)); } catch(e){}
   }
-}, 5000);
+  
+  var transcurrido = Date.now() - ultima;
+  var restanteMs = Math.max(0, TIEMPO_INACTIVIDAD_MS - transcurrido);
+  var segRestantes = Math.floor(restanteMs / 1000);
+  var min = Math.floor(segRestantes / 60);
+  var seg = segRestantes % 60;
+  var strTiempo = (min < 10 ? '0' : '') + min + ':' + (seg < 10 ? '0' : '') + seg;
+  
+  if(txt) txt.textContent = strTiempo;
+  
+  if(restanteMs <= 0){
+    if(dot){
+      dot.style.background = '#E23B42';
+      dot.style.boxShadow = '0 0 0 2px rgba(226,59,66,.4), 0 0 8px #E23B42';
+    }
+    if(chip){
+      chip.style.borderColor = '#fca5a5';
+      chip.style.background = '#fee2e2';
+      chip.title = 'Sesión desconectada por inactividad';
+    }
+    cerrarSesionPorInactividadAdmin();
+  } else if(restanteMs <= 3 * 60 * 1000){
+    if(dot){
+      dot.style.background = '#F5B800';
+      dot.style.boxShadow = '0 0 0 2px rgba(245,184,0,.4), 0 0 8px #F5B800';
+    }
+    if(chip){
+      chip.style.borderColor = '#fde047';
+      chip.style.background = '#fef9c3';
+      chip.title = 'Atención: quedan ' + strTiempo + ' de inactividad antes de desconectar';
+    }
+  } else {
+    if(dot){
+      dot.style.background = '#22c55e';
+      dot.style.boxShadow = '0 0 0 2px rgba(34,197,94,.3)';
+    }
+    if(chip){
+      chip.style.borderColor = '#cbd5e1';
+      chip.style.background = '#f8fafc';
+      chip.title = 'Sesión activa · ' + strTiempo + ' restantes';
+    }
+  }
+}
+setInterval(actualizarSemaforoInactividadAdmin, 1000);
+actualizarSemaforoInactividadAdmin();
+
+function cerrarSesionPorInactividadAdmin(){
+  localStorage.removeItem('salfa_auth_session');
+  alert('Tu sesión ha expirado tras 15 minutos de inactividad por razones de seguridad.\nPor favor ingresa nuevamente.');
+  location.href = 'index.html';
+}
 </script>
 
 <!-- Modal Selector de Portales Universal -->
