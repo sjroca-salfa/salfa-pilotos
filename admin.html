@@ -573,14 +573,7 @@ body{
           <div class="kpi-num" id="kpiPortales">4</div>
           <div class="kpi-label">Portales en Catálogo</div>
         </div>
-        <div class="kpi-icon"><svg class="i" style="width:24px;height:24px"><use href="#i-network"/></svg></div>
-      </div>
-      <div class="kpi-card">
-        <div>
-          <div class="kpi-num" id="kpiDirectorio">0</div>
-          <div class="kpi-label">Contactos en Directorio Salfa</div>
-        </div>
-        <div class="kpi-icon" style="color:var(--azul);background:var(--azul-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-contact"/></svg></div>
+        <div class="kpi-icon" style="color:var(--azul);background:var(--azul-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-network"/></svg></div>
       </div>
     </div>
 
@@ -593,12 +586,7 @@ body{
       </button>
       <button type="button" class="tab-btn" onclick="cambiarTab('habilitar')">
         <svg class="i"><use href="#i-user-plus"/></svg>
-        + Habilitar Colaborador (Predictivo)
-      </button>
-      <button type="button" class="tab-btn" onclick="cambiarTab('directorio')">
-        <svg class="i"><use href="#i-contact"/></svg>
-        Directorio Salfa Montajes
-        <span class="tab-badge" id="badgeDirectorio">0</span>
+        + Habilitar Colaborador
       </button>
     </div>
 
@@ -642,11 +630,11 @@ body{
         <div class="panel-head">
           <div class="panel-title">
             <svg class="i" style="color:var(--rojo)"><use href="#i-user-plus"/></svg>
-            Habilitar Acceso con Autocompletado Predictivo
+            Habilitar Acceso a Colaborador
           </div>
         </div>
         <p style="color:var(--gris);font-size:14.5px;margin-bottom:22px;line-height:1.5">
-          Escribe el nombre o correo del colaborador. El sistema buscará coincidencias en el directorio institucional de Salfa Montajes completando los datos automáticamente, tal como al redactar un correo corporativo.
+          Ingresa el correo corporativo del colaborador (@salfamontajes.com), su nombre y asigna los portales autorizados.
         </p>
 
         <form id="formHabilitar" onsubmit="ejecutarHabilitar(event)" class="form-grid">
@@ -696,53 +684,7 @@ body{
       </div>
     </section>
 
-    <!-- TAB 3: DIRECTORIO CORPORATIVO SALFA -->
-    <section id="tab-directorio" class="tab-panel">
-      <div class="panel-card">
-        <div class="panel-head">
-          <div class="panel-title">
-            <svg class="i" style="color:var(--rojo)"><use href="#i-contact"/></svg>
-            Directorio de Colaboradores Salfa Montajes
-          </div>
-          <div style="display:flex;gap:10px;align-items:center">
-            <input type="text" id="buscarDirectorio" class="form-input" placeholder="Buscar por nombre o correo..." style="width:260px;padding:8px 12px" oninput="filtrarDirectorio(this.value)">
-            <button type="button" class="btn-action" onclick="abrirModalImportar()"><svg class="i"><use href="#i-upload"/></svg> Importar / Pegar Lista</button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Correo Corporativo</th>
-                <th>Área / Cargo</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="tablaDirectorioBody">
-              <!-- Renderizado dinámico -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<!-- MODAL IMPORTAR DIRECTORIO -->
-<div id="modalImportar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)cerrarModalImportar()">
-  <div style="background:#fff;max-width:580px;width:100%;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,0.4);border-top:5px solid var(--rojo)">
-    <h3 style="font-family:var(--f-titulo);font-size:18px;margin-bottom:8px;text-transform:uppercase">Importar Lista de Contactos Salfa</h3>
-    <p style="font-size:14px;color:var(--gris);margin-bottom:16px;line-height:1.4">
-      Pega un listado de correos o nombres (uno por línea o separados por coma). Puedes copiar directamente desde un correo de Outlook o un archivo Excel.
-    </p>
-    <textarea id="textoImportar" class="form-input" rows="8" placeholder="Ejemplo:&#10;juan.perez@salfamontajes.com, Juan Pérez, Oficina Técnica&#10;maria.soto@salfamontajes.com, María Soto, Control de Gestión"></textarea>
-    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:18px">
-      <button type="button" class="btn-action" onclick="cerrarModalImportar()">Cancelar</button>
-      <button type="button" class="btn-submit" onclick="procesarImportacion()">Guardar en Directorio</button>
-    </div>
-  </div>
+    
 </div>
 
 <div id="toast" class="toast"></div>
@@ -760,16 +702,10 @@ var PORTALES = [
   { id:'04', nombre:'Indicadores OKR', url:'#' }
 ];
 
-// Directorio base inicial de Salfa Montajes para autocompletado instantáneo
+// Directorio institucional (solo usuarios reales registrados o aprobados)
+var DIR_KEY = 'salfa_directorio_contactos_v2';
 var DIRECTORIO_BASE = [
-  { nombre:'Sebastián Roca', email:'sjroca@salfamontajes.com', area:'Jefatura de Procesos & Mejora Continua' },
-  { nombre:'Carlos Morales', email:'cmorales@salfamontajes.com', area:'Gerencia de Operaciones' },
-  { nombre:'Patricia Soto', email:'psoto@salfamontajes.com', area:'Control de Gestión y Planificación' },
-  { nombre:'Rodrigo Henríquez', email:'rhenriquez@salfamontajes.com', area:'Oficina Técnica Central' },
-  { nombre:'Daniela Contreras', email:'dcontreras@salfamontajes.com', area:'Aseguramiento de Calidad (QA/QC)' },
-  { nombre:'Mauricio Valenzuela', email:'mvalenzuela@salfamontajes.com', area:'Prevención de Riesgos y Medio Ambiente' },
-  { nombre:'Felipe Araya', email:'faraya@salfamontajes.com', area:'Ingeniería y Construcción AWP' },
-  { nombre:'Andrea Muñoz', email:'amunoz@salfamontajes.com', area:'Gestión de Personas y Dotación' }
+  { nombre:'Sebastián Roca', email:'sjroca@salfamontajes.com', area:'Jefatura de Procesos & Mejora Continua' }
 ];
 
 function $(id){ return document.getElementById(id); }
@@ -837,7 +773,7 @@ function cambiarTab(nombre){
   } else if(nombre === 'directorio'){
     document.querySelectorAll('.tab-btn')[2].classList.add('active');
     $('tab-directorio').classList.add('active');
-    renderDirectorio();
+    
   }
 }
 
@@ -877,7 +813,7 @@ function cargarTodo(){
 
   renderTablaUsuarios(accesos);
   renderCheckPortales();
-  renderDirectorio();
+  
 }
 
 function renderCheckPortales(){
@@ -1129,7 +1065,7 @@ function renderDirectorio(filtro){
   }).join('');
 }
 
-function filtrarDirectorio(q){ renderDirectorio(q); }
+function filtrarDirectorio(q){  }
 
 function darAccesoDesdeDirectorio(email, nombre, area){
   cambiarTab('habilitar');
@@ -1165,7 +1101,7 @@ function procesarImportacion(){
   $('textoImportar').value = '';
   toast('Se importaron ' + count + ' nuevos colaboradores al Directorio Salfa.');
   cargarTodo();
-  renderDirectorio();
+  
 }
 
 // Iniciar al cargar
