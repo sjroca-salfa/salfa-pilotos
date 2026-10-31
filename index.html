@@ -542,6 +542,46 @@ html,body{height:100%}
   *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
   #brasas{display:none}
 }
+
+
+/* ===== PARCHE LOGIN: campos, ojo, íconos y pie (probado en vivo sobre la página publicada) =====
+   Pegar AL FINAL del <style> principal del Hub (después de todas las reglas existentes).
+   No borrar las reglas antiguas `.campo input` / `.ojo`: las usan los formularios de registro y recuperación. */
+
+/* Contenedor del campo: dibuja fondo, borde y foco */
+.campo .in{overflow:hidden}
+
+/* Íconos nuevos (SVG de contorno, sin la clase `i` del sprite): tamaño y trazo explícitos */
+.campo .in > svg{width:19px;height:19px;margin-left:15px;flex:none;fill:none!important;stroke:var(--gris);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:.3s}
+.campo .in:focus-within > svg{stroke:var(--rojo);transform:scale(1.1)}
+
+/* Input "desnudo" dentro del contenedor (anula `.campo input` antiguo: borde, fondo, radio, ancho 100 %, padding-left 40 px) */
+.campo .in input{-webkit-appearance:none;appearance:none;flex:1 1 0%;width:auto;min-width:0;height:auto;margin:0;
+  padding:clamp(12px,1.9vh,15px) 14px clamp(12px,1.9vh,15px) 10px;
+  background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;
+  font:inherit;font-size:15.5px;color:var(--grafito)}
+.campo .in input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--fondo) inset!important;-webkit-text-fill-color:var(--grafito)}
+.campo .in:focus-within input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #fff inset!important}
+
+/* Botón del ojo (el markup usa la clase `.ojo` antigua, que lo posicionaba en absoluto) */
+.campo .in .ojo{position:static;transform:none;flex:none;margin-right:6px;width:38px;height:38px;padding:0;border:0!important;border-radius:10px;
+  background:transparent;display:grid;place-items:center;color:var(--gris);cursor:pointer;transition:.25s}
+.campo .in .ojo:hover{background:rgba(30,34,41,.08);color:var(--grafito)}
+.campo .in .ojo svg{width:19px;height:19px;margin:0;fill:none!important;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Alineación del panel (heredaba text-align:center de .portada) */
+#tarjetaIngreso{text-align:left}
+#tarjetaIngreso .pide-box,#tarjetaIngreso .pie-seguro{text-align:center}
+
+/* Pie de ayuda: un solo bloque (el antiguo, compartido por todos los paneles), centrado */
+#paneLogin .pie-seguro{display:none}
+#tarjetaIngreso > .nota{justify-content:center;text-align:center;margin-top:clamp(10px,1.8vh,16px);padding-top:clamp(10px,1.6vh,14px);font-weight:500}
+#tarjetaIngreso > .nota svg{color:#2fb26a}
+
+#btnContactoLogin{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px auto 0;background:none;border:none;color:var(--gris);font-size:13px;cursor:pointer}
+#btnContactoLogin b{color:var(--rojo);font-weight:700}
+#btnContactoLogin svg{width:15px;height:15px;color:var(--gris)}
+
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer onerror="window.GSI_ERROR=true"></script>
 </head>
@@ -646,17 +686,7 @@ html,body{height:100%}
       </div>
       <div class="sep-grad"></div>
 
-      <div class="pie-seguro">
-        <div class="aviso-restringido">
-          <span class="vivo-dot"></span>
-          <span>Acceso restringido a cuentas autorizadas</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px">
-          <svg class="i i-mail" aria-hidden="true" style="width:14px;height:14px"><use href="#i-mail"/></svg>
-          <span>¿Necesitas ayuda?</span>
-          <button type="button" class="enlace fuerte" style="background:none;border:none;cursor:pointer;color:var(--rojo);font-weight:700" onclick="abrirContacto()">Escríbenos</button>
-        </div>
-      </div>
+
     </div>
 
     <!-- ===== Solicitar acceso a portales ===== -->
