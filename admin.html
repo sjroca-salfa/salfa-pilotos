@@ -2,1115 +2,1014 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Consola de Administración · Ecosistema de Portales Salfa</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1E2229">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Consola de Administración · Ecosistema de Portales Salfa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --rojo:#B01E24;
-  --rojo-oscuro:#951A1F;
-  --rojo-claro:#E23B42;
-  --burdeos:#5E0F13;
-  --grafito:#1E2229;
-  --grafito-medio:#2A303A;
-  --grafito-claro:#3A414A;
-  --gris:#5A6771;
-  --linea:#D3D7DC;
-  --linea-suave:#E5E8EB;
-  --fondo:#EEF0F2;
-  --blanco:#FFFFFF;
-  --verde:#146A38;
-  --verde-bg:#E8F5E9;
-  --ambar:#D97706;
-  --ambar-bg:#FEF3C7;
-  --azul:#1D4ED8;
-  --azul-bg:#EFF6FF;
-  --f-titulo:'Montserrat',sans-serif;
-  --f-cuerpo:'Barlow',Arial,sans-serif;
-  --f-rotulo:'Barlow Condensed',Arial,sans-serif;
-  --ease:cubic-bezier(.2,.8,.2,1);
+  --rojo:#B01E24; --burdeos:#5E0F13; --burdeos-banda:#7A1218;
+  --grafito:#1E2229; --grafito-claro:#3A414A; --gris:#5A6771;
+  --linea:#D3D7DC; --fondo:#EEF0F2; --blanco:#FFFFFF;
+  --rojo-claro:#E23B42; --gris-claro:#9AA2AB;
+  --ambar:#F5B800; --verde:#146A38;
+  --f-titulo:Montserrat,sans-serif; --f-cuerpo:Barlow,Arial,sans-serif; --f-rotulo:'Barlow Condensed',Arial,sans-serif;
+  --side:248px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:var(--f-cuerpo);
-  background:var(--fondo);
-  color:var(--grafito);
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  overflow-x:hidden;
-}
+html,body{height:100%}
+body{font-family:var(--f-cuerpo);font-size:15px;color:var(--grafito);background:var(--fondo);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ambar);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.rot{font-family:var(--f-rotulo);font-weight:600;text-transform:uppercase;letter-spacing:.09em;font-size:12.5px}
+h1,h2,h3{font-family:var(--f-titulo);font-weight:800;color:var(--grafito)}
 
-/* Barra superior */
-.linea-top{position:fixed;top:0;left:0;right:0;height:5px;background:var(--rojo);z-index:100}
-.header{
-  background:var(--grafito);
-  color:#fff;
-  height:70px;
-  margin-top:5px;
-  padding:0 32px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:3px solid var(--rojo);
-  box-shadow:0 4px 14px rgba(0,0,0,0.25);
-  position:sticky;
-  top:5px;
-  z-index:90;
-}
-.header-left{display:flex;align-items:center;gap:20px}
-.header-left .logo{height:30px;width:auto}
-.badge-admin{
-  background:rgba(176,30,36,0.2);
-  border:1px solid rgba(226,59,66,0.6);
-  color:#FF8A8E;
-  font-family:var(--f-rotulo);
-  font-weight:700;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:1.5px;
-  padding:4px 10px;
-  border-radius:2px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.header-right{display:flex;align-items:center;gap:14px}
-.btn-nav{
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.25);
-  color:#fff;
-  padding:8px 16px;
-  cursor:pointer;
-  font-family:var(--f-cuerpo);
-  font-weight:600;
-  font-size:13.5px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  text-decoration:none;
-  transition:all .2s;
-}
-.btn-nav:hover{background:rgba(255,255,255,0.1);border-color:#fff}
-.btn-nav.pri{background:var(--rojo);border-color:var(--rojo)}
-.btn-nav.pri:hover{background:var(--rojo-oscuro)}
+/* ---------- Estructura ---------- */
+.app{display:grid;grid-template-columns:var(--side) 1fr;min-height:100vh}
+.side{background:linear-gradient(165deg,var(--grafito) 0%,var(--burdeos) 140%);color:var(--blanco);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;border-top:6px solid var(--rojo);z-index:30;overflow:hidden}
+.side:before{content:"";position:absolute;width:440px;height:440px;left:-150px;bottom:-140px;border-radius:50%;background:radial-gradient(circle,rgba(176,30,36,.45),transparent 65%);animation:drift 14s ease-in-out infinite;pointer-events:none}
+.side>*{position:relative;z-index:1}
+.brand{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
+.logo-img{display:block;width:176px;height:auto;animation:fadein .9s both}
+.brand .rot{display:block;margin-top:9px;color:rgba(255,255,255,.7)}
+.nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;overflow:auto;flex:1}
+.nav .grp{padding:14px 12px 6px;color:rgba(255,255,255,.5)}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,.86);text-decoration:none;font-weight:500;border-left:3px solid transparent}
+.nav a:hover{background:rgba(255,255,255,.08)}
+.nav a[aria-current="page"]{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--rojo-claro)}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav .cnt{margin-left:auto;background:var(--rojo);color:#fff;border-radius:99px;font-size:11.5px;font-weight:600;padding:1px 8px}
+.me{padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:10px;align-items:center}
+.av{width:36px;height:36px;border-radius:50%;background:var(--rojo);color:#fff;display:grid;place-items:center;font-family:var(--f-titulo);font-weight:800;font-size:13px;flex:none}
+.me small{display:block;color:rgba(255,255,255,.65);font-size:12.5px;line-height:1.25}
+.me strong{display:block;font-size:14px;line-height:1.25}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{background:var(--blanco);border-bottom:1px solid var(--linea);padding:20px 28px 14px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20;overflow:hidden}
+.top:before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,var(--rojo) 35%,var(--burdeos-banda) 50%,var(--rojo) 65%);background-size:260% 100%;animation:shine 6s linear infinite}
+.top h1{font-size:19px;text-transform:uppercase;letter-spacing:.01em}
+.top .sub{color:var(--gris);font-size:13.5px}
+.top .sp{flex:1}
+.burger{display:none;background:none;border:1px solid var(--linea);border-radius:8px;padding:7px 9px}
+.burger svg{width:20px;height:20px;stroke:var(--grafito);fill:none;stroke-width:2}
+.demo{background:var(--ambar);color:var(--grafito);padding:7px 28px;font-weight:600;font-size:13.5px;display:none}
+.demo.on{display:block}
+.content{padding:26px 28px 60px;max-width:1440px;width:100%}
 
-/* Contenedor principal */
-.main-wrapper{
-  max-width:1300px;
-  width:100%;
-  margin:0 auto;
-  padding:32px 24px 64px;
-  flex:1;
-}
+/* ---------- Componentes ---------- */
+.btn{border:1px solid var(--linea);background:var(--blanco);border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;display:inline-flex;gap:8px;align-items:center;text-decoration:none;color:var(--grafito)}
+.btn:hover{border-color:var(--gris)}
+.btn.pri{background:var(--rojo);border-color:var(--rojo);color:#fff}
+.btn.pri:hover{background:var(--burdeos-banda)}
+.btn.dark{background:var(--grafito);border-color:var(--grafito);color:#fff}
+.btn.sm{padding:5px 11px;font-size:13px}
+.btn.danger{color:var(--rojo);border-color:var(--rojo)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+.card>header{padding:16px 20px;border-bottom:1px solid var(--linea);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.card>header h2{font-size:15px;text-transform:uppercase;letter-spacing:.02em}
+.card>header .sp{flex:1}
+.card .body{padding:20px}
+.grid{display:grid;gap:18px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:18px}
+.kpi{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:16px 18px;border-top:4px solid var(--grafito);transition:transform .25s,box-shadow .25s}
+.kpi:hover,.card.lift:hover{transform:translateY(-3px);box-shadow:0 10px 24px color-mix(in srgb,var(--grafito) 14%,transparent)}
+.card.lift{transition:transform .25s,box-shadow .25s}
+.kpi.hl{border-top-color:var(--rojo)}
+.kpi .rot{color:var(--gris)}
+.kpi .v{font-family:var(--f-titulo);font-weight:800;font-size:32px;margin:6px 0 2px;line-height:1.1}
+.kpi .d{font-size:13px;color:var(--gris)}
+.two{grid-template-columns:2fr 1fr}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.inp,.sel{border:1px solid var(--linea);background:var(--blanco);border-radius:8px;padding:8px 12px;min-width:0}
+.inp:focus,.sel:focus{border-color:var(--grafito)}
+.tw{overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{background:var(--grafito);color:#fff;text-align:left;padding:10px 14px;font-family:var(--f-rotulo);text-transform:uppercase;letter-spacing:.09em;font-size:12.5px;font-weight:600;white-space:nowrap;position:sticky;top:0}
+th.s{cursor:pointer}
+th.s:hover{background:var(--grafito-claro)}
+td{padding:10px 14px;border-bottom:1px solid var(--linea);vertical-align:middle}
+tbody tr:nth-child(even){background:var(--fondo)}
+tbody tr.clk{cursor:pointer}
+tbody tr.clk:hover{background:color-mix(in srgb,var(--grafito) 8%,var(--blanco))}
+.muted{color:var(--gris);font-size:13px}
+.who{display:flex;gap:10px;align-items:center}
+.who .av{width:32px;height:32px;font-size:12px;background:var(--grafito)}
+.who b{display:block;line-height:1.2}
+.who span{color:var(--gris);font-size:12.5px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid var(--linea);background:var(--blanco);white-space:nowrap}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--gris-claro)}
+.tag.ok{background:var(--blanco);border-color:var(--verde);color:var(--verde)} .tag.ok i{background:var(--verde)}
+.tag.pend{background:var(--ambar);border-color:var(--ambar);color:var(--grafito)} .tag.pend i{background:var(--grafito)}
+.tag.off{background:var(--fondo);color:var(--gris)} .tag.off i{background:var(--gris-claro)}
+.tag.bad{background:var(--blanco);border-color:var(--rojo);color:var(--rojo)} .tag.bad i{background:var(--rojo)}
+.tag.adm{background:var(--grafito);border-color:var(--grafito);color:#fff} .tag.adm i{background:var(--rojo-claro)}
+.empty{padding:40px 20px;text-align:center;color:var(--gris)}
+.bar{height:8px;background:var(--fondo);border-radius:99px;overflow:hidden;min-width:70px}
+.bar>i{display:block;height:100%;background:var(--grafito-claro);transform-origin:left;animation:growx 1s cubic-bezier(.2,.7,.2,1) backwards}
+.bar.r>i{background:var(--rojo)}
 
-/* Banner de cabecera */
-.admin-banner{
-  background:linear-gradient(135deg, #2A303A 0%, #1A1D22 65%, #0F1113 100%);
-  color:#fff;
-  padding:32px 36px;
-  box-shadow:0 12px 30px -10px rgba(0,0,0,0.3);
-  margin-bottom:28px;
-  border-left:6px solid var(--rojo);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:20px;
-}
-.admin-banner h1{
-  font-family:var(--f-titulo);
-  font-weight:800;
-  font-size:28px;
-  text-transform:uppercase;
-  letter-spacing:-0.5px;
-  margin-bottom:6px;
-}
-.admin-banner p{color:#C9CDD3;font-size:15.5px}
-.admin-meta{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap:4px;
-  text-align:right;
-}
-.admin-meta .nombre{font-family:var(--f-titulo);font-weight:700;font-size:16px;color:#fff}
-.admin-meta .correo{font-size:13.5px;color:#9AA2AB}
+/* Matriz */
+.mx select{border:1px solid var(--linea);border-radius:6px;padding:4px 6px;font-size:13px;background:var(--blanco);width:100%;min-width:104px}
+.mx select[data-v="0"]{color:var(--gris);background:var(--fondo)}
+.mx select[data-v="3"],.mx select[data-v="2"]{border-color:var(--grafito);font-weight:600}
+.mx td:first-child,.mx th:first-child{position:sticky;left:0;background:inherit;z-index:2}
+.mx tbody td:first-child{background:var(--blanco)}
+.mx tr.chg td:first-child{box-shadow:inset 4px 0 0 var(--ambar)}
+.savebar{position:sticky;bottom:14px;margin-top:16px;background:var(--grafito);color:#fff;border-radius:12px;padding:12px 18px;display:none;gap:14px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);border-left:6px solid var(--ambar)}
+.savebar.on{display:flex;animation:up .3s}
+.savebar .sp{flex:1}
 
-/* KPI Cards */
-.kpi-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-  gap:18px;
-  margin-bottom:28px;
-}
-.kpi-card{
-  background:#fff;
-  padding:20px 24px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.05);
-  border-top:4px solid var(--rojo);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.kpi-num{
-  font-family:var(--f-titulo);
-  font-weight:800;
-  font-size:32px;
-  color:var(--grafito);
-  line-height:1;
-}
-.kpi-label{
-  font-family:var(--f-rotulo);
-  font-weight:700;
-  font-size:12.5px;
-  text-transform:uppercase;
-  letter-spacing:1.5px;
-  color:var(--gris);
-  margin-top:6px;
-}
-.kpi-icon{
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  background:rgba(176,30,36,0.08);
-  color:var(--rojo);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+/* Timeline */
+.tl{list-style:none;position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:var(--linea)}
+.tl li{position:relative;padding:0 0 14px;animation:slidein .45s backwards;animation-delay:calc(var(--i,0)*70ms)}
+.tl li:before{content:"";position:absolute;left:-21px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--grafito);border:2px solid var(--blanco);box-shadow:0 0 0 1px var(--grafito)}
+.tl li.ev-login:before{background:var(--verde);box-shadow:0 0 0 1px var(--verde)}
+.tl li.ev-admin:before{background:var(--rojo);box-shadow:0 0 0 1px var(--rojo)}
+.tl li.ev-denied:before{background:var(--ambar);box-shadow:0 0 0 1px var(--grafito)}
+.tl time{display:block;color:var(--gris);font-size:12.5px}
 
-/* Pestañas de navegación */
-.tabs-container{
-  display:flex;
-  background:#fff;
-  border-bottom:2px solid var(--linea);
-  margin-bottom:24px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.04);
-}
-.tab-btn{
-  padding:16px 24px;
-  font-family:var(--f-titulo);
-  font-weight:700;
-  font-size:13.5px;
-  text-transform:uppercase;
-  letter-spacing:0.8px;
-  color:var(--gris);
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-bottom:3px solid transparent;
-  margin-bottom:-2px;
-  transition:all .2s;
-}
-.tab-btn:hover{color:var(--grafito);background:#F8F9FA}
-.tab-btn.active{
-  color:var(--rojo);
-  border-bottom-color:var(--rojo);
-  background:#fff;
-}
-.tab-badge{
-  background:var(--linea);
-  color:var(--grafito);
-  font-size:11px;
-  font-weight:700;
-  padding:2px 7px;
-  border-radius:10px;
-}
-.tab-btn.active .tab-badge{
-  background:var(--rojo);
-  color:#fff;
-}
+/* Gráfico */
+.chart{width:100%;height:230px;display:block}
+.legend{display:flex;gap:18px;font-size:13px;color:var(--gris);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 
-/* Paneles de Contenido */
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+/* Drawer y modal */
+.ov{position:fixed;inset:0;background:rgba(30,34,41,.55);display:none;z-index:50}
+.ov.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--blanco);z-index:60;transform:translateX(100%);transition:transform .22s;display:flex;flex-direction:column;border-top:6px solid var(--rojo)}
+.drawer.on{transform:none}
+.drawer header{padding:18px 22px;border-bottom:1px solid var(--linea);display:flex;gap:14px;align-items:center;background:var(--fondo)}
+.drawer header .sp{flex:1}
+.drawer .db{padding:20px 22px;overflow:auto;flex:1}
+.x{background:none;border:1px solid var(--linea);border-radius:8px;width:34px;height:34px;font-size:18px;line-height:1}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.mini div{background:var(--fondo);border-radius:10px;padding:10px 12px}
+.mini .rot{color:var(--gris);font-size:11.5px}
+.mini b{display:block;font-family:var(--f-titulo);font-weight:800;font-size:19px;margin-top:2px}
+.sec{margin:20px 0 10px;display:flex;align-items:center;gap:10px}
+.sec h3{font-size:13.5px;text-transform:uppercase}
+.sec:after{content:"";flex:1;height:1px;background:var(--linea)}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(640px,calc(100% - 28px));max-height:calc(100vh - 28px);overflow:auto;background:var(--blanco);border-radius:14px;z-index:60;display:none;border-top:6px solid var(--rojo)}
+.modal.on{display:block}
+.modal header{padding:16px 22px;border-bottom:1px solid var(--linea);display:flex;align-items:center;gap:12px}
+.modal header h2{font-size:16px;text-transform:uppercase;flex:1}
+.modal .mb{padding:20px 22px;display:grid;gap:14px}
+.modal footer{padding:14px 22px;border-top:1px solid var(--linea);display:flex;gap:10px;justify-content:flex-end;background:var(--fondo)}
+.fld label{display:block;margin-bottom:5px;color:var(--gris)}
+.fld .inp,.fld .sel{width:100%}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chk{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.chk label{display:flex;align-items:center;gap:8px;border:1px solid var(--linea);border-radius:8px;padding:8px 10px;cursor:pointer}
+.chk input{accent-color:var(--rojo);width:16px;height:16px}
+.help{font-size:12.5px;color:var(--gris)}
+.sug{position:relative}
+.sug ul{position:absolute;z-index:5;left:0;right:0;top:100%;background:#fff;border:1px solid var(--linea);border-radius:8px;list-style:none;max-height:180px;overflow:auto;display:none;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.sug ul.on{display:block}
+.sug li{padding:8px 12px;cursor:pointer}
+.sug li:hover{background:var(--fondo)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--grafito);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:90;border-left:6px solid var(--verde)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.toast.err{border-left-color:var(--rojo)}
+.deny{min-height:100vh;display:none;place-items:center;padding:20px;background:linear-gradient(135deg,var(--grafito),var(--burdeos))}
+.deny.on{display:grid}
+.deny .box{background:#fff;border-radius:14px;padding:34px;max-width:480px;text-align:center;border-top:6px solid var(--rojo)}
+.deny h1{margin:10px 0}
+section.view{display:none}
+section.view.on{display:block}
 
-/* Tarjetas y Secciones */
-.panel-card{
-  background:#fff;
-  padding:28px 32px;
-  box-shadow:0 4px 14px rgba(0,0,0,0.06);
-  margin-bottom:24px;
-}
-.panel-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--linea-suave);
-  flex-wrap:wrap;
-  gap:12px;
-}
-.panel-title{
-  font-family:var(--f-titulo);
-  font-weight:800;
-  font-size:18px;
-  text-transform:uppercase;
-  color:var(--grafito);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
 
-/* Formulario con Autocompletado Predictivo */
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-.form-group{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  position:relative;
-}
-.form-group.full{grid-column:1 / -1}
-.form-group label{
-  font-family:var(--f-rotulo);
-  font-weight:700;
-  font-size:12.5px;
-  text-transform:uppercase;
-  letter-spacing:1.2px;
-  color:var(--grafito-claro);
-}
-.form-input{
-  width:100%;
-  padding:12px 14px;
-  border:1px solid var(--linea);
-  background:#FAFBFB;
-  font:15px var(--f-cuerpo);
-  color:var(--grafito);
-  outline:none;
-  transition:border-color .2s, box-shadow .2s;
-}
-.form-input:focus{
-  border-color:var(--rojo);
-  background:#fff;
-  box-shadow:0 0 0 3px rgba(176,30,36,0.12);
-}
+/* ---------- Movimiento ---------- */
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--verde) 55%,transparent)}100%{box-shadow:0 0 0 11px color-mix(in srgb,var(--verde) 0%,transparent)}}
+@keyframes pulseb{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes shine{from{background-position:130% 0}to{background-position:-130% 0}}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(48px,-56px) scale(1.18)}}
+@keyframes slidein{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes flash{0%{background:color-mix(in srgb,var(--ambar) 45%,transparent)}100%{background:transparent}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.14);color:var(--rojo)}100%{transform:scale(1)}}
+.in{animation:up .6s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*70ms)}
+.kpi .v.flash{animation:bump .7s;transform-origin:left}
+.live{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-rotulo);font-weight:600;text-transform:uppercase;letter-spacing:.09em;font-size:12.5px;color:var(--gris);white-space:nowrap}
+.live i,.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--verde);animation:pulse 2s infinite}
+.dot{margin-right:8px}
+.av.sm{width:34px;height:34px;font-size:12px}
+.av.on{position:relative;background:var(--grafito)}
+.av.on:after{content:"";position:absolute;right:-3px;bottom:-3px;width:10px;height:10px;border-radius:50%;background:var(--verde);border:2px solid var(--blanco);animation:pulse 2s infinite}
+.avs{display:flex;gap:12px;margin-bottom:14px;min-height:34px;align-items:center;flex-wrap:wrap}
+.feed{list-style:none}
+.feed li{display:flex;gap:10px;padding:10px 6px;border-bottom:1px solid var(--linea);align-items:flex-start}
+.feed li:last-child{border-bottom:0}
+.feed li .av{background:var(--grafito);flex:none}
+.feed li.nuevo{animation:slidein .5s,flash 1.8s}
+.cb{transform-box:fill-box;transform-origin:50% 100%;animation:grow .75s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:var(--d,0ms)}
+.cb.hoy{animation:grow .75s cubic-bezier(.2,.7,.2,1) backwards,pulseb 2.4s 1.4s infinite;animation-delay:var(--d,0ms),1.4s}
+.chart rect.cb,.chart rect.cn{cursor:pointer;transition:fill .15s}
+.chart rect.cb:hover,.chart rect.cn:hover{fill:var(--burdeos-banda)}
+.sb{transform-box:fill-box;transform-origin:50% 100%;animation:grow .6s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:var(--d,0ms)}
+.hm{display:grid;grid-template-columns:30px repeat(24,1fr);gap:3px;align-items:center;font-size:11.5px;color:var(--gris)}
+.hm i{display:block;aspect-ratio:1;border-radius:3px;background:color-mix(in srgb,var(--rojo) calc(var(--a)*100%),var(--fondo));animation:pop .5s backwards;animation-delay:var(--d,0ms);cursor:default}
+.hm i:hover{outline:2px solid var(--grafito)}
+.hm span{text-align:center;font-family:var(--f-rotulo);font-weight:600}
+.hm b{font-family:var(--f-rotulo);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.scale{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12.5px;color:var(--gris)}
+.scale i{flex:1;max-width:160px;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--fondo),var(--rojo))}
+.donut{display:flex;flex-direction:column;align-items:center;gap:14px}
+.donut svg{width:170px;height:170px}
+.donut circle.seg{transition:stroke-dasharray 1.1s cubic-bezier(.2,.7,.2,1)}
+.donut ul{list-style:none;width:100%;display:grid;gap:6px}
+.donut li{display:flex;align-items:center;gap:8px;font-size:14px}
+.donut li i{width:12px;height:12px;border-radius:3px}
+.donut li b{margin-left:auto}
+.three{grid-template-columns:1.05fr 1.7fr .9fr}
+.mx select.fl{animation:flash .9s}
+.mini div{animation:up .5s backwards}
+.mini div:nth-child(2){animation-delay:.07s}.mini div:nth-child(3){animation-delay:.14s}
+.modal.on{animation:up .3s}
+.eq{grid-template-columns:1fr 1fr}
+.stack{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--fondo);margin-top:12px}
+.stack i{display:block;height:100%;transform-origin:left;animation:growx 1s cubic-bezier(.2,.7,.2,1) backwards}
+.stack i.v1{background:var(--gris-claro)}.stack i.v2{background:var(--grafito-claro)}.stack i.v3{background:var(--rojo)}
+.kpi .lg{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:12.5px;color:var(--gris)}
+.rank{list-style:none;display:grid;gap:12px}
+.rank li{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center}
+.rank .n{font-family:var(--f-titulo);font-weight:800;color:var(--gris)}
+.rank li:first-child .n{color:var(--rojo)}
+.rank .bar{grid-column:2/4;margin-top:-4px}
+.pcard .url{display:block;color:var(--gris);font-size:13px;margin:6px 0 0;word-break:break-all}
+.pcard .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.pcard ul{list-style:none;display:grid;gap:6px;margin-top:6px}
+.pcard li{display:flex;justify-content:space-between;font-size:13.5px}
+.tabs .btn[aria-pressed="true"]{background:var(--grafito);border-color:var(--grafito);color:#fff}
+@media (max-width:1100px){.three,.eq{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
-/* DROPDOWN DE AUTOCOMPLETADO PREDICTIVO (ESTILO OUTLOOK / GMAIL) */
-.autocomplete-container{position:relative}
-.autocomplete-dropdown{
-  position:absolute;
-  top:calc(100% + 4px);
-  left:0;
-  right:0;
-  background:#fff;
-  border:1px solid var(--linea);
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  max-height:280px;
-  overflow-y:auto;
-  z-index:1000;
-  display:none;
+@media (max-width:1100px){.two{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;width:var(--side);transform:translateX(-100%);transition:transform .2s}
+  .side.on{transform:none}
+  .burger{display:inline-flex}
+  .content{padding:18px 14px 60px}
+  .top{padding:18px 14px 12px}
+  .demo{padding:7px 14px}
+  .f2{grid-template-columns:1fr}
+  .top .sub{display:none}
+  #lnkHub,.top .tx{display:none}
+  .top h1{font-size:16px}
 }
-.autocomplete-dropdown.show{display:block}
-.autocomplete-item{
-  padding:10px 14px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  cursor:pointer;
-  border-bottom:1px solid var(--linea-suave);
-  transition:background .15s;
-}
-.autocomplete-item:hover, .autocomplete-item.active{
-  background:#F5F7F9;
-}
-.auto-avatar{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  background:var(--grafito);
-  color:#fff;
-  font-family:var(--f-titulo);
-  font-weight:700;
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-}
-.auto-info{display:flex;flex-direction:column;gap:2px;overflow:hidden}
-.auto-name{font-weight:700;font-size:14px;color:var(--grafito);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.auto-meta{font-size:12.5px;color:var(--gris);display:flex;gap:8px}
-.auto-domain{color:var(--rojo);font-weight:600}
-
-/* Botones de acción */
-.btn-submit{
-  background:var(--rojo);
-  color:#fff;
-  border:none;
-  padding:13px 28px;
-  font-family:var(--f-titulo);
-  font-weight:700;
-  font-size:14px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  transition:background .2s;
-}
-.btn-submit:hover{background:var(--rojo-oscuro)}
-
-/* Tabla de Solicitudes y Usuarios */
-.table-responsive{overflow-x:auto}
-.data-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14.5px;
-  text-align:left;
-}
-.data-table th{
-  background:#F4F6F8;
-  padding:12px 16px;
-  font-family:var(--f-rotulo);
-  font-weight:700;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:1.2px;
-  color:var(--grafito-claro);
-  border-bottom:2px solid var(--linea);
-}
-.data-table td{
-  padding:14px 16px;
-  border-bottom:1px solid var(--linea-suave);
-  vertical-align:middle;
-}
-.data-table tr:hover td{background:#F9FAFB}
-
-/* Badges de estado y roles */
-.badge-role{
-  display:inline-block;
-  padding:3px 9px;
-  font-family:var(--f-rotulo);
-  font-weight:700;
-  font-size:11.5px;
-  text-transform:uppercase;
-  letter-spacing:0.8px;
-  border-radius:2px;
-}
-.badge-role.admin{background:#FEE2E2;color:var(--rojo)}
-.badge-role.editor{background:var(--azul-bg);color:var(--azul)}
-.badge-role.colab{background:#E0E7FF;color:#3730A3}
-.badge-role.revisor{background:var(--ambar-bg);color:var(--ambar)}
-.badge-role.visor{background:#F3F4F6;color:var(--gris)}
-
-.badge-status{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:3px 8px;
-  font-size:12px;
-  font-weight:600;
-  border-radius:12px;
-}
-.badge-status.aprobado{background:var(--verde-bg);color:var(--verde)}
-.badge-status.pendiente{background:var(--ambar-bg);color:var(--ambar)}
-.badge-status.rechazado{background:#FEE2E2;color:var(--rojo)}
-
-/* Controles de portal en tabla */
-.portales-pills{display:flex;gap:6px;flex-wrap:wrap}
-.portal-pill{
-  font-size:11px;
-  font-weight:700;
-  padding:2px 7px;
-  background:#EDF2F7;
-  color:var(--grafito);
-  border:1px solid var(--linea);
-  border-radius:3px;
-}
-
-/* Acciones en fila */
-.actions-cell{display:flex;gap:8px;align-items:center}
-.btn-action{
-  padding:6px 12px;
-  font-size:12.5px;
-  font-weight:600;
-  cursor:pointer;
-  border:1px solid var(--linea);
-  background:#fff;
-  color:var(--grafito);
-  transition:all .15s;
-}
-.btn-action:hover{background:#F3F4F6;border-color:var(--gris)}
-.btn-action.approve{background:var(--verde);color:#fff;border-color:var(--verde)}
-.btn-action.approve:hover{background:#0F512B}
-.btn-action.reject{background:#fff;color:var(--rojo);border-color:#FCA5A5}
-.btn-action.reject:hover{background:#FEE2E2}
-
-/* SVG icons */
-.i{width:16px;height:16px;vertical-align:middle;fill:currentColor}
-
-/* Toast */
-.toast{
-  position:fixed;bottom:24px;right:24px;background:var(--grafito);color:#fff;
-  padding:14px 22px;border-left:5px solid var(--rojo);box-shadow:0 8px 24px rgba(0,0,0,0.3);
-  font-size:14.5px;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s var(--ease);
-}
-.toast.on{transform:translateY(0);opacity:1}
-
-/* Pantalla de acceso denegado */
-.denied-screen{
-  display:none;
-  max-width:540px;
-  margin:100px auto;
-  background:#fff;
-  padding:40px 32px;
-  text-align:center;
-  box-shadow:0 12px 30px rgba(0,0,0,0.1);
-  border-top:6px solid var(--rojo);
-}
-.denied-screen.show{display:block}
-.denied-icon{
-  width:64px;height:64px;border-radius:50%;background:#FEE2E2;color:var(--rojo);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;
-}
-.denied-screen h2{font-family:var(--f-titulo);font-size:22px;margin-bottom:10px;text-transform:uppercase}
-.denied-screen p{color:var(--gris);font-size:15px;line-height:1.5;margin-bottom:24px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-<symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
-<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
-<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3"/><path d="m16 7 3 3"/><path d="m14 9 2 2"/></symbol>
-<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-<symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
-<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
-<symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M9.9 4.24A9.1 9.1 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2"/><path d="M6.6 6.6C3.7 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 0 1-4.2-4.2"/><path d="m2 2 20 20"/></symbol>
-<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
-<symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
-<symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
-<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-<symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4A2 2 0 0 0 7 17.8V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4A2 2 0 0 0 17 6.2V2"/></symbol>
-<symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
-<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
-<symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
-<symbol id="i-rotate-cw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
-<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
-<symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
-<symbol id="i-contact" viewBox="0 0 24 24"><path d="M16 2v2"/><path d="M17.9 22a6 6 0 0 0-11.8 0"/><path d="M8 2v2"/><circle cx="12" cy="12" r="4"/><rect x="3" y="4" width="18" height="18" rx="2"/></symbol>
-<symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7z"/><path d="M12 22V12"/><path d="m3.3 7 7.7 4.7a2 2 0 0 0 2 0L20.7 7"/><path d="m7.5 4.3 9 5.2"/></symbol>
-</defs></svg>
-
-<div class="linea-top"></div>
-
-<!-- PANTALLA ACCESO DENEGADO (SI NO ES sjroca@salfamontajes.com) -->
-<div id="pantallaDenegado" class="denied-screen">
-  <div class="denied-icon"><svg class="i" style="width:32px;height:32px"><use href="#i-ban"/></svg></div>
-  <h2>Acceso Restringido</h2>
-  <p>Esta Consola de Administración es de uso exclusivo para la Jefatura y Administrador Central de Salfa Montajes. Tu cuenta no cuenta con permisos administrativos.</p>
-  <a href="index.html" class="btn-submit" style="text-decoration:none">Volver al Hub Principal</a>
+<div class="deny" id="deny" role="alert">
+  <div class="box">
+    <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfamontajes-claro.png" width="200" height="25" style="margin:0 auto 22px;width:200px"><span class="rot" style="color:var(--rojo)">Acceso restringido</span>
+    <h1>Perfil Administrador del Sistema</h1>
+    <p class="muted" style="font-size:15px">Esta consola es de uso exclusivo del Administrador del Sistema. Tu cuenta no tiene permisos administrativos. Cada intento queda registrado en la bitácora.</p>
+    <p style="margin-top:20px"><a class="btn dark" href="index.html">Volver al Hub de Portales</a></p>
+  </div>
 </div>
 
-<!-- VISTA PRINCIPAL DE ADMINISTRACIÓN -->
-<div id="vistaAdmin" style="display:none;flex-direction:column;min-height:100vh">
-
-  <header class="header">
-    <div class="header-left">
-      <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes">
-      <div class="badge-admin">
-        <svg class="i" style="width:14px;height:14px"><use href="#i-shield"/></svg>
-        Consola Central de Administración
-      </div>
+<div class="app" id="app" hidden>
+  <aside class="side" id="side" aria-label="Navegación principal">
+    <div class="brand">
+      <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfamontajes-oscuro.png" width="176" height="22">
+      <span class="rot">Consola Central de Administración</span>
     </div>
-    <div class="header-right">
-      <a href="index.html" class="btn-nav">
-        <svg class="i"><use href="#i-arrow-left"/></svg>
-        Volver al Hub de Portales
-      </a>
-      <button type="button" class="btn-nav" onclick="cerrarSesionAdmin()">
-        <svg class="i"><use href="#i-power"/></svg>
-        Cerrar Sesión
-      </button>
+    <nav class="nav" id="nav">
+      <span class="rot grp">General</span>
+      <a href="#resumen" data-v="resumen"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Resumen</a>
+      <span class="rot grp">Accesos</span>
+      <a href="#usuarios" data-v="usuarios"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><path d="M17 4a4 4 0 010 8M22 21c0-3-2-5.5-5-6.3"/></svg>Usuarios y roles</a>
+      <a href="#permisos" data-v="permisos"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>Matriz de permisos</a>
+      <a href="#solicitudes" data-v="solicitudes"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg>Solicitudes<span class="cnt" id="cntSol">0</span></a>
+      <span class="rot grp">Actividad</span>
+      <a href="#actividad" data-v="actividad"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Actividad por usuario</a>
+      <a href="#bitacora" data-v="bitacora"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Bitácora de auditoría</a>
+      <span class="rot grp">Catálogo</span>
+      <a href="#portales" data-v="portales"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Portales</a>
+    </nav>
+    <div class="me">
+      <div class="av" id="meAv">AS</div>
+      <div><strong id="meNom">Administrador</strong><small>Administrador del Sistema</small></div>
     </div>
-  </header>
+  </aside>
 
-  <main class="main-wrapper">
-    <!-- Banner superior -->
-    <div class="admin-banner">
+  <div class="main">
+    <div class="demo" id="demo" role="status">Modo demostración: los datos son ficticios y no se guarda nada. Para conectar el backend define la URL del servicio en la constante CONFIG.API_URL.</div>
+    <header class="top">
+      <button class="burger" id="burger" aria-label="Abrir menú"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <div>
-        <h1>Gestión Integral de Accesos y Portales</h1>
-        <p>Control centralizado de colaboradores, perfiles de seguridad y permisos de pilotaje Salfa Montajes.</p>
+        <h1 id="ttl">Resumen</h1>
+        <div class="sub" id="sub">Estado del ecosistema de portales</div>
       </div>
-      <div class="admin-meta">
-        <span class="nombre" id="txtAdminNombre">Sebastián Roca</span>
-        <span class="correo" id="txtAdminCorreo">sjroca@salfamontajes.com · Administrador General</span>
-      </div>
-    </div>
+      <div class="sp"></div>
+      <span class="live" title="Última actualización"><i></i><span id="liveTxt">En vivo</span></span>
+      <button class="btn sm" id="btnRef"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg><span class="tx">Refrescar</span></button>
+      <a class="btn sm" id="lnkHub" href="index.html">Hub de Portales</a>
+      <button class="btn sm dark" id="btnOut">Cerrar sesión</button>
+    </header>
 
-    <!-- Indicadores KPI -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div>
-          <div class="kpi-num" id="kpiUsuarios">0</div>
-          <div class="kpi-label">Colaboradores Habilitados</div>
-        </div>
-        <div class="kpi-icon"><svg class="i" style="width:24px;height:24px"><use href="#i-user"/></svg></div>
-      </div>
-      <div class="kpi-card">
-        <div>
-          <div class="kpi-num" id="kpiPendientes" style="color:var(--rojo)">0</div>
-          <div class="kpi-label">Solicitudes Pendientes</div>
-        </div>
-        <div class="kpi-icon" style="color:var(--ambar);background:var(--ambar-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-hourglass"/></svg></div>
-      </div>
-      <div class="kpi-card">
-        <div>
-          <div class="kpi-num" id="kpiPortales">5</div>
-          <div class="kpi-label">Portales en Catálogo</div>
-        </div>
-        <div class="kpi-icon" style="color:var(--azul);background:var(--azul-bg)"><svg class="i" style="width:24px;height:24px"><use href="#i-network"/></svg></div>
-      </div>
-    </div>
+    <main class="content">
 
-    <!-- Pestañas principales -->
-    <div class="tabs-container">
-      <button type="button" class="tab-btn active" onclick="cambiarTab('solicitudes')">
-        <svg class="i"><use href="#i-user"/></svg>
-        Control de Accesos y Usuarios
-        <span class="tab-badge" id="badgeTotalAccesos">0</span>
-      </button>
-      <button type="button" class="tab-btn" onclick="cambiarTab('habilitar')">
-        <svg class="i"><use href="#i-user-plus"/></svg>
-        + Habilitar Colaborador
-      </button>
-    </div>
-
-    <!-- TAB 1: SOLICITUDES Y USUARIOS -->
-    <section id="tab-solicitudes" class="tab-panel active">
-      <div class="panel-card">
-        <div class="panel-head">
-          <div class="panel-title">
-            <svg class="i" style="color:var(--rojo)"><use href="#i-shield"/></svg>
-            Colaboradores y Permisos por Portal
-          </div>
-          <div style="display:flex;gap:10px;align-items:center">
-            <button type="button" class="btn-action" onclick="cargarTodo()"><svg class="i"><use href="#i-rotate-cw"/></svg> Refrescar</button>
-            <button type="button" class="btn-submit" style="padding:8px 16px;font-size:13px" onclick="cambiarTab('habilitar')">+ Nuevo Acceso</button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Colaborador</th>
-                <th>Área / Cargo</th>
-                <th>Estado</th>
-                <th>Rol Asignado</th>
-                <th>Portales Autorizados</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tablaUsuariosBody">
-              <!-- Renderizado dinámico -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: HABILITAR COLABORADOR CON AUTOCOMPLETADO PREDICTIVO -->
-    <section id="tab-habilitar" class="tab-panel">
-      <div class="panel-card" style="max-width:800px;margin:0 auto">
-        <div class="panel-head">
-          <div class="panel-title">
-            <svg class="i" style="color:var(--rojo)"><use href="#i-user-plus"/></svg>
-            Habilitar Acceso a Colaborador
-          </div>
-        </div>
-        <p style="color:var(--gris);font-size:14.5px;margin-bottom:22px;line-height:1.5">
-          Ingresa el correo corporativo del colaborador (@salfamontajes.com), su nombre y asigna los portales autorizados.
-        </p>
-
-        <form id="formHabilitar" onsubmit="ejecutarHabilitar(event)" class="form-grid">
-          <!-- Campo con Autocompletado -->
-          <div class="form-group full autocomplete-container">
-            <label for="inputCorreo">Correo Institucional Salfa (@salfamontajes.com)</label>
-            <input type="text" id="inputCorreo" class="form-input" placeholder="Comienza a escribir: nombre, apellido o usuario..." autocomplete="off" required oninput="manejarInputCorreo(this.value)">
-            <!-- Menú flotante desplegable -->
-            <div id="dropdownCorreo" class="autocomplete-dropdown"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="inputNombre">Nombre Completo</label>
-            <input type="text" id="inputNombre" class="form-input" placeholder="Ej: Patricia González Valdés" required>
-          </div>
-
-          <div class="form-group">
-            <label for="inputArea">Área / Gerencia / Cargo</label>
-            <input type="text" id="inputArea" class="form-input" placeholder="Ej: Oficina Técnica / Jefe de Calidad" required>
-          </div>
-
-          <div class="form-group">
-            <label for="selectRol">Perfil / Rol en Portales</label>
-            <select id="selectRol" class="form-input">
-              <option value="Colaborador">Colaborador (Acceso estándar)</option>
-              <option value="Visualizador">Visualizador (Solo lectura)</option>
-              <option value="Editor">Editor (Carga y edición de datos)</option>
-              <option value="Revisor">Revisor (Aprobación técnica)</option>
-              <option value="Administrador">Administrador (Control total)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Portales Habilitados</label>
-            <div id="checkPortalesHabilitar" style="display:flex;flex-direction:column;gap:8px;padding-top:6px">
-              <!-- Render de portales -->
+      <!-- RESUMEN -->
+      <section class="view" id="v-resumen">
+        <div class="grid kpis" id="kpis"></div>
+        <div class="grid two">
+          <div class="card lift">
+            <header><h2>Visitas diarias · últimos 30 días</h2><span class="sp"></span><span class="muted">Ingresos totales por día</span></header>
+            <div class="body">
+              <svg class="chart" id="chVis" role="img" aria-label="Gráfico de barras de visitas diarias"></svg>
+              <div class="legend"><span><i style="background:var(--rojo)"></i>Hoy</span><span><i style="background:var(--grafito-claro)"></i>Días anteriores</span></div>
             </div>
           </div>
-
-          <div class="form-group full" style="margin-top:10px">
-            <button type="submit" class="btn-submit">
-              <svg class="i"><use href="#i-check"/></svg>
-              Guardar y Habilitar Colaborador
-            </button>
+          <div class="card lift">
+            <header><h2>Visitas por portal</h2></header>
+            <div class="body"><div id="porPortal"></div><div class="sec"><h3>Eventos por tipo</h3></div><div class="mini" id="tipos" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div></div>
           </div>
-        </form>
-      </div>
-    </section>
+        </div>
+        <div class="grid three" style="margin-top:18px">
+          <div class="card lift">
+            <header><h2><span class="dot"></span>Actividad en vivo</h2><span class="sp"></span><span class="rot" style="color:var(--gris)"><b id="onN" style="color:var(--grafito)">0</b> en línea</span></header>
+            <div class="body"><div class="avs" id="onAv"></div><ul class="feed" id="feed"></ul></div>
+          </div>
+          <div class="card lift">
+            <header><h2>Mapa de calor · ingresos por día y hora</h2></header>
+            <div class="body"><div class="hm" id="heat"></div><div class="scale"><span>Menos</span><i></i><span>Más</span></div><div class="mini" id="heatStats" style="margin:18px 0 0"></div></div>
+          </div>
+          <div class="card lift">
+            <header><h2>Estado de cuentas</h2></header>
+            <div class="body"><div class="donut" id="donut"></div><div class="sec"><h3>Cuentas por rol</h3></div><div id="porRol"></div></div>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top:18px">
+          <div class="card lift">
+            <header><h2>Últimos ingresos</h2><span class="sp"></span><a class="btn sm" href="#actividad">Ver actividad completa</a></header>
+            <div class="tw"><table><thead><tr><th>Usuario</th><th>Último ingreso</th><th>Portal</th><th>Estado</th></tr></thead><tbody id="ultIng"></tbody></table></div>
+          </div>
+          <div class="card lift">
+            <header><h2>Alertas de seguridad</h2></header>
+            <div class="body"><ul class="tl" id="alertas"></ul></div>
+          </div>
+        </div>
+      </section>
 
-    
+      <!-- USUARIOS -->
+      <section class="view" id="v-usuarios">
+        <div class="grid kpis" id="uKpi"></div>
+        <div class="grid eq" style="margin-bottom:18px">
+          <div class="card lift"><header><h2>Usuarios por rol</h2></header><div class="body" id="uRoles"></div></div>
+          <div class="card lift"><header><h2>Usuarios por área</h2></header><div class="body" id="uAreas"></div></div>
+        </div>
+        <div class="card">
+          <header>
+            <div class="tools">
+              <input class="inp" id="uQ" type="search" placeholder="Buscar nombre, correo o área" aria-label="Buscar usuario" style="width:260px;max-width:100%">
+              <select class="sel" id="uRol" aria-label="Filtrar por rol"><option value="">Todos los roles</option></select>
+              <select class="sel" id="uEst" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option>Activo</option><option>Suspendido</option><option>Pendiente</option></select>
+            </div>
+            <span class="sp"></span>
+            <button class="btn" id="btnCsvU"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Exportar CSV</button>
+            <button class="btn pri" id="btnNuevo"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nuevo acceso</button>
+          </header>
+          <div class="tw"><table>
+            <thead><tr><th class="s" data-k="nombre">Colaborador</th><th class="s" data-k="area">Área</th><th class="s" data-k="rol">Rol</th><th>Portales</th><th class="s" data-k="ultimo">Último ingreso</th><th class="s" data-k="estado">Estado</th><th></th></tr></thead>
+            <tbody id="uBody"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- PERMISOS -->
+      <section class="view" id="v-permisos">
+        <div class="grid" id="pCob" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-bottom:18px"></div>
+        <div class="card">
+          <header>
+            <h2>Matriz usuario × portal</h2>
+            <span class="sp"></span>
+            <input class="inp" id="mQ" type="search" placeholder="Filtrar usuario" aria-label="Filtrar usuario" style="width:200px">
+            <select class="sel" id="mBulk" aria-label="Asignación masiva por portal"><option value="">Asignación masiva…</option></select>
+          </header>
+          <div class="body" style="padding:12px 20px"><span class="help">Niveles: Sin acceso, Ver, Editar y Aprobar. Los cambios quedan marcados en ámbar hasta que los guardes.</span></div>
+          <div class="tw mx"><table><thead id="mHead"></thead><tbody id="mBody"></tbody></table></div>
+        </div>
+        <div class="savebar" id="saveBar" role="status">
+          <b id="saveTxt">0 cambios</b><span class="sp"></span>
+          <button class="btn sm" id="btnDesh">Descartar</button>
+          <button class="btn sm pri" id="btnGuardar">Guardar cambios</button>
+        </div>
+      </section>
+
+      <!-- SOLICITUDES -->
+      <section class="view" id="v-solicitudes">
+        <div class="grid kpis" id="sKpi"></div>
+        <div class="card">
+          <header><div class="tools tabs"><button class="btn sm" data-tab="pend" id="tabP" aria-pressed="true">Pendientes</button><button class="btn sm" data-tab="hist" id="tabH" aria-pressed="false">Historial</button></div></header>
+          <div class="tw" id="sPend"><table><thead><tr><th>Solicitante</th><th>Portal</th><th>Motivo</th><th>Fecha</th><th></th></tr></thead><tbody id="sBody"></tbody></table></div>
+          <div class="tw" id="sHist" hidden><table><thead><tr><th>Solicitante</th><th>Portal</th><th>Motivo</th><th>Resolución</th><th>Resuelta</th></tr></thead><tbody id="sHBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ACTIVIDAD -->
+      <section class="view" id="v-actividad">
+        <div class="grid kpis" id="aKpi"></div>
+        <div class="grid three" style="margin-bottom:18px">
+          <div class="card lift"><header><h2>Top 5 usuarios más activos</h2></header><div class="body"><ol class="rank" id="aTop"></ol></div></div>
+          <div class="card lift"><header><h2>Ingresos por hora del día</h2></header><div class="body"><svg class="chart" id="chHora" style="height:200px" role="img" aria-label="Eventos por hora del día"></svg></div></div>
+          <div class="card lift"><header><h2>Sin actividad reciente</h2></header><div class="body"><ul class="feed" id="aInac"></ul></div></div>
+        </div>
+        <div class="card">
+          <header>
+            <div class="tools">
+              <input class="inp" id="aQ" type="search" placeholder="Buscar usuario" aria-label="Buscar usuario" style="width:220px">
+              <select class="sel" id="aPer" aria-label="Periodo"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select>
+              <select class="sel" id="aPor" aria-label="Portal"><option value="">Todos los portales</option></select>
+            </div>
+            <span class="sp"></span>
+            <button class="btn sm" id="btnCsvA"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Exportar CSV</button>
+          </header>
+          <div class="tw"><table>
+            <thead><tr><th class="s" data-k="nombre">Usuario</th><th class="s" data-k="ultimo">Último ingreso</th><th>Portal</th><th class="s" data-k="visitas">Visitas</th><th class="s" data-k="minutos">Tiempo total</th><th class="s" data-k="prom">Sesión prom.</th><th class="s" data-k="acciones">Acciones</th><th>Tendencia</th></tr></thead>
+            <tbody id="aBody"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- BITACORA -->
+      <section class="view" id="v-bitacora">
+        <div class="grid kpis" id="bKpi"></div>
+        <div class="card lift" style="margin-bottom:18px">
+          <header><h2>Eventos por día · últimos 14 días</h2></header>
+          <div class="body"><svg class="chart" id="chBit" role="img" aria-label="Eventos por día apilados por tipo"></svg>
+            <div class="legend"><span><i style="background:var(--verde)"></i>Ingresos</span><span><i style="background:var(--grafito-claro)"></i>Uso</span><span><i style="background:var(--rojo)"></i>Administración</span><span><i style="background:var(--ambar)"></i>Denegados</span></div></div>
+        </div>
+        <div class="card">
+          <header>
+            <div class="tools">
+              <input class="inp" id="bQ" type="search" placeholder="Buscar en detalle o usuario" aria-label="Buscar en bitácora" style="width:240px">
+              <select class="sel" id="bPor" aria-label="Portal"><option value="">Todos los portales</option></select>
+              <select class="sel" id="bPer" aria-label="Periodo"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select>
+              <select class="sel" id="bTipo" aria-label="Tipo de evento"><option value="">Todos los eventos</option><option value="login">Ingresos</option><option value="admin">Cambios administrativos</option><option value="uso">Uso de portal</option><option value="denied">Accesos denegados</option></select>
+            </div>
+            <span class="sp"></span>
+            <button class="btn sm" id="btnCsvB"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Exportar CSV</button>
+          </header>
+          <div class="tw"><table><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Portal</th><th>Evento</th><th>Detalle</th></tr></thead><tbody id="bBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- PORTALES -->
+      <section class="view" id="v-portales">
+        <div class="tools" style="margin-bottom:18px;justify-content:space-between"><span class="muted">Catálogo de portales del ecosistema. Cada portal define una columna en la matriz de permisos.</span><button class="btn pri" id="btnNuevoP"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nuevo portal</button></div>
+        <div class="grid" id="pGrid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))"></div>
+      </section>
+
+    </main>
+  </div>
 </div>
 
-<div id="toast" class="toast"></div>
+<div class="ov" id="ov"></div>
+
+<aside class="drawer" id="drawer" aria-label="Detalle de usuario" aria-hidden="true">
+  <header>
+    <div class="who"><div class="av" id="dAv" style="background:var(--rojo);width:44px;height:44px"></div><div><b id="dNom" style="font-family:var(--f-titulo);font-weight:800;font-size:17px"></b><span id="dCor" class="muted"></span></div></div>
+    <span class="sp"></span><button class="x" id="dX" aria-label="Cerrar">×</button>
+  </header>
+  <div class="db" id="dBodyU"></div>
+</aside>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTit">
+  <header><h2 id="mTit">Nuevo acceso</h2><button class="x" id="mX" aria-label="Cerrar">×</button></header>
+  <div class="mb">
+    <div class="fld sug"><label class="rot" for="fCor">Correo corporativo</label><input class="inp" id="fCor" type="email" autocomplete="off" placeholder="nombre.apellido@salfamontajes.com"><div class="help" id="fErr" style="color:var(--rojo)"></div></div>
+    <div class="f2">
+      <div class="fld"><label class="rot" for="fNom">Nombre</label><input class="inp" id="fNom"></div>
+      <div class="fld"><label class="rot" for="fAre">Área / cargo</label><input class="inp" id="fAre"></div>
+    </div>
+    <div class="fld"><label class="rot" for="fRol">Rol</label><select class="sel" id="fRol"></select><div class="help" id="fRolH"></div></div>
+    <div class="fld"><span class="rot" style="display:block;margin-bottom:5px;color:var(--gris)">Portales habilitados</span><div class="chk" id="fPor"></div></div>
+  </div>
+  <footer><button class="btn" id="mCan">Cancelar</button><button class="btn pri" id="mOk">Guardar y habilitar</button></footer>
+</div>
+
+<div class="modal" id="modalP" role="dialog" aria-modal="true" aria-labelledby="pTit">
+  <header><h2 id="pTit">Nuevo portal</h2><button class="x" id="pX" aria-label="Cerrar">×</button></header>
+  <div class="mb">
+    <div class="fld"><label class="rot" for="pNom">Nombre del portal</label><input class="inp" id="pNom"></div>
+    <div class="f2">
+      <div class="fld"><label class="rot" for="pTipo">Tipo o tecnología</label><input class="inp" id="pTipo" placeholder="Apps Script · Portal 03"></div>
+      <div class="fld"><label class="rot" for="pEst">Estado</label><select class="sel" id="pEst"><option>Operativo</option><option>En desarrollo</option><option>Mantenimiento</option><option>Inactivo</option></select></div>
+    </div>
+    <div class="fld"><label class="rot" for="pUrl">URL de acceso</label><input class="inp" id="pUrl" type="url" placeholder="https://"></div>
+    <div class="help" id="pErr" style="color:var(--rojo)"></div>
+  </div>
+  <footer><button class="btn" id="pCan">Cancelar</button><button class="btn pri" id="pOk">Guardar portal</button></footer>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
 
 <script>
-var ADMIN_CORPORATIVO = 'sjroca@salfamontajes.com';
-var DB_KEY = 'salfa_corp_db_v2';
-var DIR_KEY = 'salfa_directorio_contactos_v1';
-var AUTH_KEY = 'salfa_auth_session';
+'use strict';
+/* =====================================================================
+   CONFIGURACIÓN
+   API_URL: URL del servicio de administración (Apps Script, modo ANYONE).
+   Vacío = modo demostración con datos ficticios. No incluir correos aquí.
+   ===================================================================== */
+const CONFIG = { API_URL: '', DOMINIO: '@salfamontajes.com', ROL_ADMIN: 'Administrador del Sistema' };
 
-var PORTALES = [
-  { id:'01', nombre:'Mapa de Procesos', url:'https://sjroca-salfa.github.io/portal-mapa-procesos/' },
-  { id:'02', nombre:'Control de CV', url:'#' },
-  { id:'03', nombre:'Gestión AWP & Construcción', url:'#' },
-  { id:'04', nombre:'Indicadores OKR', url:'#' },
-  { id:'05', nombre:'Gestión de la Información', url:'https://sjroca-salfa.github.io/portal-gestion-informacion/' }
-];
+const ROLES = {
+  'Colaborador':{d:'Usa los portales asignados.'},
+  'Visualizador':{d:'Solo lectura en los portales asignados.'},
+  'Editor':{d:'Crea y modifica contenido en sus portales.'},
+  'Revisor':{d:'Revisa y valida versiones.'},
+  'Administrador':{d:'Gestiona accesos de su área.'},
+  'Administrador del Sistema':{d:'Control total del ecosistema. Perfil único institucional.'}
+};
+const NIVELES = ['Sin acceso','Ver','Editar','Aprobar'];
 
-// Directorio institucional (solo usuarios reales registrados o aprobados)
-var DIR_KEY = 'salfa_directorio_contactos_v2';
-var DIRECTORIO_BASE = [
-  { nombre:'Sebastián Roca', email:'sjroca@salfamontajes.com', area:'Jefatura de Procesos & Mejora Continua' }
-];
+/* ---------- Utilidades ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ini = n=>n.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
+const pad = n=>String(n).padStart(2,'0');
+const fFecha = d=>{d=new Date(d);return `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const rel = d=>{const m=Math.round((Date.now()-new Date(d))/6e4);if(isNaN(m))return 'Nunca';if(m<1)return 'Ahora';if(m<60)return `Hace ${m} min`;if(m<1440)return `Hace ${Math.floor(m/60)} h`;const dd=Math.floor(m/1440);return dd===1?'Ayer':`Hace ${dd} días`};
+const dur = m=>m>=60?`${Math.floor(m/60)} h ${pad(Math.round(m%60))} min`:`${Math.round(m)} min`;
+function toast(t,err){const e=$('#toast');e.textContent=t;e.className='toast on'+(err?' err':'');clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='toast',3200)}
+function csv(nombre,filas){const t=filas.map(f=>f.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([String.fromCharCode(65279)+t],{type:'text/csv'}));a.download=nombre;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
-function $(id){ return document.getElementById(id); }
-function toast(m){
-  var t=$('toast'); t.textContent=m; t.classList.add('on');
-  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); }, 3200);
+/* =====================================================================
+   CAPA DE DATOS
+   Modo demo: datos ficticios generados en el navegador.
+   Modo real: POST text/plain al backend con {accion, ...}.
+   Acciones esperadas por el backend (ver Bitacora.gs):
+     admin.sesion, admin.datos, admin.guardarUsuario, admin.guardarPermisos,
+     admin.resolverSolicitud, admin.guardarPortal
+   ===================================================================== */
+const Datos = {
+  demo: !CONFIG.API_URL,
+  db: null,
+  async llamar(accion, payload={}){
+    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,...payload}),redirect:'follow'});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error||'Error del servicio');
+    return j.data;
+  },
+  async sesion(){
+    if(this.demo) return {nombre:'Administrador Demo',rol:CONFIG.ROL_ADMIN};
+    return this.llamar('admin.sesion');
+  },
+  async cargar(){
+    if(this.demo){ if(!this.db) this.db = generarDemo(); return this.db; }
+    this.db = await this.llamar('admin.datos'); return this.db;
+  },
+  async guardarUsuario(u){ if(this.demo) return; return this.llamar('admin.guardarUsuario',{usuario:u}); },
+  async guardarPermisos(c){ if(this.demo) return; return this.llamar('admin.guardarPermisos',{cambios:c}); },
+  async resolverSolicitud(id,ok){ if(this.demo) return; return this.llamar('admin.resolverSolicitud',{id,aprobada:ok}); },
+  async guardarPortal(p){ if(this.demo) return; return this.llamar('admin.guardarPortal',{portal:p}); }
+};
+
+/* ---------- Datos de demostración (ficticios) ---------- */
+function generarDemo(){
+  let s=42;const R=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  const portales=[
+    {id:'hub',nombre:'Hub de Portales',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/salfa-pilotos/'},
+    {id:'mapa',nombre:'Mapa de Procesos',tipo:'GitHub Pages · Portal 01',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-mapa-procesos/'},
+    {id:'p02',nombre:'Portal 02 · Control de CV',tipo:'Por definir',estado:'En desarrollo',url:''},
+    {id:'p03',nombre:'Portal 03 · Gestión AWP',tipo:'Por definir',estado:'Próximamente',url:''},
+    {id:'p04',nombre:'Portal 04 · Indicadores OKR',tipo:'Por definir',estado:'En desarrollo',url:''},
+    {id:'p05',nombre:'Portal 05 · Gestión de la Información',tipo:'Frontend · GitHub Pages',estado:'Operativo',url:'https://sjroca-salfa.github.io/portal-gestion-informacion/'}
+  ];
+  const nombres=[['Camila Rojas','Calidad','Revisor'],['Matías Soto','Operaciones','Editor'],['Valentina Pérez','Prevención de Riesgos','Colaborador'],['Diego Fuentes','Ingeniería','Editor'],['Francisca Núñez','Gestión Documental','Administrador'],['Joaquín Araya','Proyectos','Visualizador'],['Constanza Vera','Calidad','Colaborador'],['Sebastián Mora','Planificación','Revisor'],['Antonia Silva','Recursos Humanos','Visualizador'],['Ignacio Pizarro','Operaciones','Colaborador'],['Paula Contreras','Ingeniería','Editor'],['Felipe Godoy','Abastecimiento','Colaborador']];
+  const ahora=Date.now();
+  const usuarios=nombres.map((n,i)=>{
+    const correo=n[0].toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ /g,'.')+CONFIG.DOMINIO;
+    const perm={};portales.forEach((p,j)=>{perm[p.id]=j<2?Math.min(3,[1,2,3][Math.floor(R()*3)]+(n[2]==='Visualizador'?-1:0)):(R()>.8?1:0);if(perm[p.id]<0)perm[p.id]=1});
+    perm.hub=Math.max(perm.hub,1);
+    const estado=i===8?'Suspendido':i===11?'Pendiente':'Activo';
+    const dias=Array.from({length:30},()=>estado==='Activo'&&R()>.35?Math.floor(R()*5)+(R()>.8?3:0):0);
+    const visitas=dias.reduce((a,b)=>a+b,0);
+    const ult=estado==='Pendiente'?null:ahora-Math.floor(R()*(i<4?8:200))*36e5*(i<4?.4:1);
+    return {id:'u'+i,nombre:n[0],correo,area:n[1],rol:n[2],estado,perm,dias,visitas,
+      minutos:visitas*(6+R()*14),acciones:visitas*(2+Math.floor(R()*6)),ultimo:ult,
+      ultimoPortal:R()>.4?'Mapa de Procesos':'Hub de Portales',
+      creado:ahora-(30+R()*300)*864e5};
+  });
+  const tipos=[['login','Ingreso al portal'],['uso','Abrió el flujo de versiones'],['uso','Descargó documento'],['uso','Editó un proceso'],['admin','Cambió de rol'],['denied','Acceso denegado'],['uso','Validó una versión'],['uso','Consultó el mapa']];
+  const bitacora=[];
+  for(let k=0;k<420;k++){
+    const u=usuarios[Math.floor(R()*usuarios.length)];const t=tipos[Math.floor(R()*tipos.length)];
+    const p=portales[Math.floor(R()*2)];
+    let d=new Date(ahora-Math.floor(R()*30)*864e5);
+    if([0,6].includes(d.getDay())&&R()<.8)d=new Date(d.getTime()-2*864e5);
+    const hr=R()<.88?8+Math.floor(R()*10):Math.floor(R()*24);d.setHours(hr,Math.floor(R()*60),0,0);
+    let f=d.getTime();if(f>ahora)f-=864e5;
+    bitacora.push({fecha:f,usuario:u.nombre,correo:u.correo,portal:p.nombre,tipo:t[0],evento:t[1],detalle:t[0]==='admin'?'Rol modificado por el Administrador del Sistema':t[0]==='denied'?'Intento sin permiso sobre '+p.nombre:t[1]+' en '+p.nombre});
+  }
+  bitacora.sort((a,b)=>b.fecha-a.fecha);
+  [0,1,2].forEach(i=>{usuarios[i].ultimo=ahora-(2+R()*9)*6e4});
+  const solicitudes=[
+    {id:'s1',nombre:'Felipe Godoy',correo:usuarios[11].correo,portal:'Mapa de Procesos',motivo:'Consultar procesos de abastecimiento',fecha:ahora-5*36e5},
+    {id:'s2',nombre:'Rodrigo Vidal',correo:'rodrigo.vidal'+CONFIG.DOMINIO,portal:'Hub de Portales',motivo:'Nuevo ingreso al área de Proyectos',fecha:ahora-30*36e5}
+  ];
+  const diarias=Array.from({length:30},(_,i)=>usuarios.reduce((a,u)=>a+u.dias[i],0));
+  const historial=[['Rodrigo Vidal','Hub de Portales','Aprobada',3],['Marcela Ibáñez','Mapa de Procesos','Aprobada',6],['Tomás Rivas','Mapa de Procesos','Rechazada',9],['Daniela Cruz','Hub de Portales','Aprobada',12],['Pablo Leiva','Mapa de Procesos','Aprobada',17],['Karen Soto','Hub de Portales','Rechazada',21]].map((h,i)=>({id:'h'+i,nombre:h[0],correo:h[0].toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ /g,'.')+CONFIG.DOMINIO,portal:h[1],motivo:h[2]==='Aprobada'?'Requerido por su cargo':'Sin justificación suficiente',resolucion:h[2],fecha:ahora-(h[3]+1)*864e5,fechaRes:ahora-h[3]*864e5+(2+i)*36e5}));
+  return {portales,usuarios,bitacora,solicitudes,historial,diarias};
 }
 
-// Lectura de DB
-function dbLeer(){
-  try{ return JSON.parse(localStorage.getItem(DB_KEY)) || {accesos:[],sesiones:{}}; }catch(e){ return {accesos:[],sesiones:{}}; }
-}
-function dbGuardar(d){ localStorage.setItem(DB_KEY, JSON.stringify(d)); }
+/* =====================================================================
+   ESTADO Y RENDER
+   ===================================================================== */
+const S = {db:null,vista:'resumen',orden:{u:{k:'nombre',d:1},a:{k:'visitas',d:-1}},cambios:{}};
+const TITULOS = {resumen:['Resumen','Estado del ecosistema de portales'],usuarios:['Usuarios y roles','Altas, roles y estado de cada colaborador'],permisos:['Matriz de permisos','Quién accede a qué portal y con qué nivel'],solicitudes:['Solicitudes','Accesos pendientes de resolución'],actividad:['Actividad por usuario','Ingresos, tiempo de uso e historial de visitas'],bitacora:['Bitácora de auditoría','Registro de eventos del ecosistema'],portales:['Portales','Catálogo y estado de cada portal']};
 
-function directorioLeer(){
+const tagEst = e=>({Activo:'ok',Suspendido:'bad',Pendiente:'pend'}[e]||'off');
+const tagRol = r=>r===CONFIG.ROL_ADMIN?'adm':'off';
+const nPor = u=>S.db.portales.filter(p=>u.perm[p.id]>0).length;
+
+function spark(arr,w=96,h=26){
+  const m=Math.max(1,...arr);const bw=w/arr.length;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Tendencia de 30 días">`+arr.map((v,i)=>{const bh=Math.max(v?2:1,v/m*(h-2));return `<rect class="sb" style="--d:${i*16}ms" x="${(i*bw+.5).toFixed(1)}" y="${(h-bh).toFixed(1)}" width="${(bw-1.2).toFixed(1)}" height="${bh.toFixed(1)}" fill="${i===arr.length-1&&v?'#B01E24':'#9AA2AB'}"/>`}).join('')+`</svg>`;
+}
+
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function countUp(el){
+  const to=+el.dataset.to,f=el.dataset.f==='dur'?dur:(v=>Math.round(v).toLocaleString('es-CL'));
+  if(REDUCE||!to){el.textContent=f(to);return}
+  const t0=performance.now(),D=1100;
+  (function st(t){const p=Math.min(1,(t-t0)/D),e=1-Math.pow(1-p,3);el.textContent=f(to*e);if(p<1)requestAnimationFrame(st)})(t0);
+}
+function renderKpis(anim=true){
+  const d=S.db,act=d.usuarios.filter(u=>u.estado==='Activo');
+  const hoy=d.diarias[d.diarias.length-1],sem=d.diarias.slice(-7).reduce((a,b)=>a+b,0);
+  const min=d.usuarios.reduce((a,u)=>a+u.minutos,0),vis=d.usuarios.reduce((a,u)=>a+u.visitas,0);
+  const k=[['Colaboradores activos',act.length,'n',`${d.usuarios.length} registrados`,0,'act'],['Visitas hoy',hoy,'n',`${sem} en 7 días`,1,'hoy'],['Tiempo medio por sesión',Math.round(vis?min/vis:0),'dur','Promedio últimos 30 días',0,'tmp'],['Solicitudes pendientes',d.solicitudes.length,'n',d.solicitudes.length?'Requieren resolución':'Sin pendientes',d.solicitudes.length?1:0,'sol'],['Portales en catálogo',d.portales.length,'n',`${d.portales.filter(p=>p.estado==='Operativo').length} operativos`,0,'por']];
+  $('#kpis').innerHTML=k.map((x,i)=>`<div class="kpi${x[4]?' hl':''}"><span class="rot">${x[0]}</span><div class="v" data-k="${x[5]}" data-to="${x[1]}" data-f="${x[2]}">${anim?0:x[1]}</div><div class="d">${x[3]}</div></div>`).join('');
+  if(anim)$$('#kpis .v').forEach(countUp);else if(!REDUCE)bump('hoy');
+  $('#cntSol').textContent=d.solicitudes.length;$('#cntSol').style.display=d.solicitudes.length?'':'none';
+}
+function bump(k){const el=$(`#kpis [data-k="${k}"]`);if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
+
+function drawChart(anim=true){
+  const d=S.db,W=700,H=230,m={l:34,b:26,t:10,r:6},dd=d.diarias,mx=Math.max(4,...dd),bw=(W-m.l-m.r)/dd.length;
+  let g='';for(let i=0;i<=4;i++){const v=Math.round(mx/4*i),y=H-m.b-(H-m.b-m.t)*i/4;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="#D3D7DC" stroke-width="1"/><text x="${m.l-6}" y="${y+4}" text-anchor="end" font-size="11" fill="#5A6771">${v}</text>`}
+  dd.forEach((v,i)=>{const bh=(H-m.b-m.t)*v/mx,x=m.l+i*bw+2,dt=new Date(Date.now()-(dd.length-1-i)*864e5),hoy=i===dd.length-1;g+=`<rect class="${anim?'cb':'cn'}${hoy&&anim?' hoy':''}" style="--d:${i*24}ms" x="${x.toFixed(1)}" y="${(H-m.b-bh).toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${hoy?'#B01E24':'#3A414A'}"><title>${pad(dt.getDate())}-${pad(dt.getMonth()+1)}: ${v} visitas</title></rect>`;if(i%5===0||hoy)g+=`<text x="${(x+bw/2-2).toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="11" fill="#5A6771">${pad(dt.getDate())}/${pad(dt.getMonth()+1)}</text>`});
+  $('#chVis').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#chVis').innerHTML=g;
+}
+function renderPorPortal(){
+  const d=S.db,conteo=d.portales.map(p=>({p,v:d.bitacora.filter(b=>b.portal===p.nombre).length})),mv=Math.max(1,...conteo.map(c=>c.v));
+  $('#porPortal').innerHTML=conteo.map((c,i)=>`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><b>${esc(c.p.nombre)}</b><span class="muted">${c.v} eventos</span></div><div class="bar${i===0?' r':''}"><i style="width:${c.v/mv*100}%;animation-delay:${i*120}ms"></i></div></div>`).join('');
+}
+function feedItem(b,nuevo){return `<li class="${nuevo?'nuevo':''}"><div class="av sm">${ini(b.usuario)}</div><div><b>${esc(b.usuario)}</b> <span class="muted">${esc(b.evento)}</span><div class="muted">${esc(b.portal)} · ${fFecha(b.fecha).slice(11)}</div></div></li>`}
+function renderFeed(){$('#feed').innerHTML=S.db.bitacora.filter(b=>b.tipo!=='admin').slice(0,6).map(b=>feedItem(b,false)).join('');renderOnline()}
+function pushFeed(b){const ul=$('#feed');if(!ul)return;ul.insertAdjacentHTML('afterbegin',feedItem(b,true));while(ul.children.length>6)ul.lastElementChild.remove()}
+function renderOnline(){const on=S.db.usuarios.filter(u=>u.ultimo&&Date.now()-u.ultimo<15*6e4);$('#onN').textContent=on.length;$('#onAv').innerHTML=on.slice(0,8).map(u=>`<div class="av sm on" title="${esc(u.nombre)} · en línea">${ini(u.nombre)}</div>`).join('')||'<span class="muted">Nadie en línea en los últimos 15 min</span>'}
+function renderTipos(){
+  const c={login:0,uso:0,admin:0,denied:0};S.db.bitacora.forEach(b=>{if(c[b.tipo]!==undefined)c[b.tipo]++});
+  const l=[['Ingresos','login'],['Uso','uso'],['Admin.','admin'],['Denegados','denied']];
+  $('#tipos').innerHTML=l.map(x=>`<div><span class="rot">${x[0]}</span><b data-to="${c[x[1]]}" data-f="n">0</b></div>`).join('');$$('#tipos b').forEach(countUp);
+}
+function renderRoles(){
+  const c={};S.db.usuarios.forEach(u=>c[u.rol]=(c[u.rol]||0)+1);const mx=Math.max(1,...Object.values(c));
+  $('#porRol').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([r,n],i)=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px"><span>${esc(r)}</span><b>${n}</b></div><div class="bar${i===0?' r':''}"><i style="width:${n/mx*100}%;animation-delay:${i*90}ms"></i></div></div>`).join('');
+}
+function renderHeat(){
+  const m=Array.from({length:7},()=>Array(24).fill(0));
+  S.db.bitacora.forEach(b=>{if(b.tipo==='login'||b.tipo==='uso'){const dt=new Date(b.fecha);m[(dt.getDay()+6)%7][dt.getHours()]++}});
+  const mx=Math.max(1,...m.flat()),dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let h='<span></span>'+Array.from({length:24},(_,i)=>`<span>${i%3===0?pad(i):''}</span>`).join('');
+  m.forEach((r,ri)=>{h+=`<b>${dias[ri]}</b>`+r.map((v,hi)=>`<i style="--a:${v?(.14+.86*v/mx).toFixed(2):0};--d:${(ri*24+hi)*5}ms" title="${dias[ri]} ${pad(hi)}:00 · ${v} eventos"></i>`).join('')});
+  $('#heat').innerHTML=h;
+  const porHora=Array(24).fill(0),porDia=Array(7).fill(0);m.forEach((r,ri)=>r.forEach((v,hi)=>{porHora[hi]+=v;porDia[ri]+=v}));
+  const tot=porDia.reduce((a,b)=>a+b,0)||1,hp=porHora.indexOf(Math.max(...porHora)),dp=porDia.indexOf(Math.max(...porDia)),lab=porHora.slice(8,18).reduce((a,b)=>a+b,0);
+  $('#heatStats').innerHTML=`<div><span class="rot">Hora pico</span><b>${pad(hp)}:00</b></div><div><span class="rot">Día más activo</span><b>${dias[dp]}</b></div><div><span class="rot">8 a 18 h</span><b>${Math.round(lab/tot*100)}%</b></div>`;
+}
+function renderDonut(anim=true){
+  const c={Activo:0,Pendiente:0,Suspendido:0};S.db.usuarios.forEach(u=>c[u.estado]=(c[u.estado]||0)+1);
+  const segs=[['Activo','--verde'],['Pendiente','--ambar'],['Suspendido','--rojo']],tot=S.db.usuarios.length||1,C=2*Math.PI*54;let acc=0;
+  const circ=segs.map(s=>{const len=c[s[0]]/tot*C,o=acc;acc+=len;return `<circle class="seg" data-len="${len}" cx="70" cy="70" r="54" fill="none" style="stroke:var(${s[1]})" stroke-width="16" stroke-dasharray="${anim?0:Math.max(0,len-2)} ${C}" stroke-dashoffset="${-o}" transform="rotate(-90 70 70)"/>`}).join('');
+  $('#donut').innerHTML=`<svg viewBox="0 0 140 140" role="img" aria-label="Distribución de cuentas por estado"><circle cx="70" cy="70" r="54" fill="none" stroke="#EEF0F2" stroke-width="16"/>${circ}<text x="70" y="72" text-anchor="middle" font-family="Montserrat,Arial,sans-serif" font-weight="800" font-size="30" fill="#1E2229">${S.db.usuarios.length}</text><text x="70" y="90" text-anchor="middle" font-family="'Barlow Condensed',Arial,sans-serif" font-weight="600" font-size="11" letter-spacing="1.5" fill="#5A6771">USUARIOS</text></svg><ul>${segs.map(s=>`<li><i style="background:var(${s[1]})"></i>${s[0]}<b>${c[s[0]]}</b></li>`).join('')}</ul>`;
+  if(anim)requestAnimationFrame(()=>requestAnimationFrame(()=>$$('#donut circle.seg').forEach(e=>{const l=+e.dataset.len;e.setAttribute('stroke-dasharray',`${Math.max(0,l-2)} ${C}`)})));
+}
+function renderUltimos(flash){
+  const ult=[...S.db.usuarios].filter(u=>u.ultimo).sort((a,b)=>b.ultimo-a.ultimo).slice(0,6);
+  $('#ultIng').innerHTML=ult.map((u,i)=>`<tr class="clk" data-u="${u.id}"${flash&&i===0?' style="animation:flash 1.6s"':''}><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.area)}</span></div></div></td><td>${rel(u.ultimo)}<div class="muted">${fFecha(u.ultimo)}</div></td><td>${esc(u.ultimoPortal)}</td><td><span class="tag ${tagEst(u.estado)}"><i></i>${u.estado}</span></td></tr>`).join('');
+}
+function renderAlertas(){
+  const d=S.db,al=[];d.bitacora.filter(b=>b.tipo==='denied').slice(0,3).forEach(b=>al.push(['ev-denied',b.fecha,`Acceso denegado a ${esc(b.usuario)}`,esc(b.detalle)]));
+  d.usuarios.filter(u=>u.estado==='Suspendido').forEach(u=>al.push(['ev-admin',u.ultimo||Date.now(),`Cuenta suspendida: ${esc(u.nombre)}`,'Sin acceso a ningún portal']));
+  const inac=d.usuarios.filter(u=>u.estado==='Activo'&&u.ultimo&&Date.now()-u.ultimo>14*864e5);
+  if(inac.length)al.push(['ev-denied',Date.now(),`${inac.length} usuarios activos sin ingresar en 14 días`,'Revisa si deben mantener acceso']);
+  $('#alertas').innerHTML=al.length?al.map((a,i)=>`<li style="--i:${i}" class="${a[0]}"><b>${a[2]}</b><time>${fFecha(a[1])}</time><span class="muted">${a[3]}</span></li>`).join(''):'<li class="muted">Sin alertas.</li>';
+}
+function renderResumen(){renderKpis(true);drawChart(true);renderPorPortal();renderFeed();renderHeat();renderDonut(true);renderTipos();renderRoles();renderUltimos();renderAlertas()}
+
+/* Simulación en vivo (solo demo) y sondeo (modo real) */
+const EVT_USO=['Descargó documento','Editó un proceso','Validó una versión','Consultó el mapa','Abrió el flujo de versiones'];
+function setUpd(){const d=new Date();$('#liveTxt').textContent=`En vivo · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
+function tickDemo(){
+  if(!document.hidden&&S.db){
+    const act=S.db.usuarios.filter(u=>u.estado==='Activo'),u=act[Math.floor(Math.random()*act.length)],login=Math.random()<.4,portal=Math.random()<.5?'Hub de Portales':'Mapa de Procesos',ev=login?'Ingreso al portal':EVT_USO[Math.floor(Math.random()*EVT_USO.length)];
+    const b={fecha:Date.now(),usuario:u.nombre,correo:u.correo,portal,tipo:login?'login':'uso',evento:ev,detalle:`${ev} en ${portal}`};
+    S.db.bitacora.unshift(b);u.ultimo=Date.now();u.ultimoPortal=portal;u.acciones++;
+    if(login){u.visitas++;u.dias[29]++;S.db.diarias[29]++}
+    if(S.vista==='resumen'){pushFeed(b);renderOnline();if(login){renderKpis(false);drawChart(false);renderUltimos(true)}}
+    setUpd();
+  }
+  setTimeout(tickDemo,3500+Math.random()*3000);
+}
+function sondear(){
+  setInterval(async()=>{
+    if(document.hidden)return;
+    try{const prev=S.db.bitacora[0]?S.db.bitacora[0].fecha:0;S.db=await Datos.cargar();
+      if(S.vista==='resumen'){S.db.bitacora.filter(b=>b.fecha>prev&&b.tipo!=='admin').reverse().forEach(pushFeed);renderOnline();renderKpis(false);drawChart(false);renderUltimos()}
+      setUpd()}catch(e){}
+  },45000);
+}
+
+function renderUsuarios(){
+  const q=$('#uQ').value.toLowerCase(),r=$('#uRol').value,e=$('#uEst').value,o=S.orden.u;
+  let l=S.db.usuarios.filter(u=>(!q||(u.nombre+u.correo+u.area).toLowerCase().includes(q))&&(!r||u.rol===r)&&(!e||u.estado===e));
+  l.sort((a,b)=>{let x=a[o.k],y=b[o.k];if(x==null)x=0;if(y==null)y=0;return (x>y?1:x<y?-1:0)*o.d});
+  $('#uBody').innerHTML=l.length?l.map(u=>`<tr class="clk" data-u="${u.id}"><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.correo)}</span></div></div></td><td>${esc(u.area)}</td><td><span class="tag ${tagRol(u.rol)}"><i></i>${esc(u.rol)}</span></td><td>${nPor(u)} de ${S.db.portales.length}</td><td>${u.ultimo?rel(u.ultimo):'<span class="muted">Nunca</span>'}</td><td><span class="tag ${tagEst(u.estado)}"><i></i>${u.estado}</span></td><td><button class="btn sm" data-u="${u.id}">Ver detalle</button></td></tr>`).join(''):'<tr><td colspan="7"><div class="empty">Sin resultados para el filtro actual.</div></td></tr>';
+}
+
+function renderMatriz(){
+  const d=S.db,q=$('#mQ').value.toLowerCase();
+  $('#mHead').innerHTML='<tr><th>Colaborador</th>'+d.portales.map(p=>`<th>${esc(p.nombre)}</th>`).join('')+'</tr>';
+  $('#mBody').innerHTML=d.usuarios.filter(u=>!q||(u.nombre+u.correo).toLowerCase().includes(q)).map(u=>`<tr data-u="${u.id}" class="${S.cambios[u.id]?'chg':''}"><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.rol)}</span></div></div></td>`+d.portales.map(p=>{const v=S.cambios[u.id]?.[p.id]??u.perm[p.id];return `<td><select data-u="${u.id}" data-p="${p.id}" data-v="${v}" aria-label="${esc(u.nombre)} en ${esc(p.nombre)}">${NIVELES.map((n,i)=>`<option value="${i}"${i===v?' selected':''}>${n}</option>`).join('')}</select></td>`}).join('')+'</tr>').join('');
+  actualizarBarra();
+}
+function actualizarBarra(){
+  const n=Object.values(S.cambios).reduce((a,c)=>a+Object.keys(c).length,0);
+  $('#saveBar').classList.toggle('on',n>0);$('#saveTxt').textContent=`${n} cambio${n===1?'':'s'} sin guardar`;
+}
+
+function renderSolicitudes(){
+  const l=S.db.solicitudes;
+  $('#sBody').innerHTML=l.length?l.map(s=>`<tr><td><b>${esc(s.nombre)}</b><div class="muted">${esc(s.correo)}</div></td><td>${esc(s.portal)}</td><td>${esc(s.motivo)}</td><td>${fFecha(s.fecha)}</td><td style="white-space:nowrap"><button class="btn sm pri" data-sol="${s.id}" data-ok="1">Aprobar</button> <button class="btn sm danger" data-sol="${s.id}" data-ok="0">Rechazar</button></td></tr>`).join(''):'<tr><td colspan="5"><div class="empty">No hay solicitudes pendientes.</div></td></tr>';
+}
+
+function filtroAct(){
+  const per=+$('#aPer').value,por=$('#aPor').value,q=$('#aQ').value.toLowerCase(),o=S.orden.a;
+  const l=S.db.usuarios.filter(u=>!q||(u.nombre+u.correo).toLowerCase().includes(q)).map(u=>{
+    const dias=u.dias.slice(-Math.min(per,30)),f=per>30?per/30:1;
+    const vis=Math.round(dias.reduce((a,b)=>a+b,0)*(per>30?f:1)),prom=u.visitas?u.minutos/u.visitas:0;
+    return {...u,visitas:vis,prom,minutos:Math.round(vis*prom),acciones:Math.round(u.acciones*vis/Math.max(1,u.dias.reduce((a,b)=>a+b,0))),dias:dias};
+  }).filter(u=>!por||u.perm[por]>0);
+  l.sort((a,b)=>{let x=a[o.k],y=b[o.k];return (x>y?1:x<y?-1:0)*o.d});return l;
+}
+function renderActividad(anim=true){
+  const l=filtroAct(),per=+$('#aPer').value,por=$('#aPor').value,desde=Date.now()-per*864e5;
+  const act=l.filter(u=>u.visitas>0),vis=l.reduce((a,u)=>a+u.visitas,0),min=l.reduce((a,u)=>a+u.minutos,0);
+  kpiBlock('#aKpi',[['Usuarios con actividad',act.length,'n',`de ${l.length} en el filtro`,0],['Visitas',vis,'n',`Últimos ${per} días`,1],['Tiempo total de uso',Math.round(min/60),'n','Horas acumuladas',0],['Sesión promedio',Math.round(vis?min/vis:0),'dur','Por visita',0]],anim);
+  const top=[...l].sort((a,b)=>b.visitas-a.visitas).slice(0,5),mx=Math.max(1,...top.map(u=>u.visitas));
+  $('#aTop').innerHTML=top.map((u,i)=>`<li><span class="n">${i+1}</span><span>${esc(u.nombre)}</span><b>${u.visitas}</b><div class="bar${i===0?' r':''}"><i style="width:${u.visitas/mx*100}%;${anim?`animation-delay:${i*90}ms`:'animation:none'}"></i></div></li>`).join('');
+  const hv=Array(24).fill(0);S.db.bitacora.forEach(b=>{if(b.fecha>=desde&&(!por||b.portal===S.db.portales.find(p=>p.id===por)?.nombre)&&(b.tipo==='login'||b.tipo==='uso'))hv[new Date(b.fecha).getHours()]++});
+  const W=420,H=200,m={l:28,b:22,t:8,r:4},hm=Math.max(2,...hv),bw=(W-m.l-m.r)/24;let g='';
+  for(let i=0;i<=2;i++){const y=H-m.b-(H-m.b-m.t)*i/2;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="#D3D7DC"/><text x="${m.l-5}" y="${y+4}" text-anchor="end" font-size="10.5" fill="#5A6771">${Math.round(hm/2*i)}</text>`}
+  hv.forEach((v,i)=>{const bh=(H-m.b-m.t)*v/hm,pico=v===Math.max(...hv)&&v>0;g+=`<rect class="${anim?'cb':'cn'}" style="--d:${i*25}ms" x="${(m.l+i*bw+1.5).toFixed(1)}" y="${(H-m.b-bh).toFixed(1)}" width="${(bw-3).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${pico?'#B01E24':'#3A414A'}"><title>${pad(i)}:00 · ${v} eventos</title></rect>`;if(i%4===0)g+=`<text x="${(m.l+i*bw+bw/2).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="#5A6771">${pad(i)}</text>`});
+  $('#chHora').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#chHora').innerHTML=g;
+  const inac=S.db.usuarios.filter(u=>u.estado==='Activo'&&(!u.ultimo||Date.now()-u.ultimo>14*864e5)).sort((a,b)=>(a.ultimo||0)-(b.ultimo||0));
+  $('#aInac').innerHTML=inac.length?inac.slice(0,5).map(u=>`<li><div class="av sm">${ini(u.nombre)}</div><div style="flex:1"><b>${esc(u.nombre)}</b><div class="muted">${u.ultimo?rel(u.ultimo):'Nunca ha ingresado'}</div></div><button class="btn sm" data-u="${u.id}">Ver</button></li>`).join(''):'<li class="muted">Todos los usuarios activos ingresaron en los últimos 14 días.</li>';
+  $('#aBody').innerHTML=l.length?l.map(u=>`<tr class="clk" data-u="${u.id}"><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.area)}</span></div></div></td><td>${u.ultimo?rel(u.ultimo)+'<div class="muted">'+fFecha(u.ultimo)+'</div>':'<span class="muted">Nunca</span>'}</td><td>${u.ultimo?esc(u.ultimoPortal):'—'}</td><td><b>${u.visitas}</b></td><td>${dur(u.minutos)}</td><td>${u.visitas?dur(u.prom):'—'}</td><td>${u.acciones}</td><td>${spark(u.dias)}</td></tr>`).join(''):'<tr><td colspan="8"><div class="empty">Sin actividad para el filtro actual.</div></td></tr>';
+}
+
+const clsEv = t=>'ev-'+t;
+function filtroBit(ignorarTipo){
+  const q=$('#bQ').value.toLowerCase(),t=ignorarTipo?'':$('#bTipo').value,por=$('#bPor').value,desde=Date.now()-(+$('#bPer').value)*864e5;
+  return S.db.bitacora.filter(b=>(!t||b.tipo===t)&&(!por||b.portal===por)&&b.fecha>=desde&&(!q||(b.usuario+b.detalle+b.evento).toLowerCase().includes(q))).sort((a,b)=>b.fecha-a.fecha);
+}
+function renderBitacora(anim=true){
+  const base=filtroBit(true),l=filtroBit().slice(0,200),c={login:0,uso:0,admin:0,denied:0};base.forEach(b=>{if(c[b.tipo]!==undefined)c[b.tipo]++});
+  kpiBlock('#bKpi',[['Ingresos',c.login,'n','Inicios de sesión',0],['Uso de portales',c.uso,'n','Acciones registradas',0],['Administración',c.admin,'n','Cambios en la consola',c.admin?1:0],['Accesos denegados',c.denied,'n','Intentos sin permiso',c.denied?1:0]],anim);
+  const N=14,W=700,H=210,m={l:30,b:24,t:8,r:4},dias=Array.from({length:N},()=>({login:0,uso:0,admin:0,denied:0}));
+  base.forEach(b=>{const k=N-1-Math.floor((diasAtras(0)+864e5-b.fecha)/864e5);if(k>=0&&k<N&&dias[k][b.tipo]!==undefined)dias[k][b.tipo]++});
+  const mx=Math.max(4,...dias.map(d=>d.login+d.uso+d.admin+d.denied)),bw=(W-m.l-m.r)/N,col={login:'#146A38',uso:'#3A414A',admin:'#B01E24',denied:'#F5B800'};let g='';
+  for(let i=0;i<=4;i++){const y=H-m.b-(H-m.b-m.t)*i/4;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="#D3D7DC"/><text x="${m.l-6}" y="${y+4}" text-anchor="end" font-size="11" fill="#5A6771">${Math.round(mx/4*i)}</text>`}
+  dias.forEach((d,i)=>{let y=H-m.b;const x=m.l+i*bw+6,dt=new Date(diasAtras(N-1-i));['login','uso','admin','denied'].forEach(t=>{const h=(H-m.b-m.t)*d[t]/mx;if(!h)return;y-=h;g+=`<rect class="${anim?'cb':'cn'}" style="--d:${i*45}ms" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-12).toFixed(1)}" height="${h.toFixed(1)}" fill="${col[t]}"><title>${pad(dt.getDate())}/${pad(dt.getMonth()+1)} · ${t}: ${d[t]}</title></rect>`});g+=`<text x="${(x+(bw-12)/2).toFixed(1)}" y="${H-7}" text-anchor="middle" font-size="11" fill="#5A6771">${pad(dt.getDate())}/${pad(dt.getMonth()+1)}</text>`});
+  $('#chBit').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#chBit').innerHTML=g;
+  const tg={login:['ok','Ingreso'],uso:['off','Uso'],admin:['adm','Administración'],denied:['pend','Denegado']};
+  $('#bBody').innerHTML=l.length?l.map(b=>`<tr><td style="white-space:nowrap">${fFecha(b.fecha)}</td><td><b>${esc(b.usuario)}</b></td><td>${esc(b.portal)}</td><td><span class="tag ${tg[b.tipo][0]}"><i></i>${tg[b.tipo][1]}</span></td><td>${esc(b.detalle)}</td></tr>`).join(''):'<tr><td colspan="5"><div class="empty">Sin eventos para el filtro actual.</div></td></tr>';
+}
+
+
+/* ---------- Ayudantes de panel ---------- */
+function kpiBlock(sel,arr,anim=true){
+  $(sel).innerHTML=arr.map(x=>`<div class="kpi${x[4]?' hl':''}"><span class="rot">${x[0]}</span><div class="v" data-to="${x[1]}" data-f="${x[2]||'n'}">${anim?0:(x[2]==='dur'?dur(x[1]):x[1])}</div><div class="d">${x[3]||''}</div></div>`).join('');
+  if(anim)$$(sel+' .v').forEach(countUp);
+}
+function barList(sel,pairs,anim=true){
+  const mx=Math.max(1,...pairs.map(x=>x[1]));
+  $(sel).innerHTML=pairs.length?pairs.map(([l,v],i)=>`<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px"><span>${esc(l)}</span><b>${v}</b></div><div class="bar${i===0?' r':''}"><i style="width:${v/mx*100}%;${anim?`animation-delay:${i*90}ms`:'animation:none'}"></i></div></div>`).join(''):'<p class="muted">Sin datos.</p>';
+}
+function diasAtras(n){const d=new Date();d.setHours(0,0,0,0);return d.getTime()-n*864e5}
+const slug=t=>t.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,24)||'portal';
+
+/* ---------- Panel Usuarios ---------- */
+function renderUsuariosPanel(){
+  const u=S.db.usuarios,c=e=>u.filter(x=>x.estado===e).length;
+  kpiBlock('#uKpi',[['Usuarios registrados',u.length,'n',`${u.filter(x=>x.rol===CONFIG.ROL_ADMIN).length} con perfil Administrador del Sistema`,0],['Activos',c('Activo'),'n','Con acceso vigente',0],['Pendientes',c('Pendiente'),'n','Sin primer ingreso',c('Pendiente')?1:0],['Suspendidos',c('Suspendido'),'n','Acceso bloqueado',c('Suspendido')?1:0]]);
+  const roles={},areas={};u.forEach(x=>{roles[x.rol]=(roles[x.rol]||0)+1;areas[x.area]=(areas[x.area]||0)+1});
+  barList('#uRoles',Object.entries(roles).sort((a,b)=>b[1]-a[1]));
+  barList('#uAreas',Object.entries(areas).sort((a,b)=>b[1]-a[1]).slice(0,6));
+  renderUsuarios();
+}
+
+/* ---------- Panel Permisos ---------- */
+function efectivo(u,pid){return S.cambios[u.id]?.[pid]??u.perm[pid]}
+function renderCobertura(anim=true){
+  const d=S.db;
+  $('#pCob').innerHTML=d.portales.map(p=>{
+    const n=[0,0,0,0];d.usuarios.forEach(u=>n[efectivo(u,p.id)]++);const con=n[1]+n[2]+n[3],t=d.usuarios.length||1;
+    return `<div class="kpi${p.id==='hub'?' hl':''}"><span class="rot">${esc(p.nombre)}</span><div class="v" data-to="${con}" data-f="n">${anim?0:con}</div><div class="d">de ${t} con acceso</div><div class="stack" role="img" aria-label="Ver ${n[1]}, Editar ${n[2]}, Aprobar ${n[3]}">${[1,2,3].map(i=>`<i class="v${i}" style="width:${n[i]/t*100}%${anim?'':';animation:none'}"></i>`).join('')}</div><div class="lg"><span>Ver ${n[1]}</span><span>Editar ${n[2]}</span><span>Aprobar ${n[3]}</span></div></div>`}).join('');
+  if(anim)$$('#pCob .v').forEach(countUp);
+}
+function renderMatrizPanel(){renderCobertura(true);renderMatriz()}
+
+/* ---------- Panel Solicitudes ---------- */
+function renderSolicitudesPanel(){
+  const d=S.db,h=d.historial||[],lim=Date.now()-30*864e5,r30=h.filter(x=>x.fechaRes>=lim),ap=r30.filter(x=>x.resolucion==='Aprobada').length;
+  const hrs=h.length?Math.round(h.reduce((a,x)=>a+(x.fechaRes-x.fecha),0)/h.length/36e5):0;
+  kpiBlock('#sKpi',[['Pendientes',d.solicitudes.length,'n',d.solicitudes.length?'Requieren resolución':'Sin pendientes',d.solicitudes.length?1:0],['Aprobadas · 30 días',ap,'n','Accesos otorgados',0],['Rechazadas · 30 días',r30.length-ap,'n','Sin justificación suficiente',0],['Resolución media',hrs,'n','Horas desde la solicitud',0]]);
+  const t=S.solTab||'pend';$('#sPend').hidden=t!=='pend';$('#sHist').hidden=t!=='hist';$('#tabP').setAttribute('aria-pressed',t==='pend');$('#tabH').setAttribute('aria-pressed',t==='hist');
+  renderSolicitudes();
+  $('#sHBody').innerHTML=h.length?[...h].sort((a,b)=>b.fechaRes-a.fechaRes).map(x=>`<tr><td><b>${esc(x.nombre)}</b><div class="muted">${esc(x.correo)}</div></td><td>${esc(x.portal)}</td><td>${esc(x.motivo)}</td><td><span class="tag ${x.resolucion==='Aprobada'?'ok':'bad'}"><i></i>${x.resolucion}</span></td><td>${fFecha(x.fechaRes)}</td></tr>`).join(''):'<tr><td colspan="5"><div class="empty">Aún no hay solicitudes resueltas.</div></td></tr>';
+}
+
+/* ---------- Panel Portales ---------- */
+const ESTP={Operativo:'ok','En desarrollo':'pend',Mantenimiento:'pend',Inactivo:'off'};
+function renderPortales(){
+  const d=S.db;
+  $('#pGrid').innerHTML=d.portales.map((p,i)=>{
+    const con=d.usuarios.filter(u=>u.perm[p.id]>0).length,ev=d.bitacora.filter(b=>b.portal===p.nombre),dias=Array(30).fill(0);
+    ev.forEach(b=>{const k=29-Math.floor((diasAtras(0)+864e5-b.fecha)/864e5);if(k>=0&&k<30)dias[k]++});
+    const top={};ev.forEach(b=>top[b.usuario]=(top[b.usuario]||0)+1);const tp=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return `<div class="card lift pcard" style="border-top:4px solid ${i===0?'var(--rojo)':'var(--grafito)'}"><div class="body">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><span class="rot" style="color:var(--gris)">${esc(p.tipo)}</span><h2 style="font-size:17px;margin-top:6px">${esc(p.nombre)}</h2></div><span class="tag ${ESTP[p.estado]||'off'}"><i></i>${esc(p.estado)}</span></div>
+      <span class="url">${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(p.url)}</a>`:'Sin URL registrada'}</span>
+      <div class="mini" style="margin:16px 0"><div><span class="rot">Con acceso</span><b>${con}</b></div><div><span class="rot">Eventos 30 d</span><b>${ev.filter(b=>b.fecha>=diasAtras(29)).length}</b></div><div><span class="rot">Último evento</span><b style="font-size:13px">${ev[0]?rel(ev[0].fecha):'Sin eventos'}</b></div></div>
+      ${spark(dias,290,44)}
+      <div class="sec"><h3>Usuarios más activos</h3></div>
+      <ul>${tp.length?tp.map(x=>`<li><span>${esc(x[0])}</span><b>${x[1]}</b></li>`).join(''):'<li class="muted">Sin actividad registrada</li>'}</ul>
+      <div class="acts"><button class="btn sm" data-pe="${p.id}">Editar</button><button class="btn sm" data-go="usuarios">Ver usuarios</button><button class="btn sm" data-go="permisos">Permisos</button>${p.url?`<a class="btn sm dark" href="${esc(p.url)}" target="_blank" rel="noopener">Abrir portal</a>`:''}</div>
+    </div></div>`}).join('');
+}
+let editP=null;
+function abrirPortal(id){
+  editP=id||null;const p=id&&S.db.portales.find(x=>x.id===id);
+  $('#pTit').textContent=p?'Editar portal':'Nuevo portal';$('#pNom').value=p?p.nombre:'';$('#pTipo').value=p?p.tipo:'';$('#pEst').value=p?p.estado:'En desarrollo';$('#pUrl').value=p?p.url||'':'';$('#pErr').textContent='';
+  $('#ov').classList.add('on');$('#modalP').classList.add('on');setTimeout(()=>$('#pNom').focus(),50);
+}
+async function guardarPortalModal(){
+  const n=$('#pNom').value.trim(),t=$('#pTipo').value.trim(),e=$('#pEst').value,u=$('#pUrl').value.trim();
+  if(!n){$('#pErr').textContent='Ingresa el nombre del portal';return}
+  if(u&&!/^https:\/\//i.test(u)){$('#pErr').textContent='La URL debe comenzar con https://';return}
+  if(S.db.portales.some(x=>x.nombre.toLowerCase()===n.toLowerCase()&&x.id!==editP)){$('#pErr').textContent='Ya existe un portal con ese nombre';return}
   try{
-    var d = JSON.parse(localStorage.getItem(DIR_KEY));
-    if(d && Array.isArray(d) && d.length) return d;
-    localStorage.setItem(DIR_KEY, JSON.stringify(DIRECTORIO_BASE));
-    return DIRECTORIO_BASE;
-  }catch(e){ return DIRECTORIO_BASE; }
+    const ex=editP&&S.db.portales.find(x=>x.id===editP),nuevo={id:ex?ex.id:slug(n)+'-'+Date.now().toString(36).slice(-3),nombre:n,tipo:t||'Por definir',estado:e,url:u};
+    await Datos.guardarPortal(nuevo);
+    if(ex)Object.assign(ex,nuevo);else{S.db.portales.push(nuevo);S.db.usuarios.forEach(x=>x.perm[nuevo.id]=0)}
+    S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:ex?'Portal editado':'Portal creado',detalle:n});
+    cerrarTodo();iniciarFiltros();renderTodo();toast(ex?'Portal actualizado':'Portal creado');
+  }catch(x){toast(x.message,true)}
 }
-function directorioGuardar(list){ localStorage.setItem(DIR_KEY, JSON.stringify(list)); }
 
-// Validación de sesión de Administrador
-function verificarSesionAdmin(){
-  var raw = localStorage.getItem(AUTH_KEY);
-  if(!raw){ mostrarDenegado(); return false; }
+/* ---------- Detalle de usuario ---------- */
+function abrirUsuario(id){
+  const u=S.db.usuarios.find(x=>x.id===id);if(!u)return;
+  $('#dAv').textContent=ini(u.nombre);$('#dNom').textContent=u.nombre;$('#dCor').textContent=u.correo;
+  const ev=S.db.bitacora.filter(b=>b.correo===u.correo).sort((a,b)=>b.fecha-a.fecha).slice(0,12);
+  const porP=S.db.portales.filter(p=>u.perm[p.id]>0).map(p=>({p,n:S.db.bitacora.filter(b=>b.correo===u.correo&&b.portal===p.nombre).length}));
+  const mp=Math.max(1,...porP.map(x=>x.n));
+  $('#dBodyU').innerHTML=`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"><span class="tag ${tagEst(u.estado)}"><i></i>${u.estado}</span><span class="tag ${tagRol(u.rol)}"><i></i>${esc(u.rol)}</span><span class="tag off">${esc(u.area)}</span></div>
+    <div class="mini"><div><span class="rot">Último ingreso</span><b style="font-size:14px">${u.ultimo?rel(u.ultimo):'Nunca'}</b><span class="muted">${u.ultimo?fFecha(u.ultimo):''}</span></div><div><span class="rot">Visitas 30 d</span><b>${u.visitas}</b></div><div><span class="rot">Tiempo total</span><b style="font-size:15px">${dur(u.minutos)}</b></div></div>
+    <div class="mini"><div><span class="rot">Sesión prom.</span><b style="font-size:15px">${u.visitas?dur(u.minutos/u.visitas):'—'}</b></div><div><span class="rot">Acciones</span><b>${u.acciones}</b></div><div><span class="rot">Alta</span><b style="font-size:14px">${fFecha(u.creado).slice(0,10)}</b></div></div>
+    <div class="sec"><h3>Histórico de visitas · 30 días</h3></div>${spark(u.dias,500,56)}
+    <div class="sec"><h3>Uso por portal</h3></div>
+    ${porP.length?porP.map((x,i)=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between"><span>${esc(x.p.nombre)} <span class="muted">· ${NIVELES[u.perm[x.p.id]]}</span></span><b>${x.n}</b></div><div class="bar${i===0?' r':''}"><i style="width:${x.n/mp*100}%"></i></div></div>`).join(''):'<p class="muted">Sin portales asignados.</p>'}
+    <div class="sec"><h3>Qué hizo recientemente</h3></div>
+    <ul class="tl">${ev.length?ev.map((b,i)=>`<li style="--i:${i}" class="${clsEv(b.tipo)}"><b>${esc(b.evento)}</b><time>${fFecha(b.fecha)} · ${esc(b.portal)}</time><span class="muted">${esc(b.detalle)}</span></li>`).join(''):'<li class="muted">Sin eventos registrados.</li>'}</ul>
+    <div class="sec"><h3>Acciones de administración</h3></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" data-ed="${u.id}">Editar usuario</button>
+      <button class="btn" data-go="permisos" data-q="${esc(u.nombre)}">Ver permisos</button>
+      ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn danger" data-sus="${u.id}">${u.estado==='Suspendido'?'Reactivar acceso':'Suspender acceso'}</button>`}
+    </div>`;
+  $('#ov').classList.add('on');$('#drawer').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
+}
+function cerrarTodo(){$('#ov').classList.remove('on');$('#drawer').classList.remove('on');$('#drawer').setAttribute('aria-hidden','true');$('#modal').classList.remove('on');$('#modalP').classList.remove('on');$('#side').classList.remove('on')}
+
+/* ---------- Modal de alta/edición ---------- */
+let editId=null;
+function abrirModal(id){
+  editId=id||null;const u=id&&S.db.usuarios.find(x=>x.id===id);
+  $('#mTit').textContent=u?'Editar acceso':'Nuevo acceso';
+  $('#fCor').value=u?u.correo:'';$('#fCor').disabled=!!u;$('#fNom').value=u?u.nombre:'';$('#fAre').value=u?u.area:'';$('#fErr').textContent='';
+  $('#fRol').innerHTML=Object.keys(ROLES).filter(r=>r!==CONFIG.ROL_ADMIN||(u&&u.rol===r)).map(r=>`<option${u&&u.rol===r?' selected':''}>${r}</option>`).join('');
+  $('#fRolH').textContent=ROLES[$('#fRol').value].d;
+  $('#fPor').innerHTML=S.db.portales.map(p=>`<label><input type="checkbox" value="${p.id}"${u&&u.perm[p.id]>0?' checked':''}>${esc(p.nombre)}</label>`).join('');
+  $('#ov').classList.add('on');$('#modal').classList.add('on');$('#drawer').classList.remove('on');setTimeout(()=>$(u?'#fNom':'#fCor').focus(),50);
+}
+async function guardarModal(){
+  const c=$('#fCor').value.trim().toLowerCase(),n=$('#fNom').value.trim(),a=$('#fAre').value.trim(),r=$('#fRol').value;
+  if(!c.endsWith(CONFIG.DOMINIO)||c.length<=CONFIG.DOMINIO.length){$('#fErr').textContent='Ingresa un correo con dominio '+CONFIG.DOMINIO;return}
+  if(!n){$('#fErr').textContent='Ingresa el nombre del colaborador';return}
+  if(!editId&&S.db.usuarios.some(u=>u.correo===c)){$('#fErr').textContent='Ese correo ya tiene un acceso registrado';return}
+  const perm={};S.db.portales.forEach(p=>perm[p.id]=0);$$('#fPor input').forEach(i=>{perm[i.value]=i.checked?Math.max(1,(editId&&S.db.usuarios.find(x=>x.id===editId).perm[i.value])||1):0});
   try{
-    var s = JSON.parse(raw);
-    var email = (s.email||'').trim().toLowerCase();
-    if(email === ADMIN_CORPORATIVO || s.rol === 'Administrador'){
-      $('pantallaDenegado').classList.remove('show');
-      $('vistaAdmin').style.display = 'flex';
-      $('txtAdminNombre').textContent = s.nombre || 'Sebastián Roca';
-      $('txtAdminCorreo').textContent = email + ' · Administrador General';
-      return true;
-    }
-  }catch(e){}
-  mostrarDenegado();
-  return false;
+    const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:'u'+Date.now(),correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
+    Object.assign(u,{nombre:n,area:a||'Sin área',rol:r,perm});
+    await Datos.guardarUsuario({correo:c,nombre:n,area:a,rol:r,permisos:perm});
+    if(!editId){S.db.usuarios.push(u);S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:'Alta de colaborador',detalle:`Se habilitó a ${n}`})}
+    cerrarTodo();renderTodo();toast(editId?'Cambios guardados':'Colaborador habilitado');
+  }catch(e){toast(e.message,true)}
 }
 
-function mostrarDenegado(){
-  $('pantallaDenegado').classList.add('show');
-  $('vistaAdmin').style.display = 'none';
+/* ---------- Navegación ---------- */
+const RENDER={resumen:renderResumen,usuarios:renderUsuariosPanel,permisos:renderMatrizPanel,solicitudes:renderSolicitudesPanel,actividad:renderActividad,bitacora:renderBitacora,portales:renderPortales};
+function ir(v){
+  if(!TITULOS[v])v='resumen';S.vista=v;
+  $$('section.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  $$('#nav a').forEach(a=>a.getAttribute('data-v')===v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  $('#ttl').textContent=TITULOS[v][0];$('#sub').textContent=TITULOS[v][1];cerrarTodo();scrollTo(0,0);
+  if(RENDER[v])RENDER[v]();
+  $$('#v-'+v+' .kpi, #v-'+v+' .card').forEach((e,i)=>{e.style.setProperty('--i',i);e.classList.remove('in');void e.offsetWidth;e.classList.add('in')});
+}
+function renderTodo(){renderResumen();renderUsuariosPanel();renderMatrizPanel();renderSolicitudesPanel();renderActividad();renderBitacora();renderPortales()}
+
+function iniciarFiltros(){
+  const d=S.db;
+  $('#uRol').innerHTML='<option value="">Todos los roles</option>'+Object.keys(ROLES).map(r=>`<option>${r}</option>`).join('');
+  $('#aPor').innerHTML='<option value="">Todos los portales</option>'+d.portales.map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
+  $('#bPor').innerHTML='<option value="">Todos los portales</option>'+d.portales.map(p=>`<option>${esc(p.nombre)}</option>`).join('');
+  $('#mBulk').innerHTML='<option value="">Asignación masiva…</option>'+d.portales.flatMap(p=>NIVELES.map((n,i)=>`<option value="${p.id}|${i}">${esc(p.nombre)} → ${n} (usuarios visibles)</option>`)).join('');
 }
 
-function cerrarSesionAdmin(){
-  localStorage.removeItem(AUTH_KEY);
-  window.location.href = 'index.html';
-}
-
-// Navegación por pestañas
-function cambiarTab(nombre){
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
-  if(nombre === 'solicitudes'){
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-    $('tab-solicitudes').classList.add('active');
-  } else if(nombre === 'habilitar'){
-    document.querySelectorAll('.tab-btn')[1].classList.add('active');
-    $('tab-habilitar').classList.add('active');
-    $('inputCorreo').focus();
-  } else if(nombre === 'directorio'){
-    document.querySelectorAll('.tab-btn')[2].classList.add('active');
-    $('tab-directorio').classList.add('active');
-    
-  }
-}
-
-// Carga de datos y KPIs
-function cargarTodo(){
-  var db = dbLeer();
-  var accesos = db.accesos || [];
-  var directorio = directorioLeer();
-
-  // Si no está el administrador en accesos, asegurarlo
-  var adm = accesos.find(function(x){ return x.email === ADMIN_CORPORATIVO; });
-  if(!adm){
-    accesos.unshift({
-      email: ADMIN_CORPORATIVO,
-      nombre: 'Sebastián Roca',
-      area: 'Jefatura de Procesos & Mejora Continua',
-      estado: 'Aprobado',
-      rol: 'Administrador',
-      pilotos: ['01','02','03'],
-      solicitado: new Date().toISOString(),
-      resuelto: new Date().toISOString(),
-      resueltoPor: 'Sistema'
-    });
-    db.accesos = accesos;
-    dbGuardar(db);
-  }
-
-  // KPIs
-  var aprobados = accesos.filter(function(x){ return x.estado === 'Aprobado'; });
-  var pendientes = accesos.filter(function(x){ return x.estado === 'Pendiente' || x.estado === 'SinVerificar'; });
-  $('kpiUsuarios').textContent = aprobados.length;
-  $('kpiPendientes').textContent = pendientes.length;
-  $('kpiPortales').textContent = PORTALES.length;
-  $('kpiDirectorio').textContent = directorio.length;
-  $('badgeTotalAccesos').textContent = accesos.length;
-  $('badgeDirectorio').textContent = directorio.length;
-
-  renderTablaUsuarios(accesos);
-  renderCheckPortales();
-  
-}
-
-function renderCheckPortales(){
-  $('checkPortalesHabilitar').innerHTML = PORTALES.map(function(p){
-    return '<label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer"><input type="checkbox" value="'+p.id+'" checked> <span style="font-weight:600">'+p.id+' · '+p.nombre+'</span></label>';
-  }).join('');
-}
-
-function renderTablaUsuarios(lista){
-  var tbody = $('tablaUsuariosBody');
-  if(!lista.length){
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--gris)">No hay registros de usuarios.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = lista.map(function(u){
-    var stCls = u.estado === 'Aprobado' ? 'aprobado' : (u.estado === 'Pendiente' ? 'pendiente' : 'rechazado');
-    var rolCls = (u.rol === 'Administrador' ? 'admin' : (u.rol === 'Editor' ? 'editor' : (u.rol === 'Revisor' ? 'revisor' : 'colab')));
-    var pills = (u.pilotos || u.pilotosSolicitados || []).map(function(pid){
-      var port = PORTALES.find(function(p){ return p.id === pid; });
-      return '<span class="portal-pill">'+pid+' · '+(port ? port.nombre : pid)+'</span>';
-    }).join(' ') || '<span style="color:#999;font-size:12px">Ninguno</span>';
-
-    var btnAcciones = '';
-    if(u.email === ADMIN_CORPORATIVO){
-      btnAcciones = '<span style="font-size:12px;color:var(--gris);font-weight:600">Admin Maestro</span>';
-    } else if(u.estado === 'Pendiente'){
-      btnAcciones = '<button class="btn-action approve" onclick="resolverUsuario(\''+u.email+'\', \'Aprobar\')">Aprobar</button>' +
-                    '<button class="btn-action reject" onclick="resolverUsuario(\''+u.email+'\', \'Rechazar\')">Rechazar</button>';
-    } else if(u.estado === 'Aprobado'){
-      btnAcciones = '<button class="btn-action" onclick="editarUsuario(\''+u.email+'\')">Editar Permisos</button>' +
-                    '<button class="btn-action reject" onclick="resolverUsuario(\''+u.email+'\', \'Revocar\')">Revocar</button>';
-    } else {
-      btnAcciones = '<button class="btn-action approve" onclick="resolverUsuario(\''+u.email+'\', \'Aprobar\')">Reactivar</button>';
-    }
-
-    return '<tr>' +
-      '<td><b>'+escaparHtml(u.nombre)+'</b><br><span style="font-size:12.5px;color:var(--gris)">'+escaparHtml(u.email)+'</span></td>' +
-      '<td>'+escaparHtml(u.area || '—')+'</td>' +
-      '<td><span class="badge-status '+stCls+'">'+escaparHtml(u.estado)+'</span></td>' +
-      '<td><span class="badge-role '+rolCls+'">'+escaparHtml(u.rol || 'Colaborador')+'</span></td>' +
-      '<td><div class="portales-pills">'+pills+'</div></td>' +
-      '<td><div class="actions-cell">'+btnAcciones+'</div></td>' +
-    '</tr>';
-  }).join('');
-}
-
-function escaparHtml(t){
-  return String(t||'').replace(/[&<>"']/g, function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+function enlazar(){
+  addEventListener('hashchange',()=>ir(location.hash.slice(1)));
+  $('#burger').onclick=()=>{$('#side').classList.add('on');$('#ov').classList.add('on')};
+  $('#ov').onclick=cerrarTodo;$('#dX').onclick=cerrarTodo;$('#mX').onclick=cerrarTodo;$('#mCan').onclick=cerrarTodo;
+  addEventListener('keydown',e=>{if(e.key==='Escape')cerrarTodo()});
+  ['uQ','uRol','uEst'].forEach(i=>$('#'+i).oninput=()=>renderUsuarios());
+  ['aQ','aPer','aPor'].forEach(i=>$('#'+i).oninput=()=>renderActividad(false));
+  ['bQ','bTipo','bPor','bPer'].forEach(i=>$('#'+i).oninput=()=>renderBitacora(false));
+  $('#btnNuevoP').onclick=()=>abrirPortal();$('#pOk').onclick=guardarPortalModal;$('#pX').onclick=cerrarTodo;$('#pCan').onclick=cerrarTodo;
+  $('#btnCsvU').onclick=()=>csv('usuarios.csv',[['Nombre','Correo','Área','Rol','Estado','Último ingreso']].concat(S.db.usuarios.map(u=>[u.nombre,u.correo,u.area,u.rol,u.estado,u.ultimo?fFecha(u.ultimo):''])));
+  $('#mQ').oninput=()=>renderMatriz();
+  $$('th.s').forEach(th=>th.onclick=()=>{const t=th.closest('section').id==='v-usuarios'?'u':'a',o=S.orden[t];o.d=o.k===th.dataset.k?-o.d:1;o.k=th.dataset.k;t==='u'?renderUsuarios():renderActividad(false)});
+  $('#btnRef').onclick=async()=>{try{if(Datos.demo)Datos.db=null;S.db=await Datos.cargar();renderTodo();toast('Datos actualizados')}catch(e){toast(e.message,true)}};
+  $('#btnOut').onclick=()=>{toast('Sesión cerrada');setTimeout(()=>location.href='index.html',700)};
+  $('#btnNuevo').onclick=()=>abrirModal();$('#mOk').onclick=guardarModal;
+  $('#fRol').onchange=()=>$('#fRolH').textContent=ROLES[$('#fRol').value].d;
+  document.addEventListener('click',e=>{
+    const tr=e.target.closest('tr[data-u]'),b=e.target.closest('button');
+    if(b&&b.dataset.u){abrirUsuario(b.dataset.u);return}
+    if(b&&b.dataset.ed){abrirModal(b.dataset.ed);return}
+    if(b&&b.dataset.pe){abrirPortal(b.dataset.pe);return}
+    if(b&&b.dataset.tab){S.solTab=b.dataset.tab;renderSolicitudesPanel();return}
+    if(b&&b.dataset.go){location.hash=b.dataset.go;$('#mQ').value=b.dataset.q||'';renderMatriz();return}
+    if(b&&b.dataset.sus){const u=S.db.usuarios.find(x=>x.id===b.dataset.sus);u.estado=u.estado==='Suspendido'?'Activo':'Suspendido';Datos.guardarUsuario({correo:u.correo,estado:u.estado}).then(()=>{renderTodo();abrirUsuario(u.id);toast('Estado actualizado')}).catch(x=>toast(x.message,true));return}
+    if(b&&b.dataset.sol){const s=S.db.solicitudes.find(x=>x.id===b.dataset.sol),ok=b.dataset.ok==='1';Datos.resolverSolicitud(s.id,ok).then(()=>{S.db.solicitudes=S.db.solicitudes.filter(x=>x!==s);(S.db.historial=S.db.historial||[]).unshift({...s,resolucion:ok?'Aprobada':'Rechazada',fechaRes:Date.now()});S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:s.portal,tipo:'admin',evento:ok?'Solicitud aprobada':'Solicitud rechazada',detalle:`${s.nombre} · ${s.portal}`});renderSolicitudesPanel();renderResumen();toast(ok?'Solicitud aprobada':'Solicitud rechazada')}).catch(x=>toast(x.message,true));return}
+    if(tr&&!b&&!e.target.closest('select'))abrirUsuario(tr.dataset.u);
   });
-}
-
-function resolverUsuario(email, decision){
-  if(decision === 'Revocar' && !confirm('¿Deseas revocar el acceso a '+email+'?')) return;
-  if(decision === 'Rechazar' && !confirm('¿Deseas rechazar la solicitud de '+email+'?')) return;
-  var db = dbLeer();
-  var u = db.accesos.find(function(x){ return x.email === email; });
-  if(!u) return;
-  if(decision === 'Aprobar'){
-    u.estado = 'Aprobado';
-    if(!u.rol) u.rol = 'Colaborador';
-    if(!u.pilotos || !u.pilotos.length) u.pilotos = u.pilotosSolicitados || ['01'];
-  } else if(decision === 'Rechazar'){
-    u.estado = 'Rechazado';
-    u.pilotos = [];
-  } else if(decision === 'Revocar'){
-    u.estado = 'Revocado';
-    u.pilotos = [];
-  }
-  u.resuelto = new Date().toISOString();
-  u.resueltoPor = ADMIN_CORPORATIVO;
-  dbGuardar(db);
-  toast('Acceso actualizado para ' + email);
-  cargarTodo();
-}
-
-function editarUsuario(email){
-  var db = dbLeer();
-  var u = db.accesos.find(function(x){ return x.email === email; });
-  if(!u) return;
-  var nuevoRol = prompt('Modificar Rol para ' + email + ':\n(Colaborador, Visualizador, Editor, Revisor, Administrador)', u.rol || 'Colaborador');
-  if(!nuevoRol) return;
-  u.rol = nuevoRol;
-  dbGuardar(db);
-  toast('Rol actualizado a ' + nuevoRol);
-  cargarTodo();
-}
-
-// ===== AUTOCOMPLETADO PREDICTIVO TIPO GMAIL / OUTLOOK =====
-function manejarInputCorreo(val){
-  var query = val.trim().toLowerCase();
-  var dropdown = $('dropdownCorreo');
-  if(!query || query.length < 1){
-    dropdown.classList.remove('show');
-    dropdown.innerHTML = '';
-    return;
-  }
-
-  var directorio = directorioLeer();
-  var db = dbLeer();
-  // Combinar directorio con usuarios registrados
-  (db.accesos || []).forEach(function(acc){
-    if(!directorio.some(function(d){ return d.email === acc.email; })){
-      directorio.push({ nombre: acc.nombre, email: acc.email, area: acc.area });
-    }
+  // Matriz
+  $('#mBody').addEventListener('change',e=>{
+    const s=e.target.closest('select');if(!s)return;const u=S.db.usuarios.find(x=>x.id===s.dataset.u),v=+s.value;
+    s.dataset.v=v;s.classList.remove('fl');void s.offsetWidth;s.classList.add('fl');(S.cambios[u.id]=S.cambios[u.id]||{})[s.dataset.p]=v;if(u.perm[s.dataset.p]===v){delete S.cambios[u.id][s.dataset.p];if(!Object.keys(S.cambios[u.id]).length)delete S.cambios[u.id]}
+    s.closest('tr').classList.toggle('chg',!!S.cambios[u.id]);actualizarBarra();renderCobertura(false);
   });
-
-  // Si el usuario escribe sin @, podemos sugerir el dominio
-  var sugerirDominio = (!query.includes('@') && query.length >= 2);
-
-  var coincidencias = directorio.filter(function(item){
-    return item.email.toLowerCase().includes(query) ||
-           item.nombre.toLowerCase().includes(query) ||
-           (item.area && item.area.toLowerCase().includes(query));
-  });
-
-  var html = '';
-  if(sugerirDominio){
-    var emailSugerido = query + '@salfamontajes.com';
-    html += '<div class="autocomplete-item" onclick="seleccionarContacto(\''+emailSugerido+'\', \'\', \'Salfa Montajes\')">' +
-      '<div class="auto-avatar" style="background:var(--rojo)">@</div>' +
-      '<div class="auto-info">' +
-        '<div class="auto-name"><span class="auto-domain">'+emailSugerido+'</span></div>' +
-        '<div class="auto-meta">Autocompletar con dominio institucional @salfamontajes.com</div>' +
-      '</div>' +
-    '</div>';
-  }
-
-  coincidencias.slice(0, 6).forEach(function(item){
-    var iniciales = item.nombre.split(' ').map(function(p){ return p[0]; }).slice(0,2).join('').toUpperCase();
-    html += '<div class="autocomplete-item" onclick="seleccionarContacto(\''+item.email+'\', \''+escaparHtml(item.nombre)+'\', \''+escaparHtml(item.area||'')+'\')">' +
-      '<div class="auto-avatar">'+iniciales+'</div>' +
-      '<div class="auto-info">' +
-        '<div class="auto-name">'+escaparHtml(item.nombre)+'</div>' +
-        '<div class="auto-meta">' +
-          '<span class="auto-domain">'+escaparHtml(item.email)+'</span> · ' +
-          '<span>'+escaparHtml(item.area||'Salfa Montajes')+'</span>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  });
-
-  if(!html){
-    dropdown.classList.remove('show');
-    dropdown.innerHTML = '';
-  } else {
-    dropdown.innerHTML = html;
-    dropdown.classList.add('show');
-  }
+  $('#mBulk').onchange=()=>{const [p,v]=($('#mBulk').value||'|').split('|');if(!p)return;const q=$('#mQ').value.toLowerCase();S.db.usuarios.filter(u=>u.rol!==CONFIG.ROL_ADMIN&&(!q||(u.nombre+u.correo).toLowerCase().includes(q))).forEach(u=>{if(u.perm[p]!==+v)(S.cambios[u.id]=S.cambios[u.id]||{})[p]=+v});$('#mBulk').value='';renderMatriz();renderCobertura(false)};
+  $('#btnDesh').onclick=()=>{S.cambios={};renderMatriz();renderCobertura(false)};
+  $('#btnGuardar').onclick=async()=>{try{await Datos.guardarPermisos(S.cambios);let n=0;Object.entries(S.cambios).forEach(([id,c])=>{const u=S.db.usuarios.find(x=>x.id===id);Object.assign(u.perm,c);n+=Object.keys(c).length;S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:'Permisos modificados',detalle:`${u.nombre}: ${Object.keys(c).length} cambio(s)`})});S.cambios={};renderTodo();toast(`${n} cambios guardados`)}catch(e){toast(e.message,true)}};
+  // CSV
+  $('#btnCsvA').onclick=()=>csv('actividad-usuarios.csv',[['Usuario','Correo','Último ingreso','Visitas','Minutos','Acciones']].concat(filtroAct().map(u=>[u.nombre,u.correo,u.ultimo?fFecha(u.ultimo):'',u.visitas,u.minutos,u.acciones])));
+  $('#btnCsvB').onclick=()=>csv('bitacora.csv',[['Fecha','Usuario','Portal','Tipo','Evento','Detalle']].concat(filtroBit().map(b=>[fFecha(b.fecha),b.usuario,b.portal,b.tipo,b.evento,b.detalle])));
 }
 
-function seleccionarContacto(email, nombre, area){
-  $('inputCorreo').value = email;
-  if(nombre) $('inputNombre').value = nombre;
-  if(area) $('inputArea').value = area;
-  $('dropdownCorreo').classList.remove('show');
-  $('dropdownCorreo').innerHTML = '';
-  if(!nombre) $('inputNombre').focus();
-  else if(!area) $('inputArea').focus();
-}
-
-// Ocultar dropdown al hacer click afuera
-document.addEventListener('click', function(e){
-  if(!e.target.closest('.autocomplete-container')){
-    $('dropdownCorreo').classList.remove('show');
-  }
-});
-
-// Guardar y Habilitar Colaborador
-function ejecutarHabilitar(e){
-  e.preventDefault();
-  var email = $('inputCorreo').value.trim().toLowerCase();
-  var nombre = $('inputNombre').value.trim();
-  var area = $('inputArea').value.trim();
-  var rol = $('selectRol').value;
-  var pilotos = Array.from($('checkPortalesHabilitar').querySelectorAll('input:checked')).map(function(i){ return i.value; });
-
-  if(!email.endsWith('@salfamontajes.com')){
-    alert('El correo debe pertenecer al dominio institucional @salfamontajes.com');
-    return;
-  }
-  if(!pilotos.length){
-    alert('Debes seleccionar al menos un portal.');
-    return;
-  }
-
-  var db = dbLeer();
-  var u = db.accesos.find(function(x){ return x.email === email; });
-  var iso = new Date().toISOString();
-
-  if(u){
-    u.nombre = nombre;
-    u.area = area;
-    u.rol = rol;
-    u.pilotos = pilotos;
-    u.estado = 'Aprobado';
-    u.resuelto = iso;
-    u.resueltoPor = ADMIN_CORPORATIVO;
-  } else {
-    db.accesos.push({
-      email: email,
-      nombre: nombre,
-      area: area,
-      rol: rol,
-      pilotos: pilotos,
-      estado: 'Aprobado',
-      solicitado: iso,
-      resuelto: iso,
-      resueltoPor: ADMIN_CORPORATIVO
-    });
-  }
-  dbGuardar(db);
-
-  // Agregar al directorio si no está
-  var dir = directorioLeer();
-  if(!dir.some(function(d){ return d.email === email; })){
-    dir.push({ email: email, nombre: nombre, area: area });
-    directorioGuardar(dir);
-  }
-
-  toast('¡Colaborador ' + nombre + ' habilitado exitosamente!');
-  $('formHabilitar').reset();
-  renderCheckPortales();
-  cargarTodo();
-  cambiarTab('solicitudes');
-}
-
-// ===== GESTIÓN DE DIRECTORIO =====
-function renderDirectorio(filtro){
-  var dir = directorioLeer();
-  if(filtro){
-    var q = filtro.trim().toLowerCase();
-    dir = dir.filter(function(d){
-      return d.nombre.toLowerCase().includes(q) || d.email.toLowerCase().includes(q) || (d.area && d.area.toLowerCase().includes(q));
-    });
-  }
-  var tbody = $('tablaDirectorioBody');
-  if(!dir.length){
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--gris)">No se encontraron contactos en el directorio.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = dir.map(function(c){
-    return '<tr>' +
-      '<td><b>'+escaparHtml(c.nombre)+'</b></td>' +
-      '<td><span style="color:var(--rojo);font-weight:600">'+escaparHtml(c.email)+'</span></td>' +
-      '<td>'+escaparHtml(c.area||'Salfa Montajes')+'</td>' +
-      '<td><button type="button" class="btn-action approve" onclick="darAccesoDesdeDirectorio(\''+c.email+'\', \''+escaparHtml(c.nombre)+'\', \''+escaparHtml(c.area||'')+'\')">+ Habilitar Portales</button></td>' +
-    '</tr>';
-  }).join('');
-}
-
-function filtrarDirectorio(q){  }
-
-function darAccesoDesdeDirectorio(email, nombre, area){
-  cambiarTab('habilitar');
-  seleccionarContacto(email, nombre, area);
-}
-
-function abrirModalImportar(){ $('modalImportar').style.display = 'flex'; $('textoImportar').focus(); }
-function cerrarModalImportar(){ $('modalImportar').style.display = 'none'; }
-
-function procesarImportacion(){
-  var raw = $('textoImportar').value.trim();
-  if(!raw){ alert('Pega al menos un correo o contacto.'); return; }
-  var lineas = raw.split(/\r?\n/);
-  var dir = directorioLeer();
-  var count = 0;
-
-  lineas.forEach(function(l){
-    var partes = l.split(/[,;\t]/).map(function(s){ return s.trim(); });
-    var email = partes.find(function(s){ return s.includes('@'); });
-    if(email){
-      email = email.toLowerCase();
-      var nombre = partes.find(function(s){ return s !== email && s.length > 2; }) || email.split('@')[0];
-      var area = partes.filter(function(s){ return s !== email && s !== nombre; }).join(' - ') || 'Salfa Montajes';
-      if(!dir.some(function(d){ return d.email === email; })){
-        dir.push({ email: email, nombre: nombre, area: area });
-        count++;
-      }
-    }
-  });
-
-  directorioGuardar(dir);
-  cerrarModalImportar();
-  $('textoImportar').value = '';
-  toast('Se importaron ' + count + ' nuevos colaboradores al Directorio Salfa.');
-  cargarTodo();
-  
-}
-
-// Iniciar al cargar
-window.addEventListener('DOMContentLoaded', function(){
-  if(verificarSesionAdmin()){
-    cargarTodo();
-  }
-});
+/* ---------- Arranque ---------- */
+(async function(){
+  try{
+    const ses=await Datos.sesion();
+    if(ses.rol!==CONFIG.ROL_ADMIN){$('#deny').classList.add('on');return}
+    $('#meNom').textContent=ses.nombre||'Administrador';$('#meAv').textContent=ini(ses.nombre||'AS');
+    S.db=await Datos.cargar();
+    $('#app').hidden=false;if(Datos.demo)$('#demo').classList.add('on');
+    iniciarFiltros();enlazar();ir(location.hash.slice(1));setUpd();
+    if(Datos.demo)setTimeout(tickDemo,4000);else sondear();
+  }catch(e){$('#deny').classList.add('on');$('#deny .muted').textContent='No fue posible validar tu sesión: '+e.message}
+})();
 </script>
 </body>
 </html>
