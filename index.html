@@ -698,6 +698,119 @@ body:has(#viewDashboard.on){overflow:hidden}
 @media (max-height:720px){#viewDashboard .admin-banner-v2 p,#viewDashboard .saludo-v2 .sub{display:none}}
 @media (prefers-reduced-motion:reduce){#viewDashboard *,#viewDashboard *::before,#viewDashboard *::after{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
 
+
+/* =====================================================================
+   HUB RESPONSIVO · LISTA ACORDEÓN PARA CELULARES Y TABLETS (v3)
+   Aplica en pantallas de hasta 820 px de ancho o hasta 520 px de alto
+   (celular vertical, celular horizontal y tablet vertical).
+   En pantallas grandes se conserva la grilla de tarjetas actual.
+   ===================================================================== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+/* Contenedores neutros en escritorio: no alteran la tarjeta */
+#viewDashboard .t-det,#viewDashboard .t-det-in{display:contents}
+#viewDashboard .t-chev,#viewDashboard .t-est{display:none}
+
+@media (max-width:820px),(max-height:520px){
+  /* La página completa se desplaza con naturalidad */
+  body:has(#viewDashboard.on){overflow:auto}
+  #viewDashboard.on{display:flex;flex-direction:column;height:auto;max-height:none;min-height:100dvh;overflow:visible}
+  #viewDashboard.on > .top-v2,#viewDashboard.on > .strip-v2,#viewDashboard.on > .footer-v2{flex:none}
+
+  /* Cabecera fija, con iconos de 44 px */
+  #viewDashboard .top-v2{position:sticky;top:0;z-index:30;gap:10px;
+    padding:calc(env(safe-area-inset-top,0px) + 8px) max(14px,env(safe-area-inset-right,0px)) 8px max(14px,env(safe-area-inset-left,0px))}
+  #viewDashboard .top-v2 .logo{height:clamp(22px,5.6vw,30px);max-width:44vw}
+  #viewDashboard .top-der{gap:8px;flex:none}
+  #viewDashboard .btn-pill{min-height:44px;min-width:44px;justify-content:center;font-size:13.5px}
+  #viewDashboard .btn-pill span{display:none}
+  #viewDashboard .btn-pill svg{width:18px!important;height:18px!important}
+
+  /* Franja de saludo */
+  #viewDashboard .strip-in-v2{flex-wrap:wrap;gap:8px 14px;
+    padding:10px max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px))}
+  #viewDashboard .saludo-v2 .sub{display:block;font-size:14px}
+  #viewDashboard .meta-v2{flex-wrap:wrap;gap:8px}
+  #viewDashboard .meta-v2 .chip-v2:first-child{display:inline-flex}
+  #viewDashboard .chip-v2{padding:5px 12px;font-size:12px}
+
+  /* Contenido */
+  #viewDashboard .main-v2{flex:1 0 auto;display:block;overflow:visible;
+    padding:14px max(14px,env(safe-area-inset-right,0px)) 22px max(14px,env(safe-area-inset-left,0px))}
+  #viewDashboard .col-v2{height:auto;width:100%}
+  #viewDashboard .admin-banner-v2 .btn-pill span{display:inline}
+  #viewDashboard .admin-banner-v2 .btn-pill{min-height:44px;padding:10px 18px!important}
+  #viewDashboard .sec-v2{margin:14px 0 10px;font-size:12px;letter-spacing:.24em}
+
+  /* Lista de pilotos */
+  #viewDashboard .grid-v2{grid-template-columns:1fr;grid-auto-rows:auto;gap:10px;align-content:start;align-items:start;overflow:visible;padding:2px 0 8px}
+
+  #viewDashboard .tarjeta{aspect-ratio:auto;display:block;border-radius:16px;scroll-margin-top:84px;
+    transition:border-color .3s,box-shadow .3s}
+  #viewDashboard .tarjeta:not(.bloq):hover,#viewDashboard .tarjeta.bloq:hover{transform:none;box-shadow:0 10px 24px -18px rgba(30,34,41,.45)}
+  #viewDashboard .tarjeta:not(.bloq):hover::after{opacity:0}
+  #viewDashboard .tarjeta.abierta{border-color:rgba(176,30,36,.55);box-shadow:0 16px 32px -20px rgba(176,30,36,.5)}
+
+  /* Encabezado = botón que despliega */
+  #viewDashboard .t-cab{cursor:pointer;min-height:68px;padding:12px 14px;gap:12px;align-items:center;
+    -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  #viewDashboard .t-cab:focus-visible{outline:3px solid var(--rojo-claro);outline-offset:-3px}
+  #viewDashboard .t-cab:active{background:linear-gradient(135deg,#2b3038,#1E2229)}
+  #viewDashboard .t-cab .rotulo{font-size:11px;letter-spacing:.16em}
+  #viewDashboard .t-cab h3{font-size:clamp(14px,4vw,16px);line-height:1.18}
+  #viewDashboard .t-cab .ico{animation:none;font-size:20px}
+  #viewDashboard .t-est{display:flex;align-items:center;gap:7px;margin-top:5px;font-family:var(--f-rotulo);font-weight:600;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#c3c9cf}
+  #viewDashboard .t-est::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+  #viewDashboard .t-est.ok{--c:#3ddc84}
+  #viewDashboard .t-est.dev{--c:var(--ambar)}
+  #viewDashboard .t-est.lock{--c:#9AA2AB}
+  #viewDashboard .t-chev{position:relative;z-index:1;display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;background:rgba(255,255,255,.1);transition:transform .35s var(--d2),background .3s}
+  #viewDashboard .t-chev::before{content:"";width:8px;height:8px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-2px) rotate(45deg)}
+  #viewDashboard .tarjeta.abierta .t-chev{transform:rotate(180deg);background:var(--rojo)}
+
+  /* Detalle plegable (descripción, actividad y botón Abrir) */
+  #viewDashboard .t-det{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s var(--d2)}
+  #viewDashboard .tarjeta.abierta .t-det{grid-template-rows:1fr}
+  #viewDashboard .t-det-in{display:block;min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s linear .38s}
+  #viewDashboard .tarjeta.abierta .t-det-in{visibility:visible;transition-delay:0s}
+  #viewDashboard .t-cuerpo{display:block;-webkit-line-clamp:unset;overflow:visible;padding:14px 14px 10px;font-size:15px;line-height:1.5}
+  #viewDashboard .pres-v2{margin:0 14px 12px}
+  #viewDashboard .t-pie{padding:12px 14px;gap:10px;flex-wrap:wrap}
+  #viewDashboard .btn-abrir{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;font-size:13.5px}
+  #viewDashboard .estado{font-size:11.5px}
+
+  /* Pie de página */
+  #viewDashboard .footer-v2{padding:10px max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 10px) max(14px,env(safe-area-inset-left,0px));font-size:12.5px}
+}
+
+/* Tablet vertical y celular horizontal: lista en dos columnas */
+@media ((min-width:600px) and (max-width:820px)),((max-height:520px) and (min-width:600px)){
+  #viewDashboard .grid-v2{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Celular muy angosto (hasta 360 px) */
+@media (max-width:360px){
+  #viewDashboard .t-cab{padding:10px 12px;gap:10px}
+  #viewDashboard .t-cab .ico{display:none}
+  #viewDashboard .ficha{width:36px;height:36px;font-size:15px}
+  #viewDashboard .t-pie .btn-abrir{flex:1 1 100%}
+  #viewDashboard .chip-v2{letter-spacing:.08em}
+}
+
+/* Celular horizontal (poca altura): compacto */
+@media (max-height:520px){
+  #viewDashboard .top-v2{padding-top:calc(env(safe-area-inset-top,0px) + 4px);padding-bottom:4px}
+  #viewDashboard .top-v2 .logo{height:22px}
+  #viewDashboard .btn-pill{min-height:40px;min-width:40px}
+  #viewDashboard .strip-in-v2{padding-top:6px;padding-bottom:6px}
+  #viewDashboard .saludo-v2 .sub{display:none}
+  #viewDashboard .admin-banner-v2 p{display:none}
+  #viewDashboard .admin-banner-v2{padding:8px 16px}
+  #viewDashboard .tarjeta{scroll-margin-top:60px}
+  #viewDashboard .t-cab{min-height:58px;padding-top:8px;padding-bottom:8px}
+  #viewDashboard .footer-v2{flex-direction:row;flex-wrap:wrap}
+}
+
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer onerror="window.GSI_ERROR=true"></script>
 </head>
@@ -1779,6 +1892,44 @@ function abrirSesion(s,recordar){
   setTimeout(function(){ renderDashboard(s); barra.classList.remove('on'); },900);
 }
 
+// ===== Acordeón del selector de pilotos (celulares y tablets) =====
+var MQ_ACORDEON=window.matchMedia('(max-width:820px), (max-height:520px)');
+function esAcordeon(){ return MQ_ACORDEON.matches; }
+function marcarAcordeon(t){
+  var cab=t.querySelector('.t-cab'); if(!cab) return;
+  if(esAcordeon()){
+    cab.setAttribute('role','button'); cab.setAttribute('tabindex','0');
+    cab.setAttribute('aria-expanded',t.classList.contains('abierta')?'true':'false');
+  } else {
+    cab.removeAttribute('role'); cab.removeAttribute('tabindex'); cab.removeAttribute('aria-expanded');
+    t.classList.remove('abierta');
+  }
+}
+function alternarTarjeta(t){
+  if(!esAcordeon()) return;
+  var abrir=!t.classList.contains('abierta');
+  document.querySelectorAll('#gridPortales .tarjeta.abierta').forEach(function(o){
+    o.classList.remove('abierta'); marcarAcordeon(o);
+  });
+  if(abrir){
+    t.classList.add('abierta'); marcarAcordeon(t);
+    setTimeout(function(){ try{ t.scrollIntoView({block:'nearest',behavior:'smooth'}); }catch(e){} },400);
+  }
+}
+function enlazarAcordeon(t){
+  var cab=t.querySelector('.t-cab');
+  cab.addEventListener('click',function(){ alternarTarjeta(t); });
+  cab.addEventListener('keydown',function(ev){
+    if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); alternarTarjeta(t); }
+  });
+  marcarAcordeon(t);
+}
+function sincronizarAcordeon(){
+  document.querySelectorAll('#gridPortales .tarjeta').forEach(marcarAcordeon);
+}
+if(MQ_ACORDEON.addEventListener){ MQ_ACORDEON.addEventListener('change',sincronizarAcordeon); }
+else if(MQ_ACORDEON.addListener){ MQ_ACORDEON.addListener(sincronizarAcordeon); }
+
 // ===== Panel de pilotos =====
 function renderDashboard(user){
   SESION=user; detenerBrasas();
@@ -1806,12 +1957,15 @@ function renderDashboard(user){
     t.className='tarjeta'+(activo?'':' inactiva')+(activo?'':' bloq');
     t.innerHTML=
       '<div class="t-cab"><div class="ficha">'+p.num+'</div>'+
-        '<div><span class="rotulo">'+escapar(p.categoria)+'</span><h3>'+escapar(p.nombre)+'</h3></div>'+
-        ic(p.icono,'ico')+'</div>'+
+        '<div><span class="rotulo">'+escapar(p.categoria)+'</span><h3>'+escapar(p.nombre)+'</h3><span class="t-est '+cls+'">'+est+'</span></div>'+
+        ic(p.icono,'ico')+'<span class="t-chev" aria-hidden="true"></span></div>'+
+      '<div class="t-det"><div class="t-det-in">'+
       '<div class="t-cuerpo">'+p.descripcion+'</div>'+
       '<div class="pres-v2 vacio" id="pres-'+p.id+'"><div class="avs-v2"></div><span class="pn-v2"><i></i> Sin actividad</span></div>'+
       '<div class="t-pie"><span class="estado '+cls+'">'+est+'</span>'+
-        '<a class="btn-abrir'+(activo?'':' off')+'" href="'+(activo?p.url:'#')+'" '+(activo?'target="_blank" rel="noopener"':'onclick="return false"')+'>'+btn+'</a></div>';
+        '<a class="btn-abrir'+(activo?'':' off')+'" href="'+(activo?p.url:'#')+'" '+(activo?'target="_blank" rel="noopener"':'onclick="return false"')+'>'+btn+'</a></div>'+
+      '</div></div>';
+    enlazarAcordeon(t);
     grid.appendChild(t);
   });
 
