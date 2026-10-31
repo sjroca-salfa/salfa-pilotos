@@ -565,6 +565,7 @@ html,body{height:100%}
 <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
 <symbol id="i-rotate-cw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.9 1 6.7 2.7L21 8"/><path d="M21 3v5h-5"/></symbol>
 <symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+<symbol id="i-trending" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
 <symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
 <symbol id="i-contact" viewBox="0 0 24 24"><path d="M16 2v2"/><path d="M17.9 22a6 6 0 0 0-11.8 0"/><path d="M8 2v2"/><circle cx="12" cy="12" r="4"/><rect x="3" y="4" width="18" height="18" rx="2"/></symbol>
 <symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.7a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7z"/><path d="M12 22V12"/><path d="m3.3 7 7.7 4.7a2 2 0 0 0 2 0L20.7 7"/><path d="m7.5 4.3 9 5.2"/></symbol>
@@ -598,7 +599,7 @@ html,body{height:100%}
         <div class="campo">
           <label for="lgEmail">Correo corporativo</label>
           <div class="in" id="g-correo">
-            <svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
             <input type="email" id="lgEmail" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" required>
           </div>
         </div>
@@ -606,10 +607,10 @@ html,body{height:100%}
         <div class="campo">
           <label for="lgPass">Contraseña</label>
           <div class="in" id="g-pass">
-            <svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
             <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password" required>
-            <button type="button" class="ojo-btn" id="btnOjoPass" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña">
-              <svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg>
+            <button type="button" class="ojo" id="btnOjoPass" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña">
+              <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
@@ -899,66 +900,67 @@ html,body{height:100%}
   </div>
 </div>
 
-<!-- ===== DASHBOARD ===== -->
+<!-- ===== DASHBOARD V2 (Selector de Pilotos Mejorado) ===== -->
 <div class="vista-dash" id="viewDashboard">
-  <header class="banda">
+  <header class="top-v2">
     <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes">
-    <div class="banda-der">
-      <span class="fecha" id="txtFecha"></span>
-      <span id="txtUser"></span>
-      <a id="btnIrAdmin" href="admin.html" class="btn-salir" style="display:none;background:var(--rojo);border-color:var(--rojo);text-decoration:none" title="Abrir Consola de Administración"><svg class="i i-shield" aria-hidden="true"><use href="#i-shield"/></svg> <span>Panel Admin</span></a>
-      <button class="btn-salir" onclick="abrirContacto()" aria-label="Contacto"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg> <span class="txt-btn">Contacto</span></button>
-      <button class="btn-salir" onclick="cerrarSesion()"><svg class="i i-power" aria-hidden="true"><use href="#i-power"/></svg> Salir</button>
+    <div class="top-der">
+      <span class="top-fecha" id="txtFecha"></span>
+      <span class="top-mail" id="txtUser"></span>
+      <a id="btnIrAdmin" href="admin.html" class="btn-pill rojo" style="display:none;text-decoration:none" title="Consola Central de Administración">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Panel Admin</span>
+      </a>
+      <button type="button" class="btn-pill" onclick="abrirContacto()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
+        <span>Contacto</span>
+      </button>
+      <button type="button" class="btn-pill" onclick="cerrarSesion()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+        <span>Salir</span>
+      </button>
     </div>
   </header>
 
-  <section class="hero">
-    <div class="hero-in">
-      <div>
-        <span class="filete" aria-hidden="true"></span>
-        <h1 id="dashBienvenida">Bienvenido</h1>
-        <p>Elige el piloto con el que quieres trabajar hoy.</p>
-      </div>
-      <div class="rol" id="userRol"></div>
-    </div>
-  </section>
-
-  <main class="contenido">
-    <div id="bannerAdminHub" style="display:none;margin-bottom:28px;background:#fff;border-left:6px solid var(--rojo);padding:20px 28px;box-shadow:0 4px 14px rgba(0,0,0,0.06);align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
-      <div>
-        <div style="font-family:var(--f-rotulo);font-weight:700;font-size:12px;color:var(--rojo);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">Perfil Administrador Central</div>
-        <h3 style="font-family:var(--f-titulo);font-weight:800;font-size:18px;text-transform:uppercase;color:var(--grafito)">Consola Central de Administración</h3>
-        <p style="color:var(--gris);font-size:14.5px;margin-top:2px">Gestiona accesos por portal, revisa solicitudes y habilita colaboradores con autocompletado institucional.</p>
-      </div>
-      <a href="admin.html" class="btn-pri" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px;padding:12px 22px;font-size:14px">
-        <svg class="i i-shield" aria-hidden="true"><use href="#i-shield"/></svg>
-        Abrir Consola de Administración →
-      </a>
-    </div>
-
-    <div class="rotulo">Pilotos disponibles</div>
-    <div class="grid" id="gridPortales"></div>
-
-    <section class="admin" id="adminPanel" style="display:none" aria-label="Gestión de accesos">
-      <div class="rotulo">Gestión de accesos</div>
-      <div class="admin-cab">
-        <div class="admin-tabs" role="tablist">
-          <button type="button" id="aTabPend" class="on" onclick="adminVista('pend')">Pendientes <span class="contador" id="contPend"></span></button>
-          <button type="button" id="aTabApr" onclick="adminVista('apr')">Con acceso <span class="contador gris" id="contApr"></span></button>
-          <button type="button" id="aTabCer" onclick="adminVista('cer')">Cerradas <span class="contador gris" id="contCer"></span></button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button type="button" class="btn-pri btn-mini" onclick="abrirInvitar()"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg> + Habilitar Colaborador</button>
-          <button type="button" class="btn-sec btn-mini" onclick="cargarAdmin()"><svg class="i i-rotate-cw" aria-hidden="true"><use href="#i-rotate-cw"/></svg> Actualizar</button>
+  <!-- Franja de saludo compacta -->
+  <div class="strip-v2">
+    <div class="strip-in-v2">
+      <div class="saludo-v2">
+        <div class="filete-v2"></div>
+        <div>
+          <h1 id="dashBienvenida">Hola, <b id="nomUser">Colaborador</b></h1>
+          <div class="sub">Elige el piloto con el que quieres trabajar hoy.</div>
         </div>
       </div>
-      <div id="adminLista"></div>
-    </section>
+      <div class="meta-v2">
+        <span class="chip-v2">Rol: <b id="userRolTxt">Colaborador</b></span>
+        <span class="chip-v2"><i class="pv"></i> <b id="totalOnline">1</b> en línea</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-v2">
+    <div class="col-v2">
+      <!-- Banner Admin destacado (solo visible si Administrador) -->
+      <div class="admin-banner-v2" id="bannerAdminHub" style="display:none">
+        <div>
+          <small>Administración Central Salfa</small>
+          <h2>Consola Integral de Accesos y Portales</h2>
+          <p>Gestiona usuarios, aprueba solicitudes y autoriza colaboradores con autocompletado institucional.</p>
+        </div>
+        <a href="admin.html" class="btn-pill rojo" style="padding:10px 20px;font-size:13.5px">
+          <span>Abrir Panel de Administrador →</span>
+        </a>
+      </div>
+
+      <div class="sec-v2">Pilotos Disponibles</div>
+      <div class="grid-v2" id="gridPortales"></div>
+    </div>
   </main>
 
-  <footer class="pie">
+  <footer class="footer-v2">
     <span>Salfa Montajes · Portales de pilotaje · Desarrollos estratégicos y mejoras</span>
-    <span><button type="button" class="enlace-pie" onclick="abrirContacto()">Contacto</button> · Información de uso interno</span>
+    <span><button type="button" onclick="abrirContacto()">Contacto</button> · Información de uso interno</span>
   </footer>
 </div>
 
@@ -988,16 +990,22 @@ var ADMIN_CORPORATIVO = 'sjroca@salfamontajes.com';
 var CLAVE_ADMIN_HASH = 'REDACTED_HASH';
 
 var PORTALES = [
-  { id:'01', nombre:'Mapa de Procesos', categoria:'Operaciones y gestión',
+  { id:'01', num:'01', nombre:'Mapa de Procesos', categoria:'Operaciones y gestión', gerencia:'Gerencia de Operaciones',
     descripcion:'Piloto para consultar y gestionar los procesos de Salfa, con trazabilidad de revisiones (Rev B / Rev C) y documentación técnica asociada.',
-    url:'https://sjroca-salfa.github.io/portal-mapa-procesos/',
+    url:'https://sjroca-salfa.github.io/portal-mapa-procesos/', key:'mapa',
     icono:'network', roles:['Administrador','Editor','Revisor','Visualizador','Colaborador'], estado:'Activo' },
-  { id:'02', nombre:'Control de CV', categoria:'Gestión de personas',
+  { id:'02', num:'02', nombre:'Control de CV', categoria:'Gestión de personas', gerencia:'Gerencia de Gestión de Personas',
     descripcion:'Piloto para registrar, revisar y dar seguimiento a currículums de postulantes y personal para la dotación de proyectos de montaje.',
-    url:'#', icono:'contact', roles:['Administrador','Editor'], estado:'En desarrollo' },
-  { id:'03', nombre:'Gestión AWP & Construcción', categoria:'Planificación y control',
+    url:'#', key:'cv',
+    icono:'contact', roles:['Administrador','Editor'], estado:'En desarrollo' },
+  { id:'03', num:'03', nombre:'Gestión AWP & Construcción', categoria:'Planificación y control', gerencia:'Gerencia de Operaciones / AWP',
     descripcion:'Piloto de seguimiento de paquetes de ingeniería y construcción bajo metodología Advanced Work Packaging.',
-    url:'#', icono:'package', roles:['Administrador'], estado:'Próximamente' }
+    url:'#', key:'awp',
+    icono:'package', roles:['Administrador'], estado:'Próximamente' },
+  { id:'04', num:'04', nombre:'Indicadores OKR', categoria:'Planificación y desarrollo estratégico', gerencia:'Gerencia de Planificación y Desarrollo Estratégico',
+    descripcion:'Piloto para el seguimiento de objetivos y resultados clave (OKR) alineados con las metas estratégicas de la empresa.',
+    url:'#', key:'okr',
+    icono:'trending', roles:['Administrador'], estado:'En desarrollo' }
 ];
 
 // ===== Modos de funcionamiento =====
@@ -1040,6 +1048,52 @@ function fecha(iso){
   var d=new Date(iso); if(isNaN(d)) return '';
   return d.toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
 }
+
+
+// ===== MOTOR DE PRESENCIA Y USUARIOS EN LÍNEA (BLOQUE D) =====
+var PRESENCIA = { total: 1, portales: { hub: { n: 1, ini: ['SR'] }, mapa: { n: 0, ini: [] }, cv: { n: 0, ini: [] }, awp: { n: 0, ini: [] }, okr: { n: 0, ini: [] } } };
+
+async function actualizarPresencia(){
+  try{
+    var s = SESION || leerSesion();
+    if(!s || !s.email) return;
+    // Enviar latido
+    await api('presenciaLatido', { token: s.token, portal: 'hub', email: s.email });
+    // Consultar estado
+    var r = await api('presenciaEstado', { token: s.token });
+    if(r && r.ok && r.portales){
+      PRESENCIA = r;
+      pintarPresenciaUI();
+    }
+  }catch(e){}
+}
+
+function pintarPresenciaUI(){
+  if($('totalOnline')) $('totalOnline').textContent = PRESENCIA.total || 1;
+  PORTALES.forEach(function(p){
+    var k = p.key || 'mapa';
+    var presBox = $('pres-' + p.id);
+    if(!presBox) return;
+    var data = (PRESENCIA.portales && PRESENCIA.portales[k]) || { n: 0, ini: [] };
+    var vacio = (data.n === 0);
+    presBox.className = 'pres-v2' + (vacio ? ' vacio' : '');
+    
+    var avsHtml = (data.ini || []).slice(0, 3).map(function(inits, idx){
+      var cls = idx === 0 ? 'c1' : (idx === 1 ? 'c2' : 'c3');
+      return '<div class="av-v2 ' + cls + '">' + escapar(inits) + '</div>';
+    }).join('');
+
+    var txt = vacio ? '<i></i> Sin actividad' : ('<i></i> <b>' + data.n + '</b> ' + (data.n === 1 ? 'en línea' : 'en línea'));
+    presBox.innerHTML = '<div class="avs-v2">' + avsHtml + '</div><span class="pn-v2">' + txt + '</span>';
+  });
+}
+
+// Iniciar latido periódico
+setInterval(function(){
+  if(document.visibilityState === 'visible' && $('viewDashboard') && $('viewDashboard').style.display !== 'none'){
+    actualizarPresencia();
+  }
+}, 30000);
 
 // ===== Servicio de accesos (Motor Corporativo Nativo) =====
 async function api(accion,datos){
@@ -1158,6 +1212,40 @@ async function demoApi(accion,d){
   }
   var quien=sesion(d.token);
   if(!quien||!(await adminDemo(quien))) return {ok:false,mensaje:'No tienes permiso para esta acción.'};
+    if(accion==='presenciaLatido'){
+    var presKey = 'salfa_presencia_mem_v1';
+    var pres = {}; try{ pres = JSON.parse(localStorage.getItem(presKey)) || {}; }catch(e){ pres = {}; }
+    var userMail = String(d.email || (quien||'')).toLowerCase();
+    var portal = d.portal || 'hub';
+    var now = Date.now();
+    pres[userMail + '|' + portal] = now;
+    // Limpiar expirados (> 150 seg)
+    Object.keys(pres).forEach(function(k){ if(now - pres[k] > 150000) delete pres[k]; });
+    localStorage.setItem(presKey, JSON.stringify(pres));
+    return { ok: true };
+  }
+  if(accion==='presenciaEstado'){
+    var presKey = 'salfa_presencia_mem_v1';
+    var pres = {}; try{ pres = JSON.parse(localStorage.getItem(presKey)) || {}; }catch(e){ pres = {}; }
+    var now = Date.now();
+    var ports = { hub: { n: 0, ini: [] }, mapa: { n: 0, ini: [] }, cv: { n: 0, ini: [] }, awp: { n: 0, ini: [] }, okr: { n: 0, ini: [] } };
+    var unicos = {};
+    Object.keys(pres).forEach(function(k){
+      if(now - pres[k] > 150000) return;
+      var parts = k.split('|');
+      var em = parts[0], pt = parts[1];
+      if(ports[pt]){
+        ports[pt].n++;
+        var inits = (em.split('@')[0].replace(/[^a-z]/gi,'').slice(0,2)||'US').toUpperCase();
+        if(ports[pt].ini.length < 3) ports[pt].ini.push(inits);
+      }
+      unicos[em] = true;
+    });
+    // Si no hay nadie, asegurar que el usuario actual se vea
+    var tot = Object.keys(unicos).length;
+    if(tot === 0){ tot = 1; ports.hub = { n: 1, ini: ['SR'] }; ports.mapa = { n: 1, ini: ['SR'] }; }
+    return { ok: true, total: tot, portales: ports };
+  }
   if(accion==='listar') return {ok:true,solicitudes:db.accesos.filter(function(x){return x.estado!=='SinVerificar';})};
   if(accion==='resolver'){
     var x=acc(String(d.email).toLowerCase()); if(!x) return {ok:false,mensaje:'La solicitud no existe.'};
