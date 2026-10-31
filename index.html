@@ -90,9 +90,78 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .portada .pie-portada b{display:block;font-family:var(--f-titulo);font-size:15px;letter-spacing:0;text-transform:none;margin-bottom:4px}
 @keyframes aparecer{to{opacity:1}}
 
-/* Tarjeta de ingreso */
-.ingreso{background:var(--blanco);color:var(--grafito);padding:38px 34px 30px;box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
-  border-top:6px solid var(--rojo);opacity:0;transform:translateY(28px);animation:elevar .9s 1.25s var(--ease) forwards}
+/* ---------- PANEL BLANCO MEJORADO (Entrega Hub-Panel) ---------- */
+.panel-wrap{perspective:1200px;animation:elevar .9s 1.25s var(--ease) forwards;width:100%;max-width:440px}
+.ingreso{
+  position:relative;width:100%;max-height:calc(100dvh - 36px);overflow-y:auto;overflow-x:hidden;
+  background:linear-gradient(180deg,#fff 0%,#f8f9fa 100%);color:var(--grafito);
+  border-radius:24px;padding:clamp(22px,3.6vh,36px) clamp(20px,2.5vw,34px) clamp(18px,2.8vh,26px);
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.6) inset,0 0 60px rgba(176,30,36,.18);
+  transform-style:preserve-3d;transition:transform .25s ease-out,box-shadow .4s;scrollbar-width:thin}
+.ingreso::-webkit-scrollbar{width:5px}
+.ingreso::-webkit-scrollbar-thumb{background:#D3D7DC;border-radius:10px}
+.ingreso::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;border-radius:24px 24px 0 0;
+  background:linear-gradient(90deg,var(--rojo),var(--rojo-claro),var(--rojo));background-size:220% 100%;animation:flujo 5s linear infinite;z-index:10}
+@keyframes flujo{to{background-position:220% 0}}
+
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--f-rotulo);font-weight:700;letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--rojo);margin-top:4px}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--linea),transparent)}
+.ingreso h2{font-family:var(--f-titulo);font-weight:800;text-transform:uppercase;font-size:clamp(22px,3.2vh,28px);margin:6px 0 6px}
+.lead{margin:4px 0 clamp(12px,2.4vh,22px);color:var(--gris);font-size:15px;line-height:1.45}
+
+.in{position:relative;display:flex;align-items:center;background:var(--fondo);border:1.5px solid transparent;border-radius:14px;transition:.3s var(--ease)}
+.in:hover{background:#e8ebee}
+.in:focus-within{background:#fff;border-color:var(--rojo);box-shadow:0 0 0 4px rgba(176,30,36,.14),0 8px 20px -8px rgba(176,30,36,.35);transform:translateY(-1px)}
+.in svg.i{width:18px;height:18px;margin-left:14px;flex:none;fill:currentColor;color:var(--gris);transition:.3s}
+.in:focus-within>svg.i{color:var(--rojo);transform:scale(1.1)}
+.in input{flex:1;min-width:0;padding:clamp(12px,1.9vh,15px) 14px;background:transparent;border:0;outline:0;font:inherit;font-size:15px;color:var(--grafito)}
+.in input::placeholder{color:#8a949e}
+.in.error{border-color:var(--rojo);animation:sacude .4s}
+@keyframes sacude{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.ojo-btn{margin-right:6px;width:38px;height:38px;border:0;border-radius:10px;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--gris);transition:.25s}
+.ojo-btn:hover{background:rgba(30,34,41,.08);color:var(--grafito)}
+.ojo-btn svg{margin:0;width:18px;height:18px}
+
+.fila-rec{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:clamp(4px,1vh,8px) 0 clamp(14px,2.2vh,20px)}
+.rec-lbl{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.rec-lbl input{position:absolute;opacity:0}
+.rec-caja{width:20px;height:20px;border-radius:6px;border:2px solid #aab2ba;display:grid;place-items:center;flex:none;transition:.25s var(--ease);background:#fff}
+.rec-caja svg{width:12px;height:12px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;transition:.3s .05s}
+.rec-lbl input:checked+.rec-caja{background:var(--rojo);border-color:var(--rojo);transform:scale(1.08)}
+.rec-lbl input:checked+.rec-caja svg{stroke-dashoffset:0}
+.rec-lbl span{font-weight:600;font-size:14px;color:var(--grafito)}
+
+.btn-panel{position:relative;overflow:hidden;width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:clamp(13px,2.1vh,16px);border:0;border-radius:14px;
+  background:linear-gradient(135deg,var(--rojo) 0%,#8f171c 100%);color:#fff;font-family:var(--f-rotulo);font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:16px;cursor:pointer;
+  box-shadow:0 14px 28px -10px rgba(176,30,36,.7);transition:.35s var(--ease)}
+.btn-panel:hover{transform:translateY(-2px);box-shadow:0 20px 34px -10px rgba(176,30,36,.8)}
+.btn-panel:active{transform:scale(.98)}
+.btn-panel::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-130%);animation:brillo 4.5s 1.8s infinite}
+@keyframes brillo{40%,100%{transform:translateX(130%)}}
+.btn-panel .fl{transition:transform .35s var(--ease);display:flex;align-items:center}
+.btn-panel:hover .fl{transform:translateX(4px)}
+.btn-panel .spin-btn{display:none;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:giro .7s linear infinite}
+.btn-panel.cargando .fl, .btn-panel.cargando .tx{display:none}
+.btn-panel.cargando .spin-btn{display:block}
+
+.sep-grad{height:1px;margin:clamp(12px,2vh,18px) 0;background:linear-gradient(90deg,transparent,var(--linea),transparent)}
+.pide-box{text-align:center;color:var(--gris);font-size:14.5px}
+.pie-seguro{display:flex;flex-direction:column;gap:8px;color:var(--gris);font-size:13px;text-align:center}
+.pie-seguro .aviso-restringido{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500}
+.vivo-dot{width:8px;height:8px;border-radius:50%;background:#2fb26a;flex:none;animation:pulsoDot 2.4s infinite}
+@keyframes pulsoDot{0%{box-shadow:0 0 0 0 rgba(47,178,106,.55)}70%,100%{box-shadow:0 0 0 8px rgba(47,178,106,0)}}
+
+/* Pantalla de Éxito al validar acceso */
+.ok-panel{display:none;text-align:center;padding:clamp(20px,4vh,40px) 0}
+.ingreso.listo #formLoginReal{display:none}
+.ingreso.listo .ok-panel{display:block}
+.check-circle{width:70px;height:70px;margin:0 auto 16px;border-radius:50%;background:#2fb26a;display:grid;place-items:center;animation:popOk .6s var(--ease) both}
+.check-circle svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:trazoOk .6s .3s var(--ease) forwards}
+@keyframes popOk{from{transform:scale(0)}}
+@keyframes trazoOk{to{stroke-dashoffset:0}}
+.ok-panel h3{font-family:var(--f-titulo);font-weight:800;text-transform:uppercase;font-size:20px;color:var(--grafito)}
+.ok-panel p{color:var(--gris);margin-top:6px;font-size:15px}
 @keyframes elevar{to{opacity:1;transform:none}}
 .ingreso .rotulo{color:var(--rojo)}
 .ingreso h2{font-family:var(--f-titulo);font-weight:800;font-size:24px;text-transform:uppercase;margin:6px 0 8px}
@@ -515,38 +584,77 @@ html,body{height:100%}
     <div class="pie-portada rotulo"><b>Portales Salfa Pilotos</b>Proyectos de P&amp;D · Actividades de área</div>
   </div>
 
+  <div class="panel-wrap">
   <div class="ingreso" id="tarjetaIngreso">
 
-    <!-- ===== Iniciar sesión ===== -->
+    <!-- ===== Iniciar sesión (Panel Mejorado Salfa) ===== -->
     <div id="paneLogin">
-      <span class="rotulo">Acceso corporativo</span>
+      <div class="eyebrow">Acceso corporativo</div>
       <h2>Iniciar sesión</h2>
-      <p class="sub">Ingresa con tu cuenta para abrir los portales de pilotaje.</p>
+      <p class="lead">Ingresa con tu cuenta para abrir los portales de pilotaje.</p>
       <div class="aviso-local" id="bannerServicio" style="display:none"></div>
-      <form onsubmit="iniciarSesionClave(event)" novalidate>
+
+      <form id="formLoginReal" onsubmit="iniciarSesionClave(event)" novalidate>
         <div class="campo">
           <label for="lgEmail">Correo corporativo</label>
-          <div class="caja"><svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg>
-            <input type="email" id="lgEmail" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+          <div class="in" id="g-correo">
+            <svg class="i i-mail" aria-hidden="true"><use href="#i-mail"/></svg>
+            <input type="email" id="lgEmail" placeholder="nombre@salfamontajes.com" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+          </div>
         </div>
+
         <div class="campo">
           <label for="lgPass">Contraseña</label>
-          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
-            <input type="password" id="lgPass" class="con-ojo" placeholder="••••••••" autocomplete="current-password">
-            <button type="button" class="ojo" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña"><svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <div class="in" id="g-pass">
+            <svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="ojo-btn" id="btnOjoPass" onclick="alternarClave('lgPass',this)" aria-label="Mostrar contraseña">
+              <svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="fila-opciones">
-          <label class="chk" id="filaRecordar">
+
+        <div class="fila-rec">
+          <label class="rec-lbl" id="filaRecordar">
             <input type="checkbox" id="chkRecordar">
-            <span class="marca-chk" aria-hidden="true"></span>
-            <span>Recordarme<small>30 días en este equipo</small></span>
+            <span class="rec-caja">
+              <svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg>
+            </span>
+            <span>Recordarme</span>
           </label>
-          <button type="button" class="enlace" onclick="irPane('Olvide')">¿Olvidaste tu contraseña?</button>
+          <button type="button" class="enlace" style="background:none;border:none;cursor:pointer;font-size:13.5px;color:var(--grafito-claro);font-weight:600" onclick="irPane('Olvide')">¿Olvidaste tu contraseña?</button>
         </div>
-        <button type="submit" class="btn-ingresar">Ingresar <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+
+        <button type="submit" class="btn-panel" id="btnIngresarSubmit">
+          <span class="tx">Ingresar</span>
+          <span class="fl"><svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
+          <span class="spin-btn"></span>
+        </button>
       </form>
-      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--linea);text-align:center">
-        <p class="cambio" style="margin:0">¿No tienes acceso? <button type="button" class="enlace fuerte" onclick="irPane('Registro')">Solicitar acceso</button></p>
+
+      <!-- Pantalla de validación exitosa -->
+      <div class="ok-panel" id="loginOkAnim">
+        <div class="check-circle"><svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg></div>
+        <h3>Acceso validado</h3>
+        <p>Abriendo los portales…</p>
+      </div>
+
+      <div class="sep-grad"></div>
+      <div class="pide-box">
+        ¿No tienes acceso? <button type="button" class="enlace fuerte" style="background:none;border:none;cursor:pointer;color:var(--rojo);font-weight:700" onclick="irPane('Registro')">Solicitar acceso</button>
+      </div>
+      <div class="sep-grad"></div>
+
+      <div class="pie-seguro">
+        <div class="aviso-restringido">
+          <span class="vivo-dot"></span>
+          <span>Acceso restringido a cuentas autorizadas</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px">
+          <svg class="i i-mail" aria-hidden="true" style="width:14px;height:14px"><use href="#i-mail"/></svg>
+          <span>¿Necesitas ayuda?</span>
+          <button type="button" class="enlace fuerte" style="background:none;border:none;cursor:pointer;color:var(--rojo);font-weight:700" onclick="abrirContacto()">Escríbenos</button>
+        </div>
       </div>
     </div>
 
@@ -855,6 +963,22 @@ html,body{height:100%}
 </div>
 
 <script>
+
+// ===== Inclinación sutil 3D del panel con cursor =====
+(function(){
+  var p = document.getElementById('tarjetaIngreso');
+  if(!p) return;
+  if(window.matchMedia && window.matchMedia('(hover:hover)').matches){
+    window.addEventListener('pointermove', function(e){
+      if(document.getElementById('viewLogin').style.display === 'none') return;
+      var x = (e.clientX / window.innerWidth - 0.5);
+      var y = (e.clientY / window.innerHeight - 0.5);
+      p.style.transform = 'rotateY(' + (x * -4) + 'deg) rotateX(' + (y * 3.5) + 'deg)';
+    });
+    document.addEventListener('pointerleave', function(){ p.style.transform = ''; });
+  }
+})();
+
 // ===== AUTENTICACIÓN CORPORATIVA NATIVA (GitHub Pages Salfa) =====
 var DOMINIO = '@salfamontajes.com';
 var RECORDAR_DIAS = 30, SESION_HORAS = 8;
@@ -1193,19 +1317,41 @@ async function alRecibirCredencial(resp){
 // ===== Correo y contraseña =====
 async function iniciarSesionClave(ev){
   ev.preventDefault(); error('');
+  ['g-correo','g-pass'].forEach(function(i){ var el=$(i); if(el) el.classList.remove('error'); });
   var email=$('lgEmail').value.trim().toLowerCase(), clave=$('lgPass').value;
-  if(!email||!clave){ error('Escribe tu correo y tu contraseña.'); return; }
+  if(!email){
+    var gc=$('g-correo'); if(gc){ void gc.offsetWidth; gc.classList.add('error'); }
+    error('Escribe tu correo corporativo.'); return;
+  }
+  if(!email.endsWith(DOMINIO)){
+    var gc=$('g-correo'); if(gc){ void gc.offsetWidth; gc.classList.add('error'); }
+    error('Usa tu correo corporativo '+DOMINIO); return;
+  }
+  if(!clave){
+    var gp=$('g-pass'); if(gp){ void gp.offsetWidth; gp.classList.add('error'); }
+    error('Ingresa tu contraseña.'); return;
+  }
+  var btn=$('btnIngresarSubmit'); if(btn) btn.classList.add('cargando');
   CRED={idToken:'',email:email,nombre:'',foto:''};
   cargando(true,'Verificando acceso…');
   var r=await api('loginClave',{email:email,clave:clave});
   cargando(false);
+  if(btn) btn.classList.remove('cargando');
+  if(!r || !r.ok){
+    var gp=$('g-pass'); if(gp){ void gp.offsetWidth; gp.classList.add('error'); }
+  }
   procesarLogin(r);
 }
 function procesarLogin(r){
   if(!r || !r.ok){ error((r&&r.mensaje)||'No se pudo validar tu cuenta.'); return; }
   if(r.estado==='Aprobado'){
-    abrirSesion({token:r.token,email:r.email||CRED.email,nombre:r.nombre||CRED.nombre||CRED.email.split('@')[0],
-                 rol:r.rol,pilotos:r.pilotos||[],foto:CRED.foto}, $('chkRecordar').checked);
+    var ti=$('tarjetaIngreso');
+    if(ti) ti.classList.add('listo');
+    setTimeout(function(){
+      if(ti) ti.classList.remove('listo');
+      abrirSesion({token:r.token,email:r.email||CRED.email,nombre:r.nombre||CRED.nombre||CRED.email.split('@')[0],
+                   rol:r.rol,pilotos:r.pilotos||[],foto:CRED.foto}, $('chkRecordar').checked);
+    }, 700);
   } else if(r.estado==='SinSolicitud'){ abrirFormulario(); }
   else if(r.estado==='SinVerificar'){ irVerificar(r.email||CRED.email,false); }
   else { mostrarEstado(r.estado); }
