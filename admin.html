@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1E2229">
 <title>Consola de Administración · Ecosistema de Portales Salfa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,7 +134,7 @@ tbody tr.clk:hover{background:color-mix(in srgb,var(--grafito) 8%,var(--blanco))
 .tl time{display:block;color:var(--gris);font-size:12.5px}
 
 /* Gráfico */
-.chart{width:100%;height:230px;display:block}
+.chart{width:100%;height:190px;display:block}
 .legend{display:flex;gap:18px;font-size:13px;color:var(--gris);margin-top:8px;flex-wrap:wrap}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 
@@ -255,16 +255,25 @@ section.view.on{display:block}
 @media (max-width:1100px){.two{grid-template-columns:1fr}}
 @media (max-width:860px){
   .app{grid-template-columns:1fr}
-  .side{position:fixed;left:0;top:0;width:var(--side);transform:translateX(-100%);transition:transform .2s}
+  .side{position:fixed;left:0;top:0;width:var(--side);transform:translateX(-100%);transition:transform .2s;z-index:9999}
   .side.on{transform:none}
-  .burger{display:inline-flex}
-  .content{padding:18px 14px 60px}
-  .top{padding:18px 14px 12px}
-  .demo{padding:7px 14px}
-  .f2{grid-template-columns:1fr}
+  .burger{display:inline-flex;min-width:44px;min-height:44px}
+  .content{padding:14px 12px 60px}
+  .top{padding:max(10px,env(safe-area-inset-top,0px)) 12px 10px;gap:8px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(8px)}
   .top .sub{display:none}
-  #lnkHub,.top .tx{display:none}
-  .top h1{font-size:16px}
+  .top h1{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:32vw}
+  #lnkHub{display:inline-flex!important;padding:6px 10px;font-size:12px;min-height:38px}
+  #lnkHub .tx{display:inline!important}
+  #adminUserBadge .tx{display:none}
+  #btnRef .tx{display:none}
+  .chip-admin-online{font-size:11px!important;padding:3px 8px!important}
+  .chip-admin-rol{display:none}
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media (max-width:480px){
+  .top h1{display:none}
+  #lnkHub .tx{font-size:11px}
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -273,7 +282,7 @@ section.view.on{display:block}
 
 <div class="deny" id="deny" role="alert">
   <div class="box">
-    <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfamontajes-claro.png" width="200" height="25" style="margin:0 auto 22px;width:200px"><span class="rot" style="color:var(--rojo)">Acceso restringido</span>
+    <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfa-montajes-claro.svg" width="200" height="25" style="margin:0 auto 22px;width:200px"><span class="rot" style="color:var(--rojo)">Acceso restringido</span>
     <h1>Perfil Administrador del Sistema</h1>
     <p class="muted" style="font-size:15px">Esta consola es de uso exclusivo del Administrador del Sistema. Tu cuenta no tiene permisos administrativos. Cada intento queda registrado en la bitácora.</p>
     <p style="margin-top:20px"><a class="btn dark" href="index.html">Volver al Hub de Portales</a></p>
@@ -283,7 +292,7 @@ section.view.on{display:block}
 <div class="app" id="app" hidden>
   <aside class="side" id="side" aria-label="Navegación principal">
     <div class="brand">
-      <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfamontajes-oscuro.png" width="176" height="22">
+      <img class="logo-img" alt="Salfa Montajes" src="assets/logo-salfa-montajes-oscuro.svg" width="176" height="22">
       <span class="rot">Consola Central de Administración</span>
     </div>
     <nav class="nav" id="nav">
@@ -314,10 +323,21 @@ section.view.on{display:block}
         <div class="sub" id="sub">Estado del ecosistema de portales</div>
       </div>
       <div class="sp"></div>
-      <span class="live" title="Última actualización"><i></i><span id="liveTxt">En vivo</span></span>
-      <button class="btn sm" id="btnRef"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg><span class="tx">Refrescar</span></button>
-      <a class="btn sm" id="lnkHub" href="index.html">Hub de Portales</a>
-      <button class="btn sm dark" id="btnOut">Cerrar sesión</button>
+      <a class="btn sm rojo" id="lnkHub" href="index.html" title="Regresar al Hub Principal" style="background:var(--rojo);border-color:var(--rojo);color:#fff;display:inline-flex;align-items:center;gap:6px">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="tx">Volver al Hub</span>
+      </a>
+      <span class="chip-admin-online" id="chipPresenciaAdmin" title="Usuarios en línea en este panel" style="display:inline-flex;align-items:center;gap:6px;background:#f0fbf4;border:1px solid #bbf7d0;color:#166534;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700">
+        <i style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 0 3px rgba(34,197,94,.25)"></i>
+        <b id="onlineCountAdmin">1</b> en línea
+      </span>
+      <span class="chip-admin-rol" id="adminUserRol" style="background:rgba(176,30,36,.12);color:var(--rojo);font-weight:700;padding:4px 10px;border-radius:999px;font-size:12px">Administrador</span>
+      <span class="chip-admin-user" id="adminUserBadge" style="color:var(--gris);font-size:13px;display:inline-flex;align-items:center;gap:5px">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="tx" id="adminUserEmail">sjroca@salfamontajes.com</span>
+      </span>
+      <button class="btn sm" id="btnRef" title="Refrescar datos"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg><span class="tx">Refrescar</span></button>
+      <button class="btn sm dark" id="btnOut" title="Cerrar sesión">Salir</button>
     </header>
 
     <main class="content">
@@ -326,11 +346,18 @@ section.view.on{display:block}
       <section class="view" id="v-resumen">
         <div class="grid kpis" id="kpis"></div>
         <div class="grid two">
-          <div class="card lift">
+          <div class="card lift" style="display:flex;flex-direction:column">
             <header><h2>Visitas diarias · últimos 30 días</h2><span class="sp"></span><span class="muted">Ingresos totales por día</span></header>
-            <div class="body">
-              <svg class="chart" id="chVis" role="img" aria-label="Gráfico de barras de visitas diarias"></svg>
-              <div class="legend"><span><i style="background:var(--rojo)"></i>Hoy</span><span><i style="background:var(--grafito-claro)"></i>Días anteriores</span></div>
+            <div class="body" style="display:flex;flex-direction:column;flex:1;justify-content:space-between">
+              <div>
+                <svg class="chart" id="chVis" role="img" aria-label="Gráfico de barras de visitas diarias"></svg>
+                <div class="legend" style="margin-top:10px"><span><i style="background:var(--rojo)"></i>Hoy</span><span><i style="background:var(--grafito-claro)"></i>Días anteriores</span></div>
+              </div>
+              <div class="mini" id="visStats" style="margin-top:14px;grid-template-columns:repeat(3,minmax(0,1fr))">
+                <div><span class="rot">Total 30 días</span><b id="vTot30">0</b></div>
+                <div><span class="rot">Promedio / día</span><b id="vProm30">0</b></div>
+                <div><span class="rot">Día récord</span><b id="vMax30">0</b></div>
+              </div>
             </div>
           </div>
           <div class="card lift">
@@ -474,6 +501,10 @@ section.view.on{display:block}
       </section>
 
     </main>
+    <footer class="pie-corporativo" style="padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--gris);flex-wrap:wrap">
+      <span>Salfa Montajes · Consola Central de Administración · Portales de pilotaje</span>
+      <span>Nivel de Seguridad: Confidencial · Información de uso interno</span>
+    </footer>
   </div>
 </div>
 
@@ -625,7 +656,14 @@ const Datos = {
     try { localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(this.db)); } catch(e) {}
   },
   async llamar(accion, payload={}){
-    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,...payload}),redirect:'follow'});
+    let token = payload.token;
+    if(!token){
+      try{
+        const s = JSON.parse(localStorage.getItem('salfa_auth_session')||sessionStorage.getItem('salfa_auth_session')||'{}');
+        token = s.token;
+      }catch(e){}
+    }
+    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,token,...payload}),redirect:'follow'});
     const j = await r.json();
     if(!j.ok) throw new Error(j.error||'Error del servicio');
     return j.data;
@@ -633,9 +671,9 @@ const Datos = {
   async sesion(){
     try{
       const s = JSON.parse(localStorage.getItem('salfa_auth_session')||sessionStorage.getItem('salfa_auth_session'));
-      if(s && s.nombre) return {nombre: s.nombre, rol: s.rol || CONFIG.ROL_ADMIN, correo: s.email};
+      if(s && (s.nombre || s.email)) return {nombre: s.nombre || (s.email?s.email.split('@')[0]:'Usuario'), rol: s.rol || CONFIG.ROL_ADMIN, correo: s.email, email: s.email, token: s.token};
     }catch(e){}
-    return {nombre:'Sebastián Roca', rol:CONFIG.ROL_ADMIN, correo:'sjroca@salfamontajes.com'};
+    return {nombre:'Sebastián Roca', rol:CONFIG.ROL_ADMIN, correo:'sjroca@salfamontajes.com', email:'sjroca@salfamontajes.com'};
   },
   async cargar(){
     if(this.demo){
@@ -762,10 +800,17 @@ function renderKpis(anim=true){
 function bump(k){const el=$(`#kpis [data-k="${k}"]`);if(!el)return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
 
 function drawChart(anim=true){
-  const d=S.db,W=700,H=230,m={l:34,b:26,t:10,r:6},dd=d.diarias,mx=Math.max(4,...dd),bw=(W-m.l-m.r)/dd.length;
+  const d=S.db,W=700,H=190,m={l:34,b:26,t:10,r:6},dd=d.diarias,mx=Math.max(4,...dd),bw=(W-m.l-m.r)/dd.length;
   let g='';for(let i=0;i<=4;i++){const v=Math.round(mx/4*i),y=H-m.b-(H-m.b-m.t)*i/4;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="#D3D7DC" stroke-width="1"/><text x="${m.l-6}" y="${y+4}" text-anchor="end" font-size="11" fill="#5A6771">${v}</text>`}
   dd.forEach((v,i)=>{const bh=(H-m.b-m.t)*v/mx,x=m.l+i*bw+2,dt=new Date(Date.now()-(dd.length-1-i)*864e5),hoy=i===dd.length-1;g+=`<rect class="${anim?'cb':'cn'}${hoy&&anim?' hoy':''}" style="--d:${i*24}ms" x="${x.toFixed(1)}" y="${(H-m.b-bh).toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${hoy?'#B01E24':'#3A414A'}"><title>${pad(dt.getDate())}-${pad(dt.getMonth()+1)}: ${v} visitas</title></rect>`;if(i%5===0||hoy)g+=`<text x="${(x+bw/2-2).toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="11" fill="#5A6771">${pad(dt.getDate())}/${pad(dt.getMonth()+1)}</text>`});
   $('#chVis').setAttribute('viewBox',`0 0 ${W} ${H}`);$('#chVis').innerHTML=g;
+
+  const tot = dd.reduce((a,b)=>a+b, 0);
+  const prom = (tot / dd.length).toFixed(1);
+  const max = Math.max(...dd);
+  if($('#vTot30')) $('#vTot30').textContent = tot;
+  if($('#vProm30')) $('#vProm30').textContent = prom;
+  if($('#vMax30')) $('#vMax30').textContent = max;
 }
 function renderPorPortal(){
   const d=S.db,conteo=d.portales.map(p=>({p,v:d.bitacora.filter(b=>b.portal===p.nombre).length})),mv=Math.max(1,...conteo.map(c=>c.v));
@@ -817,7 +862,7 @@ function renderResumen(){renderKpis(true);drawChart(true);renderPorPortal();rend
 
 /* Simulación en vivo (solo demo) y sondeo (modo real) */
 const EVT_USO=['Descargó documento','Editó un proceso','Validó una versión','Consultó el mapa','Abrió el flujo de versiones'];
-function setUpd(){const d=new Date();$('#liveTxt').textContent=`En vivo · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
+function setUpd(){const d=new Date(),el=$('#liveTxt');if(el)el.textContent=`En vivo · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
 function tickDemo(){ /* simulacion desactivada */ }
 function sondear(){
   setInterval(async()=>{
@@ -940,6 +985,34 @@ function renderSolicitudesPanel(){
 
 /* ---------- Panel Portales ---------- */
 const ESTP={Operativo:'ok','En desarrollo':'pend',Mantenimiento:'pend',Inactivo:'off'};
+function guardarOrdenPortalesParaHub(){
+  const mapeo = {
+    'hub': null,
+    'mapa': '01', 'p01': '01', '01': '01',
+    'p02': '02', 'cv': '02', '02': '02',
+    'p03': '03', 'awp': '03', '03': '03',
+    'p04': '04', 'okr': '04', '04': '04',
+    'p05': '05', 'info': '05', '05': '05'
+  };
+  const ids = S.db.portales
+    .map(p => mapeo[p.id] || p.id)
+    .filter(id => id && id !== 'hub');
+  localStorage.setItem('salfa_portales_orden', JSON.stringify(ids));
+}
+
+function moverPortal(idx, dir){
+  const nIdx = idx + dir;
+  if(nIdx < 0 || nIdx >= S.db.portales.length) return;
+  const item = S.db.portales.splice(idx, 1)[0];
+  S.db.portales.splice(nIdx, 0, item);
+  Datos.guardarLocal();
+  guardarOrdenPortalesParaHub();
+  renderPortales();
+  if(typeof renderMatriz === 'function') renderMatriz();
+  if(typeof renderCobertura === 'function') renderCobertura(false);
+  toast(`Portal "${item.nombre}" movido a posición #${nIdx + 1}. Orden guardado para el Hub.`);
+}
+
 function renderPortales(){
   const d=S.db;
   $('#pGrid').innerHTML=d.portales.map((p,i)=>{
@@ -947,6 +1020,17 @@ function renderPortales(){
     ev.forEach(b=>{const k=29-Math.floor((diasAtras(0)+864e5-b.fecha)/864e5);if(k>=0&&k<30)dias[k]++});
     const top={};ev.forEach(b=>top[b.usuario]=(top[b.usuario]||0)+1);const tp=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,3);
     return `<div class="card lift pcard" style="border-top:4px solid ${i===0?'var(--rojo)':'var(--grafito)'}"><div class="body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--borde)">
+        <span class="rot" style="font-weight:700;color:var(--grafito);font-size:12px">Posición #${i+1} en el Hub</span>
+        <div style="display:inline-flex;gap:4px">
+          <button class="btn sm" data-mov="${i}" data-dir="-1" ${i===0?'disabled style="opacity:0.35;cursor:not-allowed"':''} title="Subir (mover antes en el Hub)">
+            <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg> Subir
+          </button>
+          <button class="btn sm" data-mov="${i}" data-dir="1" ${i===d.portales.length-1?'disabled style="opacity:0.35;cursor:not-allowed"':''} title="Bajar (mover después en el Hub)">
+            <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg> Bajar
+          </button>
+        </div>
+      </div>
       <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><span class="rot" style="color:var(--gris)">${esc(p.tipo)}</span><h2 style="font-size:17px;margin-top:6px">${esc(p.nombre)}</h2></div><span class="tag ${ESTP[p.estado]||'off'}"><i></i>${esc(p.estado)}</span></div>
       <span class="url">${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(p.url)}</a>`:'Sin URL registrada'}</span>
       <div class="mini" style="margin:16px 0"><div><span class="rot">Con acceso</span><b>${con}</b></div><div><span class="rot">Eventos 30 d</span><b>${ev.filter(b=>b.fecha>=diasAtras(29)).length}</b></div><div><span class="rot">Último evento</span><b style="font-size:13px">${ev[0]?rel(ev[0].fecha):'Sin eventos'}</b></div></div>
@@ -1066,6 +1150,7 @@ function enlazar(){
   $('#fRol').onchange=()=>$('#fRolH').textContent=ROLES[$('#fRol').value].d;
   document.addEventListener('click',e=>{
     const tr=e.target.closest('tr[data-u]'),b=e.target.closest('button');
+    if(b&&b.dataset.mov!==undefined){moverPortal(+b.dataset.mov,+b.dataset.dir);return;}
     if(b&&b.dataset.u){abrirUsuario(b.dataset.u);return}
     if(b&&b.dataset.ed){abrirModal(b.dataset.ed);return}
     if(b&&b.dataset.pe){abrirPortal(b.dataset.pe);return}
@@ -1089,11 +1174,40 @@ function enlazar(){
   $('#btnCsvB').onclick=()=>csv('bitacora.csv',[['Fecha','Usuario','Portal','Tipo','Evento','Detalle']].concat(filtroBit().map(b=>[fFecha(b.fecha),b.usuario,b.portal,b.tipo,b.evento,b.detalle])));
 }
 
+function registrarPresenciaAdmin(email){
+  try{
+    const presKey = 'salfa_presencia_mem_v1';
+    let pres = {};
+    try{ pres = JSON.parse(localStorage.getItem(presKey)) || {}; }catch(e){}
+    const userMail = String(email || 'sjroca@salfamontajes.com').toLowerCase();
+    const now = Date.now();
+    pres[userMail + '|admin'] = now;
+    Object.keys(pres).forEach(k => { if(now - pres[k] > 150000) delete pres[k]; });
+    localStorage.setItem(presKey, JSON.stringify(pres));
+    
+    let enAdmin = 0;
+    Object.keys(pres).forEach(k => {
+      if(now - pres[k] <= 150000 && k.endsWith('|admin')) enAdmin++;
+    });
+    if(enAdmin === 0) enAdmin = 1;
+    const countEl = document.getElementById('onlineCountAdmin');
+    if(countEl) countEl.textContent = enAdmin;
+  }catch(e){}
+}
+
 /* ---------- Arranque ---------- */
 (async function(){
   try{
     const ses=await Datos.sesion();
-    const esAdmin = (ses.rol === 'Administrador' || ses.rol === 'Administrador del Sistema' || !ses.rol);
+    const curEmail = (ses && (ses.email || ses.correo)) || 'sjroca@salfamontajes.com';
+    const emailEl = document.getElementById('adminUserEmail');
+    if(emailEl) emailEl.textContent = curEmail;
+    registrarPresenciaAdmin(curEmail);
+    setInterval(() => registrarPresenciaAdmin(curEmail), 25000);
+    window.addEventListener('storage', e => {
+      if(e.key === 'salfa_presencia_mem_v1') registrarPresenciaAdmin(curEmail);
+    });
+    const esAdmin = (ses && (ses.rol === 'Administrador' || ses.rol === 'Administrador del Sistema' || (!CONFIG.API_URL && !ses.rol)));
     if(!esAdmin){
       $('#deny').classList.add('on');
       return;
