@@ -718,14 +718,14 @@ body:has(#viewDashboard.on){overflow:hidden}
 #viewDashboard .sec-v2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--linea),transparent)}
 @keyframes d2-pulsoR{0%{box-shadow:0 0 0 0 rgba(176,30,36,.5)}70%,100%{box-shadow:0 0 0 10px rgba(176,30,36,0)}}
 
-/* ---- Paneles cuadrados compactos: orden y proporción ajustados ---- */
-#viewDashboard .grid-v2{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));grid-auto-rows:auto;align-content:start;justify-content:start;gap:clamp(10px,1.1vw,16px);padding:6px 4px 12px;overflow:auto;scrollbar-width:thin}
-#viewDashboard .tarjeta{--mx:50%;--my:50%;aspect-ratio:1/0.92;min-height:0;max-height:280px;border-radius:20px;overflow:hidden;background:#fff;border:1px solid var(--linea);box-shadow:0 12px 28px -18px rgba(30,34,41,.4);transition:transform .5s var(--d2),box-shadow .5s,border-color .4s}
+/* ---- Paneles compactos: proporción natural sin recorte ---- */
+#viewDashboard .grid-v2{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));grid-auto-rows:auto;align-content:start;justify-content:start;gap:clamp(12px,1.2vw,18px);padding:6px 4px 16px;overflow:auto;scrollbar-width:thin}
+#viewDashboard .tarjeta{min-height:280px;border-radius:18px;overflow:hidden;background:#fff;border:1.5px solid var(--linea);box-shadow:0 8px 24px -16px rgba(30,34,41,.25);transition:border-color .3s ease,box-shadow .3s ease;display:flex;flex-direction:column}
 #viewDashboard .tarjeta::before{display:none}
-#viewDashboard .tarjeta::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(280px circle at var(--mx) var(--my),rgba(176,30,36,.13),transparent 60%);opacity:0;transition:opacity .35s}
-#viewDashboard .tarjeta:not(.bloq):hover{transform:translateY(-6px);box-shadow:0 30px 50px -20px rgba(176,30,36,.45);border-color:rgba(176,30,36,.45)}
-#viewDashboard .tarjeta:not(.bloq):hover::after{opacity:1}
-#viewDashboard .tarjeta.bloq:hover{transform:translateY(-3px);box-shadow:0 12px 28px -18px rgba(30,34,41,.4)}
+#viewDashboard .tarjeta::after{display:none}
+#viewDashboard .tarjeta:not(.bloq):hover{transform:none!important;border-color:var(--rojo);box-shadow:0 0 0 2px rgba(176,30,36,.3),0 10px 24px -10px rgba(176,30,36,.35);animation:d2-borde-resplandor 2.4s infinite ease-in-out}
+@keyframes d2-borde-resplandor{0%,100%{box-shadow:0 0 0 2px rgba(176,30,36,.25),0 8px 20px -8px rgba(176,30,36,.3)}50%{box-shadow:0 0 0 3.5px rgba(176,30,36,.5),0 12px 28px -6px rgba(176,30,36,.45)}}
+#viewDashboard .tarjeta.bloq:hover{transform:none!important;border-color:rgba(154,162,171,.5);box-shadow:0 0 0 2px rgba(154,162,171,.25)}
 #viewDashboard .t-cab{flex:none;padding:10px 14px;gap:10px;background:linear-gradient(135deg,#1E2229,#2b3038);align-items:center}
 #viewDashboard .t-cab::after{top:-30px;bottom:auto;right:-30px;left:auto;width:120px;height:120px;border-radius:50%;transform:none;background:radial-gradient(circle,rgba(176,30,36,.35),transparent 70%);transition:transform .6s var(--d2)}
 #viewDashboard .tarjeta:not(.bloq):hover .t-cab::after{animation:none;transform:scale(1.8)}
@@ -737,9 +737,9 @@ body:has(#viewDashboard.on){overflow:hidden}
 #viewDashboard .t-cab .rotulo{font-family:var(--f-rotulo);font-size:10px;font-weight:600;color:#9AA2AB;text-transform:uppercase;letter-spacing:.16em;line-height:1.2;display:block;margin-top:1px}
 #viewDashboard .t-cab .ico{position:relative;z-index:1;font-size:20px;flex:none;animation:d2-sueve 4s ease-in-out infinite}
 @keyframes d2-sueve{50%{transform:translateY(-4px)}}
-#viewDashboard .t-cuerpo{flex:1;min-height:0;padding:9px 14px 4px;font-size:13px;line-height:1.42;text-align:justify;text-justify:inter-word;hyphens:auto;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;color:var(--gris)}
+#viewDashboard .t-cuerpo{flex:1;min-height:0;padding:8px 14px 4px;font-size:12.5px;line-height:1.4;text-align:justify;text-justify:inter-word;hyphens:auto;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;color:var(--gris)}
 /* Usuarios en línea (lo pinta pintarPresenciaUI sobre <div class="pres-v2" id="pres-XX">) */
-#viewDashboard .pres-v2{flex:none;display:flex;align-items:center;gap:8px;margin:0 14px 6px;padding:4px 10px;border-radius:10px;background:#f3f5f6;border:1px dashed var(--linea);min-height:28px}
+#viewDashboard .pres-v2{flex:none;display:flex;align-items:center;gap:8px;margin:0 14px 4px;padding:4px 10px;border-radius:10px;background:#f3f5f6;border:1px dashed var(--linea);min-height:28px}
 #viewDashboard .avs-v2{display:flex;align-items:center}
 #viewDashboard .av-v2{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:2px solid #fff;margin-left:-7px;color:#fff;font:800 9px var(--f-titulo);animation:d2-pop .5s var(--d2) both}
 #viewDashboard .av-v2:first-child{margin-left:0}
@@ -751,13 +751,17 @@ body:has(#viewDashboard.on){overflow:hidden}
 #viewDashboard .pn-v2 b{font-family:var(--f-titulo);font-weight:800;font-size:14px;color:var(--grafito)}
 #viewDashboard .pres-v2.vacio .pn-v2{color:#8a949e}
 #viewDashboard .pres-v2.vacio .pn-v2 i{background:#b7bec5;animation:none}
-#viewDashboard .t-pie{flex:none;flex-wrap:nowrap;gap:8px;padding:8px 12px}
+#viewDashboard .t-sub-estado{margin:2px 14px 8px;display:flex;align-items:center}
+#viewDashboard .t-sub-estado .estado{font-size:11px;letter-spacing:.08em;font-weight:700}
+#viewDashboard .t-pie{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#f8fafc;border-top:1px solid var(--linea)}
 #viewDashboard .estado{font-size:10.5px;letter-spacing:.1em;white-space:nowrap}
-#viewDashboard .btn-abrir{min-height:0;padding:7px 12px;border-radius:10px;font:700 12px var(--f-titulo);letter-spacing:.04em;background:linear-gradient(135deg,var(--rojo),#8f171c);box-shadow:0 8px 18px -8px rgba(176,30,36,.8);position:relative;overflow:hidden;transition:.35s var(--d2)}
-#viewDashboard .btn-abrir.off{background:#e3e6e9;color:#7b858e;box-shadow:none}
-#viewDashboard .tarjeta:not(.bloq):hover .btn-abrir{transform:translateY(-2px);box-shadow:0 14px 24px -8px rgba(176,30,36,.9)}
-#viewDashboard .btn-drive{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:10px;border:1px solid #d0d5dd;background:#f8fafc;color:#344054;font:700 11px var(--f-titulo);text-decoration:none;transition:.2s var(--d2)}
+#viewDashboard .btn-abrir{min-height:30px;padding:6px 12px;border-radius:9px;font:700 11.5px var(--f-titulo);letter-spacing:.04em;background:linear-gradient(135deg,var(--rojo),#8f171c);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;box-shadow:0 6px 14px -6px rgba(176,30,36,.7);transition:all .25s ease}
+#viewDashboard .btn-abrir.off{background:#e3e6e9;color:#7b858e;box-shadow:none;pointer-events:none}
+#viewDashboard .btn-abrir:hover:not(.off){background:#8f171c;box-shadow:0 8px 18px -4px rgba(176,30,36,.85)}
+#viewDashboard .btn-drive{min-height:30px;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 10px;border-radius:9px;border:1px solid #d0d5dd;background:#fff;color:#344054;font:700 11px var(--f-titulo);text-decoration:none;transition:.2s ease;white-space:nowrap}
 #viewDashboard .btn-drive:hover{background:#eef2f6;border-color:#b01e24;color:#b01e24}
+.btn-guia-hub{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:999px;font-family:var(--f-rotulo);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:all .2s ease}
+.btn-guia-hub:hover{background:var(--rojo);border-color:var(--rojo);color:#fff;transform:translateY(-1px)}
 
 /* ---- Pie ---- */
 #viewDashboard .footer-v2{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:clamp(8px,1.4vh,14px) clamp(16px,2.4vw,32px) calc(5px + clamp(8px,1.4vh,14px));background:var(--grafito-claro);color:#dfe3e7;font-size:13px}
@@ -1216,9 +1220,15 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <h2>Solicitar acceso a portales</h2>
       <p class="sub">Los portales de pilotaje son de uso corporativo restringido. Completa tus datos para que el administrador evalúe tu habilitación.</p>
       <form onsubmit="registrarse(event)" novalidate>
-        <div class="campo">
-          <label for="rgNombre">Nombre completo</label>
-          <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg><input type="text" id="rgNombre" maxlength="80" autocomplete="name"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="campo">
+            <label for="rgNombre">Nombre</label>
+            <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg><input type="text" id="rgNombre" maxlength="40" placeholder="Ej.: Sebastián" autocomplete="given-name"></div>
+          </div>
+          <div class="campo">
+            <label for="rgApellidos">Apellidos</label>
+            <div class="caja"><svg class="i i-user" aria-hidden="true"><use href="#i-user"/></svg><input type="text" id="rgApellidos" maxlength="40" placeholder="Ej.: Roca" autocomplete="family-name"></div>
+          </div>
         </div>
         <div class="campo">
           <label for="rgEmail">Correo corporativo</label>
@@ -1456,7 +1466,6 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <header class="top-v2">
     <div class="top-izq" style="display:flex;align-items:center;gap:14px;min-width:0">
       <a href="index.html" class="logo-link" title="Inicio Hub Salfa" style="display:inline-flex;align-items:center;text-decoration:none"><img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yLjAwIC0yLjAwIDY3OC45NCA4OC44OCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTYWxmYSBNb250YWplcyI+PHRpdGxlPlNhbGZhIE1vbnRhamVzPC90aXRsZT48cGF0aCBmaWxsPSIjQjAxRTI0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUzIDU0LjA5TDIwLjAyIDUzLjlMMjEuMjMgNjkuODFDMjMuMzUgNzEuODIgMjYuNTcgNzAuODQgMjcuNDcgNjguMDJDMjguMzIgNjUuMzUgMjcuOTggNTguNjkgMjYuNTQgNTYuMjVDMjUuMzIgNTQuMTggMjMuMjQgNTMuMyAyMS40OCA1MS45M0MyMC41MiA1MS4xOCAxOS42OCA1MC4yMyAxOC42NiA0OS41MUMxMy4wMSA0NS41MyA1LjY0IDQyLjIxIDIuMzEgMzUuODVDLTAuMDggMzEuMjcgMC4yNSAyNi4wNCAwLjEgMjEuMDVDLTAuMDEgMTcuNTIgMC4yNiAxMy40MiAxLjk5IDEwLjNDOC4yMSAtMC45IDI0LjMgLTEuNDQgMzUuMDEgMi41M0MzNi41NCAzLjEgMzguNTEgMy41NyAzOS44MyA0LjU5QzQ1LjU1IDguOTcgNDYuMjcgMTUuNjIgNDYgMjIuNDNDNDUuOTMgMjQuMDkgNDYuNTMgMjUuMjggNDUuMzUgMjYuNjVMMjcuNDYgMjYuNjlDMjQuODMgMjQuMzQgMjguNzUgMTYuNjMgMjQuNjYgMTQuNjNDMTguNDQgMTEuNTYgMTkuMzIgMjQuNjkgMjEuNjQgMjcuNjVDMjQuODIgMzEuNzMgMzkuNTggMzcuNzcgNDQuMzkgNDUuMDJDNDcuNzIgNTAuMDQgNDcuOTggNTkuMDcgNDcuODUgNjQuOTJDNDcuNzYgNjguOTMgNDcuMjEgNzMuOTIgNDQuNzMgNzcuMjhDMzcuNTEgODcuMDYgMTMuMiA4Ny4yNCA1LjM3IDc4LjE3QzUuMDMgNzcuNzggNC45OSA3Ny4yNSA0LjcgNzYuODRDNC40NCA3Ni40NyAzLjk4IDc2LjMxIDMuNzQgNzUuOTNDMS43NyA3Mi44NiAxLjE3IDY4LjkgMS4wNSA2NS4zM0MwLjk3IDYyLjU3IC0wLjEyIDU2LjIxIDEuNTMgNTQuMDlaTTgwLjg0IDgzLjEzTDc5Ljk1IDY4LjMzTDcyLjYzIDY4LjZMNzEuMTcgODMuMTFMNDkuNDYgODMuMUw2MC4wNiAxLjlMOTAuNDcgMS45NkwxMDIuMzQgODMuMUw4MC44NCA4My4xM1pNMTA1Ljg2IDgzLjEyTDEwNS44NiAxLjkzTDEyNi43MyAxLjkzTDEyNi43MyA2Ni44M0wxMzkuNTYgNjYuNzZMMTM5LjYyIDgzLjE1TDEwNS44NiA4My4xMlpNMTQ0LjM0IDgzLjE0TDE0NC4yNyAxLjkzTDE3OS45MiAxLjkzTDE3OS44NSAxOC41NEwxNjUuNDkgMTguNTFMMTY1LjMyIDMzLjcyTDE3OC4zMyAzMy41OUwxNzguMzQgNDkuMThMMTY1LjQ1IDQ5LjA4TDE2NS40NCA4My4xM0wxNDQuMzQgODMuMTRaTTE3Ny45NCA4My4wOUwxODguNjYgMS45TDIxOC45MiAxLjk4TDIzMC45NiA4My4wOUwyMDkuMzggODMuMDlMMjA4LjA2IDY4LjM3TDIwMS4wNiA2OC41M0wxOTkuNzcgODMuMDlMMTc3Ljk0IDgzLjA5Wk0yMDcuNjEgNTQuMTZMMjA0LjQzIDI1LjA2TDIwMC4zOCA1NC4xOEwyMDcuNjEgNTQuMTZaTTc5LjAzIDUzLjg2TDc2LjI3IDI1Ljc5TDcyLjE0IDU0LjQ2TDc5LjAzIDUzLjg2WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTY2My4xMiAyNi4wNEM2NDYuMDkgMjcuMzcgNjQ0LjE4IDEuMiA2NjAuOTggMC4wNUM2NzguMTIgLTEuMTMgNjc5Ljc1IDI0Ljc0IDY2My4xMiAyNi4wNFpNMzMyLjg4IDg0LjhDMzIyLjQxIDg1LjMzIDMxMC44OSA4MS4zNyAzMDcuNyA3MC4zNEMzMDUuNjggNjMuMzUgMzA2LjQ1IDQ5LjU1IDMwNi40NSA0MS45MkMzMDYuNDUgMjIuNTIgMzAzLjM1IDIuNzMgMzI4LjUxIDAuNDRDMzMyLjg1IDAuMDQgMzM3LjQ2IDAuNzUgMzQxLjUyIDIuMjdDMzUyLjUxIDYuMzcgMzU0LjE1IDE0LjM3IDM1NC43MiAyNC45MkMzNTUuMDYgMzEuMTEgMzU0Ljg2IDM3LjM1IDM1NC44NiA0My41NUMzNTQuODYgNTEuMzYgMzU1Ljc3IDYyLjk2IDM1My42NSA3MC4zM0MzNTEgNzkuNTQgMzQxLjk0IDg0LjM0IDMzMi44OCA4NC44Wk01ODkuNTcgNTQuMjVMNjA3LjA0IDUzLjk4QzYwNy41MyA1NC4xNiA2MDcuOTQgNTQuMTcgNjA4LjIzIDU0LjY4QzYwOS44MSA1Ny41MiA2MDYuNDYgNjguMjYgNjEwLjUzIDcwLjYzQzYxMS4yMyA3MS4wNCA2MTIuMDMgNzAuOTYgNjEyLjggNzAuODVDNjE3Ljc4IDcwLjEgNjE2LjQgNTguNjkgNjE0LjUgNTUuNjZDNjEzLjU2IDU0LjE3IDYxMS44MiA1My4xNCA2MTAuNDQgNTIuMUM2MDEuNjMgNDUuNDMgNTkwLjQ3IDQxLjMzIDU4OC43NCAyOS4wNUM1ODguMjcgMjUuNzIgNTg4LjIgMjIuNCA1ODguNSAxOS4wNUM1ODguODIgMTUuNTMgNTg5LjE3IDEyLjE3IDU5MC45OSA5LjA0QzU5Ny40MSAtMiA2MjEuNTYgLTIuMzEgNjMwLjAxIDYuMjdDNjM0LjI3IDEwLjYgNjM1LjExIDIwLjE1IDYzNC40NyAyNS45TDYxNC45OCAyNi44TDYxNCAxNS40MUM2MDguNTUgMTAuMDkgNjA2LjQxIDIyLjM5IDYwOS4zMiAyNi43MUM2MTIuNTcgMzEuNTIgNjI2LjUyIDM3LjA4IDYzMS45NCA0NC4yMkM2MzYuMiA0OS44MyA2MzYuMjMgNTcuNzEgNjM2LjEzIDY0LjQyQzYzNi4wNyA2OC4zMSA2MzUuNzMgNzIuODcgNjMzLjU3IDc2LjI1QzYyNi4wNyA4OCA2MDAuMyA4Ny41OSA1OTIuNCA3Ni41MUM1OTAuMTEgNzMuMyA1ODkuMyA2OC43OCA1ODkuMSA2NC45MkM1ODguOTggNjIuNTMgNTg4LjM0IDU2LjAzIDU4OS41NyA1NC4yNVpNNjYzLjUgMjQuMDVDNjc3LjgyIDIyLjI2IDY3NC41IC0wLjQ1IDY2MC42NSAxLjk1QzY0Ni4yNSA0LjQ1IDY0OS4zNyAyNS44MSA2NjMuNSAyNC4wNVpNMjgwLjM1IDgzLjE3TDI3OS44MyAzNi44M0wyNzMuMzEgODMuMTZMMjYwLjIgODMuMThMMjUzLjE5IDM3LjQ4TDI1Mi42OSA4My4xN0wyMzQuMTcgODMuMTdMMjM0LjE2IDIuMDRMMjYxLjY1IDIuMDNMMjY2LjY2IDM1LjkyTDI3MS40MiAyLjAzTDI5OC45NiAyLjAzTDI5OC45NiA4My4xNkwyODAuMzUgODMuMTdaTTM5MC44MSA4My4xNkwzODAuNTQgNDkuNDVMMzgwLjExIDgzLjE3TDM2Mi41NyA4My4xOEwzNjIuNTcgMi4wM0wzODAuMSAyLjA0TDM5MS40MiAzNS44TDM5MS43NyAyLjA0TDQwOS4zMyAyLjAyTDQwOS4zMyA4My4xOEwzOTAuODEgODMuMTZaTTQyNi4yMSA4My4xOEw0MjYuMTkgMTguNDZMNDEzLjk1IDE4LjQ1TDQxMy45NCAyLjAzTDQ1OS43OSAyLjAzTDQ1OS44IDE4LjQ1TDQ0Ny4yOSAxOC40NUw0NDcuMjggODMuMThMNDI2LjIxIDgzLjE4Wk00ODYuODUgODMuMTdMNDg1LjcxIDY4LjU4TDQ3OC40NyA2OC41TDQ3Ny4yMyA4My4xN0w0NTUuNDIgODMuMThMNDY2LjA2IDIuMDNMNDk2LjM5IDIuMDNMNTA4LjM5IDgzLjE3TDQ4Ni44NSA4My4xN1pNNTExLjcxIDgzLjA4TDUxMC44OSA2OS4wNEw1MTguOTggNjguNUw1MTguOTggMi4wMkw1MzkuMSAyLjE4QzU0MC43NiAzLjUzIDUzOS45MyA3Ljc2IDUzOS45MyA5LjhDNTM5LjkzIDE3LjEzIDUzOS45MyAyNC40NiA1MzkuOTMgMzEuOEM1MzkuOTMgNDIuOCA1MzkuOTMgNTMuOCA1MzkuOTMgNjQuOEM1MzkuOTMgNzAuNjMgNTQwLjE1IDc2LjgxIDUzNC45NiA4MC42NEM1MzAuNTYgODMuOSA1MTcuMTEgODMuNjQgNTExLjcxIDgzLjA4Wk01NDcuOCA4My4xN0w1NDcuOCAyLjAzTDU4Mi44NiAyLjAzTDU4Mi44MSAxOC40Nkw1NjguODcgMTguNDVMNTY4Ljg4IDMzLjU3TDU4MS45MSAzMy41OUw1ODEuOTIgNDkuMTVMNTY4Ljg3IDQ5LjEyTDU2OC44OCA2Ni42NEw1ODQuMjIgNjYuNjhMNTg0LjI1IDgzLjE3TDU0Ny44IDgzLjE3Wk02NjYuNzQgMTkuNUw2NjAuMiAxMi41MUw2NTkuNyAxOS40MUw2NTcuMDYgMTkuNTdMNjU3LjA2IDUuNzZMNjY2Ljg1IDcuMTlDNjY5LjYyIDExLjA5IDY2Ni4zOSAxMS4yOCA2NjUuNTIgMTMuOThMNjcwLjQ5IDE5LjYxTDY2Ni43NCAxOS41Wk02NjQuMTEgOC40M0w2NjAuMDggOC41MUM2NTcuOTQgMTUuMzQgNjY3LjQ3IDExLjg5IDY2NC4xMSA4LjQzWk0zMzEuMjIgNzAuODhDMzM0LjU2IDcwLjE5IDMzMy44MiA2Mi41NyAzMzMuODIgNjAuMDVDMzMzLjgyIDQ4LjU1IDMzMy44MiAzNy4wNSAzMzMuODIgMjUuNTVDMzMzLjgyIDIyLjkgMzM0LjkyIDEzLjQ1IDMzMC4xMyAxNC40M0MzMjYuNjkgMTUuMTUgMzI3LjUyIDIyLjU2IDMyNy41MiAyNS4xN0MzMjcuNTIgMzYuNjcgMzI3LjM1IDQ4LjE4IDMyNy41MiA1OS42N0MzMjcuNTYgNjIuMzkgMzI2LjM2IDcxLjg5IDMzMS4yMiA3MC44OFpNNDg1LjAyIDU0LjI5TDQ4MS45NCAyNS42OEw0NzcuOTUgNTQuMDhMNDg1LjAyIDU0LjI5WiIvPjwvc3ZnPg==" alt="Salfa Montajes"></a>
-      <span class="top-saludo-user" id="topSaludoHub" style="font-family:var(--f-titulo);font-weight:700;font-size:13.5px;color:#ffffff;letter-spacing:0.03em;white-space:nowrap">Hola, <b id="topNomUser" style="color:#ffffff;font-weight:800">Sebastián</b></span>
     </div>
     <div class="top-der">
       <!-- Semáforo de sesión e inactividad (Verde / Amarillo <= 3m / Rojo desconectado) -->
@@ -1518,7 +1527,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <div class="saludo-v2">
         <div class="filete-v2"></div>
         <div>
-          <h1 id="dashBienvenida">Portales de Pilotaje</h1>
+          <h1 id="dashBienvenida">Hola, <b id="nomUser">Sebastián</b></h1>
           <div class="sub">Elige el piloto con el que quieres trabajar hoy.</div>
         </div>
       </div>
@@ -1556,9 +1565,75 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   </main>
 
   <footer class="footer-v2">
-    <span>Salfa Montajes · Portales de pilotaje · Desarrollos estratégicos y mejoras</span>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span>Salfa Montajes · Portales de pilotaje · Desarrollos estratégicos y mejoras</span>
+      <button type="button" class="btn-guia-hub" onclick="abrirGuiaUso()" title="Aprende a usar el portal y navegar por los pilotos">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Aprende a usar el portal</span>
+      </button>
+    </div>
     <span><button type="button" onclick="abrirContacto()">Contacto</button> · Información de uso interno</span>
   </footer>
+</div>
+
+<!-- Modal Aprende a Usar el Portal -->
+<div class="salfa-modal-portales" id="modalGuiaUso" style="display:none" onclick="if(event.target===this)cerrarGuiaUso()">
+  <div class="salfa-modal-portales-dialog" style="max-width:560px">
+    <div class="salfa-modal-portales-header" style="background:#1E2229;border-bottom:3px solid #B01E24">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:#B01E24;display:grid;place-items:center;color:#fff;font-size:18px">💡</div>
+        <div>
+          <b>Aprende a Usar el Portal</b>
+          <span>Guía práctica para colaboradores de Salfa Montajes</span>
+        </div>
+      </div>
+      <button type="button" class="btn-close-modal" onclick="cerrarGuiaUso()" title="Cerrar guía">✕</button>
+    </div>
+    <div class="salfa-modal-portales-body" style="padding:18px 22px;gap:14px;display:flex;flex-direction:column;max-height:calc(85vh - 70px);overflow-y:auto">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="width:28px;height:28px;border-radius:8px;background:#1E2229;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none">1</span>
+        <div>
+          <b style="color:#1E2229;font-size:14px;display:block">Acceso Centralizado con Google Salfa</b>
+          <p style="color:#555;font-size:13px;margin:3px 0 0;line-height:1.45">Ingresa directamente con tu cuenta institucional <code style="background:#eef2f6;padding:1px 6px;border-radius:4px;color:#B01E24;font-size:12px">@salfamontajes.com</code>. Tu perfil se sincroniza de inmediato con tu rol y fotografía corporativa.</p>
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="width:28px;height:28px;border-radius:8px;background:#B01E24;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none">2</span>
+        <div>
+          <b style="color:#1E2229;font-size:14px;display:block">Navegación Fluida en la Misma Pestaña</b>
+          <p style="color:#555;font-size:13px;margin:3px 0 0;line-height:1.45">Haz clic en <b>[Abrir]</b> en cualquier piloto activo. El portal cargará en la misma pestaña manteniendo tu sesión segura y sin abrir ventanas innecesarias.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="width:28px;height:28px;border-radius:8px;background:#1E2229;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none">3</span>
+        <div>
+          <b style="color:#1E2229;font-size:14px;display:block">Repositorio Colaborativo en Google Drive</b>
+          <p style="color:#555;font-size:13px;margin:3px 0 0;line-height:1.45">Cada portal dispone de su botón oficial <b>[Drive]</b> que te conduce directamente a su carpeta técnica en Google Drive para subir minutas, procedimientos y archivos de trabajo conjunto.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="width:28px;height:28px;border-radius:8px;background:#2fb26a;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none">4</span>
+        <div>
+          <b style="color:#1E2229;font-size:14px;display:block">Seguridad de Sesión y Semáforo (15 min)</b>
+          <p style="color:#555;font-size:13px;margin:3px 0 0;line-height:1.45">Por seguridad de la empresa, la sesión expira tras 15 minutos sin interacción. El semáforo en la barra superior te muestra el tiempo restante (<span style="color:#16a34a;font-weight:700">🟢 Activa</span> / <span style="color:#ca8a04;font-weight:700">🟡 Menos de 3 min</span> / <span style="color:#dc2626;font-weight:700">🔴 Desconectada</span>). Cualquier clic o tecla restablece el tiempo.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="width:28px;height:28px;border-radius:8px;background:#1E2229;color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;flex:none">5</span>
+        <div>
+          <b style="color:#1E2229;font-size:14px;display:block">Cambio Rápido de Portal y Presencia en Vivo</b>
+          <p style="color:#555;font-size:13px;margin:3px 0 0;line-height:1.45">Cuando estés dentro de un piloto, usa el botón superior <b>[Portales]</b> para saltar directamente a otro sin tener que regresar al Hub. Al pasar el cursor sobre <b>"X en este portal"</b> verás quiénes están conectados en tiempo real.</p>
+        </div>
+      </div>
+    </div>
+    <div style="padding:12px 20px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end">
+      <button type="button" class="btn-pill rojo" onclick="cerrarGuiaUso()" style="padding:8px 20px;font-size:13px">¡Entendido!</button>
+    </div>
+  </div>
 </div>
 
 <!-- Modal Selector de Portales Universal (Abre en PC y Móvil sin clippeo) -->
@@ -2209,9 +2284,13 @@ function procesarLogin(r){
 // Crear cuenta
 async function registrarse(ev){
   ev.preventDefault(); error('');
-  var nombre=$('rgNombre').value.trim(), email=$('rgEmail').value.trim().toLowerCase(), area=$('rgArea').value.trim();
+  var nombre=$('rgNombre').value.trim();
+  var apellidos=($('rgApellidos')?$('rgApellidos').value.trim():'');
+  var email=$('rgEmail').value.trim().toLowerCase(), area=$('rgArea').value.trim();
   var clave=$('rgPass').value, clave2=$('rgPass2').value, motivo=$('rgMotivo').value.trim(), pilotos=elegidos('rgPilotos');
-  if(!nombre){ error('Escribe tu nombre completo.'); $('rgNombre').focus(); return; }
+  if(!nombre){ error('Escribe tu nombre.'); $('rgNombre').focus(); return; }
+  if(!apellidos){ error('Escribe tus apellidos.'); if($('rgApellidos')) $('rgApellidos').focus(); return; }
+  var nombreCompleto = (nombre + ' ' + apellidos).trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ error('Escribe un correo válido.'); $('rgEmail').focus(); return; }
   if(!area){ error('Escribe tu área y cargo.'); $('rgArea').focus(); return; }
   var e1=validarClaveFront(clave,email); if(e1){ error(e1); $('rgPass').focus(); return; }
@@ -2219,7 +2298,7 @@ async function registrarse(ev){
   if(!pilotos.length){ error('Elige al menos un piloto.'); return; }
   if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué necesitas el acceso.'); $('rgMotivo').focus(); return; }
   cargando(true,'Creando tu cuenta…');
-  var r=await api('registrar',{nombre:nombre,email:email,area:area,motivo:motivo,pilotos:pilotos,clave:clave});
+  var r=await api('registrar',{nombre:nombreCompleto,nombres:nombre,apellidos:apellidos,email:email,area:area,motivo:motivo,pilotos:pilotos,clave:clave});
   cargando(false);
   if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo crear la cuenta.'); return; }
   CRED.email=email; $('rgPass').value=''; $('rgPass2').value='';
@@ -2529,6 +2608,14 @@ window.salfaCerrarMenuPortales = function(){
   var modal = document.getElementById('modalPortales');
   if(modal) modal.style.display = 'none';
 };
+window.abrirGuiaUso = function(){
+  var modal = document.getElementById('modalGuiaUso');
+  if(modal) modal.style.display = 'flex';
+};
+window.cerrarGuiaUso = function(){
+  var modal = document.getElementById('modalGuiaUso');
+  if(modal) modal.style.display = 'none';
+};
 window.salfaToggleMenuPortales = function(ev){
   var modal = document.getElementById('modalPortales');
   if(!modal) return;
@@ -2539,7 +2626,7 @@ window.salfaToggleMenuPortales = function(ev){
   }
 };
 document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){ window.salfaCerrarMenuPortales(); }
+  if(e.key === 'Escape'){ window.salfaCerrarMenuPortales(); window.cerrarGuiaUso(); }
 });
 
 function obtenerPortalesOrdenados(){
@@ -2670,12 +2757,24 @@ function renderDashboard(user){
   if($('txtUser')) $('txtUser').textContent=user.email;
   var nombreCorto = String(user.nombre||user.email.split('@')[0]).split(' ')[0];
   if($('nomUser')) $('nomUser').textContent = nombreCorto;
-  if($('topNomUser')) $('topNomUser').textContent = nombreCorto;
-  if($('dashBienvenida')) $('dashBienvenida').textContent = 'Portales de Pilotaje';
+  if($('dashBienvenida')) $('dashBienvenida').innerHTML = 'Hola, <b id="nomUser">' + escapar(nombreCorto) + '</b>';
   if($('userRolTxt')) $('userRolTxt').textContent = (user.rol || 'Colaborador');
   if($('txtFecha')) $('txtFecha').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   if($('topUserRol')) $('topUserRol').textContent = (user.rol || 'Colaborador');
   if($('btnEditarOrden')) $('btnEditarOrden').style.display = (user.rol === 'Administrador' ? 'inline-flex' : 'none');
+  
+  if(user.foto){
+    var chipUser = $('chipUserId');
+    if(chipUser){
+      var oldSvg = chipUser.querySelector('svg, img');
+      var fotoImg = document.createElement('img');
+      fotoImg.src = user.foto;
+      fotoImg.className = 'avatar-foto-hub';
+      fotoImg.alt = user.nombre || 'Avatar';
+      fotoImg.style.cssText = 'width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.4);flex:none';
+      if(oldSvg) oldSvg.replaceWith(fotoImg);
+    }
+  }
   
   var grid=$('gridPortales'); grid.innerHTML='';
   var listaPortales = obtenerPortalesOrdenados();
@@ -2685,10 +2784,15 @@ function renderDashboard(user){
     var autorizado=esAdmin || ((user.pilotos||[]).indexOf(p.id)>=0 && rolesP.indexOf(user.rol)>=0);
     var activo=p.estado==='Activo' && autorizado;
     var cls=activo?'ok':(p.estado==='En desarrollo'?'dev':'lock');
-    var est=(p.estado==='Activo')?'Piloto activo':p.estado, btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> No disponible';
+    var est=(p.estado==='Activo')?'Piloto activo':p.estado;
+    var btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> Próximo';
     if(p.estado==='Activo'){
       if(autorizado){ btn='Abrir <svg class="i i-external-link" aria-hidden="true" style="width:14px;height:14px"><use href="#i-external-link"/></svg>'; }
-      else { est='Sin acceso'; btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> No autorizado'; }
+      else { est='Sin acceso'; btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> Sin acceso'; }
+    } else if(p.estado==='En desarrollo'){
+      btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> Desarrollo';
+    } else {
+      btn='<svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg> Próximo';
     }
     var numAuto = (i + 1 < 10 ? '0' : '') + (i + 1);
     var t=document.createElement('article');
@@ -2701,13 +2805,11 @@ function renderDashboard(user){
       '<div class="t-det"><div class="t-det-in">'+
       '<div class="t-cuerpo">'+p.descripcion+'</div>'+
       '<div class="pres-v2 vacio" id="pres-'+p.id+'"><div class="avs-v2"></div><span class="pn-v2"><i></i> Sin actividad</span></div>'+
+      '<div class="t-sub-estado"><span class="estado '+cls+'">'+est+'</span></div>'+
       '<div class="t-pie">' +
-        '<div style="display:flex;align-items:center;gap:10px">' +
-          '<span class="estado '+cls+'">'+est+'</span>' +
-          (p.driveUrl ? ('<a class="btn-drive" href="'+p.driveUrl+'" target="_blank" rel="noopener" title="Repositorio colaborativo de información en Google Drive">' +
-            '<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
-            '<span>Drive</span></a>') : '') +
-        '</div>' +
+        (p.driveUrl ? ('<a class="btn-drive" href="'+p.driveUrl+'" target="_blank" rel="noopener" title="Repositorio colaborativo de información en Google Drive">' +
+          '<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' +
+          '<span>Drive</span></a>') : '<span></span>') +
         '<a class="btn-abrir'+(activo?'':' off')+'" href="'+(activo?p.url:'#')+'" '+(activo?'target="_self"':'onclick="return false"')+'>'+btn+'</a>' +
       '</div>'+
       '</div></div>';

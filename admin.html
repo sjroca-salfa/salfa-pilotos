@@ -583,8 +583,12 @@ section.view.on{display:block}
   <div class="mb">
     <div class="fld sug"><label class="rot" for="fCor">Correo corporativo</label><input class="inp" id="fCor" type="email" autocomplete="off" placeholder="nombre.apellido@salfamontajes.com"><div class="help" id="fErr" style="color:var(--rojo)"></div></div>
     <div class="f2">
-      <div class="fld"><label class="rot" for="fNom">Nombre</label><input class="inp" id="fNom"></div>
-      <div class="fld"><label class="rot" for="fAre">Área / cargo</label><input class="inp" id="fAre"></div>
+      <div class="fld"><label class="rot" for="fNom">Nombre</label><input class="inp" id="fNom" placeholder="Ej.: Sebastián"></div>
+      <div class="fld"><label class="rot" for="fApe">Apellidos</label><input class="inp" id="fApe" placeholder="Ej.: Roca"></div>
+    </div>
+    <div class="f2">
+      <div class="fld"><label class="rot" for="fAre">Área / cargo</label><input class="inp" id="fAre" placeholder="Ej.: Planificación y Desarrollo"></div>
+      <div class="fld"><label class="rot" for="fFoto">Fotografía / Avatar (URL)</label><input class="inp" id="fFoto" placeholder="https://lh3.googleusercontent.com/..."></div>
     </div>
     <div class="fld"><label class="rot" for="fRol">Rol</label><select class="sel" id="fRol"></select><div class="help" id="fRolH"></div></div>
     <div class="fld"><span class="rot" style="display:block;margin-bottom:5px;color:var(--gris)">Portales habilitados</span><div class="chk" id="fPor"></div></div>
@@ -1151,22 +1155,35 @@ let editId=null;
 function abrirModal(id){
   editId=id||null;const u=id&&S.db.usuarios.find(x=>x.id===id);
   $('#mTit').textContent=u?'Editar acceso':'Nuevo acceso';
-  $('#fCor').value=u?u.correo:'';$('#fCor').disabled=!!u;$('#fNom').value=u?u.nombre:'';$('#fAre').value=u?u.area:'';$('#fErr').textContent='';
+  $('#fCor').value=u?u.correo:'';$('#fCor').disabled=!!u;
+  const partes = (u && u.nombre ? u.nombre.split(' ') : []);
+  $('#fNom').value=u?(u.nombres || partes[0] || ''):'';
+  $('#fApe').value=u?(u.apellidos || partes.slice(1).join(' ') || ''):'';
+  $('#fAre').value=u?u.area:'';
+  $('#fFoto').value=u?(u.foto || ''):'';
+  $('#fErr').textContent='';
   $('#fRol').innerHTML=Object.keys(ROLES).filter(r=>r!==CONFIG.ROL_ADMIN||(u&&u.rol===r)).map(r=>`<option${u&&u.rol===r?' selected':''}>${r}</option>`).join('');
   $('#fRolH').textContent=ROLES[$('#fRol').value].d;
   $('#fPor').innerHTML=S.db.portales.map(p=>`<label><input type="checkbox" value="${p.id}"${u&&u.perm[p.id]>0?' checked':''}>${esc(p.nombre)}</label>`).join('');
   $('#ov').classList.add('on');$('#modal').classList.add('on');$('#drawer').classList.remove('on');setTimeout(()=>$(u?'#fNom':'#fCor').focus(),50);
 }
 async function guardarModal(){
-  const c=$('#fCor').value.trim().toLowerCase(),n=$('#fNom').value.trim(),a=$('#fAre').value.trim(),r=$('#fRol').value;
+  const c=$('#fCor').value.trim().toLowerCase(),
+        nom=$('#fNom').value.trim(),
+        ape=($('#fApe')?$('#fApe').value.trim():''),
+        a=$('#fAre').value.trim(),
+        r=$('#fRol').value,
+        foto=($('#fFoto')?$('#fFoto').value.trim():'');
   if(!c.endsWith(CONFIG.DOMINIO)||c.length<=CONFIG.DOMINIO.length){$('#fErr').textContent='Ingresa un correo con dominio '+CONFIG.DOMINIO;return}
-  if(!n){$('#fErr').textContent='Ingresa el nombre del colaborador';return}
+  if(!nom){$('#fErr').textContent='Ingresa el nombre del colaborador';return}
+  if(!ape){$('#fErr').textContent='Ingresa los apellidos del colaborador';return}
+  const n = (nom + ' ' + ape).trim();
   if(!editId&&S.db.usuarios.some(u=>u.correo===c)){$('#fErr').textContent='Ese correo ya tiene un acceso registrado';return}
   const perm={};S.db.portales.forEach(p=>perm[p.id]=0);$$('#fPor input').forEach(i=>{perm[i.value]=i.checked?Math.max(1,(editId&&S.db.usuarios.find(x=>x.id===editId).perm[i.value])||1):0});
   try{
     const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:'u'+Date.now(),correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
-    Object.assign(u,{nombre:n,area:a||'Sin área',rol:r,perm});
-    await Datos.guardarUsuario({correo:c,nombre:n,area:a,rol:r,permisos:perm});
+    Object.assign(u,{nombre:n,nombres:nom,apellidos:ape,area:a||'Sin área',rol:r,foto:foto,perm});
+    await Datos.guardarUsuario({correo:c,nombre:n,nombres:nom,apellidos:ape,area:a,rol:r,foto:foto,permisos:perm});
     if(!editId){S.db.usuarios.push(u);S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:'Alta de colaborador',detalle:`Se habilitó a ${n}`})}
     cerrarTodo();renderTodo();toast(editId?'Cambios guardados':'Colaborador habilitado');
   }catch(e){toast(e.message,true)}
