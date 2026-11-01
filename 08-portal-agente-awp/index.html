@@ -533,7 +533,7 @@ a { color: inherit; text-decoration: none; }
     max-width: 110px !important;
     flex: none !important;
   }
-  .brand-portal, .brand-sep, .user-email-txt {
+  .brand-portal, .brand-portal-tit, .brand-sep, .user-email-txt, #topUserRol, .online-txt, .pres-drop-caret {
     display: none !important;
   }
   .btn-selector-portales {
@@ -542,16 +542,23 @@ a { color: inherit; text-decoration: none; }
     flex: none !important;
   }
   .btn-selector-portales span { display: none !important; }
-  .user-pill {
-    padding: 0 !important;
-    background: none !important;
-    border: none !important;
+  .chip-sesion-tiempo {
+    padding: 3px 6px !important;
+    font-size: 10.5px !important;
+    gap: 4px !important;
+    flex: none !important;
+  }
+  .chip-p8-online {
+    padding: 3px 6px !important;
+    font-size: 10.5px !important;
+    gap: 4px !important;
     flex: none !important;
   }
   .user-avatar {
     width: 26px !important;
     height: 26px !important;
     font-size: 10px !important;
+    flex: none !important;
   }
   .topbar-der {
     gap: 5px !important;
@@ -559,53 +566,61 @@ a { color: inherit; text-decoration: none; }
   }
   .sub-header {
     top: 48px !important;
-    height: 44px !important;
+    height: 38px !important;
     padding: 0 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
   }
   .title-tagline, .pill-engine {
     display: none !important;
   }
   .title-main {
-    font-size: 12px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 55vw !important;
+  }
+  .header-badges {
+    flex: none !important;
   }
   .pill-guardrail {
-    font-size: 10px !important;
+    font-size: 9.5px !important;
     padding: 2px 6px !important;
+    white-space: nowrap !important;
   }
   .app-layout {
-    top: 92px !important;
+    top: 86px !important;
   }
   .app-nav {
-    width: 54px !important;
+    width: 50px !important;
   }
   .nav-btn {
     padding: 8px 0 !important;
   }
 }
 @media (max-width: 480px) {
-  .sub-header-title { max-width: 65vw; }
-  .title-main span { font-size: 11px !important; }
+  .pill-guardrail { display: none !important; }
+  .title-main { max-width: 90vw !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== BARRA SUPERIOR CORPORATIVA SALFA ===== -->
-<header class="salfa-topbar-p5">
+<!-- ===== BARRA SUPERIOR CORPORATIVA ESTANDARIZADA SALFA (48px) ===== -->
+<header class="salfa-topbar-p5" id="salfaUniversalTopbar">
   <div class="topbar-izq" style="display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0">
-    <a href="../00-portal-hub/index.html" class="brand-link" title="Volver al Hub Principal" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:12px">
+    <a href="../00-portal-hub/index.html" class="brand-link" id="p8BtnVolver" title="Volver al Hub Principal" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:12px">
       <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       <span class="txt-hub">Hub</span>
     </a>
     <span class="brand-sep" style="width:1px;height:14px;background:rgba(255,255,255,0.2)"></span>
-    <a href="../00-portal-hub/index.html" title="Inicio Hub Salfa" style="display:inline-flex;align-items:center;text-decoration:none">
+    <a href="../00-portal-hub/index.html" id="p8LogoLink" title="Inicio Hub Salfa" style="display:inline-flex;align-items:center;text-decoration:none">
       <img src="assets/logo-salfa-montajes-mono-blanco.svg" alt="Salfa Montajes" onerror="this.src='../00-portal-hub/assets/logo-salfa-montajes-mono-blanco.svg'" style="height:18px;width:auto">
     </a>
     <span class="brand-sep" style="width:1px;height:14px;background:rgba(255,255,255,0.2)"></span>
-    <div class="brand-portal">
-      <span class="portal-badge">08</span>
-      <span>Agente AWP · Advanced Work Packaging</span>
-    </div>
+    <span class="brand-portal-tit" style="font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.5px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">GESTIÓN AWP & CONSTRUCCIÓN</span>
   </div>
 
   <div class="topbar-der" style="display:flex;align-items:center;gap:8px;min-width:0;flex-shrink:0">
@@ -613,10 +628,38 @@ a { color: inherit; text-decoration: none; }
       <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
       <span>Portales</span>
     </button>
-    <div class="user-pill">
-      <div class="user-avatar">SR</div>
-      <span class="user-email-txt">sjroca@salfamontajes.com</span>
+    <!-- Semáforo de Tiempo de Sesión (15 min) -->
+    <span class="chip-sesion-tiempo" id="chipSesionTiempo" title="Tiempo antes de desconexión por inactividad" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700">
+      <i id="dotSesionTiempo" style="width:7px;height:7px;border-radius:50%;background:#3ddc84;display:inline-block;box-shadow:0 0 0 2px rgba(61,220,132,.35)"></i>
+      <span id="txtSesionTiempo">15:00</span>
+    </span>
+    <!-- Presencia en este portal -->
+    <div class="presencia-wrap" id="wrapPresenciaPortal" style="position:relative;display:inline-flex;align-items:center">
+      <span class="chip-p8-online" id="chipPresenciaAWP" onclick="toggleDropdownPresenciaAWP(event)" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer">
+        <i style="width:7px;height:7px;border-radius:50%;background:#3ddc84;display:inline-block;box-shadow:0 0 0 2px rgba(61,220,132,.35)"></i>
+        <b id="awpOnlineNum">1</b><span class="online-txt"> en este portal</span>
+        <svg class="pres-drop-caret" viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <div class="salfa-presencia-dropdown" id="dropdownPresenciaAWP" style="display:none;position:absolute;top:calc(100% + 8px);right:0;width:290px;background:#1E2229;border:1px solid rgba(255,255,255,.15);border-top:2px solid var(--rojo);border-radius:12px;box-shadow:0 16px 36px rgba(0,0,0,0.5);z-index:10005;color:#fff;overflow:hidden">
+        <div class="pres-drop-header" style="padding:10px 14px;background:rgba(0,0,0,.24);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">COLABORADORES EN LÍNEA</div>
+            <div style="font-size:11px;color:#9AA2AB">Gestión AWP & Construcción</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(61,220,132,.18);color:#3ddc84" id="awpDropCountBadge">1 en este portal</span>
+        </div>
+        <div id="awpListaUsuariosOnline" style="max-height:240px;overflow-y:auto;padding:6px 0"></div>
+        <div style="padding:7px 14px;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.15);font-size:10.5px;color:#8A929B;display:flex;align-items:center;gap:6px">
+          <i style="width:6px;height:6px;border-radius:50%;background:#3ddc84;display:inline-block"></i> Sincronización en tiempo real
+        </div>
+      </div>
     </div>
+    <!-- Avatar (SR) -->
+    <div class="user-avatar" id="topUserAvatar" title="Usuario activo" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--rojo),#5E0F13);color:#fff;font-weight:700;font-size:11px;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,0.4);flex:none">SR</div>
+    <!-- Badge Rol -->
+    <span class="barra-corp-badge" id="topUserRol" style="font-family:var(--f-rotulo);font-weight:700;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--rojo);color:#fff;padding:3px 8px;border-radius:999px;white-space:nowrap;flex:none">ADMINISTRADOR</span>
+    <!-- Email -->
+    <span class="user-email-txt" id="topUserEmail" style="font-size:12px;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px">sjroca@salfamontajes.com</span>
   </div>
 </header>
 
@@ -2097,6 +2140,165 @@ function mostrarToast(msg) {
     toast.style.display = 'none';
   }, 3200);
 }
+
+// ==============================================================
+// SINCRONIZACIÓN DE SESIÓN, INACTIVIDAD Y PRESENCIA EN TIEMPO REAL
+// ==============================================================
+var TIEMPO_INACTIVIDAD_MS = 15 * 60 * 1000;
+var KEY_ACTIVIDAD = 'salfa_last_activity';
+function registrarActividad(){
+  try { localStorage.setItem(KEY_ACTIVIDAD, String(Date.now())); } catch(e){}
+}
+var _lastActThrottle = 0;
+function alInteractuar(){
+  var ahora = Date.now();
+  if(ahora - _lastActThrottle > 1500){
+    _lastActThrottle = ahora;
+    registrarActividad();
+    actualizarSemaforoInactividad();
+  }
+}
+['mousedown','pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(ev){
+  window.addEventListener(ev, alInteractuar, {passive:true});
+});
+
+function actualizarSemaforoInactividad(){
+  var dot = document.getElementById('dotSesionTiempo');
+  var txt = document.getElementById('txtSesionTiempo');
+  var chip = document.getElementById('chipSesionTiempo');
+  
+  var ultima = parseInt(localStorage.getItem(KEY_ACTIVIDAD) || '0', 10);
+  if(!ultima) {
+    ultima = Date.now();
+    try { localStorage.setItem(KEY_ACTIVIDAD, String(ultima)); } catch(e){}
+  }
+  
+  var transcurrido = Date.now() - ultima;
+  var restanteMs = Math.max(0, TIEMPO_INACTIVIDAD_MS - transcurrido);
+  var segRestantes = Math.floor(restanteMs / 1000);
+  var min = Math.floor(segRestantes / 60);
+  var seg = segRestantes % 60;
+  var strTiempo = (min < 10 ? '0' : '') + min + ':' + (seg < 10 ? '0' : '') + seg;
+  
+  if(txt) txt.textContent = strTiempo;
+  
+  if(restanteMs <= 0){
+    if(dot){
+      dot.style.background = '#E23B42';
+      dot.style.boxShadow = '0 0 0 2px rgba(226,59,66,.4), 0 0 8px #E23B42';
+    }
+    if(chip){
+      chip.style.borderColor = 'rgba(226,59,66,.5)';
+    }
+    cerrarSesionPorInactividad();
+  } else if(restanteMs <= 3 * 60 * 1000){
+    if(dot){
+      dot.style.background = '#F5B800';
+      dot.style.boxShadow = '0 0 0 2px rgba(245,184,0,.4), 0 0 8px #F5B800';
+    }
+    if(chip){
+      chip.style.borderColor = 'rgba(245,184,0,.45)';
+    }
+  } else {
+    if(dot){
+      dot.style.background = '#3ddc84';
+      dot.style.boxShadow = '0 0 0 2px rgba(61,220,132,.35)';
+    }
+    if(chip){
+      chip.style.borderColor = 'rgba(255,255,255,.16)';
+    }
+  }
+}
+
+function cerrarSesionPorInactividad(){
+  try {
+    sessionStorage.removeItem('salfa_auth_session');
+    sessionStorage.removeItem('salfa_user_session');
+  } catch(e){}
+  alert('Tu sesión ha expirado por 15 minutos de inactividad.');
+  window.location.href = '../00-portal-hub/index.html';
+}
+
+function toggleDropdownPresenciaAWP(ev){
+  if(ev) ev.stopPropagation();
+  var drop = document.getElementById('dropdownPresenciaAWP');
+  if(!drop) return;
+  drop.style.display = (drop.style.display === 'none' || !drop.style.display) ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(e){
+  var drop = document.getElementById('dropdownPresenciaAWP');
+  var wrap = document.getElementById('wrapPresenciaPortal');
+  if(drop && wrap && !wrap.contains(e.target)){
+    drop.style.display = 'none';
+  }
+});
+
+function latidoPresenciaAWP(userEmail){
+  try {
+    var raw = localStorage.getItem('salfa_presencia_mem_v1');
+    var map = {};
+    if(raw) {
+      try { map = JSON.parse(raw) || {}; } catch(e){}
+    }
+    var now = Date.now();
+    var clave = userEmail + '|awp';
+    map[clave] = {
+      email: userEmail,
+      nombre: 'Sebastián Roca',
+      rol: 'Administrador',
+      portal: 'awp',
+      portalNombre: 'Gestión AWP & Construcción',
+      ts: now
+    };
+    
+    var limite = now - 35000;
+    var usuariosEnAWP = [];
+    var otrosUsuarios = [];
+    for(var k in map){
+      if(map[k] && map[k].ts >= limite){
+        if(map[k].portal === 'awp'){
+          usuariosEnAWP.push(map[k]);
+        } else {
+          otrosUsuarios.push(map[k]);
+        }
+      }
+    }
+    localStorage.setItem('salfa_presencia_mem_v1', JSON.stringify(map));
+    
+    var numEl = document.getElementById('awpOnlineNum');
+    if(numEl) numEl.textContent = usuariosEnAWP.length || 1;
+    var badgeDrop = document.getElementById('awpDropCountBadge');
+    if(badgeDrop) badgeDrop.textContent = (usuariosEnAWP.length || 1) + ' en este portal';
+    
+    var listEl = document.getElementById('awpListaUsuariosOnline');
+    if(listEl){
+      var html = '<div style="padding:6px 14px 2px;font-size:10.5px;letter-spacing:.08em;font-weight:700;color:#9AA2AB;text-transform:uppercase">En este portal</div>' +
+        usuariosEnAWP.map(function(item){
+          var inits = (item.nombre.replace(/[^a-zA-Z]/g,'').slice(0,2) || 'US').toUpperCase();
+          return '<div style="display:flex;align-items:center;gap:10px;padding:7px 14px;transition:background .15s ease">' +
+            '<div style="width:28px;height:28px;border-radius:50%;color:#fff;font-family:Montserrat,sans-serif;font-size:11px;font-weight:800;display:grid;place-items:center;flex:none;border:1.5px solid rgba(255,255,255,.2);background:#B01E24">' + inits + '</div>' +
+            '<div style="flex:1;min-width:0">' +
+              '<div style="font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.nombre + '</div>' +
+              '<div style="font-size:11px;color:#9AA2AB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.email + '</div>' +
+              '<div style="font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#E23B42;margin-top:1px;display:flex;align-items:center;gap:4px">' +
+                '<i style="width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 2px rgba(61,220,132,.35);flex:none"></i> AWP · ' + item.rol +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      listEl.innerHTML = html;
+    }
+  } catch(e){}
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  registrarActividad();
+  actualizarSemaforoInactividad();
+  setInterval(actualizarSemaforoInactividad, 1000);
+  latidoPresenciaAWP('sjroca@salfamontajes.com');
+  setInterval(function(){ latidoPresenciaAWP('sjroca@salfamontajes.com'); }, 20000);
+});
 </script>
 
 </body>
