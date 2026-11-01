@@ -604,7 +604,7 @@ section.view.on{display:block}
       <div class="fld"><label class="rot" for="fFoto">Fotografía / Avatar (URL)</label><input class="inp" id="fFoto" placeholder="https://lh3.googleusercontent.com/..."></div>
     </div>
     <div class="fld"><label class="rot" for="fRol">Rol</label><select class="sel" id="fRol"></select><div class="help" id="fRolH"></div></div>
-    <div class="fld"><span class="rot" style="display:block;margin-bottom:5px;color:var(--gris)">Portales habilitados</span><div class="chk" id="fPor"></div></div>
+    <div class="fld"><span class="rot" style="display:block;margin-bottom:5px;color:var(--gris)">Portales habilitados</span><div id="fPor" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;"></div></div>
   </div>
   <footer><button class="btn" id="mCan">Cancelar</button><button class="btn pri" id="mOk">Guardar y habilitar</button></footer>
 </div>
@@ -1165,6 +1165,104 @@ function cerrarTodo(){$('#ov').classList.remove('on');$('#drawer').classList.rem
 
 /* ---------- Modal de alta/edición ---------- */
 let editId=null;
+
+var _ultimoEmailInvitacionAdmin = { html: '', email: '', nombre: '' };
+
+window.cerrarModalInvitacionConfirmadaAdmin = function() {
+  var m = $('#modalInvitacionConfirmadaAdmin');
+  if (m) m.style.display = 'none';
+};
+
+window.copiarEmailInvitacionAdmin = async function() {
+  var html = _ultimoEmailInvitacionAdmin.html;
+  var txt = 'Invitación a Portales de Pilotaje Salfa Montajes\n\n' +
+    'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n' +
+    'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n' +
+    'Accede desde: https://sjroca-salfa.github.io/salfa-pilotos/ con tu correo ' + _ultimoEmailInvitacionAdmin.email;
+  try {
+    if (navigator.clipboard && window.ClipboardItem) {
+      var blobHtml = new Blob([html], { type: 'text/html' });
+      var blobText = new Blob([txt], { type: 'text/plain' });
+      await navigator.clipboard.write([new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })]);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(txt);
+    }
+    var btn = $('#btnTxtCopiarInvAdmin');
+    if (btn) {
+      btn.textContent = '¡Copiado con éxito!';
+      setTimeout(function(){ btn.textContent = 'Copiar correo al portapapeles'; }, 2500);
+    }
+    toast('Correo copiado al portapapeles.');
+  } catch(e) {
+    toast('Copia manual: ' + e.message);
+  }
+};
+
+function generarEmailAdminHtml(nombre, email, area, rolGlobal, perm, portales) {
+  var urlHub = 'https://sjroca-salfa.github.io/salfa-pilotos/';
+  var filas = portales.filter(p => (perm[p.id] || 0) > 0).map(p => {
+    var lvl = perm[p.id] || 1;
+    var rolNombre = (lvl === 3 ? 'Administrador' : (lvl === 2 ? 'Editor' : 'Visualizador'));
+    var rolColor = (lvl === 3 ? '#B01E24' : (lvl === 2 ? '#D97706' : '#2563EB'));
+    var rolDesc = (lvl === 3 ? 'Control total, gestión de usuarios y aprobaciones.' : (lvl === 2 ? 'Crear, modificar y guardar cambios en el portal.' : 'Solo lectura, consulta de datos y descarga.'));
+    return '<tr style="border-bottom:1px solid #e5e7eb;">' +
+      '<td style="padding:12px 14px;vertical-align:middle;">' +
+        '<div style="font-size:10.5px;color:#8A929B;text-transform:uppercase;letter-spacing:1px;font-family:sans-serif;font-weight:700;">' + esc(p.categoria || 'OPERACIONES') + '</div>' +
+        '<div style="margin-top:2px;font-size:14px;color:#1E2229;font-family:sans-serif;font-weight:800;">' + esc(p.nombre) + '</div>' +
+      '</td>' +
+      '<td style="padding:12px 14px;vertical-align:middle;white-space:nowrap;">' +
+        '<span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff;background:' + rolColor + ';font-family:sans-serif;">' + esc(rolNombre) + '</span>' +
+      '</td>' +
+      '<td style="padding:12px 14px;vertical-align:middle;font-size:12.5px;color:#4B5563;font-family:sans-serif;line-height:1.4;">' +
+        esc(rolDesc) +
+      '</td>' +
+    '</tr>';
+  }).join('');
+
+  return '<div style="background:#F4F6F8;padding:24px 16px;font-family:\'Segoe UI\',Helvetica,Arial,sans-serif;color:#1E2229;box-sizing:border-box;">' +
+    '<div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.1);border-top:6px solid #B01E24;">' +
+      '<div style="background:#1E2229;padding:22px 26px;text-align:center;">' +
+        '<h1 style="margin:0;color:#ffffff;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase;">SALFA MONTAJES</h1>' +
+        '<div style="margin-top:4px;color:#E23B42;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Ecosistema de Portales de Pilotaje</div>' +
+      '</div>' +
+      '<div style="padding:26px 28px;">' +
+        '<h2 style="margin:0 0 10px;color:#1E2229;font-size:18px;">¡Hola ' + esc(nombre) + '!</h2>' +
+        '<p style="margin:0 0 18px;font-size:14px;color:#4B5563;line-height:1.6;">' +
+          'Has sido habilitado formalmente en el ecosistema de <b>Portales de Pilotaje de Salfa Montajes</b>' +
+          (area ? ' para el área de <b>' + esc(area) + '</b>.' : '.') +
+          ' A continuación se detallan los portales asignados, tu perfil y lo que puedes hacer en cada uno:' +
+        '</p>' +
+        '<table style="width:100%;border-collapse:collapse;margin:18px 0 22px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">' +
+          '<thead>' +
+            '<tr style="background:#1E2229;color:#ffffff;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:1px;">' +
+              '<th style="padding:10px 14px;">Portal Asignado</th>' +
+              '<th style="padding:10px 14px;">Perfil / Rol</th>' +
+              '<th style="padding:10px 14px;">¿Qué puedes hacer?</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            filas +
+          '</tbody>' +
+        '</table>' +
+        '<div style="text-align:center;margin:28px 0 22px;">' +
+          '<a href="' + urlHub + '" target="_blank" rel="noopener" style="display:inline-block;padding:13px 30px;background:#B01E24;color:#ffffff;text-decoration:none;font-weight:700;font-size:13.5px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(176,30,36,0.4);">' +
+            'Ingresar a los Portales de Pilotaje →' +
+          '</a>' +
+        '</div>' +
+        '<div style="background:#F8FAFC;border-left:4px solid #B01E24;padding:14px 16px;border-radius:0 8px 8px 0;margin:18px 0 0;font-size:12.5px;color:#475569;line-height:1.55;">' +
+          '<b>Instrucciones de acceso:</b><br>' +
+          '1. Ingresa a: <a href="' + urlHub + '" style="color:#B01E24;font-weight:700;">' + urlHub + '</a><br>' +
+          '2. Usa tu correo institucional: <b>' + esc(email) + '</b>.<br>' +
+          '3. Tu sesión cuenta con desconexión automática por inactividad tras 15 minutos.' +
+        '</div>' +
+      '</div>' +
+      '<div style="background:#F1F5F9;padding:14px 26px;text-align:center;font-size:11px;color:#64748b;border-top:1px solid #E2E8F0;">' +
+        'Salfa Montajes S.A. · Gerencia de Planificación y Desarrollo · Confidencial' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
 function abrirModal(id){
   editId=id||null;const u=id&&S.db.usuarios.find(x=>x.id===id);
   $('#mTit').textContent=u?'Editar acceso':'Nuevo acceso';
@@ -1177,9 +1275,36 @@ function abrirModal(id){
   $('#fErr').textContent='';
   $('#fRol').innerHTML=Object.keys(ROLES).filter(r=>r!==CONFIG.ROL_ADMIN||(u&&u.rol===r)).map(r=>`<option${u&&u.rol===r?' selected':''}>${r}</option>`).join('');
   $('#fRolH').textContent=ROLES[$('#fRol').value].d;
-  $('#fPor').innerHTML=S.db.portales.map(p=>`<label><input type="checkbox" value="${p.id}"${u&&u.perm[p.id]>0?' checked':''}>${esc(p.nombre)}</label>`).join('');
+
+  $('#fPor').innerHTML = S.db.portales.map(p => {
+    const lvl = (u && u.perm && u.perm[p.id]) || 0;
+    const chk = lvl > 0;
+    const defLvl = lvl > 0 ? lvl : 1;
+    return `<div class="fld-portal-card" id="fldPortal_${p.id}" style="background:#fff;border:1px solid var(--linea);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;${chk?'':'opacity:0.5;'}">
+      <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;cursor:pointer;flex:1;">
+        <input type="checkbox" class="chk-fld-p" value="${p.id}" data-pid="${p.id}" ${chk?'checked':''} onchange="toggleAdminPortalRow('${p.id}', this.checked)" style="accent-color:var(--rojo);width:16px;height:16px;">
+        <span>${esc(p.nombre)}</span>
+      </label>
+      <div style="display:inline-flex;align-items:center;gap:6px;">
+        <select class="sel-fld-lvl" id="selLvl_${p.id}" data-pid="${p.id}" ${chk?'':'disabled'} style="padding:3px 6px;border:1px solid var(--linea);border-radius:6px;font-size:12px;font-weight:600;">
+          <option value="1"${defLvl===1?' selected':''}>Visualizador (Ver)</option>
+          <option value="2"${defLvl===2?' selected':''}>Editor (Editar)</option>
+          <option value="3"${defLvl===3?' selected':''}>Administrador (Aprobar)</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+
   $('#ov').classList.add('on');$('#modal').classList.add('on');$('#drawer').classList.remove('on');setTimeout(()=>$(u?'#fNom':'#fCor').focus(),50);
 }
+
+window.toggleAdminPortalRow = function(pid, habilitado) {
+  var row = $('#fldPortal_' + pid);
+  var sel = $('#selLvl_' + pid);
+  if (row) row.style.opacity = habilitado ? '1' : '0.5';
+  if (sel) sel.disabled = !habilitado;
+};
+
 async function guardarModal(){
   const c=$('#fCor').value.trim().toLowerCase(),
         nom=$('#fNom').value.trim(),
@@ -1192,13 +1317,41 @@ async function guardarModal(){
   if(!ape){$('#fErr').textContent='Ingresa los apellidos del colaborador';return}
   const n = (nom + ' ' + ape).trim();
   if(!editId&&S.db.usuarios.some(u=>u.correo===c)){$('#fErr').textContent='Ese correo ya tiene un acceso registrado';return}
-  const perm={};S.db.portales.forEach(p=>perm[p.id]=0);$$('#fPor input').forEach(i=>{perm[i.value]=i.checked?Math.max(1,(editId&&S.db.usuarios.find(x=>x.id===editId).perm[i.value])||1):0});
+
+  const perm={};
+  S.db.portales.forEach(p=>perm[p.id]=0);
+  $('#fPor .chk-fld-p').forEach(chk => {
+    if (chk.checked) {
+      const sel = $('#selLvl_' + chk.value);
+      perm[chk.value] = sel ? (+sel.value || 1) : 1;
+    }
+  });
+
+  const rolesPorPortal = {};
+  Object.entries(perm).forEach(([pid, lvl]) => {
+    if (lvl > 0) {
+      rolesPorPortal[pid] = (lvl === 3 ? 'Administrador' : (lvl === 2 ? 'Editor' : 'Visualizador'));
+    }
+  });
+
+  const emailHtml = generarEmailAdminHtml(n, c, a, r, perm, S.db.portales);
+
   try{
     const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:'u'+Date.now(),correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
-    Object.assign(u,{nombre:n,nombres:nom,apellidos:ape,area:a||'Sin área',rol:r,foto:foto,perm});
-    await Datos.guardarUsuario({correo:c,nombre:n,nombres:nom,apellidos:ape,area:a,rol:r,foto:foto,permisos:perm});
+    Object.assign(u,{nombre:n,nombres:nom,apellidos:ape,area:a||'Sin área',rol:r,foto:foto,perm,rolesPorPortal,emailHtml});
+    await Datos.guardarUsuario({correo:c,nombre:n,nombres:nom,apellidos:ape,area:a,rol:r,foto:foto,permisos:perm,rolesPorPortal:rolesPorPortal,emailHtml:emailHtml});
     if(!editId){S.db.usuarios.push(u);S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:'Alta de colaborador',detalle:`Se habilitó a ${n}`})}
-    cerrarTodo();renderTodo();toast(editId?'Cambios guardados':'Colaborador habilitado');
+    cerrarTodo();renderTodo();
+    toast(editId?'Cambios guardados':'Colaborador habilitado');
+
+    // Mostrar modal con vista previa y botón de copiar correo
+    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n };
+    const mConf = $('#modalInvitacionConfirmadaAdmin');
+    if (mConf) {
+      $('#adminInvConfSub').textContent = 'Invitación para ' + n + ' (' + c + ')';
+      $('#adminInvHtmlPreviewCard').innerHTML = emailHtml;
+      mConf.style.display = 'flex';
+    }
   }catch(e){toast(e.message,true)}
 }
 
@@ -1497,5 +1650,38 @@ function cerrarSesionPorInactividadAdmin(){
     </div>
   </div>
 </div>
+
+<!-- Modal: Confirmación de Invitación con Vista Previa y Botón Copiar -->
+<div class="salfa-modal-portales" id="modalInvitacionConfirmadaAdmin" style="display:none;position:fixed;inset:0;background:rgba(15,17,19,0.78);backdrop-filter:blur(5px);z-index:999999;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)cerrarModalInvitacionConfirmadaAdmin()">
+  <div class="salfa-modal-portales-dialog" style="max-width:680px;width:100%;max-height:92vh;background:#fff;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;overflow:hidden;border-top:6px solid #B01E24;">
+    <div style="background:#1E2229;color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #B01E24;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:30px;height:30px;border-radius:50%;background:#146A38;display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px;">✓</div>
+        <div>
+          <b style="font-size:15px;display:block;font-family:'Montserrat',sans-serif;">Invitación Personalizada Preparada</b>
+          <span id="adminInvConfSub" style="color:#9AA2AB;font-size:12px;">Perfiles asignados y permisos detallados por portal</span>
+        </div>
+      </div>
+      <button type="button" onclick="cerrarModalInvitacionConfirmadaAdmin()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;">✕</button>
+    </div>
+    <div style="padding:16px 20px;overflow-y:auto;flex:1;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f0fdf4;border:1px solid #bbf7d0;padding:12px 16px;border-radius:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:#166534;">
+          <b>Estado de entrega:</b> <span id="adminInvEstadoEntrega">Invitación registrada en la base de datos de Salfa</span>
+        </div>
+        <button type="button" class="btn" onclick="copiarEmailInvitacionAdmin()" style="background:#1E2229;color:#fff;border-radius:6px;font-size:12.5px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:none;">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="btnTxtCopiarInvAdmin">Copiar correo al portapapeles</span>
+        </button>
+      </div>
+      <div style="font-size:12px;color:#5A6771;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Vista previa del correo para el colaborador:</div>
+      <div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06);" id="adminInvHtmlPreviewCard"></div>
+    </div>
+    <div style="padding:12px 20px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;">
+      <button type="button" class="btn pri" onclick="cerrarModalInvitacionConfirmadaAdmin()" style="background:#B01E24;color:#fff;border-radius:8px;padding:8px 22px;font-weight:700;border:none;cursor:pointer;">Entendido</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
