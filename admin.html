@@ -34,7 +34,14 @@ h1,h2,h3{font-family:var(--f-titulo);font-weight:800;color:var(--grafito)}
 .side:before{content:"";position:absolute;width:440px;height:440px;left:-150px;bottom:-140px;border-radius:50%;background:radial-gradient(circle,rgba(176,30,36,.45),transparent 65%);animation:drift 14s ease-in-out infinite;pointer-events:none}
 .side>*{position:relative;z-index:1}
 .brand{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
-.logo-img{display:block;width:176px;height:auto;animation:fadein .9s both}
+.logo-img{display:block;width:176px;height:auto;animation:fadein .9s both, salfaLogoPopBrillo 5s 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;transform-origin:left center;transition:transform .25s cubic-bezier(0.34, 1.56, 0.64, 1),filter .25s ease}
+.brand:hover .logo-img{transform:scale(1.06) !important;filter:drop-shadow(0 0 8px rgba(255,255,255,0.95)) drop-shadow(0 0 18px rgba(176,30,36,0.85)) brightness(1.28) !important}
+@keyframes salfaLogoPopBrillo{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 transparent) brightness(1)}
+  10%{transform:scale(1.045);filter:drop-shadow(0 0 6px rgba(255,255,255,0.85)) drop-shadow(0 0 14px rgba(176,30,36,0.75)) brightness(1.22)}
+  22%{transform:scale(0.995);filter:drop-shadow(0 0 2px rgba(255,255,255,0.4)) drop-shadow(0 0 8px rgba(176,30,36,0.4)) brightness(1.08)}
+  30%{transform:scale(1);filter:drop-shadow(0 0 0 transparent) brightness(1)}
+}
 .brand .rot{display:block;margin-top:9px;color:rgba(255,255,255,.7)}
 .nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;overflow:auto;flex:1}
 .nav .grp{padding:14px 12px 6px;color:rgba(255,255,255,.5)}
