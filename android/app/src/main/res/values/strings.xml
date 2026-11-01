@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Portales Salfa</string>
+    <string name="app_desc">Portal Central y Ecosistema de Pilotaje · Salfa Montajes</string>
+    <string name="hub_title">Hub de Pilotos</string>
+    <string name="btn_back_to_hub">Volver al Hub</string>
+    <string name="btn_switch_portal">Cambiar Portal</string>
+    <string name="title_portal_switcher">Portales del Ecosistema</string>
+    <string name="subtitle_portal_switcher">Selecciona un portal para navegar de inmediato</string>
+    <string name="exit_confirm_title">¿Salir de Portales Salfa?</string>
+    <string name="exit_confirm_msg">¿Deseas cerrar la aplicación de portales corporativos?</string>
+    <string name="yes">Salir</string>
+    <string name="no">Cancelar</string>
+    <string name="reload">Recargar</string>
+</resources>

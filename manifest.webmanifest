@@ -1,0 +1,62 @@
+{
+  "name": "Portales Salfa · Ecosistema de Pilotaje",
+  "short_name": "Portales Salfa",
+  "description": "Plataforma central y punto de acceso móvil a todos los portales pilotos de Salfa Montajes / SalfaCorp",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1E2229",
+  "theme_color": "#B01E24",
+  "lang": "es-CL",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo-salfa-montajes-claro.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Salfa Flow (Tareas & Obras)",
+      "short_name": "Salfa Flow",
+      "description": "Gestión de proyectos y tareas en faena",
+      "url": "./index.html?open=06",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Autodesk ACC (BIM & CDE)",
+      "short_name": "Autodesk ACC",
+      "description": "Planos y entorno común de datos",
+      "url": "./index.html?open=07",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Agente AWP (Metodología CII)",
+      "short_name": "Agente AWP",
+      "description": "Tutor y asistente de paquetes de trabajo",
+      "url": "./index.html?open=08",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Control de CV",
+      "short_name": "CVs",
+      "description": "Dotación y competencias por obra",
+      "url": "./index.html?open=02",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

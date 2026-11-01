@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Identidad Gráfica Salfa Montajes -->
+    <color name="salfa_red">#B01E24</color>
+    <color name="salfa_burgundy">#5E0F13</color>
+    <color name="salfa_dark">#1E2229</color>
+    <color name="salfa_dark_light">#282D37</color>
+    <color name="salfa_gray">#5A6771</color>
+    <color name="salfa_border">#3A414A</color>
+    <color name="salfa_bg_light">#EEF0F2</color>
+    <color name="salfa_coral">#FF584A</color>
+    <color name="salfa_amber">#D97706</color>
+    <color name="salfa_green">#10B981</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>

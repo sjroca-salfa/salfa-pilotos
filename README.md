@@ -1,6 +1,6 @@
-# 🏛️ HUB PRINCIPAL · PORTALES SALFA PILOTOS
-
-Página principal y sistema centralizado de control de acceso para el ecosistema de pilotos de Salfa Montajes.
+# 🏛️ HUB PRINCIPAL · PORTALES SALFA PILOTOS & SUPER-APP MÓVIL
+**Ecosistema: Portales Salfa Pilotos · Salfa Montajes / SalfaCorp**  
+*Página Principal, Control Centralizado de Accesos y Aplicación Móvil Android Super-App*
 
 ---
 
@@ -12,81 +12,80 @@ Página principal y sistema centralizado de control de acceso para el ecosistema
 | **Repositorio Frontend del Hub** | [github.com/sjroca-salfa/salfa-pilotos](https://github.com/sjroca-salfa/salfa-pilotos) (Cuenta oficial: `sjroca-salfa`) |
 | **Repositorio Backend de Accesos** | [github.com/sjroca-salfa/hub-accesos](https://github.com/sjroca-salfa/hub-accesos) |
 | **Base de Datos (Google Sheets)** | Hoja *Accesos Portales Salfa Pilotos* (generada al ejecutar `configurar()`) |
+| **Aplicación Móvil Android Nativa** | `E:\Claude\Portales-Salfa-Pilotos\00-portal-hub\android\` |
 
 ---
 
-## 2. Arquitectura de Funcionamiento
+## 2. Arquitectura Super-App Móvil Android (`00-portal-hub/android/`)
+
+La aplicación Android (`com.salfamontajes.hub`) actúa como un **contenedor maestro (Super-App)** para todo el ecosistema de Salfa Montajes:
 
 ```text
-[ Usuario en Navegador ]
-          │
-          ▼
-┌──────────────────────────────────────┐
-│  Frontend: GitHub Pages              │
-│  (sjroca-salfa/salfa-pilotos)        │
-│  • HTML/CSS/JS autocontenido         │
-│  • Identidad Salfa (SVG y Assets)    │
-│  • Login, Registro, Recordarme       │
-└──────────────────┬───────────────────┘
-                   │ HTTPS / Fetch (JSON)
-                   ▼
-┌──────────────────────────────────────┐
-│  Backend: Google Apps Script Web App │
-│  (sjroca-salfa/hub-accesos)          │
-│  • Validación por código (6 dígitos) │
-│  • Hash PBKDF2-HMAC-SHA256           │
-│  • Aprobación y asignación de roles  │
-└──────────────────┬───────────────────┘
-                   │ Lectura / Escritura
-                   ▼
-┌──────────────────────────────────────┐
-│  Almacenamiento: Google Sheets       │
-│  Hoja "Accesos Portales Salfa"       │
-│  (Accesos, Sesiones, Registro)       │
-└──────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│  📱 App Android: Portales Salfa (com.salfamontajes.hub)│
+│                                                        │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │ 🏛️ HUB PRINCIPAL (hubWebView)                    │  │
+│  │ • Single Sign-On Salfa                           │  │
+│  │ • Catálogo de 8+ Portales Pilotos                │  │
+│  │ • Búsqueda, filtros por gerencia y métricas      │  │
+│  └────────────────────────┬─────────────────────────┘  │
+│                           │ Tap en "Abrir Portal"      │
+│                           ▼                            │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │ 🔝 Barra Superior In-App                         │  │
+│  │ [← Volver al Hub]   [06 · Salfa Flow]  [🔀 Portales]│  │
+│  ├──────────────────────────────────────────────────┤  │
+│  │ 🌐 CONTENEDOR DE PORTAL HIJO (portalWebView)     │  │
+│  │ • Ejecución fluida sin salir de la app           │  │
+│  │ • Aceleración por hardware y modo offline        │  │
+│  │ • Soporte de cámara para fotos de obra           │  │
+│  └──────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 3. Dónde se Configura Cada Parámetro
-
-1. **En el Frontend (`index.html`):**
-   - `API_URL`: URL de la Web App de Apps Script terminada en `/exec`. Permite que el frontend se comunique con el servicio de autenticación.
-   - `GOOGLE_CLIENT_ID`: (Opcional) ID de cliente OAuth de Google Cloud configurado con el origen `https://sjroca-salfa.github.io`.
-
-2. **En las Propiedades del Script (Apps Script Editor > Configuración del proyecto > Propiedades del script):**
-   - `ADMINS`: Correos electrónicos de los administradores que aprueban solicitudes, separados por coma.
-   - `CONTACTO_A`: Correo que recibe los mensajes enviados a través del botón de Contacto.
-   - `PIMIENTA`: Clave secreta generada automáticamente por `configurar()` para el hashing robusto de contraseñas.
+### Flujo de Navegación Unificada:
+1. **Acceso al Catálogo:** El usuario abre la app y visualiza todos los portales autorizados.
+2. **Entrada a Portales In-App:** Al presionar "Abrir", el portal se despliega inmediatamente en el contenedor interno, manteniendo el Hub cargado en memoria de fondo.
+3. **Transición entre Portales (`🔀 Cambiar Portal`):** Con un toque en el botón "Portales", se despliega un selector nativo para saltar de un portal a otro (ej. de *Salfa Flow* a *Autodesk ACC* o al *Agente AWP*) sin recargar ni salir de la app.
+4. **Retorno Inmediato (`← Volver al Hub`):** Permite volver al catálogo del Hub instantáneamente.
 
 ---
 
-## 4. Gestión de Accesos (Aprobar o Revocar)
+## 3. Portafolio Completo de Portales Pilotos Integrados
 
-1. **Auto-registro del Colaborador:**
-   - El colaborador ingresa al Hub y completa el formulario de registro con su correo institucional.
-   - Recibe un código de verificación de 6 dígitos por correo para confirmar titularidad.
-   - Una vez verificado, su estado pasa a `Pendiente`.
-
-2. **Aprobación por Administrador:**
-   - Un administrador ingresa al Hub con sus credenciales autorizadas.
-   - Accede a la pestaña **Gestión de accesos** dentro del Hub o directamente en la hoja de cálculo *Accesos Portales Salfa Pilotos*.
-   - Selecciona el rol correspondiente y los portales autorizados para el usuario, cambiando el estado a `Activo`.
-   - Para revocar el acceso en cualquier momento, basta con cambiar el estado a `Revocado` o `Inactivo`.
-
----
-
-## 5. Portafolio de Portales Salfa Pilotos
-
-| Portal | Módulo | Estado |
-| :--- | :--- | :--- |
-| **01** | Mapa de Procesos | **Activo / En Producción** |
-| **02** | Control de CV | **En desarrollo** |
-| **03** | Gestión AWP & Construcción | **Próximamente** |
+| N° | Portal | Área / Gerencia | Estado | URL Relativa / Remota |
+| :---: | :--- | :--- | :---: | :--- |
+| **01** | Mapa de Procesos BPMN | Gerencia de Operaciones | Activo | `https://sjroca-salfa.github.io/portal-mapa-procesos/` |
+| **02** | Control de CV y Competencias | Gestión de Personas | Activo | `02-portal-cv/index.html` |
+| **03** | Salfa Work Management | Operaciones / Obras | Activo | `03-portal-gestion-proyectos/index.html` |
+| **04** | Indicadores OKR | Planificación y Desarrollo | En desarrollo | `04-portal-indicadores-okr/index.html` |
+| **05** | Gestión de la Información | Gobernanza y P&D | Activo | `05-portal-gestion-informacion/index.html` |
+| **06** | Salfa Flow (Tareas & Terreno) | Operaciones / P&D | Activo | `06-portal-salfa-flow/index.html` |
+| **07** | Autodesk Construction Cloud (ACC) | Operaciones / BIM | Activo | `07-portal-autodesk-construction-cloud-acc/index.html` |
+| **08** | Agente AWP (Metodología CII) | Operaciones / AWP | Activo | `08-portal-agente-awp/index.html` |
 
 ---
 
-## 6. Despliegue y Publicación
+## 4. Compilación e Instalación de la App Android
 
-- **Frontend:** Cualquier cambio en `index.html` o `assets/` se sube al repositorio `sjroca-salfa/salfa-pilotos` en la rama `main`. GitHub Pages actualiza el sitio en 30 a 60 segundos automáticamente.
-- **Backend:** Los cambios en `Code.gs` o `appsscript.json` dentro de `hub-accesos` se suben con `git push origin main`. GitHub Actions sincroniza vía Clasp (`clasp push` y `clasp deploy`) actualizando la versión de producción sin modificar la URL `/exec`.
+1. **Abrir en Android Studio:**
+   - Abrir `E:\Claude\Portales-Salfa-Pilotos\00-portal-hub\android\`.
+   - Esperar la sincronización de Gradle.
+2. **Compilar APK:**
+   - Menú **Build -> Build Bundle(s) / APK(s) -> Build APK(s)**.
+   - El APK generado quedará en:
+     `00-portal-hub/android/app/build/outputs/apk/debug/app-debug.apk`
+3. **Instalación directa en celular:**
+   ```powershell
+   adb install "E:\Claude\Portales-Salfa-Pilotos\00-portal-hub\android\app\build\outputs\apk\debug\app-debug.apk"
+   ```
+   O ejecutando `compilar-android.bat`.
+
+---
+
+## 5. Sincronización Corporativa Google Drive
+Todos los cambios se replican unidireccionalmente hacia la nube corporativa ejecutando:
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File "E:\Claude\Portales-Salfa-Pilotos\sincronizar-drive.ps1"
+```

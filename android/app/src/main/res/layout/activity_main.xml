@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/salfa_dark">
+
+    <!-- CAPA 1: HUB PRINCIPAL (Siempre en memoria) -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/hubSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/hubWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- CAPA 2: CONTENEDOR DEL PORTAL HIJO SELECCIONADO (Se activa al entrar a un portal) -->
+    <LinearLayout
+        android:id="@+id/portalContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/salfa_dark">
+
+        <!-- Barra Superior de Navegación In-App Salfa -->
+        <LinearLayout
+            android:id="@+id/portalTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/salfa_dark"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:elevation="4dp">
+
+            <!-- Botón Volver al Hub -->
+            <LinearLayout
+                android:id="@+id/btnBackToHub"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:paddingStart="8dp"
+                android:paddingEnd="12dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_back_to_hub"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Título del Portal Activo (Píldora) -->
+            <TextView
+                android:id="@+id/portalTitlePill"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Portal Salfa"
+                android:textColor="@color/white"
+                android:textSize="13.5sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp" />
+
+            <!-- Botón Cambiar Portal (App Switcher) -->
+            <ImageButton
+                android:id="@+id/btnSwitchPortal"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_manage"
+                app:tint="@color/salfa_coral"
+                android:contentDescription="@string/btn_switch_portal" />
+
+            <!-- Botón Recargar -->
+            <ImageButton
+                android:id="@+id/btnReloadPortal"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_rotate"
+                app:tint="@color/white"
+                android:contentDescription="@string/reload" />
+        </LinearLayout>
+
+        <!-- Barra de Progreso de Carga -->
+        <ProgressBar
+            android:id="@+id/portalProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:max="100"
+            android:progressTint="@color/salfa_red"
+            android:visibility="gone" />
+
+        <!-- WebView del Portal Activo con SwipeRefresh -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/portalSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <WebView
+                android:id="@+id/portalWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/portal_card_background"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Ficha con número de portal -->
+    <TextView
+        android:id="@+id/portalNumFicha"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/badge_number_background"
+        android:gravity="center"
+        android:text="06"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <!-- Información del Portal -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/portalCardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salfa Flow · Work Management"
+            android:textColor="@color/white"
+            android:textSize="13.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/portalCardCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flujos y procesos colaborativos"
+            android:textColor="#8C8C8C"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Flecha de acción -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Abrir →"
+        android:textColor="@color/salfa_coral"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>
