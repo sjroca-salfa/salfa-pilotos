@@ -1,0 +1,3425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autodesk Construction Cloud</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230696D7'%3E%3Cpath d='M12 2L2 22h20L12 2zm0 4.5l6.5 13H5.5L12 6.5z'/%3E%3C/svg%3E">
+  
+  <!-- Web fonts: Artifakt Element & Open Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       AUTODESK DESIGN SYSTEM & CONSTRUCTION CLOUD STYLING
+       ========================================================================== */
+    :root {
+      --adsk-black: #121212;
+      --adsk-dark: #1E2229;
+      --adsk-darker: #14171D;
+      --adsk-surface: #FFFFFF;
+      --adsk-surface-subtle: #F5F6F8;
+      --adsk-surface-hover: #ECEEF2;
+      --adsk-border: #D5D9E0;
+      --adsk-border-subtle: #E2E6EC;
+      --adsk-text-primary: #1E2229;
+      --adsk-text-secondary: #5C6577;
+      --adsk-text-disabled: #8E98A8;
+      
+      --adsk-blue: #0696D7;
+      --adsk-blue-hover: #057CB0;
+      --adsk-blue-active: #04638C;
+      --adsk-blue-subtle: #E6F5FC;
+      
+      --adsk-success: #17823B;
+      --adsk-success-subtle: #E7F6EC;
+      --adsk-warning: #E26529;
+      --adsk-warning-subtle: #FDF1EA;
+      --adsk-error: #D62329;
+      --adsk-error-subtle: #FCE8E8;
+      
+      --adsk-font-sans: 'Artifakt Element', 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --adsk-font-mono: 'Roboto Mono', monospace;
+      
+      --header-height: 48px;
+      --nav-height: 44px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+      --shadow-lg: 0 12px 28px rgba(0,0,0,0.20);
+      --shadow-dock: 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--adsk-font-sans);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--adsk-text-primary);
+      background-color: var(--adsk-surface-subtle);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD2DC;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A0ABC0;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    /* ==========================================================================
+       TOPBAR & APP SHELL
+       ========================================================================== */
+    .topbar {
+      height: var(--header-height);
+      background: var(--adsk-black);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #23272F;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-waffle {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .btn-waffle:hover {
+      background: rgba(255,255,255,0.12);
+    }
+    .btn-waffle svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+
+    .adsk-icon {
+      width: 22px;
+      height: 22px;
+      fill: #FFFFFF;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 14.5px;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 18px;
+      background: #3B404D;
+      margin: 0 4px;
+    }
+
+    /* Project Picker */
+    .project-picker {
+      position: relative;
+    }
+    .btn-project-picker {
+      background: #232833;
+      border: 1px solid #363C4A;
+      color: #FFFFFF;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      max-width: 340px;
+      transition: all 0.15s;
+    }
+    .btn-project-picker:hover {
+      background: #2C3342;
+      border-color: #4C5568;
+    }
+    .btn-project-picker .proj-icon {
+      width: 14px;
+      height: 14px;
+      fill: var(--adsk-blue);
+    }
+    .btn-project-picker .proj-chevron {
+      width: 12px;
+      height: 12px;
+      fill: #9DA6B8;
+      margin-left: auto;
+    }
+
+    .topbar-center {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 20px;
+    }
+
+    .global-search-box {
+      position: relative;
+      width: 100%;
+    }
+    .global-search-box input {
+      width: 100%;
+      height: 32px;
+      background: #232833;
+      border: 1px solid #363C4A;
+      border-radius: 4px;
+      padding: 0 10px 0 32px;
+      color: #FFFFFF;
+      font-size: 12.5px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .global-search-box input:focus {
+      background: #191D24;
+      border-color: var(--adsk-blue);
+      box-shadow: 0 0 0 2px rgba(6, 150, 215, 0.25);
+    }
+    .global-search-box input::placeholder {
+      color: #7A8498;
+    }
+    .global-search-box svg {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      fill: #7A8498;
+      pointer-events: none;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-action-btn {
+      background: transparent;
+      border: none;
+      color: #C3CAD6;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+    .top-action-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #FFFFFF;
+    }
+    .top-action-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+    .badge-notif-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 7px;
+      height: 7px;
+      background: var(--adsk-blue);
+      border-radius: 50%;
+      border: 1.5px solid var(--adsk-black);
+    }
+
+    .user-profile-btn {
+      background: #2D333F;
+      color: #FFFFFF;
+      border: 1px solid #434B5B;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: all 0.15s;
+    }
+    .user-profile-btn:hover {
+      border-color: var(--adsk-blue);
+      background: #3B4455;
+    }
+
+    /* ==========================================================================
+       SUBNAV TABS
+       ========================================================================== */
+    .module-nav {
+      height: var(--nav-height);
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--adsk-border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      position: sticky;
+      top: var(--header-height);
+      z-index: 900;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-tabs-list {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 100%;
+    }
+
+    .module-tab-btn {
+      height: 100%;
+      padding: 0 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--adsk-text-secondary);
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .module-tab-btn:hover {
+      color: var(--adsk-text-primary);
+      background: var(--adsk-surface-hover);
+    }
+    .module-tab-btn.active {
+      color: var(--adsk-blue);
+      border-bottom-color: var(--adsk-blue);
+      background: transparent;
+    }
+
+    .tab-counter-badge {
+      background: #E4E7ED;
+      color: var(--adsk-text-secondary);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+    .module-tab-btn.active .tab-counter-badge {
+      background: var(--adsk-blue-subtle);
+      color: var(--adsk-blue);
+    }
+
+    .module-nav-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ==========================================================================
+       BUTTONS & INPUTS
+       ========================================================================== */
+    .btn-adsk {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-adsk-primary {
+      background: var(--adsk-blue);
+      color: #FFFFFF;
+      border-color: var(--adsk-blue);
+    }
+    .btn-adsk-primary:hover {
+      background: var(--adsk-blue-hover);
+      border-color: var(--adsk-blue-hover);
+    }
+    .btn-adsk-secondary {
+      background: #FFFFFF;
+      color: var(--adsk-text-primary);
+      border-color: var(--adsk-border);
+    }
+    .btn-adsk-secondary:hover {
+      background: var(--adsk-surface-hover);
+      border-color: #B4BCC8;
+    }
+    .btn-adsk-ghost {
+      background: transparent;
+      color: var(--adsk-text-secondary);
+    }
+    .btn-adsk-ghost:hover {
+      background: var(--adsk-surface-hover);
+      color: var(--adsk-text-primary);
+    }
+    .btn-adsk-sm {
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+    .btn-adsk svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .select-adsk {
+      height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--adsk-border);
+      background: #FFFFFF;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: var(--adsk-text-primary);
+      outline: none;
+      cursor: pointer;
+    }
+    .select-adsk:focus {
+      border-color: var(--adsk-blue);
+    }
+
+    .input-adsk {
+      height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--adsk-border);
+      background: #FFFFFF;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: var(--adsk-text-primary);
+      outline: none;
+    }
+    .input-adsk:focus {
+      border-color: var(--adsk-blue);
+      box-shadow: 0 0 0 2px rgba(6, 150, 215, 0.2);
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT VIEWS
+       ========================================================================== */
+    .main-viewport {
+      flex: 1;
+      padding: 20px 24px;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .view-container {
+      display: none;
+    }
+    .view-container.active {
+      display: block;
+    }
+
+    /* Breadcrumbs & View Titles */
+    .view-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .view-title-group h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--adsk-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .view-subtitle {
+      font-size: 12px;
+      color: var(--adsk-text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Toolbar Controls Card */
+    .filter-toolbar {
+      background: #FFFFFF;
+      border: 1px solid var(--adsk-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-group-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-search-box {
+      position: relative;
+      width: 260px;
+    }
+    .filter-search-box input {
+      width: 100%;
+      height: 32px;
+      padding: 0 10px 0 30px;
+      border: 1px solid var(--adsk-border);
+      border-radius: 4px;
+      font-size: 12px;
+      outline: none;
+    }
+    .filter-search-box input:focus {
+      border-color: var(--adsk-blue);
+    }
+    .filter-search-box svg {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      fill: #8E98A8;
+    }
+
+    /* Tables */
+    .adsk-card-table {
+      background: #FFFFFF;
+      border: 1px solid var(--adsk-border);
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    table.data-table thead {
+      background: #F8F9FA;
+      border-bottom: 1px solid var(--adsk-border);
+    }
+    table.data-table th {
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--adsk-text-secondary);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    table.data-table tbody tr {
+      border-bottom: 1px solid var(--adsk-border-subtle);
+      transition: background 0.1s;
+    }
+    table.data-table tbody tr:hover {
+      background: #F4F7FB;
+    }
+    table.data-table td {
+      padding: 11px 14px;
+      color: var(--adsk-text-primary);
+      vertical-align: middle;
+    }
+
+    .doc-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .doc-icon-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 9.5px;
+      flex-shrink: 0;
+    }
+    .doc-icon-rvt { background: #E1F0FA; color: #026090; }
+    .doc-icon-pdf { background: #FDE8E8; color: #C5221F; }
+    .doc-icon-dwg { background: #FFF4E5; color: #B25E00; }
+    .doc-icon-ifc { background: #E6F4EA; color: #137333; }
+
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-badge.apc { background: var(--adsk-success-subtle); color: var(--adsk-success); }
+    .status-badge.wip { background: var(--adsk-warning-subtle); color: var(--adsk-warning); }
+    .status-badge.rev { background: var(--adsk-blue-subtle); color: var(--adsk-blue); }
+    .status-badge.open { background: #FFF0EB; color: #E26529; }
+    .status-badge.closed { background: #EBF8F1; color: #1B8A44; }
+
+    .version-chip {
+      background: #E8ECF2;
+      color: var(--adsk-text-secondary);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--adsk-font-mono);
+    }
+
+    /* Docs CDE Layout */
+    .docs-cde-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 16px;
+    }
+    .folder-tree-card {
+      background: #FFFFFF;
+      border: 1px solid var(--adsk-border);
+      border-radius: 6px;
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+    }
+    .folder-tree-title {
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--adsk-text-secondary);
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      padding-left: 6px;
+    }
+    .folder-node {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: var(--adsk-text-primary);
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .folder-node:hover {
+      background: var(--adsk-surface-hover);
+    }
+    .folder-node.active {
+      background: var(--adsk-blue-subtle);
+      color: var(--adsk-blue);
+      font-weight: 600;
+    }
+    .folder-node .f-count {
+      font-size: 11px;
+      color: #7A8498;
+      background: rgba(0,0,0,0.05);
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    /* Build Subtabs */
+    .subtabs-pill-bar {
+      display: flex;
+      gap: 4px;
+      background: #E5E9F0;
+      padding: 3px;
+      border-radius: 6px;
+      width: fit-content;
+      margin-bottom: 14px;
+    }
+    .subtab-pill-btn {
+      padding: 5px 14px;
+      border: none;
+      background: transparent;
+      color: var(--adsk-text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .subtab-pill-btn:hover {
+      color: var(--adsk-text-primary);
+    }
+    .subtab-pill-btn.active {
+      background: #FFFFFF;
+      color: var(--adsk-text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Financial Summary KPI Cards (Cost Management) */
+    .cost-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .cost-kpi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--adsk-border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cost-kpi-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--adsk-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cost-kpi-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--adsk-text-primary);
+      margin-top: 4px;
+    }
+    .cost-kpi-sub {
+      font-size: 11.5px;
+      color: var(--adsk-success);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       FULLSCREEN 3D BIM / 2D LARGE MODEL VIEWER (LMV - FORGE VIEWER)
+       ========================================================================== */
+    .viewer-modal-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      z-index: 100000;
+      background: #12151B;
+      color: #FFFFFF;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .viewer-modal-fullscreen[open] {
+      display: flex;
+    }
+
+    /* Viewer Top Header */
+    .viewer-top-header {
+      height: 48px;
+      background: #171A21;
+      border-bottom: 1px solid #282D39;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+      z-index: 50;
+    }
+
+    .viewer-top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-viewer-back {
+      background: transparent;
+      border: 1px solid #3A4354;
+      color: #D3D9E4;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-viewer-back:hover {
+      background: #252B38;
+      color: #FFFFFF;
+      border-color: #5C677E;
+    }
+    .viewer-doc-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .viewer-version-select {
+      background: #232833;
+      color: #FFFFFF;
+      border: 1px solid #3B4456;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .viewer-top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-viewer-hdr {
+      background: #232833;
+      border: 1px solid #363E4F;
+      color: #E2E6EF;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-viewer-hdr:hover {
+      background: #2F3646;
+      color: #FFFFFF;
+      border-color: var(--adsk-blue);
+    }
+    .btn-viewer-primary {
+      background: var(--adsk-blue);
+      border-color: var(--adsk-blue);
+      color: #FFFFFF;
+    }
+    .btn-viewer-primary:hover {
+      background: var(--adsk-blue-hover);
+    }
+    .btn-viewer-close {
+      background: transparent;
+      border: none;
+      color: #A0ABC0;
+      font-size: 20px;
+      line-height: 1;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+    .btn-viewer-close:hover {
+      background: rgba(255,255,255,0.12);
+      color: #FFFFFF;
+    }
+
+    /* Viewer Stage & Viewport */
+    .viewer-stage {
+      flex: 1;
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, #202735 0%, #0F1217 100%);
+    }
+
+    /* Left Icon Strip Ribbon (48px) */
+    .viewer-icon-rail {
+      width: 48px;
+      background: #171A21;
+      border-right: 1px solid #282D39;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 40;
+    }
+    .rail-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: #9DA8BA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      position: relative;
+      transition: all 0.15s;
+    }
+    .rail-btn:hover {
+      background: #252B38;
+      color: #FFFFFF;
+    }
+    .rail-btn.active {
+      background: var(--adsk-blue);
+      color: #FFFFFF;
+    }
+
+    /* Collapsible Left Side Panel Drawer */
+    .viewer-drawer-left {
+      width: 300px;
+      background: #171B23;
+      border-right: 1px solid #282D39;
+      display: none;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 35;
+      animation: slideInLeft 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .viewer-drawer-left.open {
+      display: flex;
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+    .drawer-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid #282D39;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 13px;
+      color: #FFFFFF;
+    }
+    .drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    /* Thumbnail Cards (Sheets & Views) */
+    .sheet-thumb-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sheet-thumb-card {
+      background: #202530;
+      border: 1px solid #333A48;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sheet-thumb-card:hover {
+      border-color: var(--adsk-blue);
+      transform: translateY(-1px);
+    }
+    .sheet-thumb-card.active {
+      border-color: var(--adsk-blue);
+      box-shadow: 0 0 0 2px rgba(6, 150, 215, 0.4);
+    }
+    .sheet-thumb-img {
+      height: 90px;
+      background: #11141A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .sheet-thumb-info {
+      padding: 8px 10px;
+    }
+    .sheet-thumb-title {
+      font-weight: 600;
+      font-size: 12px;
+      color: #FFFFFF;
+    }
+    .sheet-thumb-type {
+      font-size: 10.5px;
+      color: #8E98A8;
+    }
+
+    /* Model Browser Tree */
+    .bim-tree-node {
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #CBD2DE;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .bim-tree-node:hover {
+      background: #262D3B;
+      color: #FFFFFF;
+    }
+    .bim-tree-node.selected {
+      background: rgba(6, 150, 215, 0.25);
+      color: #0696D7;
+      font-weight: 600;
+    }
+    .bim-tree-level {
+      margin-left: 14px;
+      border-left: 1px dashed #3A4354;
+      padding-left: 6px;
+    }
+
+    /* Right Inspector Panel Drawer (Object Properties) */
+    .viewer-drawer-right {
+      width: 320px;
+      background: #171B23;
+      border-left: 1px solid #282D39;
+      display: none;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 35;
+      animation: slideInRight 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .viewer-drawer-right.open {
+      display: flex;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .props-group {
+      margin-bottom: 14px;
+      background: #1F2430;
+      border: 1px solid #2F3646;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .props-group-header {
+      background: #262D3C;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #9DA8BA;
+    }
+    .props-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 10px;
+      font-size: 11.5px;
+      border-bottom: 1px solid #282F3E;
+    }
+    .props-row:last-child {
+      border-bottom: none;
+    }
+    .props-key {
+      color: #8E98A8;
+    }
+    .props-val {
+      color: #FFFFFF;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* 3D Canvas Container */
+    .viewer-canvas-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+    }
+    .viewer-canvas-area:active {
+      cursor: grabbing;
+    }
+
+    /* ViewCube (Top Right of Stage) */
+    .viewcube-container {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 110px;
+      height: 110px;
+      z-index: 30;
+      perspective: 400px;
+      pointer-events: auto;
+    }
+    .viewcube-home {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 22px;
+      height: 22px;
+      background: #252C3A;
+      border: 1px solid #3E4759;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      color: #D3DAE6;
+      transition: all 0.15s;
+    }
+    .viewcube-home:hover {
+      background: var(--adsk-blue);
+      color: #FFFFFF;
+    }
+
+    .viewcube-box {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      transform-style: preserve-3d;
+      transform: rotateX(-25deg) rotateY(35deg);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+    .cube-face {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: rgba(43, 52, 68, 0.85);
+      border: 1.5px solid #5C6A84;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      transition: background 0.15s;
+    }
+    .cube-face:hover {
+      background: rgba(6, 150, 215, 0.85);
+      border-color: #FFFFFF;
+    }
+    .cube-front  { transform: translateZ(30px); }
+    .cube-back   { transform: rotateY(180deg) translateZ(30px); }
+    .cube-right  { transform: rotateY(90deg) translateZ(30px); }
+    .cube-left   { transform: rotateY(-90deg) translateZ(30px); }
+    .cube-top    { transform: rotateX(90deg) translateZ(30px); }
+    .cube-bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+    /* HUD Mode Tag */
+    .viewer-hud-status {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(23, 27, 35, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid #333A48;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11.5px;
+      color: #D3DAE6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 25;
+      pointer-events: none;
+    }
+    .hud-pulsing-dot {
+      width: 8px;
+      height: 8px;
+      background: #00E5FF;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00E5FF;
+    }
+
+    /* Measure HUD */
+    .measure-badge-hud {
+      position: absolute;
+      top: 50px;
+      left: 16px;
+      background: rgba(23, 27, 35, 0.9);
+      border: 1px solid var(--adsk-blue);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #FFFFFF;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 25;
+    }
+    .measure-badge-hud.active {
+      display: flex;
+    }
+
+    /* Section Cut Slider Box */
+    .section-slider-dock {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(23, 27, 35, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid #363E4F;
+      border-radius: 8px;
+      padding: 8px 16px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 30;
+      box-shadow: var(--shadow-dock);
+    }
+    .section-slider-dock.active {
+      display: flex;
+    }
+
+    /* Explode Slider Box */
+    .explode-slider-dock {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(23, 27, 35, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid #363E4F;
+      border-radius: 8px;
+      padding: 8px 16px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 30;
+      box-shadow: var(--shadow-dock);
+    }
+    .explode-slider-dock.active {
+      display: flex;
+    }
+
+    /* Autodesk LMV Floating Dock Toolbar (Bottom Center) */
+    .viewer-floating-dock {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26, 30, 39, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid #363E4F;
+      border-radius: 28px;
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-dock);
+      z-index: 30;
+    }
+    .dock-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: #CBD2DE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.15s;
+    }
+    .dock-btn:hover {
+      background: #2E3646;
+      color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+    .dock-btn.active {
+      background: var(--adsk-blue);
+      color: #FFFFFF;
+      box-shadow: 0 0 12px rgba(6, 150, 215, 0.6);
+    }
+    .dock-divider {
+      width: 1px;
+      height: 20px;
+      background: #3B4456;
+      margin: 0 2px;
+    }
+
+    /* 3D Scene SVG / Canvas Styling */
+    .scene-viewport-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transform-origin: center center;
+    }
+
+    /* Pin Styling on Model */
+    .viewer-issue-pin {
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .viewer-issue-pin:hover {
+      transform: scale(1.25);
+    }
+
+    /* Pin Popover Card */
+    .pin-popover-card {
+      position: absolute;
+      background: #1E232E;
+      border: 1px solid #3B4456;
+      border-radius: 6px;
+      padding: 10px 12px;
+      width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      z-index: 60;
+      display: none;
+    }
+
+    /* ==========================================================================
+       MODAL DIALOGS (Light Dismiss via closedby="any")
+       ========================================================================== */
+    dialog {
+      margin: auto;
+      border: 1px solid var(--adsk-border);
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      padding: 0;
+      max-width: 560px;
+      width: 90vw;
+      background: #FFFFFF;
+      color: var(--adsk-text-primary);
+    }
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(2px);
+    }
+    .dialog-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--adsk-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dialog-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .dialog-body {
+      padding: 18px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+    .dialog-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--adsk-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #F8F9FA;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .form-col-full {
+      grid-column: span 2;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--adsk-text-secondary);
+      margin-bottom: 4px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+    }
+    .form-group textarea {
+      min-height: 70px;
+      padding: 8px 10px;
+      border: 1px solid var(--adsk-border);
+      border-radius: 4px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-group textarea:focus {
+      border-color: var(--adsk-blue);
+    }
+
+    /* Popover Waffle Grid */
+    .waffle-popover {
+      position: absolute;
+      top: 52px;
+      left: 12px;
+      width: 360px;
+      background: #1E2229;
+      border: 1px solid #333946;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+      z-index: 1050;
+      display: none;
+    }
+    .waffle-popover.show {
+      display: block;
+    }
+    .waffle-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #8E98A8;
+      margin-bottom: 12px;
+    }
+    .waffle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .waffle-app-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #E2E6EF;
+      transition: all 0.15s;
+    }
+    .waffle-app-item:hover {
+      background: #2B313D;
+      color: #FFFFFF;
+    }
+    .waffle-app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: #2C3342;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+    .waffle-app-name {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    /* Project Picker Dropdown */
+    .project-dropdown {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      width: 340px;
+      background: #1E2229;
+      border: 1px solid #333946;
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+      z-index: 1050;
+      display: none;
+    }
+    .project-dropdown.show {
+      display: block;
+    }
+    .project-dropdown input {
+      width: 100%;
+      height: 28px;
+      background: #2C3342;
+      border: 1px solid #434C5E;
+      border-radius: 4px;
+      color: #FFF;
+      padding: 0 8px;
+      font-size: 11.5px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+    .project-item {
+      padding: 8px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #CBD2DE;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .project-item:hover {
+      background: #2C3342;
+      color: #FFF;
+    }
+    .project-item.active {
+      background: rgba(6, 150, 215, 0.25);
+      color: var(--adsk-blue);
+      font-weight: 600;
+    }
+
+    /* Profile Popover */
+    .profile-popover {
+      position: absolute;
+      top: 52px;
+      right: 12px;
+      width: 260px;
+      background: #FFFFFF;
+      border: 1px solid var(--adsk-border);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1050;
+      display: none;
+    }
+    .profile-popover.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       HEADER & AUTODESK APP SHELL
+       ========================================================================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <!-- 9-dot Waffle App Launcher -->
+      <button type="button" class="btn-waffle" id="btnWaffle" title="Autodesk Products">
+        <svg viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg>
+      </button>
+
+      <!-- Autodesk Brand -->
+      <a href="#" class="brand-group" id="btnBrandHome">
+        <svg class="adsk-icon" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13H5.5L12 6.5z"/></svg>
+        <span class="brand-title">Construction Cloud</span>
+      </a>
+
+      <div class="brand-divider"></div>
+
+      <!-- Project Picker Dropdown -->
+      <div class="project-picker">
+        <button type="button" class="btn-project-picker" id="btnProjectPicker">
+          <svg class="proj-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span id="txtCurrentProject">Salfa Montajes > OB 2401 · Hospital Salvador</span>
+          <svg class="proj-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+
+        <div class="project-dropdown" id="dropdownProjects">
+          <input type="text" id="inputFilterProjects" placeholder="Search projects...">
+          <div id="listProjectsDropdown">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Search -->
+    <div class="topbar-center">
+      <div class="global-search-box">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="globalSearchInput" placeholder="Search across all project files, RFIs, assets...">
+      </div>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="topbar-right">
+      <button type="button" class="top-action-btn" id="btnHelp" title="Help &amp; Shortcuts">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+      </button>
+
+      <button type="button" class="top-action-btn" id="btnNotifications" title="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <span class="badge-notif-dot"></span>
+      </button>
+
+      <!-- User Avatar -->
+      <button type="button" class="user-profile-btn" id="btnUserProfile" title="Sergio Roca (sjroca@salfamontajes.com)">
+        SR
+      </button>
+    </div>
+  </header>
+
+  <!-- Waffle App Launcher Popover -->
+  <div class="waffle-popover" id="popoverWaffle">
+    <div class="waffle-title">Autodesk Construction Cloud</div>
+    <div class="waffle-grid">
+      <div class="waffle-app-item" data-switch-tab="docs">
+        <div class="waffle-app-icon" style="background:#026090;color:#FFF;">📁</div>
+        <span class="waffle-app-name">Docs (CDE)</span>
+      </div>
+      <div class="waffle-app-item" data-switch-tab="build">
+        <div class="waffle-app-icon" style="background:#C5221F;color:#FFF;">🔨</div>
+        <span class="waffle-app-name">Build (Field)</span>
+      </div>
+      <div class="waffle-app-item" data-switch-tab="cost">
+        <div class="waffle-app-icon" style="background:#137333;color:#FFF;">💰</div>
+        <span class="waffle-app-name">Cost Mgmt</span>
+      </div>
+      <div class="waffle-app-item" data-switch-tab="coordination">
+        <div class="waffle-app-icon" style="background:#673AB7;color:#FFF;">🔄</div>
+        <span class="waffle-app-name">Coordination</span>
+      </div>
+      <div class="waffle-app-item" data-switch-tab="admin">
+        <div class="waffle-app-icon" style="background:#37474F;color:#FFF;">⚙️</div>
+        <span class="waffle-app-name">Project Admin</span>
+      </div>
+      <div class="waffle-app-item" data-switch-tab="projects">
+        <div class="waffle-app-icon" style="background:#00838F;color:#FFF;">🏢</div>
+        <span class="waffle-app-name">Projects</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Profile Popover -->
+  <div class="profile-popover" id="popoverProfile">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;border-bottom:1px solid #E2E6EC;padding-bottom:10px;">
+      <div class="user-profile-btn" style="width:38px;height:38px;font-size:13px;">SR</div>
+      <div>
+        <div style="font-weight:700;font-size:13.5px;">Sergio Roca</div>
+        <div style="font-size:11.5px;color:var(--adsk-text-secondary);">sjroca@salfamontajes.com</div>
+        <div style="font-size:11px;color:var(--adsk-blue);font-weight:600;margin-top:2px;">Project Administrator</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+      <a href="#" style="color:var(--adsk-text-primary);text-decoration:none;padding:5px 0;">Account Preferences</a>
+      <a href="#" style="color:var(--adsk-text-primary);text-decoration:none;padding:5px 0;">Autodesk Profile</a>
+      <hr style="border:none;border-top:1px solid #E2E6EC;margin:4px 0;">
+      <a href="#" style="color:var(--adsk-error);text-decoration:none;font-weight:600;padding:5px 0;" id="btnSignOut">Sign Out</a>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SUBNAV TABS
+       ========================================================================== -->
+  <nav class="module-nav">
+    <div class="nav-tabs-list">
+      <button type="button" class="module-tab-btn" data-tab="projects">
+        Projects
+        <span class="tab-counter-badge" id="badgeProjCount">4</span>
+      </button>
+      <button type="button" class="module-tab-btn active" data-tab="docs">
+        Docs (Files &amp; Sheets)
+        <span class="tab-counter-badge" id="badgeDocsCount">4</span>
+      </button>
+      <button type="button" class="module-tab-btn" data-tab="build">
+        Build (RFIs &amp; Field)
+        <span class="tab-counter-badge" id="badgeBuildCount">4</span>
+      </button>
+      <button type="button" class="module-tab-btn" data-tab="cost">
+        Cost Management
+      </button>
+      <button type="button" class="module-tab-btn" data-tab="coordination">
+        Model Coordination
+      </button>
+      <button type="button" class="module-tab-btn" data-tab="admin">
+        Project Admin
+      </button>
+    </div>
+
+    <div class="module-nav-actions">
+      <button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" id="btnExportData">Export Table</button>
+      <button type="button" class="btn-adsk btn-adsk-primary btn-adsk-sm" id="btnPrimaryAction">+ Upload File</button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       MAIN VIEWPORT
+       ========================================================================== -->
+  <main class="main-viewport">
+
+    <!-- 1. VIEW: PROJECTS (accProjectList) -->
+    <section id="view-projects" class="view-container">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Projects Directory</h1>
+          <div class="view-subtitle">Salfa Montajes portfolio projects in Autodesk Construction Cloud</div>
+        </div>
+        <button type="button" class="btn-adsk btn-adsk-primary" id="btnNewProject">+ Create Project</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="filter-group-left">
+          <div class="filter-search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchProjects" placeholder="Search by name or number...">
+          </div>
+          <select class="select-adsk" id="filterProjStatus">
+            <option value="">All Statuses</option>
+            <option value="En Ejecución">En Ejecución</option>
+            <option value="Preconstrucción">Preconstrucción</option>
+            <option value="Comisionamiento">Comisionamiento</option>
+          </select>
+          <select class="select-adsk" id="filterProjType">
+            <option value="">All Project Types</option>
+            <option value="Hospital / Salud">Hospital / Salud</option>
+            <option value="Minería">Minería</option>
+            <option value="Industrial">Industrial</option>
+            <option value="Infraestructura">Infraestructura</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="adsk-card-table">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:34%;">Project Name</th>
+                <th style="width:14%;">Number</th>
+                <th style="width:16%;">Type</th>
+                <th style="width:14%;">Status</th>
+                <th style="width:12%;">Created Date</th>
+                <th style="width:10%; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyProjects">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. VIEW: DOCS (Files & Sheets CDE) -->
+    <section id="view-docs" class="view-container active">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Docs · Files &amp; Sheets</h1>
+          <div class="view-subtitle">ISO 19650 Common Data Environment (CDE) for Obra OB-2401</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-adsk btn-adsk-secondary" id="btnNewFolder">+ New Folder</button>
+          <button type="button" class="btn-adsk btn-adsk-primary" id="btnUploadDoc">+ Upload File</button>
+        </div>
+      </div>
+
+      <div class="docs-cde-layout">
+        <!-- ISO 19650 Folder Tree -->
+        <aside class="folder-tree-card">
+          <div class="folder-tree-title">Folders (ISO 19650)</div>
+          <div class="folder-node active" data-folder-key="ALL">
+            <span>📁 All Project Files</span>
+            <span class="f-count" id="cntFldAll">4</span>
+          </div>
+          <div class="folder-node" data-folder-key="01-WIP">
+            <span>📁 01-WIP (Work In Progress)</span>
+            <span class="f-count" id="cntFldWip">1</span>
+          </div>
+          <div class="folder-node" data-folder-key="02-SHARED">
+            <span>📁 02-SHARED (Coordinación)</span>
+            <span class="f-count" id="cntFldShared">1</span>
+          </div>
+          <div class="folder-node" data-folder-key="03-PUBLISHED">
+            <span>📁 03-PUBLISHED (APC Terreno)</span>
+            <span class="f-count" id="cntFldApc">2</span>
+          </div>
+          <div class="folder-node" data-folder-key="04-ARCHIVED">
+            <span>📁 04-ARCHIVED (Histórico)</span>
+            <span class="f-count">0</span>
+          </div>
+        </aside>
+
+        <!-- Docs Table Card -->
+        <div>
+          <div class="filter-toolbar">
+            <div class="filter-group-left">
+              <div class="filter-search-box">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="searchDocs" placeholder="Search sheets, models, specifications...">
+              </div>
+              <select class="select-adsk" id="filterDocStatus">
+                <option value="">All Review States</option>
+                <option value="APC">Aprobado Construcción (APC)</option>
+                <option value="WIP">En Elaboración (WIP)</option>
+                <option value="Revisión">En Revisión</option>
+              </select>
+            </div>
+            <div>
+              <span style="font-size:12px;color:var(--adsk-text-secondary);" id="lblDocsShowing">Showing 4 files</span>
+            </div>
+          </div>
+
+          <div class="adsk-card-table">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width:34%;">Sheet / Model Name</th>
+                    <th style="width:14%;">Code / Number</th>
+                    <th style="width:10%;">Version</th>
+                    <th style="width:16%;">ISO Status</th>
+                    <th style="width:14%;">Author</th>
+                    <th style="width:12%; text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyDocs">
+                  <!-- Rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. VIEW: BUILD (RFIs, Submittals, Issues QA/QC) -->
+    <section id="view-build" class="view-container">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Build · Field Execution &amp; Tracking</h1>
+          <div class="view-subtitle">RFIs, Technical Submittals, QA/QC Issues and Field Assets</div>
+        </div>
+        <button type="button" class="btn-adsk btn-adsk-primary" id="btnNewBuildItem">+ Create Item</button>
+      </div>
+
+      <div class="subtabs-pill-bar" id="buildSubtabsBar">
+        <button type="button" class="subtab-pill-btn active" data-build-subtab="ALL">All Items</button>
+        <button type="button" class="subtab-pill-btn" data-build-subtab="RFI">RFIs (Consultas)</button>
+        <button type="button" class="subtab-pill-btn" data-build-subtab="Submittal">Submittals</button>
+        <button type="button" class="subtab-pill-btn" data-build-subtab="Incidencia">Issues QA/QC</button>
+        <button type="button" class="subtab-pill-btn" data-build-subtab="Activo">Field Assets</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="filter-group-left">
+          <div class="filter-search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchBuild" placeholder="Search RFIs, submittals, issues...">
+          </div>
+          <select class="select-adsk" id="filterBuildStatus">
+            <option value="">All Statuses</option>
+            <option value="Abierto">Abierto / Open</option>
+            <option value="En Revisión">En Revisión / Pending</option>
+            <option value="Aprobado">Aprobado / Answered</option>
+            <option value="Cerrado">Cerrado / Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="adsk-card-table">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:14%;">ID / Code</th>
+                <th style="width:12%;">Type</th>
+                <th style="width:34%;">Subject / Item Title</th>
+                <th style="width:16%;">Assigned To</th>
+                <th style="width:12%;">Status</th>
+                <th style="width:12%; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyBuild">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. VIEW: COST MANAGEMENT -->
+    <section id="view-cost" class="view-container">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Cost Management · Financial Controls</h1>
+          <div class="view-subtitle">Budget WBS, Contracts, Potential Change Orders (PCO) &amp; Forecasts</div>
+        </div>
+        <button type="button" class="btn-adsk btn-adsk-primary" id="btnNewChangeOrder">+ Create Change Order</button>
+      </div>
+
+      <div class="cost-kpi-grid">
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Original Budget</div>
+          <div class="cost-kpi-value">$18.450.000.000</div>
+          <div class="cost-kpi-sub">Baseline V1.0</div>
+        </div>
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Approved Changes</div>
+          <div class="cost-kpi-value">+$420.000.000</div>
+          <div class="cost-kpi-sub">3 OCOs Approved</div>
+        </div>
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Revised Budget</div>
+          <div class="cost-kpi-value">$18.870.000.000</div>
+          <div class="cost-kpi-sub">+2.28% Variance</div>
+        </div>
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Projected Margin</div>
+          <div class="cost-kpi-value" style="color:var(--adsk-success);">5.03%</div>
+          <div class="cost-kpi-sub">On-Target Financials</div>
+        </div>
+      </div>
+
+      <div class="adsk-card-table">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:14%;">WBS Code</th>
+                <th style="width:34%;">Budget Item Description</th>
+                <th style="width:16%;">Original Budget</th>
+                <th style="width:16%;">Revised Budget</th>
+                <th style="width:10%;">Status</th>
+                <th style="width:10%; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyCost">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. VIEW: MODEL COORDINATION (Clash Detection) -->
+    <section id="view-coordination" class="view-container">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Model Coordination · Clash Detection</h1>
+          <div class="view-subtitle">Automated multi-disciplinary collision matrices between Revit models</div>
+        </div>
+        <button type="button" class="btn-adsk btn-adsk-primary" id="btnRunClashCheck">⚡ Run Clash Check</button>
+      </div>
+
+      <div class="cost-kpi-grid">
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Total Clashes Found</div>
+          <div class="cost-kpi-value" style="color:var(--adsk-error);">51 Clashes</div>
+          <div class="cost-kpi-sub" style="color:var(--adsk-error);">32 Require Review</div>
+        </div>
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Resolved Clashes</div>
+          <div class="cost-kpi-value" style="color:var(--adsk-success);">89 Resolved</div>
+          <div class="cost-kpi-sub">+14 this week</div>
+        </div>
+        <div class="cost-kpi-card">
+          <div class="cost-kpi-label">Active Models</div>
+          <div class="cost-kpi-value">4 Disciplines</div>
+          <div class="cost-kpi-sub">ARQ, EST, HVAC, ELEC</div>
+        </div>
+      </div>
+
+      <div class="adsk-card-table">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Primary Model</th>
+                <th style="width:25%;">Clashing Model</th>
+                <th style="width:16%;">Active Clashes</th>
+                <th style="width:16%;">Tolerance</th>
+                <th style="width:18%; text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OB2401-EST-Estructuras.rvt</strong></td>
+                <td>OB2401-MEP-HVAC.rvt</td>
+                <td><span class="status-badge open">28 Clashes</span></td>
+                <td>10 mm</td>
+                <td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="abrirVisorBIM('OB2401-EST-PL-001-RevC.rvt', 'APC')">Open in LMV</button></td>
+              </tr>
+              <tr>
+                <td><strong>OB2401-ARQ-Arquitectura.rvt</strong></td>
+                <td>OB2401-EST-Estructuras.rvt</td>
+                <td><span class="status-badge open">14 Clashes</span></td>
+                <td>5 mm</td>
+                <td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="abrirVisorBIM('OB2401-EST-PL-001-RevC.rvt', 'APC')">Open in LMV</button></td>
+              </tr>
+              <tr>
+                <td><strong>OB2401-MEP-HVAC.rvt</strong></td>
+                <td>OB2401-ELEC-Bandejas.rvt</td>
+                <td><span class="status-badge open">9 Clashes</span></td>
+                <td>25 mm</td>
+                <td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="abrirVisorBIM('OB2401-EST-PL-001-RevC.rvt', 'APC')">Open in LMV</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. VIEW: PROJECT ADMIN -->
+    <section id="view-admin" class="view-container">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Project Admin · Members &amp; Services</h1>
+          <div class="view-subtitle">Manage user permissions, company assignments, and ACC product access</div>
+        </div>
+        <button type="button" class="btn-adsk btn-adsk-primary" id="btnAddMember">+ Add Member</button>
+      </div>
+
+      <div class="adsk-card-table">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:28%;">Member</th>
+                <th style="width:24%;">Email</th>
+                <th style="width:16%;">Company</th>
+                <th style="width:16%;">Project Role</th>
+                <th style="width:16%; text-align:right;">Access Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Sergio Roca</strong></td>
+                <td>sjroca@salfamontajes.com</td>
+                <td>Salfa Montajes</td>
+                <td>Project Administrator / BIM Lead</td>
+                <td style="text-align:right;"><span class="status-badge rev">Admin</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mario Trelles</strong></td>
+                <td>mtrelles@salfamontajes.com</td>
+                <td>Salfa Montajes</td>
+                <td>Document Manager</td>
+                <td style="text-align:right;"><span class="status-badge apc">Member</span></td>
+              </tr>
+              <tr>
+                <td><strong>Marcelo Van Der Meer</strong></td>
+                <td>mvandermeer@salfamontajes.com</td>
+                <td>Salfa Montajes</td>
+                <td>BIM Coordinator</td>
+                <td style="text-align:right;"><span class="status-badge apc">Member</span></td>
+              </tr>
+              <tr>
+                <td><strong>Carlos Méndez</strong></td>
+                <td>cmendez@salfamontajes.com</td>
+                <td>Salfa Montajes</td>
+                <td>Field Superintendent</td>
+                <td style="text-align:right;"><span class="status-badge apc">Member</span></td>
+              </tr>
+              <tr>
+                <td><strong>Gonzalo Castro</strong></td>
+                <td>gcastro@salfamontajes.com</td>
+                <td>Salfa Montajes</td>
+                <td>Cost Engineer</td>
+                <td style="text-align:right;"><span class="status-badge apc">Member</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FULLSCREEN 3D BIM / LARGE MODEL VIEWER (LMV - FORGE VIEWER)
+       ========================================================================== -->
+  <dialog id="modal-viewer" closedby="any" class="viewer-modal-fullscreen">
+    <!-- Viewer Top Header -->
+    <div class="viewer-top-header">
+      <div class="viewer-top-left">
+        <button type="button" class="btn-viewer-back" id="btnViewerBack">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Volver a Docs
+        </button>
+        <div class="viewer-doc-title">
+          <span id="txtViewerDocTitle">OB2401-EST-PL-001-RevC.rvt</span>
+          <select class="viewer-version-select" id="selViewerVersion">
+            <option value="V4" selected>V4 (Aprobado)</option>
+            <option value="V3">V3 (Revisión ITO)</option>
+            <option value="V2">V2 (Coordinación)</option>
+            <option value="V1">V1 (Borrador)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="viewer-top-right">
+        <button type="button" class="btn-viewer-hdr" id="btnCompareVersions">⚡ Comparar Versiones</button>
+        <button type="button" class="btn-viewer-hdr btn-viewer-primary" id="btnPromoteApc">Promover a APC</button>
+        <button type="button" class="btn-viewer-hdr" id="btnShareViewer">↗ Compartir</button>
+        <button type="button" class="btn-viewer-hdr" id="btnDownloadViewer">📥 Descargar .rvt</button>
+        <button type="button" class="btn-viewer-hdr" id="btnFullscreenToggle" title="Pantalla Completa">⛶</button>
+        <button type="button" class="btn-viewer-close" id="btnCloseViewer" title="Cerrar Visor">&times;</button>
+      </div>
+    </div>
+
+    <!-- Viewer Stage -->
+    <div class="viewer-stage">
+      <!-- Left 48px Icon Rail -->
+      <nav class="viewer-icon-rail">
+        <button type="button" class="rail-btn active" id="btnRailSheets" title="Hojas y Vistas (2D / 3D)">📑</button>
+        <button type="button" class="rail-btn" id="btnRailBrowser" title="Árbol de Modelo (Revit Hierarchy)">🌳</button>
+        <button type="button" class="rail-btn" id="btnRailIssues" title="Incidencias (Pins)">📍</button>
+      </nav>
+
+      <!-- Left Drawer 1: Sheets & Views -->
+      <aside class="viewer-drawer-left open" id="drawerSheets">
+        <div class="drawer-header">
+          <span>Hojas y Vistas</span>
+          <button type="button" class="btn-viewer-close" onclick="toggleDrawer('drawerSheets', false)">&times;</button>
+        </div>
+        <div class="drawer-content">
+          <div class="sheet-thumb-grid">
+            <div class="sheet-thumb-card active" data-view-mode="3D-GENERAL">
+              <div class="sheet-thumb-img">
+                <span style="font-size:26px;">🏢</span>
+                <span style="position:absolute;bottom:4px;right:6px;background:#0696D7;color:#FFF;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;">3D</span>
+              </div>
+              <div class="sheet-thumb-info">
+                <div class="sheet-thumb-title">{3D} Vista Isométrica General</div>
+                <div class="sheet-thumb-type">Modelo BIM Coordinado</div>
+              </div>
+            </div>
+
+            <div class="sheet-thumb-card" data-view-mode="3D-ESTRUCTURA">
+              <div class="sheet-thumb-img">
+                <span style="font-size:26px;">🏗️</span>
+                <span style="position:absolute;bottom:4px;right:6px;background:#0696D7;color:#FFF;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;">3D</span>
+              </div>
+              <div class="sheet-thumb-info">
+                <div class="sheet-thumb-title">{3D} Estructura HA &amp; Pilares</div>
+                <div class="sheet-thumb-type">Pilares, Vigas IPE y Losas</div>
+              </div>
+            </div>
+
+            <div class="sheet-thumb-card" data-view-mode="3D-MEP">
+              <div class="sheet-thumb-img">
+                <span style="font-size:26px;">🚰</span>
+                <span style="position:absolute;bottom:4px;right:6px;background:#0696D7;color:#FFF;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;">3D</span>
+              </div>
+              <div class="sheet-thumb-info">
+                <div class="sheet-thumb-title">{3D} Instalaciones MEP Climatización</div>
+                <div class="sheet-thumb-type">Ductos HVAC y Piping</div>
+              </div>
+            </div>
+
+            <div class="sheet-thumb-card" data-view-mode="2D-PLANTA1">
+              <div class="sheet-thumb-img">
+                <span style="font-size:26px;">📐</span>
+                <span style="position:absolute;bottom:4px;right:6px;background:#5C6577;color:#FFF;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;">2D</span>
+              </div>
+              <div class="sheet-thumb-info">
+                <div class="sheet-thumb-title">A101 - Planta Nivel 1 (±0.00)</div>
+                <div class="sheet-thumb-type">Arquitectura y Accesos</div>
+              </div>
+            </div>
+
+            <div class="sheet-thumb-card" data-view-mode="2D-PLANTA2">
+              <div class="sheet-thumb-img">
+                <span style="font-size:26px;">📐</span>
+                <span style="position:absolute;bottom:4px;right:6px;background:#5C6577;color:#FFF;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;">2D</span>
+              </div>
+              <div class="sheet-thumb-info">
+                <div class="sheet-thumb-title">A102 - Planta Nivel 2 (+3.60)</div>
+                <div class="sheet-thumb-type">Pabellones y Hospitalización</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Left Drawer 2: Model Browser -->
+      <aside class="viewer-drawer-left" id="drawerBrowser">
+        <div class="drawer-header">
+          <span>Árbol de Objetos BIM</span>
+          <button type="button" class="btn-viewer-close" onclick="toggleDrawer('drawerBrowser', false)">&times;</button>
+        </div>
+        <div class="drawer-content">
+          <div class="bim-tree-node selected" data-element-id="all">
+            🏢 <strong>Hospital Salvador OB-2401</strong>
+          </div>
+          <div class="bim-tree-level">
+            <div class="bim-tree-node" data-element-id="nivel1">📌 Nivel 1 Acceso (±0.00m)</div>
+            <div class="bim-tree-level">
+              <div class="bim-tree-node" data-element-id="pilar-p102">▫ Pilar HA-40x40 P-102</div>
+              <div class="bim-tree-node" data-element-id="pilar-p103">▫ Pilar HA-40x40 P-103</div>
+              <div class="bim-tree-node" data-element-id="viga-v204">▫ Viga Metálica IPE-400 V-204</div>
+              <div class="bim-tree-node" data-element-id="muro-h30">▫ Muro Perimetral H-30</div>
+            </div>
+
+            <div class="bim-tree-node" data-element-id="nivel2">📌 Nivel 2 Pabellones (+3.60m)</div>
+            <div class="bim-tree-level">
+              <div class="bim-tree-node" data-element-id="losa-l01">▫ Losa Postensada L-01</div>
+              <div class="bim-tree-node" data-element-id="ducto-hvac">▫ Ducto HVAC Principal 800x400</div>
+              <div class="bim-tree-node" data-element-id="pipe-rci">▫ Red Húmeda Sprinklers 4"</div>
+            </div>
+
+            <div class="bim-tree-node" data-element-id="manifold">⚙️ Manifold de Distribución Slurry</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Left Drawer 3: Issues (Incidencias) -->
+      <aside class="viewer-drawer-left" id="drawerIssues">
+        <div class="drawer-header">
+          <span>Incidencias en Modelo</span>
+          <button type="button" class="btn-viewer-close" onclick="toggleDrawer('drawerIssues', false)">&times;</button>
+        </div>
+        <div class="drawer-content">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="props-group" style="cursor:pointer;" onclick="focusPin(1)">
+              <div class="props-group-header" style="display:flex;justify-content:space-between;">
+                <span>#101 · Choque HVAC vs Viga</span>
+                <span class="status-badge open">Abierta</span>
+              </div>
+              <div style="padding:8px 10px;font-size:11.5px;color:#CBD2DE;">
+                Interferencia física entre ducto de inyección y viga IPE-400 Eje C-3.
+                <div style="margin-top:4px;color:#8E98A8;font-size:10.5px;">Asignado a: Sergio Roca · Alta</div>
+              </div>
+            </div>
+
+            <div class="props-group" style="cursor:pointer;" onclick="focusPin(2)">
+              <div class="props-group-header" style="display:flex;justify-content:space-between;">
+                <span>#102 · Falta Pase en Muro HA</span>
+                <span class="status-badge rev">En Revisión</span>
+              </div>
+              <div style="padding:8px 10px;font-size:11.5px;color:#CBD2DE;">
+                Pase de tubería 4" no considerado en encofrado de muro Nivel 1.
+                <div style="margin-top:4px;color:#8E98A8;font-size:10.5px;">Asignado a: Mario Trelles · Media</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center 3D/2D Canvas Area -->
+      <div class="viewer-canvas-area" id="viewerCanvasArea">
+        <!-- Status HUD -->
+        <div class="viewer-hud-status">
+          <span class="hud-pulsing-dot"></span>
+          <span id="txtViewerMode">Herramienta: Órbita 3D (Arrastra para girar el modelo)</span>
+        </div>
+
+        <!-- Measure Live HUD -->
+        <div class="measure-badge-hud" id="hudMeasure">
+          <span>Distancia Medida: <strong id="lblMeasureValue" style="color:#00E5FF;">0.00 m</strong></span>
+          <button type="button" class="btn-viewer-hdr" style="padding:2px 8px;font-size:11px;" id="btnClearMeasure">Limpiar</button>
+        </div>
+
+        <!-- Section Cut Slider Dock -->
+        <div class="section-slider-dock" id="dockSectionSlider">
+          <span style="font-size:11.5px;font-weight:700;color:#FFF;">Plano de Corte X:</span>
+          <input type="range" id="rngSectionCut" min="0" max="100" value="100" style="width:160px;cursor:pointer;">
+          <span id="lblSectionCutVal" style="font-family:var(--adsk-font-mono);font-size:11px;">100%</span>
+        </div>
+
+        <!-- Explode 3D Slider Dock -->
+        <div class="explode-slider-dock" id="dockExplodeSlider">
+          <span style="font-size:11.5px;font-weight:700;color:#FFF;">Explosión 3D:</span>
+          <input type="range" id="rngExplode3D" min="0" max="100" value="0" style="width:160px;cursor:pointer;">
+          <span id="lblExplodeVal" style="font-family:var(--adsk-font-mono);font-size:11px;">0%</span>
+        </div>
+
+        <!-- Interactive ViewCube (Top Right) -->
+        <div class="viewcube-container">
+          <button type="button" class="viewcube-home" id="btnCubeHome" title="Restablecer Vista (Home)">🏠</button>
+          <div class="viewcube-box" id="viewCubeBox">
+            <div class="cube-face cube-top" data-cube-view="TOP">TOP</div>
+            <div class="cube-face cube-front" data-cube-view="FRONT">FRONT</div>
+            <div class="cube-face cube-right" data-cube-view="RIGHT">RIGHT</div>
+            <div class="cube-face cube-back" data-cube-view="BACK">BACK</div>
+            <div class="cube-face cube-left" data-cube-view="LEFT">LEFT</div>
+            <div class="cube-face cube-bottom" data-cube-view="BOTTOM">BOTTOM</div>
+          </div>
+        </div>
+
+        <!-- SVG 3D Canvas Scene -->
+        <svg class="scene-viewport-svg" id="svgViewerScene" viewBox="0 0 1200 800">
+          <defs>
+            <!-- 3D Ground Grid Pattern -->
+            <pattern id="cadGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1D2430" stroke-width="0.8"/>
+            </pattern>
+            
+            <!-- Dynamic Section Clipping Plane -->
+            <clipPath id="cadSectionClip">
+              <rect id="clipSectionRect" x="0" y="0" width="1200" height="800" />
+            </clipPath>
+
+            <!-- Shading Linear Gradients for 3D Geometry -->
+            <linearGradient id="gradConcrete" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4B566B" />
+              <stop offset="100%" stop-color="#2D3545" />
+            </linearGradient>
+
+            <linearGradient id="gradSteel" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#4A5568" />
+              <stop offset="50%" stop-color="#718096" />
+              <stop offset="100%" stop-color="#2D3748" />
+            </linearGradient>
+
+            <linearGradient id="gradHvac" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#A0AEC0" />
+              <stop offset="100%" stop-color="#4A5568" />
+            </linearGradient>
+
+            <linearGradient id="gradGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(96, 165, 250, 0.45)" />
+              <stop offset="100%" stop-color="rgba(37, 99, 235, 0.15)" />
+            </linearGradient>
+          </defs>
+
+          <!-- Background 3D Grid -->
+          <rect width="100%" height="100%" fill="url(#cadGrid)" />
+
+          <!-- Main Interactive 3D Model Group (Transformed by Orbit / Pan / Explode) -->
+          <g id="group3DWorld" clip-path="url(#cadSectionClip)" transform="translate(600, 420) scale(1)">
+            
+            <!-- Coordinate System Axes Indicator -->
+            <g id="axisIndicator" transform="translate(-450, 240)">
+              <line x1="0" y1="0" x2="40" y2="0" stroke="#FF5252" stroke-width="2.5"/>
+              <text x="45" y="4" fill="#FF5252" font-size="10" font-weight="700">X</text>
+              <line x1="0" y1="0" x2="0" y2="-40" stroke="#00E676" stroke-width="2.5"/>
+              <text x="-4" y="-45" fill="#00E676" font-size="10" font-weight="700">Y</text>
+              <line x1="0" y1="0" x2="-25" y2="25" stroke="#448AFF" stroke-width="2.5"/>
+              <text x="-32" y="32" fill="#448AFF" font-size="10" font-weight="700">Z</text>
+            </g>
+
+            <!-- Ground Shadow -->
+            <ellipse cx="0" cy="180" rx="420" ry="120" fill="rgba(0,0,0,0.4)"/>
+
+            <!-- Structural Grid Lines (Ejes A, B, C, D / 1, 2, 3, 4) -->
+            <g id="groupGridAxes" stroke="#374151" stroke-width="1.2" stroke-dasharray="8,6">
+              <line x1="-380" y1="120" x2="380" y2="120" />
+              <line x1="-380" y1="170" x2="380" y2="170" />
+              <line x1="-380" y1="220" x2="380" y2="220" />
+              <line x1="-240" y1="70" x2="-240" y2="270" />
+              <line x1="0" y1="70" x2="0" y2="270" />
+              <line x1="240" y1="70" x2="240" y2="270" />
+              
+              <!-- Grid Bubble Tags -->
+              <circle cx="-395" cy="120" r="11" fill="#1F2937" stroke="#4B5563" stroke-width="1.5"/>
+              <text x="-395" y="124" fill="#9CA3AF" font-size="9.5" font-weight="700" text-anchor="middle">A</text>
+              <circle cx="-395" cy="170" r="11" fill="#1F2937" stroke="#4B5563" stroke-width="1.5"/>
+              <text x="-395" y="174" fill="#9CA3AF" font-size="9.5" font-weight="700" text-anchor="middle">B</text>
+              <circle cx="-395" cy="220" r="11" fill="#1F2937" stroke="#4B5563" stroke-width="1.5"/>
+              <text x="-395" y="224" fill="#9CA3AF" font-size="9.5" font-weight="700" text-anchor="middle">C</text>
+            </g>
+
+            <!-- SUBSYSTEM 1: CONCRETE FOUNDATION SLAB (Nivel -1 / Cimentación) -->
+            <g id="layerFoundation" class="bim-clickable-elem" data-bim-id="cimentacion">
+              <polygon points="-360,180 0,260 360,180 0,100" fill="url(#gradConcrete)" stroke="#6B7280" stroke-width="1.5"/>
+              <!-- Thickness Edge -->
+              <polygon points="-360,180 0,260 0,285 -360,205" fill="#242B38"/>
+              <polygon points="0,260 360,180 360,205 0,285" fill="#1A202C"/>
+            </g>
+
+            <!-- SUBSYSTEM 2: CONCRETE COLUMNS (Pilares H-30 Nivel 1) -->
+            <g id="layerColumns" class="bim-clickable-elem" data-bim-id="pilares">
+              <!-- Column P-101 -->
+              <g id="elem-p101" transform="translate(-240, 60)">
+                <polygon points="-12,90 12,90 12,0 -12,0" fill="url(#gradConcrete)" stroke="#525E75" stroke-width="1"/>
+                <polygon points="12,90 22,82 22,-8 12,0" fill="#28303F" stroke="#525E75" stroke-width="1"/>
+                <polygon points="-12,0 12,0 22,-8 -2,-8" fill="#5F6D86" stroke="#525E75" stroke-width="1"/>
+              </g>
+
+              <!-- Column P-102 (Clickable BIM Item) -->
+              <g id="elem-p102" transform="translate(0, 110)">
+                <polygon points="-14,100 14,100 14,0 -14,0" fill="url(#gradConcrete)" stroke="#525E75" stroke-width="1"/>
+                <polygon points="14,100 26,92 26,-8 14,0" fill="#28303F" stroke="#525E75" stroke-width="1"/>
+                <polygon points="-14,0 14,0 26,-8 -2,-8" fill="#5F6D86" stroke="#525E75" stroke-width="1"/>
+              </g>
+
+              <!-- Column P-103 -->
+              <g id="elem-p103" transform="translate(240, 60)">
+                <polygon points="-12,90 12,90 12,0 -12,0" fill="url(#gradConcrete)" stroke="#525E75" stroke-width="1"/>
+                <polygon points="12,90 22,82 22,-8 12,0" fill="#28303F" stroke="#525E75" stroke-width="1"/>
+                <polygon points="-12,0 12,0 22,-8 -2,-8" fill="#5F6D86" stroke="#525E75" stroke-width="1"/>
+              </g>
+
+              <!-- Rear Column P-104 -->
+              <g id="elem-p104" transform="translate(-120, -10)">
+                <polygon points="-10,80 10,80 10,0 -10,0" fill="url(#gradConcrete)" stroke="#525E75" stroke-width="1"/>
+                <polygon points="10,80 18,74 18,-6 10,0" fill="#28303F" stroke="#525E75" stroke-width="1"/>
+                <polygon points="-10,0 10,0 18,-6 -2,-6" fill="#5F6D86" stroke="#525E75" stroke-width="1"/>
+              </g>
+            </g>
+
+            <!-- SUBSYSTEM 3: INTERMEDIATE REINFORCED SLAB (Nivel 2 +3.60m) - Exploded dynamically -->
+            <g id="layerSlabN2" class="bim-clickable-elem" data-bim-id="losa-n2" transform="translate(0, 0)">
+              <polygon points="-340,60 0,140 340,60 0,-20" fill="url(#gradConcrete)" stroke="#6B7280" stroke-width="1.5"/>
+              <polygon points="-340,60 0,140 0,155 -340,75" fill="#242B38"/>
+              <polygon points="0,140 340,60 340,75 0,155" fill="#1A202C"/>
+            </g>
+
+            <!-- SUBSYSTEM 4: STEEL TRUSSES & BEAMS (IPE-400 Estructura Metálica) -->
+            <g id="layerSteel" class="bim-clickable-elem" data-bim-id="vigas-ipe">
+              <!-- Main Beam V-204 (Clickable Clash Item) -->
+              <g id="elem-v204">
+                <polygon points="-240,60 240,60 240,46 -240,46" fill="url(#gradSteel)" stroke="#2B3648" stroke-width="1"/>
+                <polygon points="240,60 248,54 248,40 240,46" fill="#1E293B"/>
+              </g>
+              <!-- Transversal Beams -->
+              <line x1="-240" y1="46" x2="0" y2="-10" stroke="#718096" stroke-width="5"/>
+              <line x1="240" y1="46" x2="0" y2="-10" stroke="#718096" stroke-width="5"/>
+              <line x1="0" y1="126" x2="0" y2="-10" stroke="#4A5568" stroke-width="6"/>
+            </g>
+
+            <!-- SUBSYSTEM 5: MECHANICAL MEP (HVAC Galvanized Ducts & Slurry Piping) -->
+            <g id="layerMep" class="bim-clickable-elem" data-bim-id="mep-hvac">
+              <!-- Rectangular HVAC Duct (Interferes with Beam V-204) -->
+              <g id="elem-duct-hvac" transform="translate(-180, 30)">
+                <polygon points="-30,30 220,30 220,0 -30,0" fill="url(#gradHvac)" stroke="#2D3748" stroke-width="1.2"/>
+                <polygon points="220,30 234,22 234,-8 220,0" fill="#2D3748"/>
+                <polygon points="-30,0 220,0 234,-8 -16,-8" fill="#CBD5E0"/>
+                <!-- Flange Connectors -->
+                <line x1="50" y1="-8" x2="50" y2="30" stroke="#1A202C" stroke-width="3"/>
+                <line x1="140" y1="-8" x2="140" y2="30" stroke="#1A202C" stroke-width="3"/>
+              </g>
+
+              <!-- Red Fire Protection Piping (RCI) -->
+              <g id="elem-rci-pipes" stroke="#EF4444" stroke-width="5" fill="none">
+                <path d="M -220,10 L 160,10 L 160,70" />
+                <circle cx="160" cy="70" r="4" fill="#EF4444"/>
+                <circle cx="60" cy="10" r="4" fill="#EF4444"/>
+                <circle cx="-80" cy="10" r="4" fill="#EF4444"/>
+              </g>
+
+              <!-- Blue Domestic Water Piping -->
+              <g id="elem-water-pipes" stroke="#3B82F6" stroke-width="4.5" fill="none">
+                <path d="M -230,80 L 80,80 L 80,140" />
+              </g>
+
+              <!-- Manifold Distribution Station with Valves & Skid -->
+              <g id="elem-manifold-skid" transform="translate(120, 110)">
+                <rect x="0" y="0" width="140" height="60" rx="4" fill="#1E293B" stroke="#F59E0B" stroke-width="2"/>
+                <circle cx="35" cy="30" r="16" fill="#334155" stroke="#F59E0B" stroke-width="1.5"/>
+                <text x="35" y="34" fill="#F59E0B" font-size="8.5" font-weight="700" text-anchor="middle">PUMP-1</text>
+                <circle cx="105" cy="30" r="16" fill="#334155" stroke="#F59E0B" stroke-width="1.5"/>
+                <text x="105" y="34" fill="#F59E0B" font-size="8.5" font-weight="700" text-anchor="middle">PUMP-2</text>
+                <text x="70" y="52" fill="#94A3B8" font-size="8" text-anchor="middle">MANIFOLD DISTRIBUCIÓN</text>
+              </g>
+            </g>
+
+            <!-- SUBSYSTEM 6: GLASS CURTAIN WALL (Architectural Facade) -->
+            <g id="layerCurtainWall" class="bim-clickable-elem" data-bim-id="fachada-murocortina">
+              <polygon points="-340,60 -240,-30 -240,-130 -340,-40" fill="url(#gradGlass)" stroke="#38BDF8" stroke-width="1.5"/>
+              <line x1="-290" y1="15" x2="-290" y2="-85" stroke="#38BDF8" stroke-width="1"/>
+              <line x1="-340" y1="10" x2="-240" y2="-80" stroke="#38BDF8" stroke-width="1"/>
+            </g>
+
+            <!-- MEASUREMENT LAYER (Point A -> Point B interactive line) -->
+            <g id="layerMeasurement" stroke="#00E5FF" stroke-width="2.5" fill="none">
+              <!-- Drawn by JS -->
+            </g>
+
+            <!-- INTERACTIVE ISSUE PINS LAYER -->
+            <g id="layerIssuePins">
+              <!-- Pin #101: HVAC vs Beam Clash -->
+              <g class="viewer-issue-pin" id="pin-101" transform="translate(40, 45)" onclick="focusPin(1)">
+                <circle cx="0" cy="0" r="14" fill="#E23B42" stroke="#FFFFFF" stroke-width="2"/>
+                <text x="0" y="4.5" fill="#FFFFFF" font-size="10" font-weight="800" text-anchor="middle">#101</text>
+              </g>
+
+              <!-- Pin #102: Missing Sleeve in Wall -->
+              <g class="viewer-issue-pin" id="pin-102" transform="translate(-160, 140)" onclick="focusPin(2)">
+                <circle cx="0" cy="0" r="14" fill="#0696D7" stroke="#FFFFFF" stroke-width="2"/>
+                <text x="0" y="4.5" fill="#FFFFFF" font-size="10" font-weight="800" text-anchor="middle">#102</text>
+              </g>
+            </g>
+
+          </g>
+        </svg>
+
+        <!-- Pin Popover Details -->
+        <div class="pin-popover-card" id="pinPopover">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <strong id="lblPopoverPinTitle" style="font-size:12px;color:#FFF;">Incidencia #101</strong>
+            <button type="button" class="btn-viewer-close" style="font-size:15px;width:20px;height:20px;" onclick="closePinPopover()">&times;</button>
+          </div>
+          <div id="lblPopoverPinDesc" style="font-size:11.5px;color:#CBD2DE;margin-bottom:8px;">Choque de ducto con viga</div>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn-adsk btn-adsk-primary btn-adsk-sm" style="flex:1;" onclick="resolverIncidencia()">Marcar Resuelta</button>
+            <button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="eliminarPin()">Eliminar</button>
+          </div>
+        </div>
+
+        <!-- Autodesk Floating Dock Toolbar -->
+        <div class="viewer-floating-dock">
+          <button type="button" class="dock-btn active" id="toolOrbit" title="Órbita 3D (O)">🔄</button>
+          <button type="button" class="dock-btn" id="toolPan" title="Encuadre / Mano (H)">✋</button>
+          <button type="button" class="dock-btn" id="toolWalk" title="Primera Persona / Caminar (WASD)">🚶</button>
+          <button type="button" class="dock-btn" id="toolFit" title="Ajustar a Vista / Zoom Extensión (F)">⛶</button>
+          
+          <div class="dock-divider"></div>
+          
+          <button type="button" class="dock-btn" id="toolMeasure" title="Medición Calibrada (M)">📐</button>
+          <button type="button" class="dock-btn" id="toolSection" title="Corte de Sección (X/Y/Z)">✂️</button>
+          <button type="button" class="dock-btn" id="toolExplode" title="Explosión 3D de Componentes">💥</button>
+          <button type="button" class="dock-btn" id="toolAddPin" title="Colocar Chincheta de Incidencia">🏷️</button>
+          
+          <div class="dock-divider"></div>
+          
+          <button type="button" class="dock-btn" id="toolStyles" title="Estilos Visuales (Sombreado / Alámbrico)">🎨</button>
+          <button type="button" class="dock-btn" id="toolInspectProps" title="Propiedades del Objeto">ℹ️</button>
+        </div>
+      </div>
+
+      <!-- Right Drawer: Object Properties Inspector -->
+      <aside class="viewer-drawer-right" id="drawerProps">
+        <div class="drawer-header">
+          <span>Propiedades del Objeto</span>
+          <button type="button" class="btn-viewer-close" onclick="toggleDrawer('drawerProps', false)">&times;</button>
+        </div>
+        <div class="drawer-content">
+          <div style="font-weight:700;font-size:14px;color:#FFF;margin-bottom:12px;" id="txtPropName">Pilar HA-40x40 P-102</div>
+
+          <div class="props-group">
+            <div class="props-group-header">Identidad &amp; Revit Data</div>
+            <div class="props-row"><span class="props-key">Categoría:</span><span class="props-val" id="propCategory">Pilares Estructurales</span></div>
+            <div class="props-row"><span class="props-key">Familia:</span><span class="props-val" id="propFamily">HA Rectangular</span></div>
+            <div class="props-row"><span class="props-key">Tipo:</span><span class="props-val" id="propType">400 x 400 mm</span></div>
+            <div class="props-row"><span class="props-key">GUID:</span><span class="props-val" style="font-family:var(--adsk-font-mono);font-size:10px;">f82b7c-4819-4a0b</span></div>
+          </div>
+
+          <div class="props-group">
+            <div class="props-group-header">Geometría &amp; Cotas</div>
+            <div class="props-row"><span class="props-key">Nivel Base:</span><span class="props-val" id="propBaseLevel">Nivel 1 (±0.00 m)</span></div>
+            <div class="props-row"><span class="props-key">Altura Libre:</span><span class="props-val" id="propHeight">3.60 m</span></div>
+            <div class="props-row"><span class="props-key">Sección:</span><span class="props-val">0.16 m²</span></div>
+            <div class="props-row"><span class="props-key">Volumen:</span><span class="props-val" id="propVolume">0.576 m³</span></div>
+          </div>
+
+          <div class="props-group">
+            <div class="props-group-header">Materiales &amp; Control ITO</div>
+            <div class="props-row"><span class="props-key">Hormigón:</span><span class="props-val">H-30 (95% confianza)</span></div>
+            <div class="props-row"><span class="props-key">Armadura:</span><span class="props-val">8 Ø 22 A63-42H</span></div>
+            <div class="props-row"><span class="props-key">Fase:</span><span class="props-val">Fase 1 - Obra Gruesa</span></div>
+            <div class="props-row"><span class="props-key">Estado ITO:</span><span class="props-val" style="color:var(--adsk-success);">Conforme / Liberado</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </dialog>
+
+  <!-- ==========================================================================
+       MODAL: VERSION COMPARE (V4 vs V3 Side-by-Side / Diff)
+       ========================================================================== -->
+  <dialog id="modalCompareVersions" closedby="any">
+    <div class="dialog-header">
+      <h3>Comparar Versiones · OB2401-EST-PL-001</h3>
+      <button type="button" class="btn-viewer-close" onclick="document.getElementById('modalCompareVersions').close()">&times;</button>
+    </div>
+    <div class="dialog-body">
+      <div style="display:flex;gap:12px;margin-bottom:14px;background:#F1F3F7;padding:10px;border-radius:6px;font-size:12px;">
+        <div style="flex:1;"><strong>Versión A:</strong> V4 (24 oct 2026 - Actual)</div>
+        <div style="flex:1;"><strong>Versión B:</strong> V3 (18 oct 2026 - Previa)</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <span style="font-weight:700;font-size:12.5px;">Resumen de Cambios Detectados:</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#E7F6EC;border-left:3px solid #17823B;border-radius:4px;">
+          <span style="color:#17823B;font-weight:700;">+3 Agregados</span>
+          <span>Pases mecánicos en muros Eje 3 incorporados para red de climatización.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#FDF1EA;border-left:3px solid #E26529;border-radius:4px;">
+          <span style="color:#E26529;font-weight:700;">~2 Modificados</span>
+          <span>Desplazamiento de pilar P-102 en 15 cm hacia Eje B para eliminar choque con HVAC.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#FCE8E8;border-left:3px solid #D62329;border-radius:4px;">
+          <span style="color:#D62329;font-weight:700;">-1 Eliminado</span>
+          <span>Muro provisorio de albañilería en Sala de Bombas suprimido.</span>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn-adsk btn-adsk-secondary" onclick="document.getElementById('modalCompareVersions').close()">Cerrar</button>
+      <button type="button" class="btn-adsk btn-adsk-primary" onclick="alert('Exportando reporte de cambios PDF...');document.getElementById('modalCompareVersions').close();">Exportar Reporte de Comparación</button>
+    </div>
+  </dialog>
+
+  <!-- ==========================================================================
+       MODAL: CREATE / EDIT GENERIC DIALOG (Projects, Docs, RFIs, Submittals)
+       ========================================================================== -->
+  <dialog id="modalGenericForm" closedby="any">
+    <div class="dialog-header">
+      <h3 id="lblGenericModalTitle">Crear Nuevo Registro</h3>
+      <button type="button" class="btn-viewer-close" onclick="document.getElementById('modalGenericForm').close()">&times;</button>
+    </div>
+    <form id="formGenericRecord">
+      <input type="hidden" id="recTargetModule" value="DOCS">
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="form-group form-col-full">
+            <label for="recTitle">Título o Nombre</label>
+            <input type="text" class="input-adsk" id="recTitle" required placeholder="Ej: Plano General de Fundaciones Nivel -1">
+          </div>
+          <div class="form-group">
+            <label for="recCode">Código o Número</label>
+            <input type="text" class="input-adsk" id="recCode" required placeholder="Ej: PLN-EST-005 o RFI-019">
+          </div>
+          <div class="form-group">
+            <label for="recStatus">Estado</label>
+            <select class="select-adsk" id="recStatus" style="width:100%;">
+              <option value="APC">Aprobado Construcción (APC)</option>
+              <option value="WIP">En Elaboración (WIP)</option>
+              <option value="Revisión">En Revisión</option>
+              <option value="Abierto">Abierto</option>
+              <option value="En Ejecución">En Ejecución</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recAssignee">Responsable o Autor</label>
+            <input type="text" class="input-adsk" id="recAssignee" value="Sergio Roca">
+          </div>
+          <div class="form-group">
+            <label for="recFolder">Carpeta / Especialidad</label>
+            <select class="select-adsk" id="recFolder" style="width:100%;">
+              <option value="01-WIP">01-WIP</option>
+              <option value="02-SHARED">02-SHARED</option>
+              <option value="03-PUBLISHED">03-PUBLISHED</option>
+              <option value="Estructura">Estructura</option>
+              <option value="Arquitectura">Arquitectura</option>
+              <option value="MEP">MEP Climatización</option>
+            </select>
+          </div>
+          <div class="form-group form-col-full">
+            <label for="recNotes">Descripción o Pregunta Técnica</label>
+            <textarea id="recNotes" placeholder="Detalles técnicos adicionales..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn-adsk btn-adsk-secondary" onclick="document.getElementById('modalGenericForm').close()">Cancelar</button>
+        <button type="submit" class="btn-adsk btn-adsk-primary" id="btnSubmitGeneric">Guardar en ACC</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION ENGINE
+       ========================================================================== -->
+  <script>
+  (function() {
+    'use strict';
+
+    // Core Project Data Store
+    var STORAGE_KEY = 'salfa_acc_master_v4';
+
+    var INITIAL_PROJECTS = [
+      { id: 'p1', code: 'OB-2401', name: 'OB 2401 · Hospital Salvador y Red Oriente', type: 'Hospital / Salud', status: 'En Ejecución', date: '14-01-2024', platform: 'ACC' },
+      { id: 'p2', code: 'OB-2408', name: 'OB 2408 · Minera Escondida Flotación', type: 'Minería', status: 'En Ejecución', date: '02-03-2024', platform: 'ACC' },
+      { id: 'p3', code: 'OB-2415', name: 'OB 2415 · Planta Celulosa Arauco', type: 'Industrial', status: 'Comisionamiento', date: '19-06-2023', platform: 'BIM 360' },
+      { id: 'p4', code: 'OB-2422', name: 'OB 2422 · Expansión Metro Línea 7', type: 'Infraestructura', status: 'Preconstrucción', date: '10-08-2024', platform: 'ACC' }
+    ];
+
+    var INITIAL_DOCS = [
+      { id: 'd1', code: 'OB2401-EST-PL-001', name: 'PLN-EST-001 · Planta General Estructuras Nivel 1', version: 'V4', status: 'APC', folder: '03-PUBLISHED', author: 'S. Roca', size: '42.8 MB', fileType: 'rvt' },
+      { id: 'd2', code: 'OB2401-MEP-HVAC-102', name: 'PLN-MEC-102 · Piping & Climatización Central', version: 'V3', status: 'Revisión', folder: '02-SHARED', author: 'M. Trelles', size: '18.4 MB', fileType: 'rvt' },
+      { id: 'd3', code: 'OB2401-ARQ-PL-201', name: 'PLN-ARQ-201 · Arquitectura Pabellones Quirúrgicos', version: 'V2', status: 'APC', folder: '03-PUBLISHED', author: 'S. Roca', size: '12.1 MB', fileType: 'pdf' },
+      { id: 'd4', code: 'OB2401-EST-DET-301', name: 'PLN-DET-301 · Detalles de Armaduras & Vigas IPE', version: 'V1', status: 'WIP', folder: '01-WIP', author: 'C. Méndez', size: '8.6 MB', fileType: 'dwg' }
+    ];
+
+    var INITIAL_BUILD = [
+      { id: 'b1', code: 'RFI-018', type: 'RFI', title: 'Pase de cañería red húmeda en viga V-204 Eje C', assignee: 'Sergio Roca', status: 'Abierto', category: 'Estructura' },
+      { id: 'b2', code: 'RFI-017', type: 'RFI', title: 'Discrepancia cota nivel de coronación pilar P-102', assignee: 'Mario Trelles', status: 'Aprobado', category: 'Estructura' },
+      { id: 'b3', code: 'SUB-042', type: 'Submittal', title: 'Ficha técnica mortero autonivelante Sikafloor 264', assignee: 'Carlos Méndez', status: 'En Revisión', category: 'Terminaciones' },
+      { id: 'b4', code: 'ISS-009', type: 'Incidencia', title: 'Falta protección perimetral en hueco de losa Nivel 2', assignee: 'C. Méndez', status: 'Cerrado', category: 'Seguridad' }
+    ];
+
+    var INITIAL_COST = [
+      { id: 'c1', code: '03.01.00', name: 'Movimiento de Tierras y Excavación Masiva', orig: '$1.450.000.000', rev: '$1.450.000.000', status: 'Cerrado' },
+      { id: 'c2', code: '03.02.01', name: 'Hormigones H-30 y Encofrados Pilares', orig: '$4.820.000.000', rev: '$5.040.000.000', status: 'En Ejecución' },
+      { id: 'c3', code: '03.04.02', name: 'Estructuras de Acero IPE y Techumbre Reticulada', orig: '$3.600.000.000', rev: '$3.780.000.000', status: 'En Ejecución' },
+      { id: 'c4', code: '05.01.00', name: 'Instalaciones HVAC & Red Contra Incendios (RCI)', orig: '$2.980.000.000', rev: '$3.030.000.000', status: 'En Ejecución' }
+    ];
+
+    function loadData() {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try { return JSON.parse(stored); } catch (e) { console.error('Reset store', e); }
+      }
+      var initial = {
+        projects: INITIAL_PROJECTS,
+        docs: INITIAL_DOCS,
+        build: INITIAL_BUILD,
+        cost: INITIAL_COST,
+        activeProject: 'OB 2401 · Hospital Salvador y Red Oriente'
+      };
+      saveData(initial);
+      return initial;
+    }
+
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    var appData = loadData();
+    var currentFolderFilter = 'ALL';
+    var currentBuildSubtab = 'ALL';
+
+    // ==========================================================================
+    // RENDER FUNCTIONS
+    // ==========================================================================
+    function renderAll() {
+      renderProjects();
+      renderDocs();
+      renderBuild();
+      renderCost();
+      renderProjectPickerDropdown();
+    }
+
+    function renderProjects() {
+      var tbody = document.getElementById('tbodyProjects');
+      var search = (document.getElementById('searchProjects').value || '').toLowerCase();
+      var st = document.getElementById('filterProjStatus').value;
+      var tp = document.getElementById('filterProjType').value;
+
+      var filtered = appData.projects.filter(function(p) {
+        var matchesSearch = p.name.toLowerCase().indexOf(search) !== -1 || p.code.toLowerCase().indexOf(search) !== -1;
+        var matchesStatus = !st || p.status === st;
+        var matchesType = !tp || p.type === tp;
+        return matchesSearch && matchesStatus && matchesType;
+      });
+
+      tbody.innerHTML = filtered.map(function(p) {
+        return '<tr>' +
+          '<td><div style="font-weight:600;display:flex;align-items:center;gap:8px;"><span style="color:var(--adsk-blue);">🏢</span><span>' + p.name + '</span></div></td>' +
+          '<td><span class="version-chip">' + p.code + '</span></td>' +
+          '<td>' + p.type + '</td>' +
+          '<td><span class="status-badge ' + (p.status === 'En Ejecución' ? 'apc' : 'rev') + '">' + p.status + '</span></td>' +
+          '<td>' + p.date + '</td>' +
+          '<td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="switchActiveProject(\'' + p.name + '\')">Select</button></td>' +
+          '</tr>';
+      }).join('');
+
+      document.getElementById('badgeProjCount').textContent = appData.projects.length;
+    }
+
+    function renderDocs() {
+      var tbody = document.getElementById('tbodyDocs');
+      var search = (document.getElementById('searchDocs').value || '').toLowerCase();
+      var st = document.getElementById('filterDocStatus').value;
+
+      var filtered = appData.docs.filter(function(d) {
+        var matchesSearch = d.name.toLowerCase().indexOf(search) !== -1 || d.code.toLowerCase().indexOf(search) !== -1;
+        var matchesStatus = !st || d.status === st;
+        var matchesFolder = currentFolderFilter === 'ALL' || d.folder === currentFolderFilter;
+        return matchesSearch && matchesStatus && matchesFolder;
+      });
+
+      tbody.innerHTML = filtered.map(function(d) {
+        return '<tr>' +
+          '<td><div class="doc-name-cell"><span class="doc-icon-badge doc-icon-' + d.fileType + '">' + d.fileType.toUpperCase() + '</span>' +
+          '<div><div>' + d.name + '</div><div style="font-size:11px;color:var(--adsk-text-secondary);">' + d.size + ' · Carpeta ' + d.folder + '</div></div></div></td>' +
+          '<td><span class="version-chip">' + d.code + '</span></td>' +
+          '<td><span class="version-chip">' + d.version + '</span></td>' +
+          '<td><span class="status-badge ' + (d.status === 'APC' ? 'apc' : d.status === 'WIP' ? 'wip' : 'rev') + '">' + d.status + '</span></td>' +
+          '<td>' + d.author + '</td>' +
+          '<td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-primary btn-adsk-sm" onclick="abrirVisorBIM(\'' + d.code + '.rvt\', \'' + d.status + '\')">View in 2D/BIM</button></td>' +
+          '</tr>';
+      }).join('');
+
+      document.getElementById('badgeDocsCount').textContent = appData.docs.length;
+      document.getElementById('lblDocsShowing').textContent = 'Showing ' + filtered.length + ' files';
+    }
+
+    function renderBuild() {
+      var tbody = document.getElementById('tbodyBuild');
+      var search = (document.getElementById('searchBuild').value || '').toLowerCase();
+      var st = document.getElementById('filterBuildStatus').value;
+
+      var filtered = appData.build.filter(function(b) {
+        var matchesSearch = b.title.toLowerCase().indexOf(search) !== -1 || b.code.toLowerCase().indexOf(search) !== -1;
+        var matchesStatus = !st || b.status === st;
+        var matchesSubtab = currentBuildSubtab === 'ALL' || b.type.toLowerCase() === currentBuildSubtab.toLowerCase();
+        return matchesSearch && matchesStatus && matchesSubtab;
+      });
+
+      tbody.innerHTML = filtered.map(function(b) {
+        return '<tr>' +
+          '<td><strong>' + b.code + '</strong></td>' +
+          '<td><span class="version-chip">' + b.type + '</span></td>' +
+          '<td><div style="font-weight:600;">' + b.title + '</div><div style="font-size:11px;color:var(--adsk-text-secondary);">Categoría: ' + b.category + '</div></td>' +
+          '<td>' + b.assignee + '</td>' +
+          '<td><span class="status-badge ' + (b.status === 'Aprobado' || b.status === 'Cerrado' ? 'closed' : 'open') + '">' + b.status + '</span></td>' +
+          '<td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="alert(\'Detalle de ' + b.code + ':\\n' + b.title + '\')">Open</button></td>' +
+          '</tr>';
+      }).join('');
+
+      document.getElementById('badgeBuildCount').textContent = appData.build.length;
+    }
+
+    function renderCost() {
+      var tbody = document.getElementById('tbodyCost');
+      tbody.innerHTML = appData.cost.map(function(c) {
+        return '<tr>' +
+          '<td><span class="version-chip">' + c.code + '</span></td>' +
+          '<td><strong>' + c.name + '</strong></td>' +
+          '<td>' + c.orig + '</td>' +
+          '<td><strong>' + c.rev + '</strong></td>' +
+          '<td><span class="status-badge apc">' + c.status + '</span></td>' +
+          '<td style="text-align:right;"><button type="button" class="btn-adsk btn-adsk-secondary btn-adsk-sm" onclick="alert(\'WBS ' + c.code + ' ajustado\')">Manage</button></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    function renderProjectPickerDropdown() {
+      var list = document.getElementById('listProjectsDropdown');
+      list.innerHTML = appData.projects.map(function(p) {
+        return '<div class="project-item ' + (p.name.indexOf(appData.activeProject) !== -1 ? 'active' : '') + '" onclick="switchActiveProject(\'' + p.name + '\')">' +
+          '<span style="font-weight:600;font-size:12px;">' + p.name + '</span>' +
+          '<span style="font-size:10.5px;color:#8E98A8;">' + p.type + ' · ' + p.status + '</span>' +
+          '</div>';
+      }).join('');
+    }
+
+    window.switchActiveProject = function(pName) {
+      appData.activeProject = pName;
+      saveData(appData);
+      document.getElementById('txtCurrentProject').textContent = 'Salfa Montajes > ' + pName;
+      document.getElementById('dropdownProjects').classList.remove('show');
+      renderAll();
+    };
+
+    // ==========================================================================
+    // TAB SWITCHING (Projects, Docs, Build, Cost, Coordination, Admin)
+    // ==========================================================================
+    var tabButtons = document.querySelectorAll('.module-tab-btn');
+    var viewSections = document.querySelectorAll('.view-container');
+
+    tabButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var tabKey = btn.getAttribute('data-tab');
+        switchMainTab(tabKey);
+      });
+    });
+
+    function switchMainTab(tabKey) {
+      tabButtons.forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-tab') === tabKey); });
+      viewSections.forEach(function(s) { s.classList.toggle('active', s.id === 'view-' + tabKey); });
+      
+      var primaryBtn = document.getElementById('btnPrimaryAction');
+      if (tabKey === 'docs') primaryBtn.textContent = '+ Upload File';
+      else if (tabKey === 'projects') primaryBtn.textContent = '+ Create Project';
+      else if (tabKey === 'build') primaryBtn.textContent = '+ Create RFI';
+      else if (tabKey === 'cost') primaryBtn.textContent = '+ Create Change Order';
+      else if (tabKey === 'admin') primaryBtn.textContent = '+ Add Member';
+      else primaryBtn.textContent = '+ Action';
+    }
+
+    // Build Subtabs
+    document.querySelectorAll('.subtab-pill-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.subtab-pill-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentBuildSubtab = btn.getAttribute('data-build-subtab');
+        renderBuild();
+      });
+    });
+
+    // Folder Filtering in Docs
+    document.querySelectorAll('.folder-node').forEach(function(node) {
+      node.addEventListener('click', function() {
+        document.querySelectorAll('.folder-node').forEach(function(n) { n.classList.remove('active'); });
+        node.classList.add('active');
+        currentFolderFilter = node.getAttribute('data-folder-key');
+        renderDocs();
+      });
+    });
+
+    // Search & Filter listeners
+    document.getElementById('searchProjects').addEventListener('input', renderProjects);
+    document.getElementById('filterProjStatus').addEventListener('change', renderProjects);
+    document.getElementById('filterProjType').addEventListener('change', renderProjects);
+
+    document.getElementById('searchDocs').addEventListener('input', renderDocs);
+    document.getElementById('filterDocStatus').addEventListener('change', renderDocs);
+
+    document.getElementById('searchBuild').addEventListener('input', renderBuild);
+    document.getElementById('filterBuildStatus').addEventListener('change', renderBuild);
+
+    // Global Search filters active view
+    document.getElementById('globalSearchInput').addEventListener('input', function(e) {
+      var q = e.target.value;
+      document.getElementById('searchDocs').value = q;
+      document.getElementById('searchProjects').value = q;
+      document.getElementById('searchBuild').value = q;
+      renderAll();
+    });
+
+    // Popovers: Waffle, Profile, Project Picker
+    var btnWaffle = document.getElementById('btnWaffle');
+    var popWaffle = document.getElementById('popoverWaffle');
+    btnWaffle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      popWaffle.classList.toggle('show');
+      document.getElementById('popoverProfile').classList.remove('show');
+      document.getElementById('dropdownProjects').classList.remove('show');
+    });
+
+    var btnProfile = document.getElementById('btnUserProfile');
+    var popProfile = document.getElementById('popoverProfile');
+    btnProfile.addEventListener('click', function(e) {
+      e.stopPropagation();
+      popProfile.classList.toggle('show');
+      popWaffle.classList.remove('show');
+      document.getElementById('dropdownProjects').classList.remove('show');
+    });
+
+    var btnProjPicker = document.getElementById('btnProjectPicker');
+    var dropProj = document.getElementById('dropdownProjects');
+    btnProjPicker.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropProj.classList.toggle('show');
+      popWaffle.classList.remove('show');
+      popProfile.classList.remove('show');
+    });
+
+    document.addEventListener('click', function() {
+      popWaffle.classList.remove('show');
+      popProfile.classList.remove('show');
+      dropProj.classList.remove('show');
+    });
+
+    // App Waffle quick switch
+    document.querySelectorAll('.waffle-app-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        var target = item.getAttribute('data-switch-tab');
+        popWaffle.classList.remove('show');
+        switchMainTab(target);
+      });
+    });
+
+    // ==========================================================================
+    // LARGE MODEL VIEWER (LMV) INTERACTIVE 3D BIM ENGINE
+    // ==========================================================================
+    var modalViewer = document.getElementById('modal-viewer');
+    var svgScene = document.getElementById('svgViewerScene');
+    var groupWorld = document.getElementById('group3DWorld');
+    var viewCubeBox = document.getElementById('viewCubeBox');
+    var hudStatus = document.getElementById('txtViewerMode');
+
+    var currentTool = 'orbit'; // orbit, pan, walk, measure, addpin
+    var isDragging = false;
+    var startX = 0, startY = 0;
+    var rotX = -22, rotY = 32;
+    var panX = 600, panY = 420;
+    var zoomScale = 1.0;
+
+    // Measurement Points
+    var measurePointA = null;
+
+    window.abrirVisorBIM = function(docTitle, status) {
+      document.getElementById('txtViewerDocTitle').textContent = docTitle || 'OB2401-EST-PL-001-RevC.rvt';
+      modalViewer.showModal();
+      resetCamera();
+    };
+
+    document.getElementById('btnViewerBack').addEventListener('click', function() { modalViewer.close(); });
+    document.getElementById('btnCloseViewer').addEventListener('click', function() { modalViewer.close(); });
+
+    // Fallback for light-dismiss
+    modalViewer.addEventListener('click', function(e) {
+      if (e.target === modalViewer) modalViewer.close();
+    });
+
+    function updateSceneTransform() {
+      groupWorld.setAttribute('transform', 'translate(' + panX + ', ' + panY + ') scale(' + zoomScale + ') rotate(' + (rotY * 0.15) + ')');
+      viewCubeBox.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+    }
+
+    function resetCamera() {
+      rotX = -22;
+      rotY = 32;
+      panX = 600;
+      panY = 420;
+      zoomScale = 1.0;
+      document.getElementById('rngExplode3D').value = 0;
+      document.getElementById('lblExplodeVal').textContent = '0%';
+      document.getElementById('rngSectionCut').value = 100;
+      document.getElementById('lblSectionCutVal').textContent = '100%';
+      document.getElementById('clipSectionRect').setAttribute('width', '1200');
+      applyExplode(0);
+      updateSceneTransform();
+    }
+
+    // ViewCube Click Handlers
+    document.querySelectorAll('.cube-face').forEach(function(face) {
+      face.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var v = face.getAttribute('data-cube-view');
+        if (v === 'TOP') { rotX = -90; rotY = 0; }
+        else if (v === 'FRONT') { rotX = 0; rotY = 0; }
+        else if (v === 'RIGHT') { rotX = 0; rotY = 90; }
+        else if (v === 'BACK') { rotX = 0; rotY = 180; }
+        else if (v === 'LEFT') { rotX = 0; rotY = -90; }
+        else if (v === 'BOTTOM') { rotX = 90; rotY = 0; }
+        updateSceneTransform();
+      });
+    });
+    document.getElementById('btnCubeHome').addEventListener('click', resetCamera);
+
+    // Canvas Drag & Orbit Events
+    var canvasArea = document.getElementById('viewerCanvasArea');
+
+    canvasArea.addEventListener('mousedown', function(e) {
+      if (e.target.closest('.viewer-floating-dock') || e.target.closest('.viewcube-container') || e.target.closest('.pin-popover-card')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging || !modalViewer.open) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+
+      if (currentTool === 'orbit') {
+        rotY += dx * 0.5;
+        rotX = Math.max(-85, Math.min(85, rotX - dy * 0.5));
+      } else if (currentTool === 'pan' || currentTool === 'walk') {
+        panX += dx;
+        panY += dy;
+      }
+      startX = e.clientX;
+      startY = e.clientY;
+      updateSceneTransform();
+    });
+
+    window.addEventListener('mouseup', function() { isDragging = false; });
+
+    // Wheel Zoom
+    canvasArea.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      var zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      zoomScale = Math.max(0.4, Math.min(3.5, zoomScale * zoomFactor));
+      updateSceneTransform();
+    }, { passive: false });
+
+    // Floating Dock Tool Selection
+    var dockButtons = document.querySelectorAll('.dock-btn');
+    dockButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var tool = btn.id.replace('tool', '').toLowerCase();
+        
+        if (tool === 'fit') {
+          resetCamera();
+          return;
+        }
+
+        if (tool === 'section') {
+          var dockS = document.getElementById('dockSectionSlider');
+          dockS.classList.toggle('active');
+          document.getElementById('dockExplodeSlider').classList.remove('active');
+          return;
+        }
+
+        if (tool === 'explode') {
+          var dockE = document.getElementById('dockExplodeSlider');
+          dockE.classList.toggle('active');
+          document.getElementById('dockSectionSlider').classList.remove('active');
+          return;
+        }
+
+        if (tool === 'inspectprops') {
+          toggleDrawer('drawerProps');
+          return;
+        }
+
+        if (tool === 'styles') {
+          var isWire = groupWorld.getAttribute('fill-opacity') === '0.2';
+          groupWorld.setAttribute('fill-opacity', isWire ? '1' : '0.2');
+          alert(isWire ? 'Modo de sombreado: Sólido con Bordes' : 'Modo de sombreado: Alámbrico / Wireframe');
+          return;
+        }
+
+        dockButtons.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentTool = tool;
+
+        if (tool === 'orbit') hudStatus.textContent = 'Herramienta: Órbita 3D (Arrastra para rotar)';
+        else if (tool === 'pan') hudStatus.textContent = 'Herramienta: Encuadre / Mano (Arrastra para mover la vista)';
+        else if (tool === 'walk') hudStatus.textContent = 'Herramienta: Paseo Virtual (WASD / Flechas de teclado)';
+        else if (tool === 'measure') {
+          hudStatus.textContent = 'Herramienta: Medición (Haz clic en Punto A y luego en Punto B)';
+          document.getElementById('hudMeasure').classList.add('active');
+        } else if (tool === 'addpin') {
+          hudStatus.textContent = 'Colocar Incidencia: Haz clic en el modelo para fijar chincheta';
+        }
+      });
+    });
+
+    // 3D Explode Tool Slider
+    document.getElementById('rngExplode3D').addEventListener('input', function(e) {
+      var val = parseInt(e.target.value, 10);
+      document.getElementById('lblExplodeVal').textContent = val + '%';
+      applyExplode(val);
+    });
+
+    function applyExplode(val) {
+      var offset = val * 1.8;
+      document.getElementById('layerSlabN2').setAttribute('transform', 'translate(0, ' + (-offset * 0.7) + ')');
+      document.getElementById('layerSteel').setAttribute('transform', 'translate(0, ' + (-offset * 1.2) + ')');
+      document.getElementById('layerMep').setAttribute('transform', 'translate(0, ' + (-offset * 1.5) + ')');
+      document.getElementById('layerCurtainWall').setAttribute('transform', 'translate(0, ' + (-offset * 0.5) + ')');
+    }
+
+    // Section Cut Slider
+    document.getElementById('rngSectionCut').addEventListener('input', function(e) {
+      var val = parseInt(e.target.value, 10);
+      document.getElementById('lblSectionCutVal').textContent = val + '%';
+      var cutWidth = (val / 100) * 1200;
+      document.getElementById('clipSectionRect').setAttribute('width', cutWidth);
+    });
+
+    // Click on Canvas to Measure or Drop Pin
+    canvasArea.addEventListener('click', function(e) {
+      if (e.target.closest('.viewer-floating-dock') || e.target.closest('.viewcube-container') || e.target.closest('.viewer-icon-rail') || e.target.closest('.viewer-drawer-left') || e.target.closest('.viewer-drawer-right') || e.target.closest('.pin-popover-card')) return;
+
+      var rect = svgScene.getBoundingClientRect();
+      var clickX = e.clientX - rect.left;
+      var clickY = e.clientY - rect.top;
+
+      if (currentTool === 'measure') {
+        if (!measurePointA) {
+          measurePointA = { x: clickX, y: clickY };
+          hudStatus.textContent = 'Punto A fijado. Haz clic en Punto B para medir distancia.';
+        } else {
+          var dx = clickX - measurePointA.x;
+          var dy = clickY - measurePointA.y;
+          var distMeters = (Math.sqrt(dx * dx + dy * dy) * 0.025).toFixed(2);
+          document.getElementById('lblMeasureValue').textContent = distMeters + ' m';
+          
+          var measureLayer = document.getElementById('layerMeasurement');
+          measureLayer.innerHTML = '<line x1="' + (measurePointA.x - panX) + '" y1="' + (measurePointA.y - panY) + '" x2="' + (clickX - panX) + '" y2="' + (clickY - panY) + '" stroke="#00E5FF" stroke-width="2.5" stroke-dasharray="4,4"/>' +
+            '<circle cx="' + (measurePointA.x - panX) + '" cy="' + (measurePointA.y - panY) + '" r="4" fill="#00E5FF"/>' +
+            '<circle cx="' + (clickX - panX) + '" cy="' + (clickY - panY) + '" r="4" fill="#00E5FF"/>';
+          measurePointA = null;
+        }
+      } else if (currentTool === 'addpin') {
+        var pinId = 'pin-' + Date.now();
+        var pinX = clickX - panX;
+        var pinY = clickY - panY;
+        var pinsLayer = document.getElementById('layerIssuePins');
+        
+        var newPin = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        newPin.setAttribute('class', 'viewer-issue-pin');
+        newPin.setAttribute('id', pinId);
+        newPin.setAttribute('transform', 'translate(' + pinX + ', ' + pinY + ')');
+        newPin.innerHTML = '<circle cx="0" cy="0" r="14" fill="#E26529" stroke="#FFFFFF" stroke-width="2"/>' +
+          '<text x="0" y="4.5" fill="#FFFFFF" font-size="9" font-weight="800" text-anchor="middle">NEW</text>';
+        
+        newPin.addEventListener('click', function() {
+          showPinPopover(pinX + panX, pinY + panY, 'Nueva Incidencia', 'Observación registrada en terreno por Sergio Roca.');
+        });
+        pinsLayer.appendChild(newPin);
+        
+        showPinPopover(clickX, clickY, 'Nueva Incidencia en Terreno', 'Chincheta colocada en modelo 3D.');
+        currentTool = 'orbit';
+        document.getElementById('toolOrbit').click();
+      }
+    });
+
+    document.getElementById('btnClearMeasure').addEventListener('click', function() {
+      document.getElementById('layerMeasurement').innerHTML = '';
+      document.getElementById('lblMeasureValue').textContent = '0.00 m';
+      measurePointA = null;
+    });
+
+    // Pin Focus and Popover
+    window.focusPin = function(id) {
+      if (id === 1) {
+        showPinPopover(640, 465, 'Incidencia #101 · Choque HVAC vs Viga V-204', 'Ducto 800x400 interfiere con ala inferior de viga IPE-400. Requiere re-trazado o bypass.');
+      } else {
+        showPinPopover(440, 560, 'Incidencia #102 · Falta Pase en Muro HA', 'Pase de tubería de 4" omitido en plano de enfierradura Nivel 1.');
+      }
+    };
+
+    function showPinPopover(x, y, title, desc) {
+      var pop = document.getElementById('pinPopover');
+      pop.style.left = (x + 15) + 'px';
+      pop.style.top = (y - 30) + 'px';
+      document.getElementById('lblPopoverPinTitle').textContent = title;
+      document.getElementById('lblPopoverPinDesc').textContent = desc;
+      pop.style.display = 'block';
+    }
+
+    window.closePinPopover = function() {
+      document.getElementById('pinPopover').style.display = 'none';
+    };
+
+    window.resolverIncidencia = function() {
+      alert('Incidencia marcada como RESUELTA. Se notificará a los coordinadores de especialidad.');
+      closePinPopover();
+    };
+
+    window.eliminarPin = function() {
+      closePinPopover();
+    };
+
+    // Left Icon Rail Drawer Toggles
+    var railButtons = [
+      { id: 'btnRailSheets', drawer: 'drawerSheets' },
+      { id: 'btnRailBrowser', drawer: 'drawerBrowser' },
+      { id: 'btnRailIssues', drawer: 'drawerIssues' }
+    ];
+
+    railButtons.forEach(function(rb) {
+      var btn = document.getElementById(rb.id);
+      if (btn) {
+        btn.addEventListener('click', function() {
+          railButtons.forEach(function(o) {
+            if (o.id !== rb.id) {
+              document.getElementById(o.id)?.classList.remove('active');
+              document.getElementById(o.drawer)?.classList.remove('open');
+            }
+          });
+          btn.classList.toggle('active');
+          var drawer = document.getElementById(rb.drawer);
+          drawer.classList.toggle('open');
+        });
+      }
+    });
+
+    window.toggleDrawer = function(drawerId, forceState) {
+      var el = document.getElementById(drawerId);
+      if (el) {
+        if (typeof forceState === 'boolean') el.classList.toggle('open', forceState);
+        else el.classList.toggle('open');
+      }
+    };
+
+    // BIM Elements Click Handler (Properties Drawer)
+    document.querySelectorAll('.bim-clickable-elem').forEach(function(elem) {
+      elem.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var bimId = elem.getAttribute('data-bim-id');
+        loadElementProperties(bimId);
+        toggleDrawer('drawerProps', true);
+      });
+    });
+
+    function loadElementProperties(bimId) {
+      var txtName = document.getElementById('txtPropName');
+      var cat = document.getElementById('propCategory');
+      var fam = document.getElementById('propFamily');
+      var typ = document.getElementById('propType');
+      var h = document.getElementById('propHeight');
+      var vol = document.getElementById('propVolume');
+
+      if (bimId === 'pilares') {
+        txtName.textContent = 'Pilar HA-40x40 P-102';
+        cat.textContent = 'Pilares Estructurales';
+        fam.textContent = 'Hormigón Armado Rectangular';
+        typ.textContent = '400 x 400 mm';
+        h.textContent = '3.60 m';
+        vol.textContent = '0.576 m³';
+      } else if (bimId === 'vigas-ipe') {
+        txtName.textContent = 'Viga Metálica V-204';
+        cat.textContent = 'Armazón Estructural';
+        fam.textContent = 'Perfiles Laminados IPE';
+        typ.textContent = 'IPE-400 Acero A36';
+        h.textContent = '6.40 m';
+        vol.textContent = '0.412 m³';
+      } else if (bimId === 'mep-hvac') {
+        txtName.textContent = 'Ducto HVAC Rectangular';
+        cat.textContent = 'Conductos de Climatización';
+        fam.textContent = 'Acero Galvanizado con Bridas';
+        typ.textContent = '800 x 400 mm';
+        h.textContent = '12.00 m';
+        vol.textContent = '0.840 m³';
+      } else {
+        txtName.textContent = 'Losa Postensada Nivel 2';
+        cat.textContent = 'Suelos Estructurales';
+        fam.textContent = 'Losa Hormigón Postensado';
+        typ.textContent = 'Espesor e=20 cm';
+        h.textContent = '0.20 m';
+        vol.textContent = '24.60 m³';
+      }
+    }
+
+    // Sheet / View Switcher (2D vs 3D)
+    document.querySelectorAll('.sheet-thumb-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.sheet-thumb-card').forEach(function(c) { c.classList.remove('active'); });
+        card.classList.add('active');
+        var mode = card.getAttribute('data-view-mode');
+        
+        if (mode.indexOf('2D') === 0) {
+          // Switch to pure 2D orthogonal plan
+          rotX = -90;
+          rotY = 0;
+          zoomScale = 1.2;
+          hudStatus.textContent = 'Vista 2D de Planta: Planos A101 Arquitectura';
+        } else {
+          // 3D Perspective
+          rotX = -22;
+          rotY = 32;
+          zoomScale = 1.0;
+          hudStatus.textContent = 'Modelo BIM 3D Coordinado';
+        }
+        updateSceneTransform();
+      });
+    });
+
+    // Version Compare Modal
+    document.getElementById('btnCompareVersions').addEventListener('click', function() {
+      document.getElementById('modalCompareVersions').showModal();
+    });
+
+    // Share & Download Actions
+    document.getElementById('btnShareViewer').addEventListener('click', function() {
+      var url = window.location.href;
+      navigator.clipboard?.writeText(url);
+      alert('Enlace del modelo BIM copiado al portapapeles:\n' + url);
+    });
+
+    document.getElementById('btnDownloadViewer').addEventListener('click', function() {
+      var docName = document.getElementById('txtViewerDocTitle').textContent;
+      var blob = new Blob(['AUTODESK-BIM-DATA-MOCK: ' + docName], { type: 'application/octet-stream' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = docName;
+      a.click();
+    });
+
+    document.getElementById('btnPromoteApc').addEventListener('click', function() {
+      alert('Documento promovido exitosamente a estado: 03-PUBLISHED (APC Terreno).');
+    });
+
+    document.getElementById('btnFullscreenToggle').addEventListener('click', function() {
+      if (!document.fullscreenElement) {
+        modalViewer.requestFullscreen?.().catch(function() {});
+      } else {
+        document.exitFullscreen?.().catch(function() {});
+      }
+    });
+
+    // Generic Create Modal
+    var modalGeneric = document.getElementById('modalGenericForm');
+    var formGeneric = document.getElementById('formGenericRecord');
+
+    function openGenericModal(moduleType, title) {
+      document.getElementById('recTargetModule').value = moduleType;
+      document.getElementById('lblGenericModalTitle').textContent = title;
+      formGeneric.reset();
+      modalGeneric.showModal();
+    }
+
+    document.getElementById('btnUploadDoc').addEventListener('click', function() { openGenericModal('DOCS', 'Upload File to Docs CDE'); });
+    document.getElementById('btnPrimaryAction').addEventListener('click', function() { openGenericModal('DOCS', 'Upload File to Docs CDE'); });
+    document.getElementById('btnNewProject').addEventListener('click', function() { openGenericModal('PROJECTS', 'Create Project in ACC'); });
+    document.getElementById('btnNewBuildItem').addEventListener('click', function() { openGenericModal('BUILD', 'Create Field Item (RFI / Issue)'); });
+    document.getElementById('btnNewChangeOrder').addEventListener('click', function() { openGenericModal('COST', 'Create Potential Change Order (PCO)'); });
+
+    formGeneric.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var mod = document.getElementById('recTargetModule').value;
+      var title = document.getElementById('recTitle').value;
+      var code = document.getElementById('recCode').value;
+      var status = document.getElementById('recStatus').value;
+      var assignee = document.getElementById('recAssignee').value;
+      var folder = document.getElementById('recFolder').value;
+
+      if (mod === 'DOCS') {
+        appData.docs.unshift({
+          id: 'd' + Date.now(),
+          code: code || 'PLN-DOC-NEW',
+          name: title,
+          version: 'V1',
+          status: status,
+          folder: folder,
+          author: assignee,
+          size: '15.2 MB',
+          fileType: 'rvt'
+        });
+      } else if (mod === 'PROJECTS') {
+        appData.projects.unshift({
+          id: 'p' + Date.now(),
+          code: code || 'OB-NEW',
+          name: title,
+          type: 'Edificación',
+          status: status,
+          date: '31-10-2026',
+          platform: 'ACC'
+        });
+      } else if (mod === 'BUILD') {
+        appData.build.unshift({
+          id: 'b' + Date.now(),
+          code: code || 'RFI-NEW',
+          type: 'RFI',
+          title: title,
+          assignee: assignee,
+          status: status,
+          category: folder
+        });
+      }
+
+      saveData(appData);
+      renderAll();
+      modalGeneric.close();
+      alert('Registro guardado exitosamente en Autodesk Construction Cloud.');
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', function(e) {
+      if (!modalViewer.open) return;
+      if (e.key === 'o' || e.key === 'O') document.getElementById('toolOrbit')?.click();
+      if (e.key === 'h' || e.key === 'H') document.getElementById('toolPan')?.click();
+      if (e.key === 'f' || e.key === 'F') resetCamera();
+      if (e.key === 'm' || e.key === 'M') document.getElementById('toolMeasure')?.click();
+      if (e.key === 'Escape') {
+        if (document.getElementById('pinPopover').style.display === 'block') closePinPopover();
+        else modalViewer.close();
+      }
+    });
+
+    // Initial render
+    renderAll();
+
+  })();
+  </script>
+</body>
+</html>

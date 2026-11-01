@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SALFA Montajes — Arquitectura de Procesos BPMN 2.0 (AS-IS)</title>
+  <style>
+    :root {
+      --salfa-red: #B01E24;
+      --salfa-red-dark: #8C1419;
+      --salfa-red-light: #FDF2F2;
+      --salfa-graphite: #2E343C;
+      --salfa-graphite-dark: #1F2327;
+      --salfa-graphite-light: #5A626A;
+      --salfa-gray-bg: #F8FAFC;
+      --salfa-gray-alt: #F1F5F9;
+      --salfa-border: #D1D5DB;
+      --salfa-border-dark: #9CA3AF;
+      --salfa-text: #15181B;
+      --salfa-text-muted: #5A626A;
+      --salfa-green: #2E7D32;
+      --salfa-green-bg: #E8F5E9;
+      --salfa-amber: #D97706;
+      --salfa-amber-bg: #FFF8E1;
+      --salfa-blue: #1D4ED8;
+      --salfa-blue-bg: #EFF6FF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--salfa-gray-bg);
+      color: var(--salfa-text);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    /* Barra Superior Roja BRASA (8mm) */
+    .top-brasa-bar {
+      height: 8px;
+      background: var(--salfa-red);
+      width: 100%;
+    }
+
+    /* Encabezado Corporativo Oficial SALFA MONTAJES */
+    .header-container {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--salfa-border);
+      padding: 10px 24px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--salfa-graphite-dark);
+    }
+    .brand-logo span.red { color: var(--salfa-red); }
+
+    .brand-divider {
+      width: 1px;
+      height: 34px;
+      background: var(--salfa-border);
+    }
+
+    .doc-meta {
+      font-size: 11px;
+      color: var(--salfa-text-muted);
+      line-height: 1.4;
+    }
+    .doc-meta strong {
+      color: var(--salfa-graphite-dark);
+      font-size: 12px;
+    }
+
+    /* Cajetín Normalizado con Autoría */
+    .cajetin-box {
+      display: flex;
+      background: #FFFFFF;
+      border: 1px solid var(--salfa-border);
+      border-radius: 3px;
+      overflow: hidden;
+      font-size: 10px;
+    }
+
+    .cajetin-cell {
+      padding: 5px 12px;
+      border-right: 1px solid var(--salfa-border);
+      display: flex;
+      flex-direction: column;
+    }
+    .cajetin-cell:last-child { border-right: none; }
+    .cajetin-label { font-size: 8.5px; font-weight: 700; color: var(--salfa-text-muted); text-transform: uppercase; }
+    .cajetin-val { font-weight: 700; color: var(--salfa-graphite-dark); }
+
+    /* Barra de Subnavegación y Vistas */
+    .subnav-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--salfa-border);
+      padding: 0 24px;
+    }
+
+    .subnav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .subnav-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--salfa-graphite-dark);
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subnav-badge {
+      background: #E2E8F0;
+      color: #334155;
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .subnav-tabs {
+      display: flex;
+      gap: 2px;
+    }
+
+    .subnav-btn {
+      padding: 10px 14px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--salfa-text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .subnav-btn:hover {
+      color: var(--salfa-graphite-dark);
+      background: var(--salfa-gray-bg);
+    }
+    .subnav-btn.active {
+      color: var(--salfa-red);
+      border-bottom-color: var(--salfa-red);
+      background: transparent;
+      font-weight: 700;
+    }
+
+    /* Layout Principal */
+    .main-diagram-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 16px;
+      padding: 16px 24px;
+      min-height: calc(100vh - 125px);
+      align-items: start;
+    }
+
+    /* Lienzo */
+    .canvas-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--salfa-border);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .canvas-toolbar {
+      padding: 8px 16px;
+      background: #FAFAFA;
+      border-bottom: 1px solid var(--salfa-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action {
+      background: #FFFFFF;
+      border: 1px solid var(--salfa-border);
+      color: var(--salfa-graphite-dark);
+      padding: 6px 12px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-action:hover {
+      background: var(--salfa-gray-alt);
+      border-color: var(--salfa-border-dark);
+    }
+    .btn-action.primary {
+      background: var(--salfa-red);
+      border-color: var(--salfa-red);
+      color: #FFFFFF;
+    }
+    .btn-action.primary:hover {
+      background: var(--salfa-red-dark);
+      border-color: var(--salfa-red-dark);
+    }
+    .btn-action.active-toggle {
+      background: var(--salfa-graphite-dark);
+      color: #FFFFFF;
+      border-color: var(--salfa-graphite-dark);
+    }
+
+    /* Viewport del Diagrama */
+    .diagram-viewport {
+      position: relative;
+      background: #FFFFFF;
+      min-height: 620px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 24px;
+      cursor: grab;
+      user-select: none;
+    }
+    .diagram-viewport:active { cursor: grabbing; }
+
+    #diagram-zoom-wrapper {
+      transform-origin: 0 0;
+      transition: transform 0.1s ease-out;
+      margin: 0;
+      width: 100%;
+    }
+
+    /* Inspector Lateral Bizagi */
+    .inspector-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--salfa-border);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: 16px;
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+    .inspector-panel.hidden { display: none; }
+
+    .inspector-header {
+      border-bottom: 2px solid var(--salfa-red);
+      padding-bottom: 8px;
+    }
+    .inspector-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--salfa-graphite-dark);
+    }
+    .inspector-subtitle {
+      font-size: 10.5px;
+      color: var(--salfa-text-muted);
+    }
+
+    .prop-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .prop-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--salfa-text-muted);
+      letter-spacing: 0.3px;
+    }
+    .prop-val {
+      font-size: 11.5px;
+      color: var(--salfa-graphite-dark);
+      background: var(--salfa-gray-bg);
+      padding: 6px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--salfa-border);
+      word-break: break-word;
+    }
+
+    .badge-va {
+      display: inline-block;
+      background: var(--salfa-green-bg);
+      color: var(--salfa-green);
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 3px;
+      border: 1px solid #C8E6C9;
+      font-size: 10.5px;
+    }
+    .badge-tr {
+      display: inline-block;
+      background: var(--salfa-blue-bg);
+      color: var(--salfa-blue);
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 3px;
+      border: 1px solid #BFDBFE;
+      font-size: 10.5px;
+    }
+    .badge-ct {
+      display: inline-block;
+      background: var(--salfa-amber-bg);
+      color: var(--salfa-amber);
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 3px;
+      border: 1px solid #FDE68A;
+      font-size: 10.5px;
+    }
+
+    .btn-ref-pill {
+      display: inline-block;
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-ref-pill:hover {
+      background: #E2E8F0;
+      color: var(--salfa-red);
+      border-color: var(--salfa-red);
+    }
+
+    /* Tabla de Auditoría Forense */
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 12px;
+    }
+    .audit-table th {
+      background: var(--salfa-graphite);
+      color: #FFFFFF;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+      border: 1px solid var(--salfa-border-dark);
+    }
+    .audit-table td {
+      padding: 8px 10px;
+      border: 1px solid var(--salfa-border);
+      vertical-align: middle;
+    }
+    .audit-table tr:nth-child(even) { background-color: var(--salfa-gray-bg); }
+    .audit-table tr:hover { background-color: #FEF3C7; }
+
+    /* Modal Diálogo */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #FFFFFF;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 1250px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-top: 4px solid var(--salfa-red);
+    }
+    .modal-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--salfa-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAFAFA;
+    }
+    .modal-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--salfa-graphite-dark);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--salfa-text-muted);
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Roja BRASA (8mm) -->
+  <div class="top-brasa-bar"></div>
+
+  <!-- Encabezado Corporativo Oficial -->
+  <header class="header-container">
+    <div class="header-content">
+      <div class="brand-group">
+        <div class="brand-logo"><span class="red">SALFA</span>MONTAJES</div>
+        <div class="brand-divider"></div>
+        <div class="doc-meta">
+          <div>SISTEMA DE GESTIÓN INTEGRADO — SERIE OPERACIONAL N5</div>
+          <div><strong>DIAGRAMA OPERATIVO DE PROCESOS (BPMN 2.0 / BIZAGI) · LEVANTAMIENTO AS-IS</strong></div>
+        </div>
+      </div>
+      
+      <!-- Cajetín Normalizado con Autoría -->
+      <div class="cajetin-box">
+        <div class="cajetin-cell">
+          <span class="cajetin-label">Código Diagrama</span>
+          <span class="cajetin-val" style="color:var(--salfa-red);">10000000-SAL-00000-DOC-DIA-00001</span>
+        </div>
+        <div class="cajetin-cell">
+          <span class="cajetin-label">Doc. Rector Fuente</span>
+          <span class="cajetin-val">10000000-PRO-EST-001 (Rev. 0)</span>
+        </div>
+        <div class="cajetin-cell">
+          <span class="cajetin-label">Revisión</span>
+          <span class="cajetin-val">Rev. 0 (Auditoría 100%)</span>
+        </div>
+        <div class="cajetin-cell">
+          <span class="cajetin-label">Autor / Especialista</span>
+          <span class="cajetin-val">Sebastián Roca G.</span>
+        </div>
+        <div class="cajetin-cell">
+          <span class="cajetin-label">Contacto</span>
+          <span class="cajetin-val">+56993543447 | sjroca@salfamontajes.com</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Subnavegación -->
+  <nav class="subnav-bar">
+    <div class="subnav-content">
+      <div class="subnav-title">
+        <span>MACRO-01: PLANIFICACIÓN Y CONTROL DE PROYECTOS (METODOLOGÍA LEAN EN OPC)</span>
+        <span class="subnav-badge">Norma ISO/IEC 19510</span>
+      </div>
+      <div class="subnav-tabs">
+        <button id="btn-tab-macro" class="subnav-btn active" onclick="setView('macro')">1. Diagrama Integral (Ambos Procesos Bizagi)</button>
+        <button id="btn-tab-p1" class="subnav-btn" onclick="setView('proc1')">2. Detalle PROC-01 (Planificación Last Planner)</button>
+        <button id="btn-tab-p2" class="subnav-btn" onclick="setView('proc2')">3. Detalle PROC-02 (Gestión de Restricciones)</button>
+        <button id="btn-tab-audit" class="subnav-btn" onclick="setView('audit')">4. Auditoría Forense y Trazabilidad AS-IS</button>
+        <button id="btn-tab-doc" class="subnav-btn" onclick="setView('doc')">5. Documento Rector Fuente (10000000-PRO-EST-001)</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Layout Principal -->
+  <main class="main-diagram-layout" id="main-diagram-layout">
+    
+    <!-- Lienzo del Diagrama -->
+    <section class="canvas-panel">
+      <div class="canvas-toolbar">
+        <div class="tool-group">
+          <span id="canvas-status-text" style="font-weight: 700; color: var(--salfa-graphite-dark);">
+            Vista Integral BPMN 2.0: PROC-01 (Last Planner) + PROC-02 (Restricciones)
+          </span>
+          <span style="color: var(--salfa-text-muted);">|</span>
+          <span id="canvas-hint" style="font-size: 11px; color: var(--salfa-text-muted);">
+            Visualización unificada 1:1 con Bizagi Modeler: 2 Piscinas (Pools), 6 Carriles (Lanes) y Flujos de Mensaje.
+          </span>
+        </div>
+        
+        <!-- Controles de Toolbar y Descargas -->
+        <div class="tool-group">
+          <button id="btn-toggle-artifacts" class="btn-action active-toggle" onclick="toggleArtifactsLayer()" title="Mostrar u ocultar depósitos, documentos y anotaciones Bizagi">
+            <span id="artifacts-btn-text">📄 Ver Artefactos (ON)</span>
+          </button>
+
+          <button class="btn-action" onclick="setView('doc')" title="Abrir y consultar el documento rector corporativo con navegación interactiva">
+            📖 Leer Documento Rector
+          </button>
+          
+          <div id="zoom-controls-group" style="display:flex; border:1px solid var(--salfa-border); border-radius:3px; overflow:hidden;">
+            <button class="btn-action" style="border:none; border-radius:0; padding:6px 9px;" onclick="zoomOut()" title="Alejar (Ctrl + Rueda Abajo)">−</button>
+            <button class="btn-action" id="zoom-display" style="border:none; border-left:1px solid var(--salfa-border); border-right:1px solid var(--salfa-border); border-radius:0; padding:6px 10px; font-weight:700;" onclick="resetZoom()" title="Restablecer zoom al 100%">100%</button>
+            <button class="btn-action" style="border:none; border-radius:0; padding:6px 9px;" onclick="zoomIn()" title="Acercar (Ctrl + Rueda Arriba)">+</button>
+          </div>
+
+          <button class="btn-action" onclick="autoFitToWindow()" title="Ajustar diagrama al ancho completo de la ventana">
+            ⛶ Ajustar
+          </button>
+
+          <button class="btn-action" id="btn-toggle-inspector" onclick="toggleInspector()" title="Ocultar o mostrar panel lateral de propiedades">
+            ⇄ Inspector
+          </button>
+
+          <!-- ÚNICOS 2 BOTONES DE DESCARGA: PNG Y .BPMN (SIN BIZAGI BPM Y SIN SVG) -->
+          <button class="btn-action primary" onclick="downloadDiagramPng()" title="Exportar diagrama en formato imagen PNG de alta resolución con cajetín corporativo SALFA Montajes">
+            📷 Descargar PNG
+          </button>
+          <button class="btn-action" onclick="downloadBpmnXml()" title="Descargar modelo en estándar OMG BPMN 2.0 XML (Compatible con Bizagi Modeler / Camunda)">
+            📥 Descargar .BPMN
+          </button>
+        </div>
+      </div>
+
+      <div class="diagram-viewport" id="diagram-viewport">
+        <div id="diagram-zoom-wrapper">
+          <!-- Contenido inyectado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Inspector Lateral Bizagi -->
+    <aside class="inspector-panel" id="inspector-panel">
+      <div class="inspector-header">
+        <div class="inspector-title" id="insp-title">Detalle del Elemento</div>
+        <div class="inspector-subtitle" id="insp-type">Selecciona un elemento en el diagrama</div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">ID Canónico</span>
+        <div class="prop-val" id="insp-id">ACT-01-01-02</div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Rol Responsable (RACI)</span>
+        <div class="prop-val" id="insp-role">Programador de Obra</div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Clasificación de Valor</span>
+        <div id="insp-value-class"><span class="badge-tr">Trabajo Requerido (TR)</span></div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Trazabilidad Documental Fuente</span>
+        <div class="prop-val" id="insp-source" style="font-weight:700; color:var(--salfa-red);">
+          10000000-PRO-EST-001 §4.1 Tabla 1 (Pág. 7)
+        </div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Cadena de Estados del Objeto</span>
+        <div class="prop-val" id="insp-state">Programa Maestro: Actualizado</div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Plataforma / Sistema</span>
+        <div class="prop-val" id="insp-system">Oracle Primavera P6 EPPM</div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Salida de Información / Entregable</span>
+        <div class="prop-val" id="insp-output" style="font-size: 11px; line-height: 1.4; color: var(--salfa-graphite-dark); font-weight: 600;">
+          Cronograma Contractual Maestro P6 (.xer/.xml) con avances reales y ruta crítica recalculada.
+        </div>
+      </div>
+
+      <div class="prop-group">
+        <span class="prop-label">Descripción Operativa de Terreno</span>
+        <div class="prop-val" id="insp-desc" style="font-size: 11px; line-height: 1.4;">
+          Carga de avances reales de terreno, cálculo de la ruta crítica y actualización de la línea base contractual.
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Modal Diálogo para Fichas y Subprocesos -->
+  <div class="modal-overlay" id="process-modal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Ficha Técnica de Proceso</div>
+        <button class="modal-close" onclick="closeProcessModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+        <!-- Contenido dinámico del modal -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS Y DATOS EMBEBIDOS -->
+  <script>
+    // 1. Archivo BPMN 2.0 XML embebido en Base64
+    const B64_BPMN_FILE = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGJwbW46ZGVmaW5pdGlvbnMgeG1sbnM6YnBtbj0iaHR0cDovL3d3dy5vbWcub3JnL3NwZWMvQlBNTi8yMDEwMDUyNC9NT0RFTCIKICAgICAgICAgICAgICAgICAgeG1sbnM6YnBtbmRpPSJodHRwOi8vd3d3Lm9tZy5vcmcvc3BlYy9CUE1OLzIwMTAwNTI0L0RJIgogICAgICAgICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3d3dy5vbWcub3JnL3NwZWMvREQvMjAxMDA1MjQvREMiCiAgICAgICAgICAgICAgICAgIHhtbG5zOmRpPSJodHRwOi8vd3d3Lm9tZy5vcmcvc3BlYy9ERC8yMDEwMDUyNC9ESSIKICAgICAgICAgICAgICAgICAgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIKICAgICAgICAgICAgICAgICAgaWQ9IkRlZmluaXRpb25zX1NBTEZBX0xlYW5fQVNJUyIKICAgICAgICAgICAgICAgICAgdGFyZ2V0TmFtZXNwYWNlPSJodHRwOi8vc2FsZmEuY2wvYnBtbi9sZWFuX2xhc3RfcGxhbm5lciIKICAgICAgICAgICAgICAgICAgZXhwb3J0ZXI9IkJpemFnaSAvIEFudGlncmF2aXR5IEJQTU4gRW5naW5lIgogICAgICAgICAgICAgICAgICBleHBvcnRlclZlcnNpb249IjIuMCI+CgogIDwhLS0gQ29sbGFib3JhdGlvbjogTWFjcm9wcm9jZXNvIHkgUHJvY2Vzb3MgUmVsYWNpb25hZG9zIC0tPgogIDxicG1uOmNvbGxhYm9yYXRpb24gaWQ9IkNvbGxhYl9NYWNyb19QbGFuaWZpY2FjaW9uIj4KICAgIDxicG1uOnBhcnRpY2lwYW50IGlkPSJQYXJ0X1BST0NfMDEiIG5hbWU9IlBST0MtMDE6IFBsYW5pZmljYWNpw7NuIFTDoWN0aWNhIHkgR2VzdGnDs24gZGUgVGFyZWFzIExhc3QgUGxhbm5lciIgcHJvY2Vzc1JlZj0iUHJvY2Vzc19QUk9DXzAxIiAvPgogICAgPGJwbW46cGFydGljaXBhbnQgaWQ9IlBhcnRfUFJPQ18wMiIgbmFtZT0iUFJPQy0wMjogR2VzdGnDs24geSBMaWJlcmFjacOzbiBkZSBSZXN0cmljY2lvbmVzIiBwcm9jZXNzUmVmPSJQcm9jZXNzX1BST0NfMDIiIC8+CiAgICA8YnBtbjptZXNzYWdlRmxvdyBpZD0iTXNnRmxvd19JbnZvY2FjaW9uIiBuYW1lPSJSRUwtMDAwMjogSW52b2NhY2nDs24gcG9yIFJlc3RyaWNjacOzbiBEZXRlY3RhZGEiIHNvdXJjZVJlZj0iQ2FsbEFjdF9HZXN0aW9uUmVzdHJpY2Npb25lcyIgdGFyZ2V0UmVmPSJTdGFydF9QUk9DXzAyIiAvPgogICAgPGJwbW46bWVzc2FnZUZsb3cgaWQ9Ik1zZ0Zsb3dfUmV0b3JubyIgbmFtZT0iUkVMLTAwMDM6IEhhbmQtb2ZmIFJlc3RyaWNjacOzbiBFbnRyZWdhZGEiIHNvdXJjZVJlZj0iRW5kX1BST0NfMDIiIHRhcmdldFJlZj0iVGFza19QbGFuVHJpc2VtYW5hbCIgLz4KICA8L2JwbW46Y29sbGFib3JhdGlvbj4KCiAgPCEtLSA9PT09PT09PT09PT09PT09PT09PSBQUk9DRVNTIDE6IFBST0MtMDEgPT09PT09PT09PT09PT09PT09PT0gLS0+CiAgPGJwbW46cHJvY2VzcyBpZD0iUHJvY2Vzc19QUk9DXzAxIiBpc0V4ZWN1dGFibGU9ImZhbHNlIj4KICAgIDxicG1uOmxhbmVTZXQgaWQ9IkxhbmVTZXRfUFJPQ18wMSI+CiAgICAgIDxicG1uOmxhbmUgaWQ9IkxhbmVfUHJvZ3JhbWFkb3IiIG5hbWU9IlByb2dyYW1hZG9yIGRlIE9icmEiPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlN0YXJ0X1RpbWVyU2VtYW5hbDwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgICA8YnBtbjpmbG93Tm9kZVJlZj5UYXNrX0FjdHVhbGl6YXJQNjwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgICA8YnBtbjpmbG93Tm9kZVJlZj5UYXNrX1NpbmNyb25pemFyT1BDPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlRhc2tfQ2FsY3VsYXJLUEk8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+RW5kX0NpY2xvU2VtYW5hbDwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgPC9icG1uOmxhbmU+CiAgICAgIDxicG1uOmxhbmUgaWQ9IkxhbmVfTGFzdFBsYW5uZXIiIG5hbWU9IkplZmUgZGUgw4FyZWEgKExhc3QgUGxhbm5lcikiPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlRhc2tfQXBlcnR1cmFUYXJlYXM8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+VGFza19QdWxsUGxhbm5pbmc8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+R2F0ZXdheV9UaWVuZVJlc3RyaWNjaW9uPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPkNhbGxBY3RfR2VzdGlvblJlc3RyaWNjaW9uZXM8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+VGFza19QbGFuVHJpc2VtYW5hbDwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgPC9icG1uOmxhbmU+CiAgICAgIDxicG1uOmxhbmUgaWQ9IkxhbmVfU3VwZXJ2aXNvciIgbmFtZT0iU3VwZXJ2aXNvciBkZSBUZXJyZW5vIj4KICAgICAgICA8YnBtbjpmbG93Tm9kZVJlZj5UYXNrX0NvbXByb21ldGVyVGFyZWE8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+VGFza19Db250cm9sRGlhcmlvUE9EPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICA8L2JwbW46bGFuZT4KICAgIDwvYnBtbjpsYW5lU2V0PgoKICAgIDxicG1uOnN0YXJ0RXZlbnQgaWQ9IlN0YXJ0X1RpbWVyU2VtYW5hbCIgbmFtZT0iQ29ydGUgU2VtYW5hbCBkZWwgUHJveWVjdG8iPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93XzAxPC9icG1uOm91dGdvaW5nPgogICAgICA8YnBtbjp0aW1lckV2ZW50RGVmaW5pdGlvbiBpZD0iVGltZXJEZWZfMDEiIC8+CiAgICA8L2JwbW46c3RhcnRFdmVudD4KCiAgICA8YnBtbjp1c2VyVGFzayBpZD0iVGFza19BY3R1YWxpemFyUDYiIG5hbWU9IkFjdHVhbGl6YXIgUHJvZ3JhbWEgTWFlc3RybyBlbiBQNiI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfMDE8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfMDI8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46dXNlclRhc2s+CgogICAgPGJwbW46c2VydmljZVRhc2sgaWQ9IlRhc2tfU2luY3Jvbml6YXJPUEMiIG5hbWU9IlNpbmNyb25pemFyIFA2IGhhY2lhIE9QQyI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfMDI8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfMDM8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46c2VydmljZVRhc2s+CgogICAgPGJwbW46dXNlclRhc2sgaWQ9IlRhc2tfQXBlcnR1cmFUYXJlYXMiIG5hbWU9IkRlc2dsb3NhciBBY3RpdmlkYWRlcyBlbiBUYXJlYXMgT3BlcmF0aXZhcyI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfMDM8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfMDQ8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46dXNlclRhc2s+CgogICAgPGJwbW46bWFudWFsVGFzayBpZD0iVGFza19QdWxsUGxhbm5pbmciIG5hbWU9IlJlYWxpemFyIFB1bGwgUGxhbm5pbmcgVMOhY3RpY28gKFZlbnRhbmEgMyBTZW1hbmFzKSI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfMDQ8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfMDU8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46bWFudWFsVGFzaz4KCiAgICA8YnBtbjpleGNsdXNpdmVHYXRld2F5IGlkPSJHYXRld2F5X1RpZW5lUmVzdHJpY2Npb24iIG5hbWU9IsK/VGllbmUgUmVzdHJpY2Npb25lcyBBYmllcnRhcz8iPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93XzA1PC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93X1NpUmVzdHJpY2Npb248L2JwbW46b3V0Z29pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfTm9SZXN0cmljY2lvbjwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjpleGNsdXNpdmVHYXRld2F5PgoKICAgIDxicG1uOmNhbGxBY3Rpdml0eSBpZD0iQ2FsbEFjdF9HZXN0aW9uUmVzdHJpY2Npb25lcyIgbmFtZT0iSW52b2NhciBQUk9DLTAyOiBHZXN0acOzbiBkZSBSZXN0cmljY2lvbmVzIiBjYWxsZWRFbGVtZW50PSJQcm9jZXNzX1BST0NfMDIiPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X1NpUmVzdHJpY2Npb248L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfUmVzdHJpY2Npb25SZXN1ZWx0YTwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjpjYWxsQWN0aXZpdHk+CgogICAgPGJwbW46dXNlclRhc2sgaWQ9IlRhc2tfUGxhblRyaXNlbWFuYWwiIG5hbWU9IlByb2dyYW1hciBUcmlzZW1hbmFsIHkgQXNpZ25hciBTdXBlcnZpc29yIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd19Ob1Jlc3RyaWNjaW9uPC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X1Jlc3RyaWNjaW9uUmVzdWVsdGE8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfMDY8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46dXNlclRhc2s+CgogICAgPGJwbW46dXNlclRhc2sgaWQ9IlRhc2tfQ29tcHJvbWV0ZXJUYXJlYSIgbmFtZT0iQ29tcHJvbWV0ZXIgVGFyZWEgZW4gT1BDIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd18wNjwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd18wNzwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjp1c2VyVGFzaz4KCiAgICA8YnBtbjptYW51YWxUYXNrIGlkPSJUYXNrX0NvbnRyb2xEaWFyaW9QT0QiIG5hbWU9IkNvbnRyb2wgRGlhcmlvIFBPRCB5IENpZXJyZSBkZSBUYXJlYXMiPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93XzA3PC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93XzA4PC9icG1uOm91dGdvaW5nPgogICAgPC9icG1uOm1hbnVhbFRhc2s+CgogICAgPGJwbW46c2VydmljZVRhc2sgaWQ9IlRhc2tfQ2FsY3VsYXJLUEkiIG5hbWU9IlB1YmxpY2FyIEtQSSBlbiBQb3dlciBCSSB5IFRyYW5zZmVyaXIgQXZhbmNlIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd18wODwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd18wOTwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjpzZXJ2aWNlVGFzaz4KCiAgICA8YnBtbjplbmRFdmVudCBpZD0iRW5kX0NpY2xvU2VtYW5hbCIgbmFtZT0iQ2ljbG8gU2VtYW5hbCBDZXJyYWRvIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd18wOTwvYnBtbjppbmNvbWluZz4KICAgIDwvYnBtbjplbmRFdmVudD4KCiAgICA8IS0tIFNlcXVlbmNlIEZsb3dzIFBST0MtMDEgLS0+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfMDEiIHNvdXJjZVJlZj0iU3RhcnRfVGltZXJTZW1hbmFsIiB0YXJnZXRSZWY9IlRhc2tfQWN0dWFsaXphclA2IiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93XzAyIiBzb3VyY2VSZWY9IlRhc2tfQWN0dWFsaXphclA2IiB0YXJnZXRSZWY9IlRhc2tfU2luY3Jvbml6YXJPUEMiIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfMDMiIHNvdXJjZVJlZj0iVGFza19TaW5jcm9uaXphck9QQyIgdGFyZ2V0UmVmPSJUYXNrX0FwZXJ0dXJhVGFyZWFzIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93XzA0IiBzb3VyY2VSZWY9IlRhc2tfQXBlcnR1cmFUYXJlYXMiIHRhcmdldFJlZj0iVGFza19QdWxsUGxhbm5pbmciIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfMDUiIHNvdXJjZVJlZj0iVGFza19QdWxsUGxhbm5pbmciIHRhcmdldFJlZj0iR2F0ZXdheV9UaWVuZVJlc3RyaWNjaW9uIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93X1NpUmVzdHJpY2Npb24iIG5hbWU9IlPDjSIgc291cmNlUmVmPSJHYXRld2F5X1RpZW5lUmVzdHJpY2Npb24iIHRhcmdldFJlZj0iQ2FsbEFjdF9HZXN0aW9uUmVzdHJpY2Npb25lcyIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd19Ob1Jlc3RyaWNjaW9uIiBuYW1lPSJOTyIgc291cmNlUmVmPSJHYXRld2F5X1RpZW5lUmVzdHJpY2Npb24iIHRhcmdldFJlZj0iVGFza19QbGFuVHJpc2VtYW5hbCIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd19SZXN0cmljY2lvblJlc3VlbHRhIiBzb3VyY2VSZWY9IkNhbGxBY3RfR2VzdGlvblJlc3RyaWNjaW9uZXMiIHRhcmdldFJlZj0iVGFza19QbGFuVHJpc2VtYW5hbCIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd18wNiIgc291cmNlUmVmPSJUYXNrX1BsYW5UcmlzZW1hbmFsIiB0YXJnZXRSZWY9IlRhc2tfQ29tcHJvbWV0ZXJUYXJlYSIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd18wNyIgc291cmNlUmVmPSJUYXNrX0NvbXByb21ldGVyVGFyZWEiIHRhcmdldFJlZj0iVGFza19Db250cm9sRGlhcmlvUE9EIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93XzA4IiBzb3VyY2VSZWY9IlRhc2tfQ29udHJvbERpYXJpb1BPRCIgdGFyZ2V0UmVmPSJUYXNrX0NhbGN1bGFyS1BJIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93XzA5IiBzb3VyY2VSZWY9IlRhc2tfQ2FsY3VsYXJLUEkiIHRhcmdldFJlZj0iRW5kX0NpY2xvU2VtYW5hbCIgLz4KICA8L2JwbW46cHJvY2Vzcz4KCiAgPCEtLSA9PT09PT09PT09PT09PT09PT09PSBQUk9DRVNTIDI6IFBST0MtMDIgPT09PT09PT09PT09PT09PT09PT0gLS0+CiAgPGJwbW46cHJvY2VzcyBpZD0iUHJvY2Vzc19QUk9DXzAyIiBpc0V4ZWN1dGFibGU9ImZhbHNlIj4KICAgIDxicG1uOmxhbmVTZXQgaWQ9IkxhbmVTZXRfUFJPQ18wMiI+CiAgICAgIDxicG1uOmxhbmUgaWQ9IkxhbmVfSWRlbnRpZmljYWRvciIgbmFtZT0iSWRlbnRpZmljYWRvciBkZSBsYSBSZXN0cmljY2nDs24iPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlN0YXJ0X1BST0NfMDI8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+VGFza19SZWdpc3RyYXJSZXN0cmljY2lvbjwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgICA8YnBtbjpmbG93Tm9kZVJlZj5Gb3JrX1ZpbmN1bGFjaW9uPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlRhc2tfVmluY3VsYXJUYXJlYXM8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+Sm9pbl9WaW5jdWxhY2lvbjwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgPC9icG1uOmxhbmU+CiAgICAgIDxicG1uOmxhbmUgaWQ9IkxhbmVfQWRtaW5PYnJhIiBuYW1lPSJBZG1pbmlzdHJhZG9yIGRlIE9icmEiPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlRhc2tfQXNpZ25hclJlc3BvbnNhYmxlPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICA8L2JwbW46bGFuZT4KICAgICAgPGJwbW46bGFuZSBpZD0iTGFuZV9QYXJ0ZVJlc3BvbnNhYmxlIiBuYW1lPSJQYXJ0ZSBSZXNwb25zYWJsZSI+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+VGFza19Db21wcm9tZXRlckZlY2hhPC9icG1uOmZsb3dOb2RlUmVmPgogICAgICAgIDxicG1uOmZsb3dOb2RlUmVmPlRhc2tfR2VzdGlvbmFyTGliZXJhY2lvbjwvYnBtbjpmbG93Tm9kZVJlZj4KICAgICAgICA8YnBtbjpmbG93Tm9kZVJlZj5UYXNrX0VudHJlZ2FyUmVzdHJpY2Npb248L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgICAgPGJwbW46Zmxvd05vZGVSZWY+RW5kX1BST0NfMDI8L2JwbW46Zmxvd05vZGVSZWY+CiAgICAgIDwvYnBtbjpsYW5lPgogICAgPC9icG1uOmxhbmVTZXQ+CgogICAgPGJwbW46c3RhcnRFdmVudCBpZD0iU3RhcnRfUFJPQ18wMiIgbmFtZT0iUmVzdHJpY2Npw7NuIERldGVjdGFkYSI+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfUDJfMDE8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46c3RhcnRFdmVudD4KCiAgICA8YnBtbjp1c2VyVGFzayBpZD0iVGFza19SZWdpc3RyYXJSZXN0cmljY2lvbiIgbmFtZT0iUmVnaXN0cmFyIFJlc3RyaWNjacOzbiBlbiBPUEMiPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X1AyXzAxPC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93X1AyXzAyPC9icG1uOm91dGdvaW5nPgogICAgPC9icG1uOnVzZXJUYXNrPgoKICAgIDxicG1uOnBhcmFsbGVsR2F0ZXdheSBpZD0iRm9ya19WaW5jdWxhY2lvbiI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfUDJfMDI8L2JwbW46aW5jb21pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfRm9yazE8L2JwbW46b3V0Z29pbmc+CiAgICAgIDxicG1uOm91dGdvaW5nPkZsb3dfRm9yazI8L2JwbW46b3V0Z29pbmc+CiAgICA8L2JwbW46cGFyYWxsZWxHYXRld2F5PgoKICAgIDxicG1uOnVzZXJUYXNrIGlkPSJUYXNrX1ZpbmN1bGFyVGFyZWFzIiBuYW1lPSJWaW5jdWxhciBhIFRhcmVhcyBJbXBhY3RhZGFzIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd19Gb3JrMTwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd19Kb2luMTwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjp1c2VyVGFzaz4KCiAgICA8YnBtbjp1c2VyVGFzayBpZD0iVGFza19Bc2lnbmFyUmVzcG9uc2FibGUiIG5hbWU9IkFzaWduYXIgUmVzcG9uc2FibGUgeSBGZWNoYSBMw61taXRlIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd19Gb3JrMjwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd19Kb2luMjwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjp1c2VyVGFzaz4KCiAgICA8YnBtbjpwYXJhbGxlbEdhdGV3YXkgaWQ9IkpvaW5fVmluY3VsYWNpb24iPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X0pvaW4xPC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X0pvaW4yPC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93X1AyXzAzPC9icG1uOm91dGdvaW5nPgogICAgPC9icG1uOnBhcmFsbGVsR2F0ZXdheT4KCiAgICA8YnBtbjp1c2VyVGFzayBpZD0iVGFza19Db21wcm9tZXRlckZlY2hhIiBuYW1lPSJDb21wcm9tZXRlciBGZWNoYSBQcm9tZXRpZGEiPgogICAgICA8YnBtbjppbmNvbWluZz5GbG93X1AyXzAzPC9icG1uOmluY29taW5nPgogICAgICA8YnBtbjpvdXRnb2luZz5GbG93X1AyXzA0PC9icG1uOm91dGdvaW5nPgogICAgPC9icG1uOnVzZXJUYXNrPgoKICAgIDxicG1uOm1hbnVhbFRhc2sgaWQ9IlRhc2tfR2VzdGlvbmFyTGliZXJhY2lvbiIgbmFtZT0iR2VzdGlvbmFyIExpYmVyYWNpw7NuIGVuIEZhZW5hIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd19QMl8wNDwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd19QMl8wNTwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjptYW51YWxUYXNrPgoKICAgIDxicG1uOnVzZXJUYXNrIGlkPSJUYXNrX0VudHJlZ2FyUmVzdHJpY2Npb24iIG5hbWU9Ik1hcmNhciBFbnRyZWdhZGEgZW4gT1BDIj4KICAgICAgPGJwbW46aW5jb21pbmc+Rmxvd19QMl8wNTwvYnBtbjppbmNvbWluZz4KICAgICAgPGJwbW46b3V0Z29pbmc+Rmxvd19QMl8wNjwvYnBtbjpvdXRnb2luZz4KICAgIDwvYnBtbjp1c2VyVGFzaz4KCiAgICA8YnBtbjplbmRFdmVudCBpZD0iRW5kX1BST0NfMDIiIG5hbWU9IlJlc3RyaWNjacOzbiBFbnRyZWdhZGEgeSBUYXJlYSBMaWJlcmFkYSI+CiAgICAgIDxicG1uOmluY29taW5nPkZsb3dfUDJfMDY8L2JwbW46aW5jb21pbmc+CiAgICA8L2JwbW46ZW5kRXZlbnQ+CgogICAgPCEtLSBTZXF1ZW5jZSBGbG93cyBQUk9DLTAyIC0tPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93X1AyXzAxIiBzb3VyY2VSZWY9IlN0YXJ0X1BST0NfMDIiIHRhcmdldFJlZj0iVGFza19SZWdpc3RyYXJSZXN0cmljY2lvbiIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd19QMl8wMiIgc291cmNlUmVmPSJUYXNrX1JlZ2lzdHJhclJlc3RyaWNjaW9uIiB0YXJnZXRSZWY9IkZvcmtfVmluY3VsYWNpb24iIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfRm9yazEiIHNvdXJjZVJlZj0iRm9ya19WaW5jdWxhY2lvbiIgdGFyZ2V0UmVmPSJUYXNrX1ZpbmN1bGFyVGFyZWFzIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93X0ZvcmsyIiBzb3VyY2VSZWY9IkZvcmtfVmluY3VsYWNpb24iIHRhcmdldFJlZj0iVGFza19Bc2lnbmFyUmVzcG9uc2FibGUiIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfSm9pbjEiIHNvdXJjZVJlZj0iVGFza19WaW5jdWxhclRhcmVhcyIgdGFyZ2V0UmVmPSJKb2luX1ZpbmN1bGFjaW9uIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93X0pvaW4yIiBzb3VyY2VSZWY9IlRhc2tfQXNpZ25hclJlc3BvbnNhYmxlIiB0YXJnZXRSZWY9IkpvaW5fVmluY3VsYWNpb24iIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfUDJfMDMiIHNvdXJjZVJlZj0iSm9pbl9WaW5jdWxhY2lvbiIgdGFyZ2V0UmVmPSJUYXNrX0NvbXByb21ldGVyRmVjaGEiIC8+CiAgICA8YnBtbjpzZXF1ZW5jZUZsb3cgaWQ9IkZsb3dfUDJfMDQiIHNvdXJjZVJlZj0iVGFza19Db21wcm9tZXRlckZlY2hhIiB0YXJnZXRSZWY9IlRhc2tfR2VzdGlvbmFyTGliZXJhY2lvbiIgLz4KICAgIDxicG1uOnNlcXVlbmNlRmxvdyBpZD0iRmxvd19QMl8wNSIgc291cmNlUmVmPSJUYXNrX0dlc3Rpb25hckxpYmVyYWNpb24iIHRhcmdldFJlZj0iVGFza19FbnRyZWdhclJlc3RyaWNjaW9uIiAvPgogICAgPGJwbW46c2VxdWVuY2VGbG93IGlkPSJGbG93X1AyXzA2IiBzb3VyY2VSZWY9IlRhc2tfRW50cmVnYXJSZXN0cmljY2lvbiIgdGFyZ2V0UmVmPSJFbmRfUFJPQ18wMiIgLz4KICA8L2JwbW46cHJvY2Vzcz4KCiAgPCEtLSA9PT09PT09PT09PT09PT09PT09PSBCUE1OIERJQUdSQU0gSU5URVJDSEFOR0UgKEJQTU5ESSkgPT09PT09PT09PT09PT09PT09PT0gLS0+CiAgPGJwbW5kaTpCUE1ORGlhZ3JhbSBpZD0iQlBNTkRpYWdyYW1fMSI+CiAgICA8YnBtbmRpOkJQTU5QbGFuZSBpZD0iQlBNTlBsYW5lXzEiIGJwbW5FbGVtZW50PSJDb2xsYWJfTWFjcm9fUGxhbmlmaWNhY2lvbiI+CiAgICAgIAogICAgICA8IS0tIFBvb2wgUFJPQy0wMSAtLT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1BhcnRfUFJPQ18wMSIgYnBtbkVsZW1lbnQ9IlBhcnRfUFJPQ18wMSIgaXNIb3Jpem9udGFsPSJ0cnVlIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjE2MCIgeT0iODAiIHdpZHRoPSIxMzgwIiBoZWlnaHQ9IjQyMCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfTGFuZV9Qcm9ncmFtYWRvciIgYnBtbkVsZW1lbnQ9IkxhbmVfUHJvZ3JhbWFkb3IiIGlzSG9yaXpvbnRhbD0idHJ1ZSI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxOTAiIHk9IjgwIiB3aWR0aD0iMTM1MCIgaGVpZ2h0PSIxNDAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX0xhbmVfTGFzdFBsYW5uZXIiIGJwbW5FbGVtZW50PSJMYW5lX0xhc3RQbGFubmVyIiBpc0hvcml6b250YWw9InRydWUiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTkwIiB5PSIyMjAiIHdpZHRoPSIxMzUwIiBoZWlnaHQ9IjE0MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfTGFuZV9TdXBlcnZpc29yIiBicG1uRWxlbWVudD0iTGFuZV9TdXBlcnZpc29yIiBpc0hvcml6b250YWw9InRydWUiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTkwIiB5PSIzNjAiIHdpZHRoPSIxMzUwIiBoZWlnaHQ9IjE0MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgoKICAgICAgPCEtLSBFbGVtZW50cyBQUk9DLTAxIC0tPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfU3RhcnRfVGltZXJTZW1hbmFsIiBicG1uRWxlbWVudD0iU3RhcnRfVGltZXJTZW1hbmFsIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjIzMiIgeT0iMTMyIiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfQWN0dWFsaXphclA2IiBicG1uRWxlbWVudD0iVGFza19BY3R1YWxpemFyUDYiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMzEwIiB5PSIxMTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfU2luY3Jvbml6YXJPUEMiIGJwbW5FbGVtZW50PSJUYXNrX1NpbmNyb25pemFyT1BDIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjQ3MCIgeT0iMTEwIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9UYXNrX0FwZXJ0dXJhVGFyZWFzIiBicG1uRWxlbWVudD0iVGFza19BcGVydHVyYVRhcmVhcyI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSI0NzAiIHk9IjI1MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI4MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfVGFza19QdWxsUGxhbm5pbmciIGJwbW5FbGVtZW50PSJUYXNrX1B1bGxQbGFubmluZyI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSI2MzAiIHk9IjI1MCIgd2lkdGg9IjEzMCIgaGVpZ2h0PSI4MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfR2F0ZXdheV9UaWVuZVJlc3RyaWNjaW9uIiBicG1uRWxlbWVudD0iR2F0ZXdheV9UaWVuZVJlc3RyaWNjaW9uIiBpc01hcmtlclZpc2libGU9InRydWUiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iODA1IiB5PSIyNjUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfQ2FsbEFjdF9HZXN0aW9uUmVzdHJpY2Npb25lcyIgYnBtbkVsZW1lbnQ9IkNhbGxBY3RfR2VzdGlvblJlc3RyaWNjaW9uZXMiIGlzRXhwYW5kZWQ9ImZhbHNlIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjkwMCIgeT0iMjUwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjgwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9UYXNrX1BsYW5UcmlzZW1hbmFsIiBicG1uRWxlbWVudD0iVGFza19QbGFuVHJpc2VtYW5hbCI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxMDgwIiB5PSIyNTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfQ29tcHJvbWV0ZXJUYXJlYSIgYnBtbkVsZW1lbnQ9IlRhc2tfQ29tcHJvbWV0ZXJUYXJlYSI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxMDgwIiB5PSIzOTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfQ29udHJvbERpYXJpb1BPRCIgYnBtbkVsZW1lbnQ9IlRhc2tfQ29udHJvbERpYXJpb1BPRCI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxMjUwIiB5PSIzOTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfQ2FsY3VsYXJLUEkiIGJwbW5FbGVtZW50PSJUYXNrX0NhbGN1bGFyS1BJIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjEyNTAiIHk9IjExMCIgd2lkdGg9IjEzMCIgaGVpZ2h0PSI4MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfRW5kX0NpY2xvU2VtYW5hbCIgYnBtbkVsZW1lbnQ9IkVuZF9DaWNsb1NlbWFuYWwiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTQzMiIgeT0iMTMyIiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KCiAgICAgIDwhLS0gRWRnZXMgUFJPQy0wMSAtLT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9GbG93XzAxIiBicG1uRWxlbWVudD0iRmxvd18wMSI+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjI2OCIgeT0iMTUwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIzMTAiIHk9IjE1MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd18wMiIgYnBtbkVsZW1lbnQ9IkZsb3dfMDIiPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI0MzAiIHk9IjE1MCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNDcwIiB5PSIxNTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfMDMiIGJwbW5FbGVtZW50PSJGbG93XzAzIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNTMwIiB5PSIxOTAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjUzMCIgeT0iMjUwIiAvPgogICAgICA8L2JwbW5kaTpCUE1ORWRnZT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9GbG93XzA0IiBicG1uRWxlbWVudD0iRmxvd18wNCI+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjU5MCIgeT0iMjkwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI2MzAiIHk9IjI5MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd18wNSIgYnBtbkVsZW1lbnQ9IkZsb3dfMDUiPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI3NjAiIHk9IjI5MCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iODA1IiB5PSIyOTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfU2lSZXN0cmljY2lvbiIgYnBtbkVsZW1lbnQ9IkZsb3dfU2lSZXN0cmljY2lvbiI+CiAgICAgICAgPGRpOndheXBvaW50IHg9Ijg1NSIgeT0iMjkwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI5MDAiIHk9IjI5MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd19Ob1Jlc3RyaWNjaW9uIiBicG1uRWxlbWVudD0iRmxvd19Ob1Jlc3RyaWNjaW9uIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iODMwIiB5PSIyNjUiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjgzMCIgeT0iMjMwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMTQ1IiB5PSIyMzAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjExNDUiIHk9IjI1MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd19SZXN0cmljY2lvblJlc3VlbHRhIiBicG1uRWxlbWVudD0iRmxvd19SZXN0cmljY2lvblJlc3VlbHRhIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTAzMCIgeT0iMjkwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMDgwIiB5PSIyOTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfMDYiIGJwbW5FbGVtZW50PSJGbG93XzA2Ij4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTE0NSIgeT0iMzMwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMTQ1IiB5PSIzOTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfMDciIGJwbW5FbGVtZW50PSJGbG93XzA3Ij4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTIxMCIgeT0iNDMwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMjUwIiB5PSI0MzAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfMDgiIGJwbW5FbGVtZW50PSJGbG93XzA4Ij4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTMxNSIgeT0iMzkwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMzE1IiB5PSIxOTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfMDkiIGJwbW5FbGVtZW50PSJGbG93XzA5Ij4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTM4MCIgeT0iMTUwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxNDMyIiB5PSIxNTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgoKICAgICAgPCEtLSBQb29sIFBST0MtMDIgLS0+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9QYXJ0X1BST0NfMDIiIGJwbW5FbGVtZW50PSJQYXJ0X1BST0NfMDIiIGlzSG9yaXpvbnRhbD0idHJ1ZSI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxNjAiIHk9IjU1MCIgd2lkdGg9IjEzODAiIGhlaWdodD0iNDIwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9MYW5lX0lkZW50aWZpY2Fkb3IiIGJwbW5FbGVtZW50PSJMYW5lX0lkZW50aWZpY2Fkb3IiIGlzSG9yaXpvbnRhbD0idHJ1ZSI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxOTAiIHk9IjU1MCIgd2lkdGg9IjEzNTAiIGhlaWdodD0iMTQwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9MYW5lX0FkbWluT2JyYSIgYnBtbkVsZW1lbnQ9IkxhbmVfQWRtaW5PYnJhIiBpc0hvcml6b250YWw9InRydWUiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTkwIiB5PSI2OTAiIHdpZHRoPSIxMzUwIiBoZWlnaHQ9IjEzMCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfTGFuZV9QYXJ0ZVJlc3BvbnNhYmxlIiBicG1uRWxlbWVudD0iTGFuZV9QYXJ0ZVJlc3BvbnNhYmxlIiBpc0hvcml6b250YWw9InRydWUiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTkwIiB5PSI4MjAiIHdpZHRoPSIxMzUwIiBoZWlnaHQ9IjE1MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgoKICAgICAgPCEtLSBFbGVtZW50cyBQUk9DLTAyIC0tPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfU3RhcnRfUFJPQ18wMiIgYnBtbkVsZW1lbnQ9IlN0YXJ0X1BST0NfMDIiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMjMyIiB5PSI2MDIiIHdpZHRoPSIzNiIgaGVpZ2h0PSIzNiIgLz4KICAgICAgPC9icG1uZGk6QlBNTlNoYXBlPgogICAgICA8YnBtbmRpOkJQTU5TaGFwZSBpZD0iU2hhcGVfVGFza19SZWdpc3RyYXJSZXN0cmljY2lvbiIgYnBtbkVsZW1lbnQ9IlRhc2tfUmVnaXN0cmFyUmVzdHJpY2Npb24iPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMzEwIiB5PSI1ODAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX0ZvcmtfVmluY3VsYWNpb24iIGJwbW5FbGVtZW50PSJGb3JrX1ZpbmN1bGFjaW9uIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjQ4NSIgeT0iNTk1IiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfVmluY3VsYXJUYXJlYXMiIGJwbW5FbGVtZW50PSJUYXNrX1ZpbmN1bGFyVGFyZWFzIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjU4MCIgeT0iNTgwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjgwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9UYXNrX0FzaWduYXJSZXNwb25zYWJsZSIgYnBtbkVsZW1lbnQ9IlRhc2tfQXNpZ25hclJlc3BvbnNhYmxlIj4KICAgICAgICA8ZGM6Qm91bmRzIHg9IjU4MCIgeT0iNzE1IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjgwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9Kb2luX1ZpbmN1bGFjaW9uIiBicG1uRWxlbWVudD0iSm9pbl9WaW5jdWxhY2lvbiI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSI3NjUiIHk9IjU5NSIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiAvPgogICAgICA8L2JwbW5kaTpCUE1OU2hhcGU+CiAgICAgIDxicG1uZGk6QlBNTlNoYXBlIGlkPSJTaGFwZV9UYXNrX0NvbXByb21ldGVyRmVjaGEiIGJwbW5FbGVtZW50PSJUYXNrX0NvbXByb21ldGVyRmVjaGEiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iODYwIiB5PSI4NTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfR2VzdGlvbmFyTGliZXJhY2lvbiIgYnBtbkVsZW1lbnQ9IlRhc2tfR2VzdGlvbmFyTGliZXJhY2lvbiI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxMDMwIiB5PSI4NTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX1Rhc2tfRW50cmVnYXJSZXN0cmljY2lvbiIgYnBtbkVsZW1lbnQ9IlRhc2tfRW50cmVnYXJSZXN0cmljY2lvbiI+CiAgICAgICAgPGRjOkJvdW5kcyB4PSIxMjAwIiB5PSI4NTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iODAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KICAgICAgPGJwbW5kaTpCUE1OU2hhcGUgaWQ9IlNoYXBlX0VuZF9QUk9DXzAyIiBicG1uRWxlbWVudD0iRW5kX1BST0NfMDIiPgogICAgICAgIDxkYzpCb3VuZHMgeD0iMTM4MiIgeT0iODcyIiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5TaGFwZT4KCiAgICAgIDwhLS0gRWRnZXMgUFJPQy0wMiAtLT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9GbG93X1AyXzAxIiBicG1uRWxlbWVudD0iRmxvd19QMl8wMSI+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjI2OCIgeT0iNjIwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIzMTAiIHk9IjYyMCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd19QMl8wMiIgYnBtbkVsZW1lbnQ9IkZsb3dfUDJfMDIiPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI0NDAiIHk9IjYyMCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNDg1IiB5PSI2MjAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfRm9yazEiIGJwbW5FbGVtZW50PSJGbG93X0ZvcmsxIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNTM1IiB5PSI2MjAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjU4MCIgeT0iNjIwIiAvPgogICAgICA8L2JwbW5kaTpCUE1ORWRnZT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9GbG93X0ZvcmsyIiBicG1uRWxlbWVudD0iRmxvd19Gb3JrMiI+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjUxMCIgeT0iNjQ1IiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI1MTAiIHk9Ijc1NSIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNTgwIiB5PSI3NTUiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfSm9pbjEiIGJwbW5FbGVtZW50PSJGbG93X0pvaW4xIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNzEwIiB5PSI2MjAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9Ijc2NSIgeT0iNjIwIiAvPgogICAgICA8L2JwbW5kaTpCUE1ORWRnZT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9GbG93X0pvaW4yIiBicG1uRWxlbWVudD0iRmxvd19Kb2luMiI+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjcxMCIgeT0iNzU1IiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI3OTAiIHk9Ijc1NSIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iNzkwIiB5PSI2NDUiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfUDJfMDMiIGJwbW5FbGVtZW50PSJGbG93X1AyXzAzIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iODE1IiB5PSI2MjAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjgzOCIgeT0iNjIwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI4MzgiIHk9Ijg5MCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iODYwIiB5PSI4OTAiIC8+CiAgICAgIDwvYnBtbmRpOkJQTU5FZGdlPgogICAgICA8YnBtbmRpOkJQTU5FZGdlIGlkPSJFZGdlX0Zsb3dfUDJfMDQiIGJwbW5FbGVtZW50PSJGbG93X1AyXzA0Ij4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iOTkwIiB5PSI4OTAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjEwMzAiIHk9Ijg5MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd19QMl8wNSIgYnBtbkVsZW1lbnQ9IkZsb3dfUDJfMDUiPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMTYwIiB5PSI4OTAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjEyMDAiIHk9Ijg5MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfRmxvd19QMl8wNiIgYnBtbkVsZW1lbnQ9IkZsb3dfUDJfMDYiPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxMzMwIiB5PSI4OTAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjEzODIiIHk9Ijg5MCIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CgogICAgICA8IS0tIEludGVyLVByb2Nlc3MgTWVzc2FnZSBGbG93cyAtLT4KICAgICAgPGJwbW5kaTpCUE1ORWRnZSBpZD0iRWRnZV9Nc2dGbG93X0ludm9jYWNpb24iIGJwbW5FbGVtZW50PSJNc2dGbG93X0ludm9jYWNpb24iPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSI5NjUiIHk9IjMzMCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iOTY1IiB5PSI1MzAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjI1MCIgeT0iNTMwIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIyNTAiIHk9IjYwMiIgLz4KICAgICAgPC9icG1uZGk6QlBNTkVkZ2U+CiAgICAgIDxicG1uZGk6QlBNTkVkZ2UgaWQ9IkVkZ2VfTXNnRmxvd19SZXRvcm5vIiBicG1uRWxlbWVudD0iTXNnRmxvd19SZXRvcm5vIj4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTQwMCIgeT0iODcyIiAvPgogICAgICAgIDxkaTp3YXlwb2ludCB4PSIxNDAwIiB5PSI1MzAiIC8+CiAgICAgICAgPGRpOndheXBvaW50IHg9IjExNDUiIHk9IjUzMCIgLz4KICAgICAgICA8ZGk6d2F5cG9pbnQgeD0iMTE0NSIgeT0iMzMwIiAvPgogICAgICA8L2JwbW5kaTpCUE1ORWRnZT4KCiAgICA8L2JwbW5kaTpCUE1OUGxhbmU+CiAgPC9icG1uZGk6QlBNTkRpYWdyYW0+CjwvYnBtbjpkZWZpbml0aW9ucz4K";
+
+    // 2. Base de Datos Centralizada de Elementos
+    const elementsDB = {
+  "start_timer": {
+    "title": "Evento Temporizador: Corte Semanal del Proyecto",
+    "type": "Evento de Inicio Temporizador (Timer Start Event)",
+    "id": "Start_TimerSemanal (ACT-01-01-01)",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.1 Tabla 1 (Pág. 7)",
+    "state": "Ciclo: Disparado / Inicializado",
+    "system": "Sistema de Control de Gestión / Primavera P6",
+    "outputInfo": "Hito de corte temporal de faena (Día y hora de corte oficial de mediciones). Disparo de actualización de avance semanal.",
+    "desc": "Disparo programado periódico (corte semanal de obra, típicamente jueves 18:00 hrs) para el congelamiento de avances reales de terreno y el inicio del ciclo Last Planner System."
+  },
+  "task_p6": {
+    "title": "Actualizar Programa Maestro en P6",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_ActualizarP6 (ACT-01-01-02)",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.1 Tabla 1 (Pág. 7)",
+    "state": "Programa Maestro: Actualizado / Línea Base Congelada",
+    "system": "Oracle Primavera P6 EPPM",
+    "outputInfo": "Cronograma Contractual Maestro P6 (.xer/.xml) con avances reales ingresados, cálculo de ruta crítica (CPM) y holguras totales recalculadas.",
+    "desc": "Carga de avances reales validados de faena, recálculo de la ruta crítica y holguras del cronograma contractual maestro antes de transferir datos a la faena colaborativa."
+  },
+  "task_sync": {
+    "title": "Sincronizar OPC con P6",
+    "type": "Tarea de Servicio (Service / Sync Task)",
+    "id": "Task_SincronizarOPC (ACT-01-01-03)",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.1 Tabla 1 (Pág. 7)",
+    "state": "Entorno OPC: Sincronizado",
+    "system": "Oracle Primavera Cloud (OPC) Integration Gateway",
+    "outputInfo": "Paquete de datos de cronograma sincronizado bidireccionalmente entre Primavera P6 EPPM y Oracle Primavera Cloud (OPC).",
+    "desc": "Ejecución del servicio de integración de nube para replicar actividades, duraciones, fechas tempranas/tardías y códigos WBS desde P6 hacia el ambiente de gestión colaborativa de OPC."
+  },
+  "task_apertura": {
+    "title": "Apertura de Tareas en OPC",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_AperturaTareas (ETP-01-02 / ACT-01-02-01)",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.2 Tabla 2 (Pág. 8-9)",
+    "state": "Tareas Operativas: Abiertas y Detalladas (Horizonte 4 a 6 semanas)",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Tasks",
+    "outputInfo": "Inventario de Tareas Operativas Last Planner con atributos cargados: Empresa responsable, Cuadrilla, Cantidad presupuestada, Horas Hombre (HH), Ubicación física y Duración ≤ 3 días (o factor de ponderación ≤ 1).",
+    "desc": "Desglose sistemático de actividades de cronograma en tareas ejecutables a nivel cuadrilla. Se establecen compromisos a nivel operativo con granularidad máxima de 3 días para garantizar control de flujo."
+  },
+  "sub_apertura": {
+    "title": "Subproceso: Apertura de Tareas Operativas",
+    "type": "Subproceso Embebido (Embedded Subprocess)",
+    "id": "SubProcess_Apertura (ETP-01-02)",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.2 Tabla 2 (Pág. 8-9)",
+    "state": "Tareas Abiertas y Detalladas",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Tasks",
+    "outputInfo": "Catálogo de tareas detalladas con asignación de recursos y frentes de trabajo.",
+    "desc": "Descomposición de actividades de nivel 4/5 de P6 en tareas de nivel 6 con horizonte de 4 a 6 semanas, asignando cuadrillas, rendimientos y equipos."
+  },
+  "task_pull": {
+    "title": "Sesión Pull Planning Semanal",
+    "type": "Tarea de Usuario Colaborativa (User Task)",
+    "id": "Task_PullPlanning (ACT-01-02-04 / ACT-01-03-01)",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.2 y §4.3 (Pág. 9-11)",
+    "state": "Flujo Pull: Secuencia Validada / Restricciones Identificadas",
+    "system": "Oracle Primavera Cloud (OPC) / Sesión Presencial o Mural Digital",
+    "outputInfo": "Secuencia lógica coordinada hacia atrás (de hito a inicio), acuerdos de traspaso de frentes entre especialidades e identificación exhaustiva de interferencias o restricciones potenciales.",
+    "desc": "Taller colaborativo semanal donde los jefes de área, supervisores y subcontratistas coordinan el flujo continuo 'aguas arriba', identificando las condiciones necesarias para liberar cada tarea."
+  },
+  "gw_restriccion": {
+    "title": "Compuerta Exclusiva: ¿Tiene Restricciones?",
+    "type": "Compuerta Exclusiva Basada en Datos (Exclusive XOR Gateway)",
+    "id": "Gateway_TieneRestriccion (GW-01-03-01)",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 (Pág. 10)",
+    "state": "Decisión de Ruta: SÍ (Dispara PROC-02) / NO (Pasa a Plan Trisemanal)",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Enrutamiento condicional: Ramal [SÍ] genera solicitud formal de liberación de restricción (Call Activity PROC-02); Ramal [NO] avanza la tarea directamente al Plan Trisemanal protegido.",
+    "desc": "Evaluación de cumplimiento de pre-requisitos de faena. Si una tarea posee interferencias (falta de planos de ingeniería, materiales sin arribar, equipos sin certificación, permisos de trabajo pendientes), no puede entrar al plan protegido."
+  },
+  "call_restricciones": {
+    "title": "Call Activity: PROC-02 Gestión de Restricciones",
+    "type": "Actividad de Llamada Reutilizable (Call Activity)",
+    "id": "CallAct_GestionRestricciones (PROC-02 / ETP-01-03)",
+    "role": "Jefe de Área (Last Planner) / Administrador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 10-11)",
+    "state": "Subproceso Externo Invocado / Restricción en Proceso de Liberación",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Restricciones",
+    "outputInfo": "Handoff saliente (REL-0002): Ficha de restricción transmitida al proceso PROC-02 para gestión con compras, oficina técnica, cliente o seguridad.",
+    "desc": "Invocación al proceso estandarizado PROC-02 para la gestión de levantamiento, análisis, asignación de responsables y seguimiento de compromisos de liberación de interferencias de obra."
+  },
+  "sub_pull": {
+    "title": "Subproceso Reutilizable: Gestión de Restricciones",
+    "type": "Subproceso Reutilizable (Call Activity / Reusable Subprocess)",
+    "id": "PROC-02 (ETP-01-03)",
+    "role": "Jefe de Área / Administrador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 10-11)",
+    "state": "Restricción Gestionada / Liberada",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Restricciones",
+    "outputInfo": "Ficha oficial de restricción gestionada, SLA de liberación cumplido y entrega de frente libre.",
+    "desc": "Macro-flujo de levantamiento, análisis, asignación y seguimiento de compromisos de liberación de interferencias operativas."
+  },
+  "task_trisemanal": {
+    "title": "Elaborar Plan Trisemanal (Lookahead)",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_PlanTrisemanal (ETP-01-05 / ACT-01-05-01)",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.5 Tabla 5 (Pág. 13-14)",
+    "state": "Plan Trisemanal: Protegido y Confiable (100% Libre de Restricciones)",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Lookahead",
+    "outputInfo": "Plan Trisemanal Confiable (Lookahead a 3 semanas): Solo tareas que cuentan con frente liberado, ingeniería aprobada, materiales en bodega y equipos certificados.",
+    "desc": "Consolidación de las tareas a ejecutar en las siguientes 3 semanas (Semanas S+1, S+2 y S+3). Es regla de oro estricta: ninguna tarea con restricción activa puede ingresar a la programación trisemanal protegida."
+  },
+  "sub_pod": {
+    "title": "Subproceso: Plan Trisemanal y Control POD",
+    "type": "Subproceso Embebido (Embedded Subprocess)",
+    "id": "SubProcess_PlanTrisemanal_POD (ETP-01-05 / ETP-01-06)",
+    "role": "Jefe de Área / Supervisor de Terreno",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.5 y §4.6 (Pág. 13-16)",
+    "state": "Plan Protegido y Tareas Controladas",
+    "system": "Oracle Primavera Cloud (OPC) / Formulario POD Terreno",
+    "outputInfo": "Plan trisemanal validado y actas diarias de compromisos POD.",
+    "desc": "Elaboración del plan trisemanal protegido y ejecución diaria del Plan de Operación Diario (POD) con registro de compromisos y causas de no cumplimiento."
+  },
+  "pod_comprometer": {
+    "title": "Comprometer Tareas Diarias (POD)",
+    "type": "Tarea de Usuario en Terreno (User Task)",
+    "id": "Task_ComprometerTarea (ACT-01-05-02 / ACT-01-06-01)",
+    "role": "Supervisor de Terreno",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.5 Tabla 5 y §4.6 Tabla 6 (Pág. 14-15)",
+    "state": "Compromiso Diario: Firmado y Aceptado",
+    "system": "Oracle Primavera Cloud (OPC) / Formulario Terreno POD",
+    "outputInfo": "Hoja de Plan de Operación Diario (POD) con asignación nominal de cuadrilla, recursos asignados y meta cuantitativa diaria comprometida por el Supervisor de Terreno.",
+    "desc": "Reunión de compromiso operativo al inicio de cada jornada. El supervisor valida las condiciones de seguridad y disponibilidad del frente antes de formalizar el compromiso diario."
+  },
+  "pod_control": {
+    "title": "Control y Cierre Diario de Tareas (POD)",
+    "type": "Tarea de Usuario en Terreno (User Task)",
+    "id": "Task_ControlDiarioPOD (ACT-01-06-03)",
+    "role": "Supervisor de Terreno",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.6 Tabla 6 (Pág. 15-16)",
+    "state": "Cierre Diario: Completada / No Completada con Declaración de CNC",
+    "system": "Oracle Primavera Cloud (OPC) / Acta de Cierre POD",
+    "outputInfo": "Acta de Cierre de Jornada: Estado de cada tarea (100% Terminada o No Cumplida). Para toda tarea no terminada, tipificación obligatoria de la Causa de No Cumplimiento (CNC).",
+    "desc": "Inspección de terreno al término del turno. Se verifica físicamente la ejecución de la meta. Si la tarea no se ejecutó al 100%, se tipifica la Causa de No Cumplimiento según el estándar corporativo."
+  },
+  "task_kpi": {
+    "title": "Calcular PPC y Causas de No Cumplimiento (CNC)",
+    "type": "Tarea de Servicio / Usuario (Service & User Task)",
+    "id": "Task_CalcularKPI (ACT-01-07-04 / ACT-01-07-05)",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.7 Tabla 7 (Pág. 17-18)",
+    "state": "KPIs Oficiales: Calculados y Publicados en Tablero Ejecutivo",
+    "system": "Oracle Primavera Cloud (OPC) / Power BI Dashboard",
+    "outputInfo": "Reporte Semanal de Rendimiento y Confiabilidad Last Planner: Índice PPC oficial = (Tareas Completadas / Tareas Comprometidas) * 100, Pareto de Causas de No Cumplimiento (CNC) y Plan de Mitigación.",
+    "desc": "Cálculo matemático formal del Porcentaje del Plan Cumplido (PPC). Generación del análisis de Pareto de causas raíces de desvíos y transferencia analítica hacia Power BI corporativo."
+  },
+  "end_ciclo": {
+    "title": "Fin Ciclo Semanal Planificación",
+    "type": "Evento de Fin (None End Event)",
+    "id": "End_CicloSemanal (ACT-01-07-07)",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.7 (Pág. 18)",
+    "state": "Ciclo Semanal: Concluido y Auditado",
+    "system": "Oracle Primavera Cloud / Sistema de Gestión Integrado",
+    "outputInfo": "Línea de tiempo semanal cerrada; acta de retroalimentación para el siguiente ciclo de corte.",
+    "desc": "Conclusión formal del ciclo semanal Last Planner. Los resultados y lecciones aprendidas alimentan el siguiente corte temporal de programación."
+  },
+  "ap_detallar": {
+    "title": "Detallar Actividades en Tareas",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "ACT-01-02-01",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.2 Tabla 2 (Pág. 8)",
+    "state": "Tareas Operativas Generadas",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Listado de tareas operativas generadas a partir de actividades maestras.",
+    "desc": "Desglose de cada actividad de cronograma en tareas operativas de duración menor o igual a 3 días con factor de ponderación no mayor a 1."
+  },
+  "ap_programar": {
+    "title": "Programar Atributos y HH de la Tarea",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "ACT-01-02-04",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.2 Tabla 2 (Pág. 9)",
+    "state": "Atributos Cargados",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Ficha de tarea operativa con atributos de horas hombre, especialidad y cuadrilla.",
+    "desc": "Carga de metadatos operacionales: empresa contratista, cuadrilla, horas hombre (HH), ubicación y factor de ponderación."
+  },
+  "p2_start_event": {
+    "title": "Evento de Inicio: Restricción Identificada",
+    "type": "Evento de Inicio de Mensaje / Handoff (Message Start Event)",
+    "id": "Start_PROC_02 (EVT-02-01-01)",
+    "role": "Identificador de la Restricción",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 (Pág. 10)",
+    "state": "Restricción: Detectada en Terreno o Taller Pull",
+    "system": "Oracle Primavera Cloud (OPC) / Handoff REL-0002",
+    "outputInfo": "Recepción de requerimiento de restricción desde PROC-01 (flujo REL-0002) con identificación preliminar de la interferencia que pone en riesgo una tarea futura.",
+    "desc": "Gatillador del proceso PROC-02 originado por la identificación de una interferencia en terreno o durante la sesión colaborativa Pull Planning de PROC-01."
+  },
+  "p2_task_reg": {
+    "title": "Registrar Restricción en OPC",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_RegistrarRestriccion (ACT-02-01-02)",
+    "role": "Identificador de la Restricción",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 10)",
+    "state": "Ficha en OPC: Creada con Código Único",
+    "system": "Oracle Primavera Cloud (OPC) - Módulo Restricciones",
+    "outputInfo": "Ficha Oficial de Restricción en OPC con código correlativo (REST-XXXX), tipificación obligatoria en las 6 familias estándar (Ingeniería, Materiales, Equipos, Frentes, Permisos/Seguridad, Subcontratos) y fecha requerida en obra.",
+    "desc": "Ingreso formal de la interferencia al repositorio central de restricciones en OPC, garantizando visibilidad y trazabilidad inmediata para toda la administración de obra."
+  },
+  "p2_fork": {
+    "title": "División Paralela (Fork): Vinculación y Asignación",
+    "type": "Compuerta Paralela (Parallel Fork Gateway)",
+    "id": "Fork_Vinculacion (GW-02-01-01)",
+    "role": "Administrador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 11)",
+    "state": "Bifurcación: Tareas concurrentes activadas",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Apertura en paralelo de dos líneas de acción concurrentes: Vinculación técnica de tareas afectadas y Asignación contractual del responsable.",
+    "desc": "Compuerta AND que divide el flujo en dos tareas simultáneas e independientes para maximizar la velocidad de tipificación y asignación de la restricción."
+  },
+  "p2_task_vinc": {
+    "title": "Vincular Tareas Afectadas",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_VincularTareas (ACT-02-01-05)",
+    "role": "Administrador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 11)",
+    "state": "Tareas Vinculadas: Bloqueadas para Plan Trisemanal",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Vínculo de precedencia cruzada entre la restricción y las tareas operativas de OPC que no pueden iniciar hasta su total levantamiento.",
+    "desc": "Asociación relacional directa en OPC entre el ID de la restricción y los códigos de tarea correspondientes, impidiendo de forma lógica que sean incluidas en planes protegidos."
+  },
+  "p2_task_asig": {
+    "title": "Asignar Parte Responsable y Vencimiento",
+    "type": "Tarea de Usuario (User Task)",
+    "id": "Task_AsignarResponsable (ACT-02-01-06)",
+    "role": "Administrador de Obra",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 11)",
+    "state": "Responsable: Designado / SLA Asignado",
+    "system": "Oracle Primavera Cloud (OPC) - Notificaciones",
+    "outputInfo": "Designación nominal de la 'Parte Responsable' (Jefe de Oficina Técnica, Administrador de Contratos, Jefe de Adquisiciones o Subcontratista) y fecha contractual límite de resolución (SLA).",
+    "desc": "Asignación formal de la responsabilidad de gestión a un actor clave del proyecto y fijación del plazo máximo de liberación requerido para no impactar la ruta crítica."
+  },
+  "p2_join": {
+    "title": "Sincronización Paralela (Join): Consolidación de Restricción",
+    "type": "Compuerta Paralela de Sincronización (Parallel Join Gateway)",
+    "id": "Join_Vinculacion (GW-02-01-02)",
+    "role": "Administrador de Obra",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.3 Tabla 3 (Pág. 11)",
+    "state": "Sincronización: Restricción Caracterizada y Lista para Compromiso",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Consolidación de las dos ramas concurrentes (tareas vinculadas + responsable asignado). Estado listo para negociación de fecha de liberación.",
+    "desc": "Compuerta AND de convergencia que espera la finalización de la vinculación y la asignación del responsable antes de proceder a la fase de compromiso formal."
+  },
+  "p2_task_comp": {
+    "title": "Comprometer Fecha de Liberación",
+    "type": "Tarea de Usuario Colaborativa (User Task)",
+    "id": "Task_ComprometerFecha (ACT-02-01-08)",
+    "role": "Parte Responsable",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.4 Tabla 4 (Pág. 12)",
+    "state": "Compromiso: Formalizado en OPC (Fecha Prometida)",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Registro en OPC de la Fecha Prometida de Liberación aceptada formalmente por la Parte Responsable frente al Administrador de Obra.",
+    "desc": "Validación de factibilidad y compromiso formal del responsable sobre la fecha exacta en que la interferencia será resuelta y los recursos o aprobaciones estarán disponibles en obra."
+  },
+  "p2_task_lib": {
+    "title": "Gestionar Acciones y Liberación en Faena",
+    "type": "Tarea de Usuario / Gestión de Terreno (User Task)",
+    "id": "Task_GestionarLiberacion (ACT-02-02-01)",
+    "role": "Parte Responsable",
+    "valClass": "<span class=\"badge-va\">Valor Agregado (VA)</span>",
+    "source": "10000000-PRO-EST-001 §4.4 Tabla 4 (Pág. 12-13)",
+    "state": "Liberación: Ejecutada y Evidenciada",
+    "system": "Gestión Documental / Bodega / Terreno / OPC",
+    "outputInfo": "Expediente de Evidencias de Terreno: Aprobaciones técnicas de cliente, órdenes de compra, guías de despacho en bodega, inspecciones de calidad o autorizaciones de seguridad física.",
+    "desc": "Ejecución de las gestiones técnicas, logísticas o contractuales para remover el impedimento físico o normativo en faena, compilando las evidencias documentales de soporte."
+  },
+  "p2_task_ent": {
+    "title": "Entregar Restricción Liberada al Jefe de Área",
+    "type": "Tarea de Usuario / Handoff (User Task)",
+    "id": "Task_EntregarRestriccion (ACT-02-02-03)",
+    "role": "Identificador de la Restricción",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.4 Tabla 4 (Pág. 13)",
+    "state": "Restricción: ENTREGADA y Tarea Desbloqueada",
+    "system": "Oracle Primavera Cloud (OPC) / Handoff REL-0003",
+    "outputInfo": "Handoff saliente (REL-0003): Notificación formal de Restricción ENTREGADA en OPC. Desbloqueo de las tareas vinculadas y aviso al Jefe de Área para ingreso al Plan Trisemanal.",
+    "desc": "Validación final de que las condiciones de terreno son seguras y aptas, cierre de la ficha en OPC y traspaso de información hacia PROC-01 para la inclusión inmediata en el Plan Trisemanal."
+  },
+  "p2_end_event": {
+    "title": "Evento de Fin: Restricción Liberada e Incorporada",
+    "type": "Evento de Fin de Notificación (End Event)",
+    "id": "End_PROC_02 (EVT-02-02-04)",
+    "role": "Identificador de la Restricción",
+    "valClass": "<span class=\"badge-tr\">Trabajo Requerido (TR)</span>",
+    "source": "10000000-PRO-EST-001 §4.4 (Pág. 13)",
+    "state": "Ciclo de Restricción: Cerrado Exitosamente",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Cierre exitoso del expediente de restricción. Indicador de tiempo de ciclo de resolución registrado en la base histórica de lecciones aprendidas.",
+    "desc": "Término del ciclo de vida de la restricción. La tarea queda 100% liberada de impedimentos y protegida para ejecución productiva en faena."
+  },
+  "ds_p6": {
+    "title": "Base de Datos Primavera P6 EPPM",
+    "type": "Almacén de Datos (Data Store)",
+    "id": "DSRef_Primavera_P6",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Infraestructura TIC</span>",
+    "source": "10000000-PRO-EST-001 §3.1",
+    "state": "Base de Datos Contractual en Producción",
+    "system": "Oracle Primavera P6 EPPM",
+    "outputInfo": "Base de datos corporativa que custodia la Línea Base Contractual del Proyecto, cronogramas de especialidades, rutas críticas CPM y ponderaciones presupuestarias.",
+    "desc": "Repositorio oficial donde se gestiona el cronograma contractual maestro, las holguras totales y los análisis de valor ganado de SALFA Montajes."
+  },
+  "ds_opc": {
+    "title": "Plataforma Oracle Primavera Cloud (OPC)",
+    "type": "Almacén de Datos (Data Store)",
+    "id": "DSRef_Oracle_OPC",
+    "role": "Equipo de Obra / Last Planner",
+    "valClass": "<span class=\"badge-tr\">Infraestructura TIC</span>",
+    "source": "10000000-PRO-EST-001 §3.1 y §4.2",
+    "state": "Plataforma Cloud Colaborativa Activa",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Base de datos en la nube para la gestión operativa en faena: módulos Tasks (Tareas a corto plazo), Constraints (Restricciones colaborativas) y Performance (PPC/CNC).",
+    "desc": "Plataforma SaaS corporativa para la implementación de la metodología Lean Construction en faena, permitiendo colaboración en tiempo real entre oficina y terreno."
+  },
+  "ds_pbi": {
+    "title": "Data Warehouse Power BI Portal",
+    "type": "Almacén de Datos (Data Store)",
+    "id": "DSRef_Power_BI",
+    "role": "Control de Gestión / Gerencia",
+    "valClass": "<span class=\"badge-tr\">Infraestructura TIC</span>",
+    "source": "10000000-PRO-EST-001 §4.7",
+    "state": "Data Warehouse Empresarial",
+    "system": "Microsoft Power BI Cloud Service",
+    "outputInfo": "Modelos analíticos de inteligencia de negocios para la consolidación de dashboards directivos de productividad, confiabilidad de planes y análisis de desvíos.",
+    "desc": "Repositorio analítico corporativo donde se publican los informes consolidados de PPC, curvas de avance físico y tendencias históricas de desempeño de contratos."
+  },
+  "do_prog_maestro": {
+    "title": "Programa Maestro Contractual",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_ProgramaMaestro",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Documento de Control</span>",
+    "source": "10000000-PRO-EST-001 §4.1",
+    "state": "Línea Base Aprobada por Cliente",
+    "system": "Primavera P6 EPPM (.xer)",
+    "outputInfo": "Cronograma de referencia oficial con curva 'S' contractual aprobada, hitos contractuales y secuenciamiento macro de especialidades.",
+    "desc": "Línea base formalmente aprobada por el Mandante y la Gerencia de Proyecto, sirviendo de referencia rectora para todo el control de plazos de la obra."
+  },
+  "do_tareas_apertura": {
+    "title": "Inventario de Tareas Operativas",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_PlanillaApertura",
+    "role": "Jefe de Área (Last Planner)",
+    "valClass": "<span class=\"badge-va\">Entregable Operativo</span>",
+    "source": "10000000-PRO-EST-001 §4.2",
+    "state": "Tareas Operativas Validadas en OPC",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Catálogo estructurado de tareas a nivel cuadrilla (horizonte 4 a 6 semanas) con duración ≤ 3 días y asignación de cuadrillas y rendimientos.",
+    "desc": "Desglose sistemático de las actividades maestras en tareas discretas y auditables para su ejecución protegida en faena."
+  },
+  "do_plan_trisemanal": {
+    "title": "Plan Trisemanal Confiable (Lookahead)",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_PlanTrisemanal",
+    "role": "Jefe de Área / Administrador de Obra",
+    "valClass": "<span class=\"badge-va\">Entregable Operativo</span>",
+    "source": "10000000-PRO-EST-001 §4.5",
+    "state": "Plan Trisemanal 100% Protegido",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Programa de trabajo operativo a 3 semanas (S+1 a S+3), compuesto exclusivamente por tareas con todas sus restricciones levantadas y entregadas.",
+    "desc": "Compromiso de producción blindado que garantiza flujo continuo y libre de esperas en terreno durante las siguientes tres semanas calendario."
+  },
+  "do_acta_pod": {
+    "title": "Registro y Hoja Diaria POD",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_ActaPOD",
+    "role": "Supervisor de Terreno",
+    "valClass": "<span class=\"badge-va\">Entregable de Terreno</span>",
+    "source": "10000000-PRO-EST-001 §4.6",
+    "state": "Compromiso Firmado / Cierre Evaluado",
+    "system": "Oracle Primavera Cloud / Planilla Terreno",
+    "outputInfo": "Hoja de compromiso diario del supervisor con metas físicas, recursos asignados y evaluación vespertina del porcentaje de cumplimiento y causas CNC.",
+    "desc": "Herramienta nuclear de gestión en el frente de trabajo que formaliza el compromiso del supervisor y captura las desviaciones diarias en faena."
+  },
+  "do_reporte_ppc": {
+    "title": "Informe Analítico Semanal PPC y CNC",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_ReportePPC",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Entregable Directivo</span>",
+    "source": "10000000-PRO-EST-001 §4.7",
+    "state": "Informe Oficial Publicado y Emitido",
+    "system": "Power BI / PDF / OPC",
+    "outputInfo": "Dossier semanal que consolida el Porcentaje de Plan Cumplido (PPC), causas de no cumplimiento tipificadas, Pareto de interferencias y planes de acción correctiva.",
+    "desc": "Entregable ejecutivo semanal presentado en la reunión de directorio y enviado al Mandante para acreditar la madurez operativa del contrato."
+  },
+  "do_ficha_rest": {
+    "title": "Ficha Oficial de Restricción",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_FichaRestriccion",
+    "role": "Identificador / Administrador de Obra",
+    "valClass": "<span class=\"badge-va\">Entregable de Gestión</span>",
+    "source": "10000000-PRO-EST-001 §4.3",
+    "state": "Restricción Activa en Gestión",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Registro formal que detalla el impedimento, código de tarea vinculada, responsable asignado, SLA de respuesta y fecha prometida de entrega.",
+    "desc": "Instrumento contractual para canalizar requerimientos críticos y exigir compromisos formales a compras, ingeniería o partes interesadas."
+  },
+  "do_rest_entregada": {
+    "title": "Restricción ENTREGADA / Frente Habilitado",
+    "type": "Objeto de Datos (Data Object)",
+    "id": "DORef_RestriccionEntregada",
+    "role": "Parte Responsable / Jefe de Área",
+    "valClass": "<span class=\"badge-va\">Entregable de Gestión</span>",
+    "source": "10000000-PRO-EST-001 §4.4",
+    "state": "Restricción ENTREGADA en OPC",
+    "system": "Oracle Primavera Cloud (OPC)",
+    "outputInfo": "Acta de entrega en OPC con evidencias técnicas adjuntas que certifica que el frente de trabajo o recurso se encuentra 100% disponible y libre de riesgos.",
+    "desc": "Certificación digital de que el impedimento fue resuelto satisfactoriamente y que la tarea asociada puede ingresar al flujo productivo sin riesgos de paralización."
+  },
+  "note_corte": {
+    "title": "Regla de Corte Semanal",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_Corte",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.1",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "Directriz corporativa de horario de corte para congelamiento de avances de obra.",
+    "desc": "Corte oficial de mediciones de obra: Jueves 18:00 hrs. Todo avance posterior se registra en el siguiente período de control."
+  },
+  "note_apertura": {
+    "title": "Reglas Last Planner de Tareas",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_ReglasApertura",
+    "role": "Jefe de Área",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.2",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "Reglas de granularidad: Duración máxima de tarea ≤ 3 días; factor de ponderación ≤ 1.",
+    "desc": "Criterios estrictos de granularidad para evitar cajas negras operativas en faena y asegurar previsibilidad diaria."
+  },
+  "note_restricciones": {
+    "title": "Regla de Restricciones en Plan Trisemanal",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_CriterioRestriccion",
+    "role": "Jefe de Área",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.5",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "Regla de Oro: Prohibido incluir tareas con restricciones activas en el Plan Trisemanal.",
+    "desc": "Solo pueden comprometerse tareas 100% libres de interferencias para blindar la productividad de las cuadrillas."
+  },
+  "note_pod": {
+    "title": "Regla de Operación POD",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_ReglaPOD",
+    "role": "Supervisor de Terreno",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.6",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "Mandato de reunión diaria: 15 minutos al inicio del turno y 15 minutos al término del turno.",
+    "desc": "Disciplina operacional en faena para sincronizar metas y retroalimentar causas de desvíos en tiempo real."
+  },
+  "note_kpi_ppc": {
+    "title": "Fórmula Oficial de Cálculo PPC",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_FormulaPPC",
+    "role": "Programador de Obra",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.7",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "PPC (%) = (Tareas Cumplidas al 100% / Total Tareas Comprometidas en POD) * 100.",
+    "desc": "Cálculo binario estricto: Una tarea al 99% se contabiliza como 0% de cumplimiento para incentivar la finalización efectiva."
+  },
+  "note_clasif_rest": {
+    "title": "Familias Estándar de Restricción",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_P2_Handoff",
+    "role": "Identificador / Administrador",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.3",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "Taxonomía canónica: 1. Ingeniería, 2. Materiales, 3. Equipos, 4. Frentes, 5. Permisos/Seguridad, 6. Subcontratos.",
+    "desc": "Clasificación unificada para alimentar el análisis corporativo de vulnerabilidades de suministro en contratos mineros."
+  },
+  "note_sla_rest": {
+    "title": "SLA de Compromiso de Liberación",
+    "type": "Anotación de Texto (Text Annotation)",
+    "id": "Annot_P2_ReglaFecha",
+    "role": "Parte Responsable",
+    "valClass": "<span class=\"badge-tr\">Regla de Negocio</span>",
+    "source": "10000000-PRO-EST-001 §4.4",
+    "state": "Normativa Vigente",
+    "system": "Manual de Procedimiento",
+    "outputInfo": "SLA corporativo: Máximo 48 hrs hábiles para designar responsable y formalizar fecha comprometida en OPC.",
+    "desc": "Acuerdo de nivel de servicio interno para evitar demoras burocráticas en la gestión de interferencias de obra."
+  }
+};
+
+    // 3. Generadores SVG Bizagi
+    // scratch/svg_generators.js
+// Generador de Diagramas BPMN 2.0 que replica con fidelidad 1:1 la vista de Bizagi Modeler
+// Muestra ambos procesos (PROC-01 y PROC-02) interconectados en el Macroproceso
+// Autor: Sebastián Roca G. (+56993543447 | sjroca@salfamontajes.com)
+
+function renderCajetinSvg(totalWidth, docTitle) {
+  const cajetinW = 460;
+  const cajetinX = totalWidth - cajetinW - 20;
+  return `
+    <!-- Barra Roja Institucional BRASA (8mm) -->
+    <rect x="0" y="0" width="${totalWidth}" height="8" fill="#B01E24"/>
+
+    <!-- Encabezado Corporativo Oficial SALFA MONTAJES -->
+    <g transform="translate(20, 18)">
+      <!-- Logo Corporativo -->
+      <text x="0" y="24" fill="#15181B" font-size="22" font-weight="900" font-family="'Segoe UI', Arial, sans-serif">
+        <tspan fill="#B01E24">SALFA</tspan>MONTAJES
+      </text>
+      <line x1="190" y1="4" x2="190" y2="34" stroke="#D1D5DB" stroke-width="1.2"/>
+      
+      <!-- Metadatos de Serie Normativa -->
+      <text x="205" y="15" fill="#5A626A" font-size="10.5" font-family="'Segoe UI', Arial, sans-serif">SISTEMA DE GESTIÓN INTEGRADO — SERIE OPERACIONAL N5</text>
+      <text x="205" y="32" fill="#15181B" font-size="12.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">${docTitle}</text>
+
+      <!-- Cajetín Normalizado de Control, Autoría y Auditoría -->
+      <rect x="${cajetinX - 20}" y="2" width="${cajetinW}" height="42" rx="3" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1"/>
+      
+      <!-- Fila 1 -->
+      <text x="${cajetinX - 10}" y="15" fill="#5A626A" font-size="8.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">CÓDIGO:</text>
+      <text x="${cajetinX + 38}" y="15" fill="#B01E24" font-size="9" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">10000000-SAL-00000-DOC-DIA-00001</text>
+      <text x="${cajetinX + 250}" y="15" fill="#5A626A" font-size="8.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">ESTADO:</text>
+      <text x="${cajetinX + 300}" y="15" fill="#2E7D32" font-size="9" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">VIGENTE AS-IS</text>
+
+      <!-- Fila 2 -->
+      <text x="${cajetinX - 10}" y="27" fill="#5A626A" font-size="8.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">DOC RECTOR:</text>
+      <text x="${cajetinX + 62}" y="27" fill="#15181B" font-size="9" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">10000000-PRO-EST-001 (Rev. 0)</text>
+      <text x="${cajetinX + 250}" y="27" fill="#5A626A" font-size="8.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">REVISIÓN:</text>
+      <text x="${cajetinX + 308}" y="27" fill="#15181B" font-size="9" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">Rev. 0 (Auditoría 100%)</text>
+
+      <!-- Fila 3: Autor Institucional -->
+      <text x="${cajetinX - 10}" y="39" fill="#5A626A" font-size="8.5" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">AUTOR:</text>
+      <text x="${cajetinX + 32}" y="39" fill="#15181B" font-size="9" font-weight="700" font-family="'Segoe UI', Arial, sans-serif">Sebastián Roca G. (+56993543447 | sjroca@salfamontajes.com)</text>
+    </g>
+  `;
+}
+
+// Marcadores de flechas y estilos
+function getSvgDefs() {
+  return `
+    <defs>
+      <!-- Marcador flecha sólida (Flujo de secuencia) -->
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#1E293B"/>
+      </marker>
+      <!-- Marcador flecha abierta (Flujo de mensaje) -->
+      <marker id="msg-arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 1 2 L 11 6 L 1 10" fill="none" stroke="#475569" stroke-width="1.8"/>
+      </marker>
+      <!-- Filtro sombra suave -->
+      <filter id="task-shadow" x="-5%" y="-5%" width="110%" height="115%">
+        <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.08"/>
+      </filter>
+    </defs>
+  `;
+}
+
+// Iconografía SVG oficial Bizagi Modeler
+const BIZ_ICONS = {
+  user: `<g transform="translate(6, 6) scale(0.72)">
+    <circle cx="8" cy="5" r="3.6" fill="none" stroke="#0284C7" stroke-width="1.6"/>
+    <path d="M 2 15 C 2 10.8 5 9.4 8 9.4 C 11 9.4 14 10.8 14 15" fill="none" stroke="#0284C7" stroke-width="1.6"/>
+  </g>`,
+  gear: `<g transform="translate(6, 6) scale(0.72)">
+    <circle cx="8" cy="8" r="3.2" fill="none" stroke="#0284C7" stroke-width="1.6"/>
+    <path d="M8 1 v2 M8 13 v2 M1 8 h2 M13 8 h2 M3 3 l1.5 1.5 M11.5 11.5 l1.5 1.5 M3 13 l1.5 -1.5 M11.5 4.5 l1.5 -1.5" stroke="#0284C7" stroke-width="1.6" stroke-linecap="round"/>
+  </g>`,
+  hand: `<g transform="translate(6, 6) scale(0.72)">
+    <path d="M 4 14 L 4 7 C 4 6 5 6 5 7 L 5 13 M 5 7 C 5 5.5 6.5 5.5 6.5 7 L 6.5 13 M 6.5 7 C 6.5 5.8 8 5.8 8 7 L 8 13 M 8 8 C 8 7 9.5 7 9.5 8.5 L 9.5 14 C 9.5 16 4 16 3 13 L 2 10 C 1.5 9 2.5 8 3.5 9 L 4 10" fill="none" stroke="#0284C7" stroke-width="1.4" stroke-linejoin="round"/>
+  </g>`,
+  callPlus: (w, h) => `
+    <g transform="translate(${w/2}, ${h - 8})">
+      <rect x="-6" y="-6" width="12" height="12" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.2" rx="1.5"/>
+      <line x1="-3.5" y1="0" x2="3.5" y2="0" stroke="#0284C7" stroke-width="1.6"/>
+      <line x1="0" y1="-3.5" x2="0" y2="3.5" stroke="#0284C7" stroke-width="1.6"/>
+    </g>
+  `
+};
+
+// Renderizar una tarea con estilo auténtico de Bizagi Modeler
+function renderBizagiTask(id, x, y, w, h, iconType, line1, line2, isCall = false) {
+  const iconSvg = iconType === 'user' ? BIZ_ICONS.user : (iconType === 'gear' ? BIZ_ICONS.gear : (iconType === 'hand' ? BIZ_ICONS.hand : ''));
+  const callBadge = isCall ? BIZ_ICONS.callPlus(w, h) : '';
+  const strokeW = isCall ? '2' : '1.3';
+  const strokeCol = isCall ? '#1E40AF' : '#2563EB';
+  const textY1 = line2 ? y + (h / 2) - 3 : y + (h / 2) + 4;
+  const textY2 = y + (h / 2) + 11;
+
+  return `
+    <g class="bpmn-task" id="node_${id}" onclick="selectElement('${id}')" filter="url(#task-shadow)" style="cursor: pointer;">
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#F0F7FF" stroke="${strokeCol}" stroke-width="${strokeW}"/>
+      <g transform="translate(${x}, ${y})">
+        ${iconSvg}
+        ${callBadge}
+      </g>
+      <text x="${x + (w / 2)}" y="${textY1}" fill="#1E293B" font-size="10.5" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" text-anchor="middle">${line1}</text>
+      ${line2 ? `<text x="${x + (w / 2)}" y="${textY2}" fill="#1E293B" font-size="10.5" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" text-anchor="middle">${line2}</text>` : ''}
+    </g>
+  `;
+}
+
+// 1. GENERADOR DE MACROPROCESO INTEGRADO (AMBOS PROCESOS - VISTA BIZAGI IDÉNTICA)
+function generateMacroSvg(isStandalone = false) {
+  const innerW = 1420;
+  const innerH = 820;
+  const headerH = isStandalone ? 75 : 0;
+  const totalW = innerW + (isStandalone ? 40 : 0);
+  const totalH = innerH + headerH + (isStandalone ? 30 : 0);
+  const transY = headerH + (isStandalone ? 15 : 0);
+  const transX = isStandalone ? 20 : 0;
+
+  const cajetinHeader = isStandalone ? renderCajetinSvg(totalW, "MACROPROCESO: PLANIFICACIÓN LEAN Y GESTIÓN DE RESTRICCIONES (AS-IS)") : '';
+
+  // Dimensiones de Piscinas y Carriles
+  const poolX = 25;
+  const poolW = 1370;
+  const poolTitleW = 32;
+  const laneTitleW = 28;
+  const contentLeft = poolX + poolTitleW + laneTitleW; // 85
+  const contentW = poolW - poolTitleW - laneTitleW; // 1310
+
+  // Pool 1 (PROC-01): y from 20 to 380 (Height: 360, 3 carriles de 120)
+  const p1Top = 20;
+  const laneH = 120;
+  const p1L1_Y = p1Top;                // Programador (20..140)
+  const p1L2_Y = p1Top + laneH;        // Jefe de Área (140..260)
+  const p1L3_Y = p1Top + (laneH * 2);  // Supervisor (260..380)
+
+  // Canal inter-piscinas: 380 a 440 (Height: 60)
+
+  // Pool 2 (PROC-02): y from 440 to 800 (Height: 360, 3 carriles de 120)
+  const p2Top = 440;
+  const p2L1_Y = p2Top;                // Identificador (440..560)
+  const p2L2_Y = p2Top + laneH;        // Admin Obra (560..680)
+  const p2L3_Y = p2Top + (laneH * 2);  // Parte Responsable (680..800)
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${isStandalone ? totalW : '100%'}" height="${isStandalone ? totalH : '100%'}" style="background:#FFFFFF; font-family:'Segoe UI', Arial, sans-serif;">
+      ${cajetinHeader}
+      ${getSvgDefs()}
+
+      <g transform="translate(${transX}, ${transY})">
+
+        <!-- =================================================================== -->
+        <!-- PISCINA 1: PROC-01 PLANIFICACIÓN TÁCTICA Y TAREAS LAST PLANNER      -->
+        <!-- =================================================================== -->
+        <g id="pool_proc1">
+          <!-- Borde exterior de la piscina -->
+          <rect x="${poolX}" y="${p1Top}" width="${poolW}" height="360" fill="#FFFFFF" stroke="#334155" stroke-width="1.5" rx="2"/>
+
+          <!-- Franja de título vertical de la piscina -->
+          <rect x="${poolX}" y="${p1Top}" width="${poolTitleW}" height="360" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1Top + 180}" y="${poolX + 21}" fill="#1E293B" font-size="11" font-weight="700" letter-spacing="0.5" text-anchor="middle" transform="rotate(-90)">PROC-01: Planificación Táctica y Gestión de Tareas Last Planner</text>
+
+          <!-- Carril 1: Programador de Obra -->
+          <rect x="${poolX + poolTitleW}" y="${p1L1_Y}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1L1_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Programador de Obra</text>
+          <line x1="${contentLeft}" y1="${p1L1_Y + laneH}" x2="${poolX + poolW}" y2="${p1L1_Y + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <!-- Carril 2: Jefe de Área (Last Planner) -->
+          <rect x="${poolX + poolTitleW}" y="${p1L2_Y}" width="${laneTitleW}" height="${laneH}" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1L2_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Jefe de Área (Last Planner)</text>
+          <line x1="${contentLeft}" y1="${p1L2_Y + laneH}" x2="${poolX + poolW}" y2="${p1L2_Y + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <!-- Carril 3: Supervisor de Terreno -->
+          <rect x="${poolX + poolTitleW}" y="${p1L3_Y}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1L3_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Supervisor de Terreno</text>
+
+          <!-- ================= ELEMENTOS POOL 1 ================= -->
+
+          <!-- 1. Evento de Inicio Temporizador (Lane 1) -->
+          <g class="bpmn-node" id="node_start_timer" onclick="selectElement('start_timer')" style="cursor:pointer;">
+            <circle cx="115" cy="80" r="17" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+            <g transform="translate(115, 80)">
+              <polyline points="0,-7 0,0 4,3" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"/>
+            </g>
+            <text x="115" y="112" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Corte Semanal</text>
+            <text x="115" y="123" fill="#64748B" font-size="8.5" text-anchor="middle">del Proyecto</text>
+          </g>
+
+          <!-- 2. Actualizar Programa Maestro en P6 (Lane 1) -->
+          ${renderBizagiTask('task_p6', 175, 50, 125, 60, 'user', 'Actualizar Programa', 'Maestro en P6')}
+
+          <!-- 3. Sincronizar P6 hacia OPC (Lane 1) -->
+          ${renderBizagiTask('task_sync', 335, 50, 125, 60, 'gear', 'Sincronizar P6', 'hacia OPC')}
+
+          <!-- 4. Desglosar Actividades en Tareas Operativas (Lane 2) -->
+          ${renderBizagiTask('task_apertura', 335, 170, 125, 60, 'user', 'Desglosar Actividades', 'en Tareas')}
+
+          <!-- 5. Realizar Pull Planning Táctico (Lane 2) -->
+          ${renderBizagiTask('task_pull', 495, 170, 130, 60, 'hand', 'Realizar Pull Planning', 'Táctico (3 Semanas)')}
+
+          <!-- 6. Gateway Exclusivo ¿Tiene Restricciones? (Lane 2) -->
+          <g class="bpmn-node" id="node_gw_restriccion" onclick="selectElement('gw_restriccion')" style="cursor:pointer;">
+            <polygon points="675,182 695,200 675,218 655,200" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <text x="675" y="233" fill="#1E293B" font-size="8.5" font-weight="700" text-anchor="middle">¿Tiene</text>
+            <text x="675" y="244" fill="#1E293B" font-size="8.5" font-weight="700" text-anchor="middle">Restricciones?</text>
+          </g>
+
+          <!-- 7. Call Activity: Invocar PROC-02 (Lane 2) -->
+          ${renderBizagiTask('call_restricciones', 740, 170, 135, 60, '', 'Invocar PROC-02:', 'Gestión Restricciones', true)}
+
+          <!-- 8. Programar Trisemanal y Asignar Supervisor (Lane 2) -->
+          ${renderBizagiTask('task_trisemanal', 915, 170, 135, 60, 'user', 'Programar Trisemanal', 'y Asignar Supervisor')}
+
+          <!-- 9. Comprometer Tarea en OPC (Lane 3) -->
+          ${renderBizagiTask('pod_comprometer', 915, 290, 135, 60, 'user', 'Comprometer Tarea', 'en OPC')}
+
+          <!-- 10. Control Diario POD y Cierre de Tareas (Lane 3) -->
+          ${renderBizagiTask('pod_control', 1085, 290, 135, 60, 'hand', 'Control Diario POD', 'y Cierre de Tareas')}
+
+          <!-- 11. Publicar KPI en Power BI (Lane 1) -->
+          ${renderBizagiTask('task_kpi', 1085, 50, 135, 60, 'gear', 'Publicar KPI en PBI', 'y Transferir Avance')}
+
+          <!-- 12. Fin de Ciclo Semanal (Lane 1) -->
+          <g class="bpmn-node" id="node_end_ciclo" onclick="selectElement('end_ciclo')" style="cursor:pointer;">
+            <circle cx="1285" cy="80" r="17" fill="#FEE2E2" stroke="#DC2626" stroke-width="3"/>
+            <circle cx="1285" cy="80" r="13" fill="none" stroke="#DC2626" stroke-width="1.2"/>
+            <text x="1285" y="112" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Ciclo Semanal</text>
+            <text x="1285" y="123" fill="#64748B" font-size="8.5" text-anchor="middle">Cerrado</text>
+          </g>
+
+          <!-- ================= FLUJOS DE SECUENCIA POOL 1 ================= -->
+          <!-- Start -> Actualizar P6 -->
+          <line x1="132" y1="80" x2="175" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          
+          <!-- Actualizar P6 -> Sincronizar OPC -->
+          <line x1="300" y1="80" x2="335" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          
+          <!-- Sincronizar OPC (Lane 1) -> Desglosar Tareas (Lane 2) -->
+          <line x1="397" y1="110" x2="397" y2="170" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Desglosar Tareas -> Pull Planning -->
+          <line x1="460" y1="200" x2="495" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Pull Planning -> Gateway -->
+          <line x1="625" y1="200" x2="655" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Gateway -> SÍ -> Call Activity -->
+          <line x1="695" y1="200" x2="740" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <text x="712" y="194" fill="#16A34A" font-size="9" font-weight="700">SÍ</text>
+
+          <!-- Gateway -> NO -> Programar Trisemanal (Bypass superior) -->
+          <path d="M 675 182 L 675 155 L 982 155 L 982 170" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <text x="820" y="150" fill="#DC2626" font-size="9" font-weight="700">NO</text>
+
+          <!-- Call Activity -> Programar Trisemanal -->
+          <line x1="875" y1="200" x2="915" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Programar Trisemanal (Lane 2) -> Comprometer (Lane 3) -->
+          <line x1="982" y1="230" x2="982" y2="290" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Comprometer -> Control Diario POD -->
+          <line x1="1050" y1="320" x2="1085" y2="320" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Control Diario POD (Lane 3) -> Publicar KPI (Lane 1) -->
+          <line x1="1152" y1="290" x2="1152" y2="110" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Publicar KPI -> Fin Ciclo -->
+          <line x1="1220" y1="80" x2="1268" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+        </g>
+
+
+        <!-- =================================================================== -->
+        <!-- CANAL INTER-PISCINAS (MENSAJES DE INTERACCIÓN Y HAND-OFFS)          -->
+        <!-- =================================================================== -->
+        <g id="inter_pool_messages">
+          <!-- REL-0002: Invocación desde Call Activity hacia Start PROC-02 -->
+          <path d="M 807 230 L 807 410 L 115 410 L 115 483" fill="none" stroke="#475569" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#msg-arrow)"/>
+          <g transform="translate(420, 402)">
+            <rect x="-10" y="-10" width="310" height="18" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1"/>
+            <text x="145" y="3" fill="#1E293B" font-size="9" font-weight="700" text-anchor="middle">REL-0002: Invocación por Restricción Detectada</text>
+          </g>
+
+          <!-- REL-0003: Hand-off de Desbloqueo desde End PROC-02 hacia Trisemanal -->
+          <path d="M 1210 722 L 1210 425 L 982 425 L 982 230" fill="none" stroke="#475569" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#msg-arrow)"/>
+          <g transform="translate(1080, 417)">
+            <rect x="-10" y="-10" width="280" height="18" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1"/>
+            <text x="130" y="3" fill="#1E293B" font-size="9" font-weight="700" text-anchor="middle">REL-0003: Hand-off Restricción Entregada</text>
+          </g>
+        </g>
+
+
+        <!-- =================================================================== -->
+        <!-- PISCINA 2: PROC-02 GESTIÓN Y LIBERACIÓN DE RESTRICCIONES             -->
+        <!-- =================================================================== -->
+        <g id="pool_proc2">
+          <!-- Borde exterior de la piscina -->
+          <rect x="${poolX}" y="${p2Top}" width="${poolW}" height="360" fill="#FFFFFF" stroke="#334155" stroke-width="1.5" rx="2"/>
+
+          <!-- Franja de título vertical de la piscina -->
+          <rect x="${poolX}" y="${p2Top}" width="${poolTitleW}" height="360" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2Top + 180}" y="${poolX + 21}" fill="#1E293B" font-size="11" font-weight="700" letter-spacing="0.5" text-anchor="middle" transform="rotate(-90)">PROC-02: Gestión y Liberación de Restricciones</text>
+
+          <!-- Carril 1: Identificador de la Restricción -->
+          <rect x="${poolX + poolTitleW}" y="${p2L1_Y}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2L1_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Identificador de la Restricción</text>
+          <line x1="${contentLeft}" y1="${p2L1_Y + laneH}" x2="${poolX + poolW}" y2="${p2L1_Y + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <!-- Carril 2: Administrador de Obra -->
+          <rect x="${poolX + poolTitleW}" y="${p2L2_Y}" width="${laneTitleW}" height="${laneH}" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2L2_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Administrador de Obra</text>
+          <line x1="${contentLeft}" y1="${p2L2_Y + laneH}" x2="${poolX + poolW}" y2="${p2L2_Y + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <!-- Carril 3: Parte Responsable -->
+          <rect x="${poolX + poolTitleW}" y="${p2L3_Y}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2L3_Y + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Parte Responsable</text>
+
+          <!-- ================= ELEMENTOS POOL 2 ================= -->
+
+          <!-- 1. Evento de Inicio Mensaje (Lane 1) -->
+          <g class="bpmn-node" id="node_p2_start_event" onclick="selectElement('p2_start_event')" style="cursor:pointer;">
+            <circle cx="115" cy="500" r="17" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+            <text x="115" y="532" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Restricción</text>
+            <text x="115" y="543" fill="#64748B" font-size="8.5" text-anchor="middle">Detectada</text>
+          </g>
+
+          <!-- 2. Registrar Restricción en OPC (Lane 1) -->
+          ${renderBizagiTask('p2_task_reg', 175, 470, 125, 60, 'user', 'Registrar Restricción', 'en OPC')}
+
+          <!-- 3. Gateway Paralelo Bifurcación (Lane 1) -->
+          <g class="bpmn-node" id="node_p2_fork" onclick="selectElement('p2_fork')" style="cursor:pointer;">
+            <polygon points="340,482 360,500 340,518 320,500" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <line x1="333" y1="500" x2="347" y2="500" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="340" y1="493" x2="340" y2="507" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+
+          <!-- 4. Vincular a Tareas Impactadas (Lane 1) -->
+          ${renderBizagiTask('p2_task_vinc', 405, 470, 130, 60, 'user', 'Vincular a Tareas', 'Impactadas')}
+
+          <!-- 5. Asignar Responsable y Fecha Límite (Lane 2) -->
+          ${renderBizagiTask('p2_task_asig', 405, 590, 130, 60, 'user', 'Asignar Responsable', 'y Fecha Límite')}
+
+          <!-- 6. Gateway Paralelo Unión (Lane 1) -->
+          <g class="bpmn-node" id="node_p2_join" onclick="selectElement('p2_join')" style="cursor:pointer;">
+            <polygon points="585,482 605,500 585,518 565,500" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <line x1="578" y1="500" x2="592" y2="500" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="585" y1="493" x2="585" y2="507" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+
+          <!-- 7. Comprometer Fecha Prometida (Lane 3) -->
+          ${renderBizagiTask('p2_task_comp', 665, 710, 135, 60, 'user', 'Comprometer Fecha', 'Prometida')}
+
+          <!-- 8. Gestionar Liberación en Faena (Lane 3) -->
+          ${renderBizagiTask('p2_task_lib', 840, 710, 135, 60, 'hand', 'Gestionar Liberación', 'en Faena')}
+
+          <!-- 9. Marcar Entregada en OPC (Lane 3) -->
+          ${renderBizagiTask('p2_task_ent', 1015, 710, 135, 60, 'user', 'Marcar Entregada', 'en OPC')}
+
+          <!-- 10. Fin de Restricción Entregada (Lane 3) -->
+          <g class="bpmn-node" id="node_p2_end_event" onclick="selectElement('p2_end_event')" style="cursor:pointer;">
+            <circle cx="1210" cy="740" r="17" fill="#FEE2E2" stroke="#DC2626" stroke-width="3"/>
+            <circle cx="1210" cy="740" r="13" fill="none" stroke="#DC2626" stroke-width="1.2"/>
+            <text x="1210" y="772" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Restricción Entregada</text>
+            <text x="1210" y="783" fill="#64748B" font-size="8.5" text-anchor="middle">y Tarea Liberada</text>
+          </g>
+
+          <!-- ================= FLUJOS DE SECUENCIA POOL 2 ================= -->
+          <!-- Start -> Registrar Restricción -->
+          <line x1="132" y1="500" x2="175" y2="500" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Registrar Restricción -> Fork -->
+          <line x1="300" y1="500" x2="320" y2="500" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Fork -> Rama 1 (Lane 1): Vincular Tareas -->
+          <line x1="360" y1="500" x2="405" y2="500" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Fork -> Rama 2 (Lane 2): Asignar Responsable -->
+          <path d="M 340 518 L 340 620 L 405 620" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Vincular Tareas (Lane 1) -> Join -->
+          <line x1="535" y1="500" x2="565" y2="500" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Asignar Responsable (Lane 2) -> Join (Lane 1) -->
+          <path d="M 535 620 L 585 620 L 585 518" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Join (Lane 1) -> Comprometer Fecha (Lane 3) -->
+          <path d="M 605 500 L 635 500 L 635 740 L 665 740" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Comprometer Fecha -> Gestionar Liberación -->
+          <line x1="800" y1="740" x2="840" y2="740" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Gestionar Liberación -> Marcar Entregada -->
+          <line x1="975" y1="740" x2="1015" y2="740" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+          <!-- Marcar Entregada -> Fin Restricción -->
+          <line x1="1150" y1="740" x2="1193" y2="740" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+        </g>
+
+      </g>
+    </svg>
+  `;
+}
+
+// 2. GENERADOR DE DETALLE: PROC-01 (PLANIFICACIÓN TÁCTICA)
+function generateProc1Svg(isStandalone = false) {
+  const innerW = 1420;
+  const innerH = 430;
+  const headerH = isStandalone ? 75 : 0;
+  const totalW = innerW + (isStandalone ? 40 : 0);
+  const totalH = innerH + headerH + (isStandalone ? 30 : 0);
+  const transY = headerH + (isStandalone ? 15 : 0);
+  const transX = isStandalone ? 20 : 0;
+
+  const cajetinHeader = isStandalone ? renderCajetinSvg(totalW, "PROC-01: PLANIFICACIÓN TÁCTICA Y GESTIÓN DE TAREAS LAST PLANNER") : '';
+
+  const poolX = 25;
+  const poolW = 1370;
+  const poolTitleW = 32;
+  const laneTitleW = 28;
+  const contentLeft = poolX + poolTitleW + laneTitleW;
+  const laneH = 120;
+  const p1Top = 20;
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${isStandalone ? totalW : '100%'}" height="${isStandalone ? totalH : '100%'}" style="background:#FFFFFF; font-family:'Segoe UI', Arial, sans-serif;">
+      ${cajetinHeader}
+      ${getSvgDefs()}
+
+      <g transform="translate(${transX}, ${transY})">
+        <g id="pool_proc1_detail">
+          <!-- Borde exterior de la piscina -->
+          <rect x="${poolX}" y="${p1Top}" width="${poolW}" height="360" fill="#FFFFFF" stroke="#334155" stroke-width="1.5" rx="2"/>
+
+          <!-- Franja de título vertical -->
+          <rect x="${poolX}" y="${p1Top}" width="${poolTitleW}" height="360" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1Top + 180}" y="${poolX + 21}" fill="#1E293B" font-size="11" font-weight="700" letter-spacing="0.5" text-anchor="middle" transform="rotate(-90)">PROC-01: Planificación Táctica y Gestión de Tareas Last Planner</text>
+
+          <!-- Carriles -->
+          <rect x="${poolX + poolTitleW}" y="${p1Top}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1Top + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Programador de Obra</text>
+          <line x1="${contentLeft}" y1="${p1Top + laneH}" x2="${poolX + poolW}" y2="${p1Top + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <rect x="${poolX + poolTitleW}" y="${p1Top + laneH}" width="${laneTitleW}" height="${laneH}" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1Top + laneH + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Jefe de Área (Last Planner)</text>
+          <line x1="${contentLeft}" y1="${p1Top + (laneH * 2)}" x2="${poolX + poolW}" y2="${p1Top + (laneH * 2)}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <rect x="${poolX + poolTitleW}" y="${p1Top + (laneH * 2)}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p1Top + (laneH * 2) + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Supervisor de Terreno</text>
+
+          <!-- Tareas y Nodos -->
+          <g class="bpmn-node" id="node_start_timer" onclick="selectElement('start_timer')" style="cursor:pointer;">
+            <circle cx="115" cy="80" r="17" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+            <polyline points="115,73 115,80 119,83" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"/>
+            <text x="115" y="112" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Corte Semanal</text>
+            <text x="115" y="123" fill="#64748B" font-size="8.5" text-anchor="middle">del Proyecto</text>
+          </g>
+
+          ${renderBizagiTask('task_p6', 175, 50, 125, 60, 'user', 'Actualizar Programa', 'Maestro en P6')}
+          ${renderBizagiTask('task_sync', 335, 50, 125, 60, 'gear', 'Sincronizar P6', 'hacia OPC')}
+          ${renderBizagiTask('task_apertura', 335, 170, 125, 60, 'user', 'Desglosar Actividades', 'en Tareas')}
+          ${renderBizagiTask('task_pull', 495, 170, 130, 60, 'hand', 'Realizar Pull Planning', 'Táctico (3 Semanas)')}
+
+          <g class="bpmn-node" id="node_gw_restriccion" onclick="selectElement('gw_restriccion')" style="cursor:pointer;">
+            <polygon points="675,182 695,200 675,218 655,200" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <text x="675" y="233" fill="#1E293B" font-size="8.5" font-weight="700" text-anchor="middle">¿Tiene</text>
+            <text x="675" y="244" fill="#1E293B" font-size="8.5" font-weight="700" text-anchor="middle">Restricciones?</text>
+          </g>
+
+          ${renderBizagiTask('call_restricciones', 740, 170, 135, 60, '', 'Invocar PROC-02:', 'Gestión Restricciones', true)}
+          ${renderBizagiTask('task_trisemanal', 915, 170, 135, 60, 'user', 'Programar Trisemanal', 'y Asignar Supervisor')}
+          ${renderBizagiTask('pod_comprometer', 915, 290, 135, 60, 'user', 'Comprometer Tarea', 'en OPC')}
+          ${renderBizagiTask('pod_control', 1085, 290, 135, 60, 'hand', 'Control Diario POD', 'y Cierre de Tareas')}
+          ${renderBizagiTask('task_kpi', 1085, 50, 135, 60, 'gear', 'Publicar KPI en PBI', 'y Transferir Avance')}
+
+          <g class="bpmn-node" id="node_end_ciclo" onclick="selectElement('end_ciclo')" style="cursor:pointer;">
+            <circle cx="1285" cy="80" r="17" fill="#FEE2E2" stroke="#DC2626" stroke-width="3"/>
+            <circle cx="1285" cy="80" r="13" fill="none" stroke="#DC2626" stroke-width="1.2"/>
+            <text x="1285" y="112" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Ciclo Semanal</text>
+            <text x="1285" y="123" fill="#64748B" font-size="8.5" text-anchor="middle">Cerrado</text>
+          </g>
+
+          <!-- Flujos -->
+          <line x1="132" y1="80" x2="175" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="300" y1="80" x2="335" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="397" y1="110" x2="397" y2="170" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="460" y1="200" x2="495" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="625" y1="200" x2="655" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="695" y1="200" x2="740" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <text x="712" y="194" fill="#16A34A" font-size="9" font-weight="700">SÍ</text>
+          <path d="M 675 182 L 675 155 L 982 155 L 982 170" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <text x="820" y="150" fill="#DC2626" font-size="9" font-weight="700">NO</text>
+          <line x1="875" y1="200" x2="915" y2="200" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="982" y1="230" x2="982" y2="290" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="1050" y1="320" x2="1085" y2="320" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="1152" y1="290" x2="1152" y2="110" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="1220" y1="80" x2="1268" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+        </g>
+      </g>
+    </svg>
+  `;
+}
+
+// 3. GENERADOR DE DETALLE: PROC-02 (GESTIÓN Y LIBERACIÓN DE RESTRICCIONES)
+function generateProc2Svg(isStandalone = false, showArtifacts = true, isModal = false) {
+  const innerW = 1420;
+  const innerH = 430;
+  const headerH = isStandalone ? 75 : 0;
+  const totalW = innerW + (isStandalone ? 40 : 0);
+  const totalH = innerH + headerH + (isStandalone ? 30 : 0);
+  const transY = headerH + (isStandalone ? 15 : 0);
+  const transX = isStandalone ? 20 : 0;
+
+  const cajetinHeader = isStandalone ? renderCajetinSvg(totalW, "PROC-02: GESTIÓN Y LIBERACIÓN DE RESTRICCIONES (AS-IS)") : '';
+
+  const poolX = 25;
+  const poolW = 1370;
+  const poolTitleW = 32;
+  const laneTitleW = 28;
+  const contentLeft = poolX + poolTitleW + laneTitleW;
+  const laneH = 120;
+  const p2Top = 20;
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${isStandalone ? totalW : '100%'}" height="${isStandalone ? totalH : '100%'}" style="background:#FFFFFF; font-family:'Segoe UI', Arial, sans-serif;">
+      ${cajetinHeader}
+      ${getSvgDefs()}
+
+      <g transform="translate(${transX}, ${transY})">
+        <g id="pool_proc2_detail">
+          <!-- Borde exterior de la piscina -->
+          <rect x="${poolX}" y="${p2Top}" width="${poolW}" height="360" fill="#FFFFFF" stroke="#334155" stroke-width="1.5" rx="2"/>
+
+          <!-- Franja de título vertical -->
+          <rect x="${poolX}" y="${p2Top}" width="${poolTitleW}" height="360" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2Top + 180}" y="${poolX + 21}" fill="#1E293B" font-size="11" font-weight="700" letter-spacing="0.5" text-anchor="middle" transform="rotate(-90)">PROC-02: Gestión y Liberación de Restricciones</text>
+
+          <!-- Carriles -->
+          <rect x="${poolX + poolTitleW}" y="${p2Top}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2Top + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Identificador de la Restricción</text>
+          <line x1="${contentLeft}" y1="${p2Top + laneH}" x2="${poolX + poolW}" y2="${p2Top + laneH}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <rect x="${poolX + poolTitleW}" y="${p2Top + laneH}" width="${laneTitleW}" height="${laneH}" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2Top + laneH + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Administrador de Obra</text>
+          <line x1="${contentLeft}" y1="${p2Top + (laneH * 2)}" x2="${poolX + poolW}" y2="${p2Top + (laneH * 2)}" stroke="#CBD5E1" stroke-width="1"/>
+
+          <rect x="${poolX + poolTitleW}" y="${p2Top + (laneH * 2)}" width="${laneTitleW}" height="${laneH}" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="-${p2Top + (laneH * 2) + 60}" y="${poolX + poolTitleW + 18}" fill="#475569" font-size="9" font-weight="700" text-anchor="middle" transform="rotate(-90)">Parte Responsable</text>
+
+          <!-- Tareas y Nodos -->
+          <g class="bpmn-node" id="node_p2_start_event" onclick="selectElement('p2_start_event')" style="cursor:pointer;">
+            <circle cx="115" cy="80" r="17" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+            <text x="115" y="112" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Restricción</text>
+            <text x="115" y="123" fill="#64748B" font-size="8.5" text-anchor="middle">Detectada</text>
+          </g>
+
+          ${renderBizagiTask('p2_task_reg', 175, 50, 125, 60, 'user', 'Registrar Restricción', 'en OPC')}
+
+          <g class="bpmn-node" id="node_p2_fork" onclick="selectElement('p2_fork')" style="cursor:pointer;">
+            <polygon points="340,62 360,80 340,98 320,80" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <line x1="333" y1="80" x2="347" y2="80" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="340" y1="73" x2="340" y2="87" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+
+          ${renderBizagiTask('p2_task_vinc', 405, 50, 130, 60, 'user', 'Vincular a Tareas', 'Impactadas')}
+          ${renderBizagiTask('p2_task_asig', 405, 170, 130, 60, 'user', 'Asignar Responsable', 'y Fecha Límite')}
+
+          <g class="bpmn-node" id="node_p2_join" onclick="selectElement('p2_join')" style="cursor:pointer;">
+            <polygon points="585,62 605,80 585,98 565,80" fill="#FEF9E7" stroke="#CA8A04" stroke-width="1.8"/>
+            <line x1="578" y1="80" x2="592" y2="80" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="585" y1="73" x2="585" y2="87" stroke="#854D0E" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+
+          ${renderBizagiTask('p2_task_comp', 665, 290, 135, 60, 'user', 'Comprometer Fecha', 'Prometida')}
+          ${renderBizagiTask('p2_task_lib', 840, 290, 135, 60, 'hand', 'Gestionar Liberación', 'en Faena')}
+          ${renderBizagiTask('p2_task_ent', 1015, 290, 135, 60, 'user', 'Marcar Entregada', 'en OPC')}
+
+          <g class="bpmn-node" id="node_p2_end_event" onclick="selectElement('p2_end_event')" style="cursor:pointer;">
+            <circle cx="1210" cy="320" r="17" fill="#FEE2E2" stroke="#DC2626" stroke-width="3"/>
+            <circle cx="1210" cy="320" r="13" fill="none" stroke="#DC2626" stroke-width="1.2"/>
+            <text x="1210" y="352" fill="#1E293B" font-size="9" font-weight="600" text-anchor="middle">Restricción Entregada</text>
+            <text x="1210" y="363" fill="#64748B" font-size="8.5" text-anchor="middle">y Tarea Liberada</text>
+          </g>
+
+          <!-- Flujos -->
+          <line x1="132" y1="80" x2="175" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="300" y1="80" x2="320" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="360" y1="80" x2="405" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <path d="M 340 98 L 340 200 L 405 200" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="535" y1="80" x2="565" y2="80" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <path d="M 535 200 L 585 200 L 585 98" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <path d="M 605 80 L 635 80 L 635 320 L 665 320" fill="none" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="800" y1="320" x2="840" y2="320" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="975" y1="320" x2="1015" y2="320" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <line x1="1150" y1="320" x2="1193" y2="320" stroke="#1E293B" stroke-width="1.4" marker-end="url(#arrow)"/>
+        </g>
+      </g>
+    </svg>
+  `;
+}
+
+
+
+    // 4. Lector del Documento Rector Fuente
+    // scratch/document_viewer_module.js
+// Módulo de Visualización Interactiva del Documento Rector y Trazabilidad BPMN
+
+function getDocumentViewHtml() {
+  return `
+    <div class="doc-viewer-container">
+      <!-- Membrete del Documento Fuente -->
+      <div class="doc-header-banner">
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--salfa-text-muted); text-transform: uppercase;">
+            DOCUMENTO RECTOR FUENTE (SISTEMA DE GESTIÓN INTEGRADO — SERIE OPERACIONAL N5)
+          </div>
+          <h2 style="font-size: 18px; font-weight: 900; color: var(--salfa-graphite-dark); margin-top: 4px;">
+            10000000-PRO-EST-001 (Rev. 0) — Planificación Táctica y Gestión de Restricciones
+          </h2>
+          <div style="font-size: 12px; color: var(--salfa-text-muted); margin-top: 2px;">
+            Metodología Lean Construction / Last Planner System en Oracle Primavera Cloud (OPC)
+          </div>
+        </div>
+
+        <div class="cajetin-box" style="margin-top: 0;">
+          <div class="cajetin-cell">
+            <span class="cajetin-label">Estado Auditoría</span>
+            <span class="cajetin-val" style="color: var(--salfa-green);">100% TRAZABLE</span>
+          </div>
+          <div class="cajetin-cell">
+            <span class="cajetin-label">Diagrama Asociado</span>
+            <span class="cajetin-val" style="color: var(--salfa-red);">10000000-SAL-00000-DOC-DIA-00001</span>
+          </div>
+          <div class="cajetin-cell">
+            <span class="cajetin-label">Especialista / Autor</span>
+            <span class="cajetin-val">Sebastián Roca G.</span>
+          </div>
+          <div class="cajetin-cell">
+            <span class="cajetin-label">Contacto</span>
+            <span class="cajetin-val">+56993543447 | sjroca@salfamontajes.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout: Índice a la izquierda + Cuerpo del documento con botones interactivos -->
+      <div class="doc-main-layout">
+        <!-- Índice lateral fijado -->
+        <nav class="doc-nav-sidebar">
+          <div style="font-size: 11px; font-weight: 800; color: var(--salfa-graphite-dark); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">
+            Índice de Secciones
+          </div>
+          <a class="doc-nav-item" href="#doc-sec-1">§1. Objetivo</a>
+          <a class="doc-nav-item" href="#doc-sec-2">§2. Alcance</a>
+          <a class="doc-nav-item" href="#doc-sec-3">§3. Roles y Responsabilidades</a>
+          <a class="doc-nav-item" href="#doc-sec-4-1">§4.1 Sincronización P6 → OPC</a>
+          <a class="doc-nav-item" href="#doc-sec-4-2">§4.2 Apertura en Tareas Operativas</a>
+          <a class="doc-nav-item" href="#doc-sec-4-3">§4.3 Pull Planning y Detección</a>
+          <a class="doc-nav-item" href="#doc-sec-4-4" style="color: var(--salfa-red); font-weight: 700;">§4.4 Proceso Hermano: PROC-02</a>
+          <a class="doc-nav-item" href="#doc-sec-4-5">§4.5 Programación Trisemanal</a>
+          <a class="doc-nav-item" href="#doc-sec-4-6">§4.6 Control Diario POD en Terreno</a>
+          <a class="doc-nav-item" href="#doc-sec-4-7">§4.7 Indicadores PPC, CNC y Cierre</a>
+        </nav>
+
+        <!-- Cuerpo del documento -->
+        <article class="doc-content-body">
+
+          <!-- Sección 1 -->
+          <section class="doc-section" id="doc-sec-1">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">1.</span> OBJETIVO DEL ESTÁNDAR
+            </div>
+            <p>
+              Establecer el estándar operativo corporativo para la <strong>planificación táctica</strong>, el <strong>control de la producción</strong> y la <strong>gestión sistemática de restricciones</strong> en obras y proyectos mediante la metodología <em>Last Planner System</em> y la plataforma <em>Oracle Primavera Cloud (OPC)</em>, asegurando la confiabilidad del flujo de trabajo, la remoción de obstáculos de faena y la adherencia irrestricta al Programa Maestro de SALFA Montajes S.A.
+            </p>
+          </section>
+
+          <!-- Sección 2 -->
+          <section class="doc-section" id="doc-sec-2">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">2.</span> ALCANCE Y CAMPO DE APLICACIÓN
+            </div>
+            <p>
+              Aplica a la totalidad de los proyectos y contratos de montaje industrial, obras civiles, cañerías, electricidad, instrumentación y comisionamiento ejecutados por SALFA Montajes S.A. El rol de <strong>Último Planificador (Last Planner)</strong> es asumido funcionalmente por los Jefes de Área de cada disciplina técnica, interactuando en faena con los Supervisores y el Jefe General de Terreno.
+            </p>
+          </section>
+
+          <!-- Sección 3 -->
+          <section class="doc-section" id="doc-sec-3">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">3.</span> ROLES Y RESPONSABILIDADES OPERATIVAS
+            </div>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+              <li><strong>Administrador de Obra:</strong> Lidera la gobernanza del sistema, preside las sesiones de Pull Planning Estratégico y las reuniones semanales de planificación trisemanal. Asigna los responsables directos y las fechas límite para la liberación de restricciones detectadas.</li>
+              <li><strong>Jefe General de Terreno (JGT):</strong> Discrimina las actividades ejecutables, prioriza los frentes de trabajo y valida la asignación de cuadrillas y recursos en faena.</li>
+              <li><strong>Jefe de Terreno (JT):</strong> Identifica restricciones en terreno y deriva su gestión inmediata. Supervisa el cumplimiento de las metas físicas diarias.</li>
+              <li><strong>Jefe de Área (Last Planner):</strong> Descompone las actividades del cronograma en tareas operativas (≤ 3 días), conduce el Pull Planning Táctico, asigna los Supervisores ejecutores, gestiona tareas colchón y lidera el análisis de causas de no cumplimiento (CNC).</li>
+              <li><strong>Supervisor de Cuadrilla:</strong> Revisa sus tareas asignadas en terreno, compromete su fecha y recursos, dirige las cuadrillas en faena, reporta el avance en la reunión diaria POD (Plan of the Day) y ejecuta el cierre o recompromiso de tareas.</li>
+              <li><strong>Programador de Obra / Jefe de Programación:</strong> Mantiene actualizado el Programa Maestro en Primavera P6 EPPM, ejecuta y programa la sincronización periódica hacia Oracle Primavera Cloud (OPC), consolida la apertura de tareas y calcula las estadísticas de desempeño semanal (PPC, PF, Adherencia).</li>
+            </ul>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Mapeo de Carriles (Swimlanes) en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_task_p6')">📋 Carril Programador (PROC-01)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_sub_apertura')">📋 Carril Last Planner (PROC-01)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_pod_comprometer')">📋 Carril Supervisor (PROC-01)</button>
+                <button class="btn-ref-pill primary" onclick="jumpToElement('proc2', 'node_p2_task_reg')">🔒 Carriles de PROC-02 (Identificador, Admin, Responsable)</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.1 -->
+          <section class="doc-section" id="doc-sec-4-1">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.1.</span> SINCRONIZACIÓN Y PROGRAMA MAESTRO (P6 → OPC)
+            </div>
+            <p>
+              Semanalmente, al cumplirse la fecha de corte del proyecto (<strong>viernes a las 18:00 hrs</strong>), el Programador de Obra actualiza el Programa Maestro en <em>Primavera P6 Professional</em> con los avances reales de obra y horas hombre. Al día siguiente, a primera hora, el sistema OPC ejecuta de forma automática y programada los flujos de integración middleware que transfieren el cronograma actualizado desde P6 hacia el módulo de Schedule y Lean de Primavera Cloud. El Programador verifica que el estado de sincronización sea "finalizado".
+            </p>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Entidades y Artefactos Modelados en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_start_timer')">🏢 Hito: Corte Semanal (Timer Event)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_task_p6')">🏢 Tarea: Actualizar Programa en P6</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_ds_p6')">🗄️ Depósito de Datos: BD Primavera P6 EPPM</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_do_prog_maestro')">📄 Objeto de Datos: Programa Maestro [Línea Base Aprobada]</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.2 -->
+          <section class="doc-section" id="doc-sec-4-2">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.2.</span> APERTURA Y PROGRAMACIÓN TÁCTICA DE TAREAS (LAST PLANNER)
+            </div>
+            <p>
+              Con el cronograma maestro sincronizado, el Jefe de Área (Last Planner) junto al Jefe de Terreno y los Supervisores realizan el desglose de las actividades a 3 semanas en tareas ejecutables. Cada tarea debe cumplir con las siguientes <strong>reglas técnicas obligatorias</strong>:
+            </p>
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li><strong>Duración:</strong> Mínimo 1 día, máximo 3 días y fecha de término definida.</li>
+              <li><strong>Responsabilidad:</strong> Contar con un único Supervisor responsable asignado.</li>
+              <li><strong>Instrucción Técnica:</strong> Describir la instrucción técnica precisa (indicando tag de equipo, spools, ejes o n° de unión).</li>
+              <li><strong>Balance de Horas Hombre:</strong> La suma de HH de las tareas no puede superar las HH asignadas a la actividad del programa (PF ≤ 1.0).</li>
+              <li><strong>Actividades Adicionales:</strong> Si una tarea no cuenta con actividad en P6 (trabajos emergentes), se crea una actividad provisoria en OPC para no detener la gestión en terreno.</li>
+            </ol>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Entidades y Artefactos Modelados en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_sub_apertura')">🏢 Subproceso Apertura (Macroflujo)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_sub_apertura')">📋 Tarea Apertura en PROC-01</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_do_tareas_apertura')">📄 Objeto de Datos: Planilla Tareas [≤ 3 días | PF ≤ 1]</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_note_apertura')">📝 Anotación: Criterio Last Planner</button>
+                <button class="btn-ref-pill primary" onclick="openProcessModal('apertura')">🗖 Ver Ficha Técnica de Apertura</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.3 -->
+          <section class="doc-section" id="doc-sec-4-3">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.3.</span> SESIONES DE PULL PLANNING Y DETECCIÓN DE RESTRICCIONES
+            </div>
+            <p>
+              * <strong>Pull Planning Estratégico (Ventana a 3 Meses):</strong> Presidido por el Administrador de Obra, se identifican los paquetes de trabajo de construcción (CWP) a liberar y se analizan las restricciones globales de ingeniería y suministros mayores.<br>
+              * <strong>Pull Planning Táctico (Ventana a 3 Semanas):</strong> Realizado semanalmente por los Jefes de Área y Oficina Técnica. Se identifican los paquetes de trabajo de instalación (IWP), asegurando que las actividades de la semana 1 estén totalmente libres de restricciones y detectando tempranamente las restricciones de las semanas 2 y 3.
+            </p>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Mapeo en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_sub_pull')">📋 Compuerta Exclusiva: ¿Tiene Restricciones?</button>
+                <button class="btn-ref-pill primary" onclick="jumpToElement('macro', 'node_sub_pull')">🏢 Llamada a Subproceso PROC-02 (Call Activity)</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.4: PROCESO HERMANO PROC-02 -->
+          <section class="doc-section" id="doc-sec-4-4" style="background: #FFFDFD; padding: 20px; border: 1px solid #FECACA; border-radius: 6px;">
+            <div class="doc-section-title" style="color: var(--salfa-red);">
+              <span>4.4.</span> PROCESO HERMANO AUTÓNOMO: GESTIÓN Y LIBERACIÓN DE RESTRICCIONES (PROC-02)
+            </div>
+            <p>
+              Cualquier integrante de la obra que detecte una interferencia (falta de planos, materiales en tránsito, interferencias físicas, permisos o atraso del cliente) debe ingresar de inmediato el ticket al módulo de Restricciones en OPC:
+            </p>
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li><strong>Registro:</strong> Se define nombre, tipo, familia estandarizada, fecha necesaria y compañía responsable. Estado inicial: <em>No planificada</em>.</li>
+              <li><strong>Vinculación y Asignación en Paralelo:</strong>
+                <br>— El identificador vincula la restricción a todas las tareas de terreno que se verán bloqueadas por el obstáculo.
+                <br>— En paralelo, el Administrador de Obra asigna formalmente a la "Parte Responsable" de su solución y la fecha límite de resolución (SLA máx. 48 hrs).
+              </li>
+              <li><strong>Compromiso de Fecha Prometida:</strong> La Parte Responsable analiza el caso y registra en OPC la "Fecha Prometida" de entrega (debe ser anterior o igual a la fecha requerida en faena). Estado: <em>Planificada</em>.</li>
+              <li><strong>Liberación en Faena:</strong> El responsable ejecuta las coordinaciones de compras, bodega, oficina técnica o terreno para levantar la restricción.</li>
+              <li><strong>Entrega y Validación:</strong> Una vez resuelta, la Parte Responsable marca la restricción como <em>ENTREGADA</em> en el sistema. El Jefe de Área y el Supervisor validan que el obstáculo físico o documental desapareció, liberando automáticamente las tareas asociadas para su ejecución en el plan trisemanal.</li>
+            </ol>
+
+            <div class="doc-bpmn-ref-box highlight-red">
+              <span style="font-weight: 700; font-size: 11px; color: var(--salfa-red);">🔗 Entidades del Proceso Hermano PROC-02 en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill primary" onclick="jumpToElement('proc2', 'node_p2_start_event')">🔒 Abrir Vista PROC-02: Gestión de Restricciones</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc2', 'node_p2_task_reg')">📋 Tarea: Registrar en OPC</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc2', 'node_do_ficha_rest')">📄 Objeto de Datos: Ficha Restricción [Identificada]</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc2', 'node_note_sla_rest')">📝 Anotación: SLA Asignación 48 hrs</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc2', 'node_p2_task_ent')">📋 Tarea: Marcar ENTREGADA en OPC</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc2', 'node_do_rest_entregada')">📄 Objeto de Datos: Restricción [ENTREGADA]</button>
+                <button class="btn-ref-pill primary" onclick="openProcessModal('proc2')">🗖 Ver Ficha Técnica Completa PROC-02</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.5 -->
+          <section class="doc-section" id="doc-sec-4-5">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.5.</span> PROGRAMACIÓN TRISEMANAL Y COMPROMISO FORMAL DE TAREAS
+            </div>
+            <p>
+              Los días <strong>jueves de cada semana</strong>, el Administrador de Obra preside la Reunión Trisemanal con el Jefe General de Terreno y los Jefes de Área:
+            </p>
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Se revisan las restricciones levantadas por el proceso hermano de Restricciones (PROC-02).</li>
+              <li><strong>Regla de Negocio Dura:</strong> Únicamente las tareas que se encuentren 100% libres de restricciones son seleccionadas para la semana actual.</li>
+              <li>El Jefe de Área asigna formalmente al Supervisor correspondiente (Estado: <em>Asignada - No comprometida</em>).</li>
+              <li>El Supervisor revisa el método constructivo y ejecuta la acción de "Comprometer" en OPC (Estado: <em>Comprometida</em>), asumiendo el compromiso formal de entrega en plazo y horas hombre.</li>
+            </ol>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Entidades y Artefactos Modelados en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_sub_pod')">🏢 Subproceso Trisemanal (Macroflujo)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_sub_pod')">📋 Tarea Programación Trisemanal (PROC-01)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_do_plan_trisemanal')">📄 Objeto de Datos: Plan Trisemanal [Sin Restricciones]</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_note_restricciones')">📝 Anotación: Regla Restricciones en Trisemanal</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.6 -->
+          <section class="doc-section" id="doc-sec-4-6">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.6.</span> EJECUCIÓN EN TERRENO Y CONTROL DIARIO (PLAN OF THE DAY - POD)
+            </div>
+            <p>
+              Durante la jornada, las cuadrillas ejecutan las tareas comprometidas. Al inicio de cada turno de trabajo, se realiza en faena la <strong>reunión POD de 15 minutos</strong> liderada por el Jefe de Área y los Supervisores:
+            </p>
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Se evalúa el cumplimiento de cada tarea del día anterior con criterio binario (100% o 0%).</li>
+              <li>Si la tarea se completó a satisfacción: el Supervisor ingresa a OPC, carga la cantidad ejecutada, las HH ganadas y marca la casilla <em>Finalizar</em> (Estado: <em>Finalizada</em>).</li>
+              <li>Si la tarea NO se terminó en el plazo: el Jefe de Área aplica la técnica de los "5 Por Qué", selecciona el código corporativo de <strong>Causa de No Cumplimiento (CNC)</strong> y establece una nueva fecha de recompromiso (Estado: <em>Recomprometida</em>).</li>
+              <li>Ante desvíos críticos o bloqueos imprevistos, se activan inmediatamente "tareas colchón" (actividades de reserva previamente planificadas) para reubicar al personal y evitar tiempos muertos en faena.</li>
+            </ol>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Entidades y Artefactos Modelados en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_pod_comprometer')">📋 Tarea Comprometer y POD (PROC-01)</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_do_acta_pod')">📄 Objeto de Datos: Registro Diario POD [Avance Real y CNC]</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_note_pod')">📝 Anotación: Regla de Operación POD (15 min)</button>
+                <button class="btn-ref-pill primary" onclick="openProcessModal('pod')">🗖 Ver Ficha Técnica POD</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 4.7 -->
+          <section class="doc-section" id="doc-sec-4-7">
+            <div class="doc-section-title">
+              <span style="color: var(--salfa-red);">4.7.</span> ANÁLISIS DE CUMPLIMIENTO SEMANAL, INDICADORES PPC Y CIERRE DE CICLO
+            </div>
+            <p>
+              Al corte del día viernes:
+            </p>
+            <ol style="margin-left: 20px; margin-top: 8px;">
+              <li>Los Jefes de Área y Terreno analizan las tareas ejecutadas versus las comprometidas y consolidan el árbol de pérdidas por Causas de No Cumplimiento (CNC).</li>
+              <li>El Jefe de Programación calcula el <strong>Porcentaje de Plan Cumplido</strong>:
+                <br><em>PPC (%) = (Tareas Cumplidas / Tareas Comprometidas) * 100</em>
+              </li>
+              <li>La plataforma <strong>Power BI</strong> extrae automáticamente los datos desde OPC y publica los paneles de control gerenciales (KPI Trisemanal, Adherencia y Curvas de Horas Hombre).</li>
+              <li>El Programador de Obra vuelca los avances físicos logrados hacia el cronograma <em>Primavera P6 EPPM</em>, cerrando formalmente el ciclo semanal y emitiendo la nueva línea base.</li>
+            </ol>
+
+            <div class="doc-bpmn-ref-box">
+              <span style="font-weight: 700; font-size: 11px; color: #1D4ED8;">🔗 Entidades y Artefactos Modelados en BPMN 2.0:</span>
+              <div class="doc-bpmn-pills">
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_task_kpi')">🏢 Tarea: Calcular KPI en Macroflujo</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_task_kpi')">📋 Tarea KPI en PROC-01</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_ds_pbi')">🗄️ Depósito: Data Warehouse Power BI</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_do_reporte_ppc')">📄 Objeto de Datos: Reporte PPC [Publicado]</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('proc1', 'node_note_kpi_ppc')">📝 Anotación: Fórmula Oficial PPC</button>
+                <button class="btn-ref-pill" onclick="jumpToElement('macro', 'node_end_ciclo')">🏢 Hito: Ciclo Semanal Cerrado</button>
+              </div>
+            </div>
+          </section>
+
+        </article>
+      </div>
+    </div>
+  `;
+}
+
+
+
+    // 5. Lógica de Interfaz y Cliente
+    // scratch/browser_logic.js
+// Lógica de cliente y generadores de SVG para el Visor Interactivo SALFA
+// Autor: Sebastián Roca G. (+56993543447 | sjroca@salfamontajes.com)
+
+let currentView = 'macro';
+let zoomLevel = 1.0;
+let panX = 0;
+let panY = 0;
+let isPanning = false;
+let startX = 0;
+let startY = 0;
+let showArtifacts = true;
+let selectedElementId = null;
+
+const subState = {
+  apertura: false,
+  restricciones: false,
+  pod: false
+};
+
+// Toggle Capa de Artefactos Bizagi
+function toggleArtifactsLayer() {
+  showArtifacts = !showArtifacts;
+  const btn = document.getElementById('btn-toggle-artifacts');
+  if (btn) {
+    if (showArtifacts) {
+      btn.classList.add('active');
+      btn.style.background = 'var(--salfa-graphite-dark)';
+      btn.style.color = '#FFFFFF';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '#FFFFFF';
+      btn.style.color = 'var(--salfa-graphite-dark)';
+    }
+  }
+  renderDiagram();
+}
+
+// Funciones de Navegación de Vistas
+function setView(viewName) {
+  currentView = viewName;
+  
+  document.querySelectorAll('.subnav-btn').forEach(btn => btn.classList.remove('active'));
+  const btnMap = {
+    macro: 'btn-tab-macro',
+    proc1: 'btn-tab-p1',
+    proc2: 'btn-tab-p2',
+    audit: 'btn-tab-audit',
+    doc: 'btn-tab-doc'
+  };
+  const activeBtn = document.getElementById(btnMap[viewName]);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const statusText = document.getElementById('canvas-status-text');
+  const hintText = document.getElementById('canvas-hint');
+  const btnToggleArtifacts = document.getElementById('btn-toggle-artifacts');
+  const zoomControls = document.getElementById('zoom-controls-group');
+  const viewportElem = document.getElementById('diagram-viewport');
+
+  if (viewName === 'macro') {
+    statusText.textContent = 'Vista Integral BPMN 2.0: PROC-01 (Last Planner) + PROC-02 (Restricciones)';
+    hintText.innerHTML = 'Visualización unificada 1:1 con Bizagi Modeler: 2 Piscinas (Pools), 6 Carriles (Lanes) y Flujos de Mensaje Inter-Proceso.';
+    if (btnToggleArtifacts) btnToggleArtifacts.style.display = 'flex';
+    if (zoomControls) zoomControls.style.display = 'flex';
+    viewportElem.style.display = 'flex';
+  } else if (viewName === 'proc1') {
+    statusText.textContent = 'Vista Detallada Nivel 3: PROC-01 Planificación Táctica y Gestión de Tareas Last Planner';
+    hintText.innerHTML = '3 Carriles: Programador de Obra, Last Planner y Supervisor de Terreno con análisis exhaustivo de salidas de información.';
+    if (btnToggleArtifacts) btnToggleArtifacts.style.display = 'flex';
+    if (zoomControls) zoomControls.style.display = 'flex';
+    viewportElem.style.display = 'flex';
+  } else if (viewName === 'proc2') {
+    statusText.textContent = 'Vista Detallada Nivel 3: PROC-02 Gestión y Liberación de Restricciones';
+    hintText.innerHTML = '3 Carriles: Identificador, Administrador de Obra y Parte Responsable con SLA de 48 hrs y análisis de salidas.';
+    if (btnToggleArtifacts) btnToggleArtifacts.style.display = 'flex';
+    if (zoomControls) zoomControls.style.display = 'flex';
+    viewportElem.style.display = 'flex';
+  } else if (viewName === 'audit') {
+    statusText.textContent = 'Vista: Matriz de Trazabilidad Forense y Auditoría Documental AS-IS';
+    hintText.innerHTML = 'Mapeo exhaustivo de actividades contra estándar corporativo 10000000-PRO-EST-001 (Rev. 0).';
+    if (btnToggleArtifacts) btnToggleArtifacts.style.display = 'none';
+    if (zoomControls) zoomControls.style.display = 'none';
+    viewportElem.style.display = 'block';
+  } else if (viewName === 'doc') {
+    statusText.textContent = 'Vista: Documento Rector Fuente — 10000000-PRO-EST-001 (Rev. 0)';
+    hintText.innerHTML = 'Texto completo oficial de Salfa Montajes S.A. con hipervínculos bidireccionales hacia el modelo de procesos.';
+    if (btnToggleArtifacts) btnToggleArtifacts.style.display = 'none';
+    if (zoomControls) zoomControls.style.display = 'none';
+    viewportElem.style.display = 'block';
+  }
+
+  resetZoom();
+  renderDiagram();
+}
+
+// Salto Interactivo desde el Documento hacia el Diagrama
+function jumpToElement(targetView, elementId) {
+  setView(targetView);
+  setTimeout(() => {
+    selectElement(elementId);
+    const elem = document.getElementById('node_' + elementId) || document.getElementById(elementId);
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+  }, 100);
+}
+
+// Salto desde el Inspector hacia el Documento
+function viewInDocument(sourceText) {
+  setView('doc');
+  setTimeout(() => {
+    let targetSection = 'doc-sec-general';
+    if (sourceText.includes('§4.1')) targetSection = 'sec-4-1';
+    else if (sourceText.includes('§4.2')) targetSection = 'sec-4-2';
+    else if (sourceText.includes('§4.3')) targetSection = 'sec-4-3';
+    else if (sourceText.includes('§4.4')) targetSection = 'sec-4-4';
+    else if (sourceText.includes('§4.5')) targetSection = 'sec-4-5';
+    else if (sourceText.includes('§4.6')) targetSection = 'sec-4-6';
+    else if (sourceText.includes('§4.7')) targetSection = 'sec-4-7';
+
+    const targetElem = document.getElementById(targetSection);
+    if (targetElem) {
+      targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      targetElem.style.backgroundColor = '#FEF3C7';
+      setTimeout(() => {
+        targetElem.style.backgroundColor = 'transparent';
+      }, 2500);
+    }
+  }, 150);
+}
+
+// Control de Zoom y Pan
+function applyZoom() {
+  const wrapper = document.getElementById('diagram-zoom-wrapper');
+  if (wrapper) {
+    wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
+  }
+  const display = document.getElementById('zoom-display');
+  if (display) {
+    display.textContent = Math.round(zoomLevel * 100) + '%';
+  }
+}
+
+function zoomIn() {
+  zoomLevel = Math.min(zoomLevel + 0.15, 2.5);
+  applyZoom();
+}
+
+function zoomOut() {
+  zoomLevel = Math.max(zoomLevel - 0.15, 0.4);
+  applyZoom();
+}
+
+function resetZoom() {
+  zoomLevel = 1.0;
+  panX = 0;
+  panY = 0;
+  applyZoom();
+}
+
+function autoFitToWindow() {
+  if (currentView === 'doc' || currentView === 'audit') return;
+  const viewport = document.getElementById('diagram-viewport');
+  const svg = viewport.querySelector('svg');
+  if (!svg) return;
+
+  const svgW = parseInt(svg.getAttribute('width')) || 1420;
+  const viewW = viewport.clientWidth - 48;
+
+  if (svgW > 0 && viewW > 0) {
+    zoomLevel = Math.min(1.0, Math.max(0.4, (viewW / svgW)));
+    panX = 0;
+    panY = 0;
+    applyZoom();
+  }
+}
+
+function toggleInspector() {
+  const panel = document.getElementById('inspector-panel');
+  const btn = document.getElementById('btn-toggle-inspector');
+
+  if (panel.classList.contains('hidden')) {
+    panel.classList.remove('hidden');
+    if (btn) btn.classList.add('active');
+  } else {
+    panel.classList.add('hidden');
+    if (btn) btn.classList.remove('active');
+  }
+}
+
+// Soporte Pan con Mouse
+function initPanAndZoom() {
+  const viewport = document.getElementById('diagram-viewport');
+  if (!viewport) return;
+
+  viewport.addEventListener('mousedown', (e) => {
+    if (currentView === 'doc' || currentView === 'audit') return;
+    if (e.target.closest('button') || e.target.closest('.modal-content') || e.target.closest('.outputs-analysis-container')) return;
+    isPanning = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+    viewport.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isPanning) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    applyZoom();
+  });
+
+  window.addEventListener('mouseup', () => {
+    isPanning = false;
+    if (viewport) viewport.style.cursor = 'grab';
+  });
+
+  viewport.addEventListener('wheel', (e) => {
+    if (currentView === 'doc' || currentView === 'audit') return;
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      zoomIn();
+    } else {
+      zoomOut();
+    }
+  }, { passive: false });
+}
+
+// Selección de Elementos en el Inspector
+function selectElement(id) {
+  selectedElementId = id;
+  const cleanKey = id.startsWith('node_') ? id.replace('node_', '') : id;
+  const data = elementsDB[cleanKey] || elementsDB[id];
+  if (!data) return;
+
+  const titleEl = document.getElementById('insp-title');
+  const typeEl = document.getElementById('insp-type');
+  const idEl = document.getElementById('insp-id');
+  const roleEl = document.getElementById('insp-role');
+  const valEl = document.getElementById('insp-value-class');
+  const stateEl = document.getElementById('insp-state');
+  const sysEl = document.getElementById('insp-system');
+  const descEl = document.getElementById('insp-desc');
+  const outputEl = document.getElementById('insp-output');
+  const sourceContainer = document.getElementById('insp-source');
+
+  if (titleEl) titleEl.textContent = data.title;
+  if (typeEl) typeEl.textContent = data.type;
+  if (idEl) idEl.textContent = data.id;
+  if (roleEl) roleEl.textContent = data.role;
+  if (valEl) valEl.innerHTML = data.valClass;
+  if (stateEl) stateEl.textContent = data.state;
+  if (sysEl) sysEl.textContent = data.system;
+  if (descEl) descEl.textContent = data.desc;
+  if (outputEl) outputEl.textContent = data.outputInfo || 'Información y entregables del flujo de proceso estándar.';
+  
+  if (sourceContainer) {
+    sourceContainer.innerHTML = `
+      <div>${data.source}</div>
+      <button class="btn-ref-pill" style="margin-top: 6px; font-size: 10px;" onclick="viewInDocument('${data.source}')">
+        📖 Leer sección en Documento Rector
+      </button>
+    `;
+  }
+
+  // Resaltado visual en el SVG
+  document.querySelectorAll('.bpm-shape, .task-rect').forEach(el => {
+    el.style.filter = '';
+  });
+  const currentEl = document.getElementById('node_' + cleanKey) || document.getElementById(cleanKey);
+  if (currentEl) {
+    currentEl.style.filter = 'drop-shadow(0 0 6px #B01E24)';
+  }
+}
+
+// Modal Dialog de Fichas Técnicas
+function openProcessModal(processKey) {
+  const modal = document.getElementById('process-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body-content');
+
+  if (!modal || !modalTitle || !modalBody) return;
+
+  if (processKey === 'apertura') {
+    modalTitle.textContent = 'Detalle Técnico: ETP-01-02 Apertura de Tareas Operativas';
+    modalBody.innerHTML = `
+      <div style="margin-bottom:12px; font-size:12px; color:#4B5563;">
+        Desglose sistemático de actividades de nivel 4/5 de P6 en tareas de nivel 6 (≤ 3 días | Factor ≤ 1).
+      </div>
+      <div style="background:#F9FAFB; padding:12px; border:1px solid #E5E7EB; border-radius:4px; font-size:11.5px;">
+        <p><strong>Responsable:</strong> Jefe de Área (Last Planner)</p>
+        <p><strong>Plataforma:</strong> Oracle Primavera Cloud (OPC) - Módulo Tasks</p>
+        <p><strong>Norma Rector:</strong> 10000000-PRO-EST-001 §4.2 Tabla 2</p>
+        <p><strong>Salida de Información:</strong> Inventario de Tareas con asignación de cuadrilla, HH y ubicación física.</p>
+      </div>
+    `;
+  } else if (processKey === 'proc2') {
+    modalTitle.textContent = 'Detalle Nivel 3: PROC-02 Gestión y Liberación de Restricciones';
+    modalBody.innerHTML = `
+      <div style="margin-bottom:12px; font-size:12px; color:#4B5563;">
+        Flujo colaborativo de levantamiento, análisis, asignación de responsables y seguimiento de compromisos de liberación.
+      </div>
+      <div style="overflow-x:auto; padding:10px 0;">
+        ${generateProc2Svg(false, showArtifacts, true)}
+      </div>
+      ${renderOutputsCardProc2()}
+    `;
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeProcessModal() {
+  const modal = document.getElementById('process-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target && e.target.id === 'process-modal') {
+    closeProcessModal();
+  }
+}
+
+// Funciones de Descarga de Entregables
+function downloadBlob(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadBpmnXml() {
+  if (typeof B64_BPMN_FILE === 'undefined' || !B64_BPMN_FILE) {
+    alert("Archivo BPMN no disponible.");
+    return;
+  }
+  const binaryString = atob(B64_BPMN_FILE);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  downloadBlob(bytes, 'Modelo_Procesos_SALFA.bpmn', 'application/xml');
+}
+
+// Descarga de Diagrama en Alta Resolución PNG con Cajetín SALFA Normalizado
+function downloadDiagramPng() {
+  let fullSvg = '';
+  if (currentView === 'proc1') {
+    fullSvg = generateProc1Svg(true);
+  } else if (currentView === 'proc2') {
+    fullSvg = generateProc2Svg(true);
+  } else {
+    fullSvg = generateMacroSvg(true);
+  }
+
+  const blob = new Blob([fullSvg], { type: 'image/svg+xml;charset=utf-8' });
+  const URL = window.URL || window.webkitURL || window;
+  const blobURL = URL.createObjectURL(blob);
+  const image = new Image();
+
+  image.onload = () => {
+    const scale = 2.0; // 2x DPI Retina
+    const canvas = document.createElement('canvas');
+    const w = 1460;
+    const h = (currentView === 'proc1' || currentView === 'proc2') ? 535 : 925;
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(image, 0, 0, w, h);
+
+    canvas.toBlob((pngBlob) => {
+      const downloadUrl = URL.createObjectURL(pngBlob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      const fileNames = {
+        macro: 'Diagrama_Macroproceso_Integrado_SALFA.png',
+        proc1: 'Diagrama_Detalle_PROC-01_Last_Planner_SALFA.png',
+        proc2: 'Diagrama_Detalle_PROC-02_Restricciones_SALFA.png'
+      };
+      a.download = fileNames[currentView] || 'Diagrama_BPMN_SALFA.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+    }, 'image/png');
+    URL.revokeObjectURL(blobURL);
+  };
+
+  image.src = blobURL;
+}
+
+// Tarjeta de Análisis de Salidas de Información para PROC-01
+function renderOutputsCardProc1() {
+  return `
+    <div class="outputs-analysis-container" style="margin-top: 24px; padding: 20px; background: #FFFFFF; border: 1px solid var(--salfa-border); border-top: 3px solid var(--salfa-red); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-family: 'Segoe UI', Arial, sans-serif;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; padding-bottom: 12px; margin-bottom: 16px;">
+        <div>
+          <h4 style="margin: 0; color: var(--salfa-graphite-dark); font-size: 13.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            📊 Análisis Exhaustivo de Salidas de Información y Entregables Operativos: PROC-01
+          </h4>
+          <span style="font-size: 11px; color: var(--salfa-text-muted);">
+            Trazabilidad de datos, productos intermedios y transferencias bajo el estándar 10000000-PRO-EST-001 (Rev. 0)
+          </span>
+        </div>
+        <span style="background: #FEE2E2; color: #991B1B; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; border: 1px solid #FCA5A5;">
+          Serie Operacional N5
+        </span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px;">
+        
+        <!-- Salida 1 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #2563EB; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #1E3A8A; font-size: 12px;">1. Programa Maestro Contractual en P6</strong>
+            <span style="font-size: 9.5px; background: #DBEAFE; color: #1D4ED8; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Primavera P6 EPPM</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Cronograma maestro actualizado con avances físicos de obra, cálculo de ruta crítica (CPM) y holguras totales recalculadas.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Programador de Obra</span>
+            <span><strong>Corte:</strong> Semanal (Jueves 18:00 hrs)</span>
+          </div>
+        </div>
+
+        <!-- Salida 2 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #16A34A; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #14532D; font-size: 12px;">2. Catálogo de Tareas Operativas Abiertas</strong>
+            <span style="font-size: 9.5px; background: #DCFCE7; color: #15803D; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Oracle Cloud (OPC)</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Tareas a nivel cuadrilla (horizonte 4 a 6 semanas) con duración reglamentaria ≤ 3 días, factor de ponderación ≤ 1, asignación de cuadrillas y HH.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Jefe de Área (Last Planner)</span>
+            <span><strong>Regla:</strong> Sin cajas negras</span>
+          </div>
+        </div>
+
+        <!-- Salida 3 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #D97706; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #78350F; font-size: 12px;">3. Plan Trisemanal Confiable (Lookahead 3S)</strong>
+            <span style="font-size: 9.5px; background: #FEF3C7; color: #B45309; padding: 2px 6px; border-radius: 3px; font-weight: 600;">OPC Módulo Lookahead</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Plan de trabajo protegido a 3 semanas (S+1 a S+3). Regla de Oro corporativa: Solo ingresan tareas con 100% de restricciones liberadas.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Jefe de Área</span>
+            <span><strong>Estado:</strong> Protegido / Sin Restricciones</span>
+          </div>
+        </div>
+
+        <!-- Salida 4 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #7C3AED; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #4C1D95; font-size: 12px;">4. Actas y Compromisos Diarios POD</strong>
+            <span style="font-size: 9.5px; background: #EDE9FE; color: #6D28D9; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Planilla Terreno / OPC</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Hojas de compromiso diario firmadas al inicio de la jornada; verificación física vespertina y declaración obligatoria de causas de no cumplimiento (CNC).
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Supervisor de Terreno</span>
+            <span><strong>Frecuencia:</strong> Diaria (Inicio y Fin Turno)</span>
+          </div>
+        </div>
+
+        <!-- Salida 5 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #B01E24; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #991B1B; font-size: 12px;">5. Reporte Semanal PPC y Causas CNC</strong>
+            <span style="font-size: 9.5px; background: #FEE2E2; color: #991B1B; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Microsoft Power BI</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Cálculo matemático formal de confiabilidad operativa (% PPC = Tareas Cumplidas / Comprometidas * 100), Pareto de causas de no cumplimiento y plan correctivo.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Programador de Obra</span>
+            <span><strong>Audiencia:</strong> Gerencia y Auditoría</span>
+          </div>
+        </div>
+
+        <!-- Salida 6 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #475569; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #1E293B; font-size: 12px;">6. Handoff Saliente Inter-Proceso (REL-0002)</strong>
+            <span style="font-size: 9.5px; background: #E2E8F0; color: #334155; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Mensaje BPMN 2.0</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Ficha de restricción detectada en taller Pull Planning, transferida al proceso PROC-02 para su resolución formal antes de la fecha requerida.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Destino:</strong> Subproceso PROC-02</span>
+            <span><strong>Protocolo:</strong> Flujo de Mensaje</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+// Tarjeta de Análisis de Salidas de Información para PROC-02
+function renderOutputsCardProc2() {
+  return `
+    <div class="outputs-analysis-container" style="margin-top: 24px; padding: 20px; background: #FFFFFF; border: 1px solid var(--salfa-border); border-top: 3px solid var(--salfa-red); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-family: 'Segoe UI', Arial, sans-serif;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; padding-bottom: 12px; margin-bottom: 16px;">
+        <div>
+          <h4 style="margin: 0; color: var(--salfa-graphite-dark); font-size: 13.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            📊 Análisis Exhaustivo de Salidas de Información y Entregables Operativos: PROC-02
+          </h4>
+          <span style="font-size: 11px; color: var(--salfa-text-muted);">
+            Trazabilidad de datos, ciclo de vida de restricciones y retorno de frentes habilitados bajo el estándar 10000000-PRO-EST-001 (Rev. 0)
+          </span>
+        </div>
+        <span style="background: #FEE2E2; color: #991B1B; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; border: 1px solid #FCA5A5;">
+          Serie Operacional N5
+        </span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px;">
+        
+        <!-- Salida 1 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #2563EB; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #1E3A8A; font-size: 12px;">1. Ficha Oficial de Restricción en OPC</strong>
+            <span style="font-size: 9.5px; background: #DBEAFE; color: #1D4ED8; padding: 2px 6px; border-radius: 3px; font-weight: 600;">OPC Módulo Constraints</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Registro formal con código único correlativo (REST-XXXX), tipificación obligatoria en las 6 familias estándar (Ingeniería, Materiales, Equipos, Frentes, Permisos/Seguridad, Subcontratos) y fecha requerida en faena.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Identificador de la Restricción</span>
+            <span><strong>Impacto:</strong> Tarea Bloqueada</span>
+          </div>
+        </div>
+
+        <!-- Salida 2 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #D97706; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #78350F; font-size: 12px;">2. Matriz de Asignación y Compromiso SLA</strong>
+            <span style="font-size: 9.5px; background: #FEF3C7; color: #B45309; padding: 2px 6px; border-radius: 3px; font-weight: 600;">OPC / Contratos</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Designación formal de la Parte Responsable (Oficina Técnica, Adquisiciones, Contratos, etc.) y fecha contractual límite comprometida (Fecha Prometida de Liberación).
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Administrador de Obra / Responsable</span>
+            <span><strong>SLA:</strong> Máximo 48 hrs hábiles</span>
+          </div>
+        </div>
+
+        <!-- Salida 3 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #7C3AED; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #4C1D95; font-size: 12px;">3. Expediente y Evidencias de Terreno</strong>
+            <span style="font-size: 9.5px; background: #EDE9FE; color: #6D28D9; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Gestión Documental / Faena</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Dossier de soporte técnico: Planos revisados y aprobados, órdenes de compra emitidas, guías de despacho recepcionadas en bodega, certificados de calibración o permisos ambientales.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Rol Emisor:</strong> Parte Responsable</span>
+            <span><strong>Trazabilidad:</strong> Auditoría 100%</span>
+          </div>
+        </div>
+
+        <!-- Salida 4 -->
+        <div style="border: 1px solid #E5E7EB; border-left: 3px solid #16A34A; border-radius: 4px; padding: 12px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <strong style="color: #14532D; font-size: 12px;">4. Acta de Entrega y Desbloqueo (REL-0003)</strong>
+            <span style="font-size: 9.5px; background: #DCFCE7; color: #15803D; padding: 2px 6px; border-radius: 3px; font-weight: 600;">Handoff de Retorno</span>
+          </div>
+          <p style="font-size: 11px; color: #4B5563; margin: 0 0 6px 0; line-height: 1.4;">
+            <strong>Contenido / Entregable:</strong> Notificación formal en OPC de Restricción ENTREGADA. Desbloqueo lógico de la tarea y aviso al Jefe de Área para ingreso inmediato al Plan Trisemanal protegido.
+          </p>
+          <div style="font-size: 10px; color: #6B7280; display: flex; gap: 12px;">
+            <span><strong>Destino:</strong> PROC-01 (Plan Trisemanal)</span>
+            <span><strong>Estado:</strong> Frente Habilitado</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+// Renderizador Dinámico de Lienzo
+function renderDiagram() {
+  const wrapper = document.getElementById('diagram-zoom-wrapper');
+  if (!wrapper) return;
+
+  if (currentView === 'macro') {
+    wrapper.innerHTML = generateMacroSvg(false, showArtifacts, subState);
+  } else if (currentView === 'proc1') {
+    wrapper.innerHTML = generateProc1Svg(false, showArtifacts) + renderOutputsCardProc1();
+  } else if (currentView === 'proc2') {
+    wrapper.innerHTML = generateProc2Svg(false, showArtifacts) + renderOutputsCardProc2();
+  } else if (currentView === 'audit') {
+    wrapper.innerHTML = renderAuditTableView();
+  } else if (currentView === 'doc') {
+    wrapper.innerHTML = renderDocumentSourceView();
+  }
+}
+
+function renderMacroView() {
+  return generateMacroSvg(false, showArtifacts, subState);
+}
+
+function renderProc1DetailView() {
+  return generateProc1Svg(false, showArtifacts) + renderOutputsCardProc1();
+}
+
+function renderProc2DetailView(isModal) {
+  return generateProc2Svg(false, showArtifacts, isModal) + (isModal ? '' : renderOutputsCardProc2());
+}
+
+function renderDocumentSourceView() {
+  return getDocumentViewHtml();
+}
+
+function renderAuditTableView() {
+  return `
+    <div style="width: 100%; max-width: 1350px; background: #FFFFFF; padding: 24px; border: 1px solid var(--salfa-border); border-radius: 4px;">
+      <h3 style="color: var(--salfa-graphite-dark); margin-bottom: 6px;">MATRIZ DE AUDITORÍA FORENSE Y TRAZABILIDAD DOCUMENTAL (AS-IS)</h3>
+      <p style="font-size: 12px; color: var(--salfa-text-muted); margin-bottom: 18px;">
+        Auditoría de correspondencia 1:1 entre el estándar corporativo <strong>10000000-PRO-EST-001 (Rev. 0)</strong>, los anexos operacionales y las entidades modeladas en BPMN 2.0 / Bizagi.
+      </p>
+
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th style="width: 100px;">Código BPMN</th>
+            <th style="width: 220px;">Elemento de Negocio</th>
+            <th style="width: 130px;">Rol Responsable</th>
+            <th style="width: 130px;">Tipo Elemento</th>
+            <th style="width: 140px;">Clasificación Valor</th>
+            <th style="width: 150px;">Sección Rectora</th>
+            <th style="width: 200px;">Salida de Información / Objeto</th>
+            <th style="width: 70px;">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ACT-01-01-01</code></td>
+            <td>Corte Semanal del Proyecto</td>
+            <td>Programador de Obra</td>
+            <td>Start Event (Timer)</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.1 Tabla 1 (Pág. 7)</td>
+            <td>Hito de congelamiento temporal semanal</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'start_timer')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-01-02</code></td>
+            <td>Actualizar Programa Maestro en P6</td>
+            <td>Programador de Obra</td>
+            <td>User Task</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.1 Tabla 1 (Pág. 7)</td>
+            <td>Programa Maestro Contractual P6 (.xer)</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_p6')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-01-03</code></td>
+            <td>Sincronizar OPC con P6</td>
+            <td>Programador de Obra</td>
+            <td>Service Task</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.1 Tabla 1 (Pág. 7)</td>
+            <td>Cronograma sincronizado en nube</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_sync')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-02-01</code></td>
+            <td>Apertura de Tareas en OPC</td>
+            <td>Jefe de Área (Last Planner)</td>
+            <td>User Task</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.2 Tabla 2 (Pág. 8-9)</td>
+            <td>Tareas operativas (≤ 3 días | Factor ≤ 1)</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_apertura')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-02-04</code></td>
+            <td>Sesión Pull Planning Semanal</td>
+            <td>Jefe de Área (Last Planner)</td>
+            <td>User Task Colaborativa</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.2 y §4.3 (Pág. 9-11)</td>
+            <td>Secuencia pull acordada e interferencias</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_pull')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>GW-01-03-01</code></td>
+            <td>¿Tiene Restricciones?</td>
+            <td>Jefe de Área (Last Planner)</td>
+            <td>Exclusive Gateway (XOR)</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.3 (Pág. 10)</td>
+            <td>Enrutamiento condicional (SÍ: PROC-02 / NO: Plan)</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'gw_restriccion')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>PROC-02</code></td>
+            <td>Gestión y Liberación de Restricciones</td>
+            <td>Jefe de Área / Admin Obra</td>
+            <td>Call Activity (Subproceso)</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.3 Tabla 3 (Pág. 10-11)</td>
+            <td>Handoff REL-0002 / Restricción resuelta</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_start_event')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-05-01</code></td>
+            <td>Elaborar Plan Trisemanal (Lookahead)</td>
+            <td>Jefe de Área (Last Planner)</td>
+            <td>User Task</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.5 Tabla 5 (Pág. 13-14)</td>
+            <td>Plan Trisemanal 100% Protegido (S+1 a S+3)</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_trisemanal')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-05-02</code></td>
+            <td>Comprometer Tareas Diarias (POD)</td>
+            <td>Supervisor de Terreno</td>
+            <td>User Task en Terreno</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.5 y §4.6 (Pág. 14-15)</td>
+            <td>Hoja de Plan de Operación Diario firmada</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'pod_comprometer')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-06-03</code></td>
+            <td>Control y Cierre Diario de Tareas (POD)</td>
+            <td>Supervisor de Terreno</td>
+            <td>User Task en Terreno</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.6 Tabla 6 (Pág. 15-16)</td>
+            <td>Acta de cierre vespertina y registro de CNC</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'pod_control')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-01-07-04</code></td>
+            <td>Calcular PPC y Causas de No Cumplimiento</td>
+            <td>Programador de Obra</td>
+            <td>Service & User Task</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.7 Tabla 7 (Pág. 17-18)</td>
+            <td>Reporte semanal de % PPC y Pareto en Power BI</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc1', 'task_kpi')">Ver en PROC-01</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-01-02</code></td>
+            <td>Registrar Restricción en OPC</td>
+            <td>Identificador de la Restricción</td>
+            <td>User Task</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.3 Tabla 3 (Pág. 10)</td>
+            <td>Ficha REST-XXXX tipificada en 6 familias</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_reg')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>GW-02-01-01</code></td>
+            <td>Bifurcación Paralela (Fork)</td>
+            <td>Administrador de Obra</td>
+            <td>Parallel Gateway (AND)</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.3 Tabla 3 (Pág. 11)</td>
+            <td>Apertura concurrente de vinculación y asignación</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_fork')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-01-05</code></td>
+            <td>Vincular Tareas Afectadas</td>
+            <td>Administrador de Obra</td>
+            <td>User Task</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.3 Tabla 3 (Pág. 11)</td>
+            <td>Tareas operativas bloqueadas en OPC</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_vinc')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-01-06</code></td>
+            <td>Asignar Parte Responsable y Vencimiento</td>
+            <td>Administrador de Obra</td>
+            <td>User Task</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.3 Tabla 3 (Pág. 11)</td>
+            <td>Responsable asignado con SLA de resolución</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_asig')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-01-08</code></td>
+            <td>Comprometer Fecha de Liberación</td>
+            <td>Parte Responsable</td>
+            <td>User Task Colaborativa</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.4 Tabla 4 (Pág. 12)</td>
+            <td>Fecha Prometida de Liberación registrada en OPC</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_comp')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-02-01</code></td>
+            <td>Gestionar Acciones y Liberación en Faena</td>
+            <td>Parte Responsable</td>
+            <td>User Task Terreno</td>
+            <td><span class="badge-va">Valor Agregado (VA)</span></td>
+            <td>§4.4 Tabla 4 (Pág. 12-13)</td>
+            <td>Dossier de evidencias técnicas y logísticas</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_lib')">Ver en PROC-02</button></td>
+          </tr>
+          <tr>
+            <td><code>ACT-02-02-03</code></td>
+            <td>Entregar Restricción Liberada al Jefe de Área</td>
+            <td>Identificador de la Restricción</td>
+            <td>User Task / Handoff</td>
+            <td><span class="badge-tr">Trabajo Requerido (TR)</span></td>
+            <td>§4.4 Tabla 4 (Pág. 13)</td>
+            <td>Restricción ENTREGADA y frente desbloqueado</td>
+            <td><button class="btn-ref-pill" onclick="jumpToElement('proc2', 'p2_task_ent')">Ver en PROC-02</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// Inicializar aplicación de forma ultra-robusta
+function initializeApp() {
+  initPanAndZoom();
+  renderDiagram();
+  selectElement('task_p6');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  initializeApp();
+}
+
+  </script>
+</body>
+</html>

@@ -280,6 +280,12 @@ section.view.on{display:block}
 @media (max-width:480px){
   .top h1{display:none}
   #lnkHub .tx{font-size:11px}
+  #adminUserBadge{display:none!important}
+  #btnRef{display:none!important}
+  #btnSelectorPortales span{display:none!important}
+  #btnSelectorPortales{padding:6px 8px!important;min-width:36px!important;justify-content:center}
+  .chip-admin-online b + span, .chip-admin-online{font-size:11px!important;padding:3px 7px!important}
+  .chip-sesion-tiempo{font-size:11px!important;padding:3px 7px!important}
   .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -1436,8 +1442,8 @@ actualizarSemaforoInactividadAdmin();
 
 function cerrarSesionPorInactividadAdmin(){
   localStorage.removeItem('salfa_auth_session');
-  alert('Tu sesión ha expirado tras 15 minutos de inactividad por razones de seguridad.\nPor favor ingresa nuevamente.');
-  location.href = 'index.html';
+  toast('Sesión cerrada por 15 min de inactividad');
+  setTimeout(function(){ location.href = 'index.html'; }, 800);
 }
 </script>
 

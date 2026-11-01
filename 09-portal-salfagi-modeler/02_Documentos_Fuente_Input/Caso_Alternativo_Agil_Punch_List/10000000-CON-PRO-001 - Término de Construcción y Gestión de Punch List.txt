@@ -1,0 +1,38 @@
+PROCEDIMIENTO OPERATIVO:
+TÉRMINO DE CONSTRUCCIÓN Y GESTIÓN DE PUNCH LIST
+CÓDIGO: 10000000-CON-PRO-001  |  REVISIÓN: 1  |  SALFA MONTAJES S.A.
+
+1. OBJETIVO
+Establecer la metodología y responsabilidades para planificar, ejecutar y documentar las caminatas de inspección de término de construcción por sistemas y subsistemas, garantizando el levantamiento, categorización y cierre de observaciones pendientes previo a la entrega formal a la etapa de Precomisionamiento y Puesta en Marcha.
+2. ALCANCE
+Aplica a todas las obras y contratos ejecutados por SALFA Montajes S.A., abarcando las disciplinas de Obras Civiles, Montaje Mecánico, Cañerías, Electricidad, Instrumentación y Sistemas de Control.
+3. RESPONSABILIDADES
+Jefe de Terreno: Coordinar los frentes de trabajo, verificar la culminación física del montaje, solicitar formalmente la inspección y asignar cuadrillas para la subsanación de observaciones en terreno.
+Jefe de Calidad (QA/QC): Auditar la completitud del Plan de Inspección y Ensayos (PIE), emitir el programa de caminatas, liderar la inspección conjunta, emitir los protocolos y visar la entrega técnica conforme.
+Especialista de Construcción Digital: Administrar el ingreso, actualización de estados y cierre de puntos en la plataforma digital OPC.
+Inspección Técnica de Obras (ITO Mandante): Participar en las caminatas de terreno, validar la categorización de los hallazgos y firmar las actas de recepción conforme.
+4. DESARROLLO DEL PROCEDIMIENTO
+4.1. Solicitud de Inspección y Verificación Documental Previa
+Cuando una disciplina o sector de obra alcanza el término físico de sus labores de montaje, el Jefe de Terreno elabora y envía formalmente la solicitud de inspección de término de subsistema al Jefe de Calidad.
+Recibida la solicitud, el Jefe de Calidad audita el expediente técnico del subsistema verificando que el cien por ciento de los protocolos de calidad asociados al Plan de Inspección y Ensayos (PIE) se encuentren suscritos y sin no conformidades abiertas. Si se detectan protocolos pendientes, resultados de laboratorio no disponibles o pruebas de presión no ejecutadas, el Jefe de Calidad rechaza la solicitud mediante comunicación interna detallando las causales del rechazo, devolviendo los antecedentes al Jefe de Terreno para su regularización en faena. En caso de constatar que el dossier técnico y los protocolos del PIE se encuentran íntegramente conformes y liberados, el Jefe de Calidad procede con la coordinación de la inspección física.
+4.2. Planificación y Ejecución de la Caminata de Inspección
+Con el expediente aprobado, el Jefe de Calidad elabora el documento Programa de Caminatas (Registro R001), estableciendo fecha, hora, límites de batería del subsistema y convocando formalmente al Jefe de Terreno y a la Inspección Técnica de Obras (ITO) del Mandante.
+En la fecha acordada, los representantes de Terreno, Calidad y la ITO realizan el recorrido físico conjunto por la instalación. Durante la caminata se inspeccionan visual y dimensionalmente los equipos, estructuras, soportería, cableado y terminaciones. Cada hallazgo o trabajo pendiente detectado es anotado por el Jefe de Calidad en el formulario Caminata Punch List (Registro R002), individualizando el tag del equipo, plano de referencia, descripción técnica del defecto y registro fotográfico inicial.
+4.3. Carga, Categorización y Tratamiento de Observaciones en Plataforma Digital
+Finalizada la caminata, el Especialista de Construcción Digital ingresa la totalidad de los hallazgos registrados en el acta a la plataforma digital OPC. En conjunto con la ITO y Calidad, se asigna a cada observación una de las siguientes prioridades:
+Observación Tipo A: Defecto crítico o incumplimiento de diseño que impide la energización, seguridad o pruebas funcionales del subsistema.
+Observación Tipo B: Trabajo pendiente menor que no compromete la seguridad ni impide las pruebas de precomisionamiento, pero cuya resolución es mandatoria antes de la entrega final.
+Observación Tipo C: Detalle estético, de pintura o entrega de copias documentales menores.
+Si en el subsistema se identifica al menos una observación clasificada como Tipo A, la recepción del área queda formalmente bloqueada. El Jefe de Terreno toma conocimiento de la condición y moviliza cuadrillas de trabajo de forma prioritaria para subsanar los defectos Tipo A en un plazo perentorio no superior a cuarenta y ocho horas. Subsanados los desvíos críticos, el Jefe de Terreno solicita la re-inspección en terreno.
+Si el subsistema no presenta observaciones Tipo A, o bien estas han sido completamente levantadas, el Jefe de Calidad y la ITO suscriben el formulario Estatus de Punch List (Registro R003), autorizando la entrega condicional del subsistema acompañada del cronograma de compromisos para el cierre de los puntos B y C.
+4.4. Re-inspección, Cierre de Puntos y Transferencia del Subsistema
+El Jefe de Calidad y la ITO acuden a terreno a verificar la corrección de los trabajos pendientes. Si en la re-inspección se constata que los trabajos ejecutados no satisfacen los criterios de aceptación o persisten defectos, la observación se mantiene en estado abierta en el sistema y se reitera el requerimiento al Jefe de Terreno para un nuevo ciclo de trabajo correctivo.
+Cuando la re-inspección resulta plenamente satisfactoria, el Especialista de Construcción Digital adjunta la fotografía de respaldo del trabajo concluido en la plataforma OPC y actualiza el estado de la observación a cerrada.
+Habiéndose cerrado la totalidad de los puntos Tipo A y formalizado los plazos para las observaciones residuales B y C, el Jefe de Calidad genera el Acta de Recepción Conforme de Sistema o Subsistema (Registro R005). El documento es firmado en señal de aceptación por el Jefe de Terreno, el Administrador de Contrato y la ITO del Mandante. Con las firmas completas, el Jefe de Calidad carga el acta y el dossier de aseguramiento de calidad al entorno común de datos del proyecto (CDE Aconex) y efectúa la entrega formal de la custodia física y operacional del subsistema al equipo de Precomisionamiento y Puesta en Marcha.
+5. REGISTROS ASOCIADOS
+10000000-CON-PRO-001-R001: Programa de Caminatas.
+10000000-CON-PRO-001-R002: Caminata Punch List.
+10000000-CON-PRO-001-R003: Estatus de Punch List.
+10000000-CON-PRO-001-R005: Recepción Conforme de Sistema / Subsistema.
+Módulo Punch List en Plataforma OPC.
+Entorno Común de Datos (CDE Aconex).

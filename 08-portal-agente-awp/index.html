@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E2229">
+<meta name="description" content="Agente AWP Salfa Montajes · Asistente y Tutor Metodológico de Advanced Work Packaging (CII RT-272, RT-319, RT-390)">
+<title>Agente AWP · Tutor & Metodología CII — Salfa Montajes</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23B01E24'/%3E%3Cpath d='M8 24 L16 8 L24 24 Z' fill='%23FFFFFF'/%3E%3Ccircle cx='16' cy='18' r='3' fill='%231E2229'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --rojo: #B01E24;
+  --rojo-oscuro: #8C161B;
+  --rojo-claro: #E23B42;
+  --burdeos: #5E0F13;
+  --grafito: #1E2229;
+  --grafito-medio: #2D333D;
+  --grafito-claro: #3D4450;
+  --gris-texto: #5A6771;
+  --gris-suave: #8D99A6;
+  --linea: #E2E6EA;
+  --linea-oscura: #343B46;
+  --fondo: #F4F6F8;
+  --fondo-panel: #FFFFFF;
+  --blanco: #FFFFFF;
+  --verde-ok: #15803D;
+  --verde-bg: #DCFCE7;
+  --amarillo-alerta: #B45309;
+  --amarillo-bg: #FEF3C7;
+  --azul-info: #1D4ED8;
+  --azul-bg: #DBEAFE;
+  
+  --f-titulos: 'Montserrat', sans-serif;
+  --f-cuerpo: 'Barlow', Arial, sans-serif;
+  --f-rotulo: 'Barlow Condensed', sans-serif;
+  
+  --sombra-card: 0 4px 16px rgba(30, 34, 41, 0.06), 0 1px 3px rgba(30, 34, 41, 0.04);
+  --sombra-flotante: 0 12px 32px rgba(30, 34, 41, 0.12), 0 2px 8px rgba(30, 34, 41, 0.06);
+  --trans: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; min-height: 100%; background: var(--fondo); color: var(--grafito); font-family: var(--f-cuerpo); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font-family: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* ===== BARRA SUPERIOR CORPORATIVA SALFA ===== */
+.salfa-topbar-p5 {
+  position: fixed; top: 0; left: 0; right: 0; height: 46px;
+  background: var(--grafito); color: #fff; z-index: 9999;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px; border-bottom: 3px solid var(--rojo);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+.salfa-topbar-p5::after {
+  content: ""; position: absolute; left: 0; bottom: -3px; width: 100%; height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--rojo) 25%, #ff525b 50%, var(--rojo) 75%, transparent 100%);
+  background-size: 200% 100%; animation: shimmerBarra 6s ease-in-out infinite; pointer-events: none;
+}
+@keyframes shimmerBarra { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+.topbar-izq { display: flex; align-items: center; gap: 14px; }
+.brand-link { display: flex; align-items: center; gap: 10px; font-weight: 700; font-family: var(--f-titulos); font-size: 13px; color: #fff; }
+.brand-link img { height: 24px; width: auto; }
+.brand-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.2); }
+.brand-portal { display: flex; align-items: center; gap: 8px; font-family: var(--f-rotulo); font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; color: #E2E6EA; }
+.portal-badge { background: var(--rojo); color: #fff; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+
+.topbar-der { display: flex; align-items: center; gap: 10px; }
+.btn-selector-portales {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); color: #fff;
+  font-family: var(--f-titulos); font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--trans);
+}
+.btn-selector-portales:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }
+
+.user-pill {
+  display: flex; align-items: center; gap: 7px; padding: 3px 10px 3px 4px; border-radius: 20px;
+  background: rgba(255,255,255,0.08); font-size: 12px; color: #E2E6EA; border: 1px solid rgba(255,255,255,0.12);
+}
+.user-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--rojo); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; }
+
+/* ===== SUBHEADER CON RANGO Y ESTADO ===== */
+.sub-header {
+  position: fixed; top: 46px; left: 0; right: 0; height: 60px;
+  background: linear-gradient(135deg, #1E2229 0%, #29303A 100%);
+  color: #fff; z-index: 999; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sub-header-title { display: flex; flex-direction: column; }
+.title-main { font-family: var(--f-titulos); font-weight: 800; font-size: 16px; letter-spacing: -0.2px; display: flex; align-items: center; gap: 8px; }
+.title-tagline { font-size: 12px; color: #A0ABB7; font-family: var(--f-cuerpo); }
+
+.header-badges { display: flex; align-items: center; gap: 8px; }
+.pill-guardrail {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+  background: rgba(176, 30, 36, 0.22); border: 1px solid var(--rojo); color: #FF9B9F;
+  font-family: var(--f-rotulo); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.pill-guardrail-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 8px #22C55E; }
+.pill-engine {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #CBD5E1;
+  font-size: 12px; font-weight: 600;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.app-layout {
+  position: fixed; top: 106px; bottom: 0; left: 0; right: 0;
+  display: flex; overflow: hidden; background: var(--fondo);
+}
+
+/* ===== BARRA LATERAL DE NAVEGACIÓN ===== */
+.app-nav {
+  width: 250px; background: var(--blanco); border-right: 1px solid var(--linea);
+  display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0;
+}
+.nav-section-title {
+  padding: 16px 18px 8px; font-family: var(--f-rotulo); font-size: 11px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--gris-suave);
+}
+.nav-list { list-style: none; padding: 0 8px; }
+.nav-item { margin-bottom: 4px; }
+.nav-btn {
+  width: 100%; display: flex; align-items: center; gap: 11px; padding: 10px 14px;
+  border-radius: 8px; border: none; background: transparent; color: var(--grafito);
+  font-family: var(--f-titulos); font-size: 13px; font-weight: 600; cursor: pointer;
+  text-align: left; transition: var(--trans);
+}
+.nav-btn:hover { background: #F1F4F7; color: var(--rojo); }
+.nav-btn.active { background: #FEECEE; color: var(--rojo); font-weight: 700; }
+.nav-btn.active svg { color: var(--rojo); fill: currentColor; }
+.nav-btn svg { width: 18px; height: 18px; color: var(--gris-texto); flex-shrink: 0; transition: var(--trans); }
+.nav-badge-count { margin-left: auto; background: #E2E6EA; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; color: var(--grafito); }
+.nav-btn.active .nav-badge-count { background: var(--rojo); color: #fff; }
+
+.nav-footer-box {
+  padding: 16px; margin: 12px; background: #FAFBFD; border: 1px solid var(--linea);
+  border-radius: 10px; font-size: 12px; color: var(--gris-texto);
+}
+.nav-footer-title { font-family: var(--f-titulos); font-weight: 700; color: var(--grafito); margin-bottom: 4px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.nav-footer-links { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.nav-footer-links a { color: var(--rojo); font-weight: 600; text-decoration: underline; font-size: 11px; }
+
+/* ===== ÁREA DE CONTENIDO / VISTAS ===== */
+.app-main {
+  flex: 1; overflow-y: auto; background: var(--fondo); display: flex; flex-direction: column;
+}
+
+.view-panel { display: none; height: 100%; flex-direction: column; }
+.view-panel.active { display: flex; }
+
+/* ===== VISTA 1: CHAT TUTOR IA CONSULTIVO ===== */
+.chat-container { display: flex; flex-direction: column; height: 100%; position: relative; }
+
+/* Banner de regla metodológica / Guardrail */
+.guardrail-alert-banner {
+  background: #FFFBEB; border-bottom: 1px solid #FDE68A; padding: 9px 20px;
+  display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #92400E;
+}
+.guardrail-banner-text { display: flex; align-items: center; gap: 8px; }
+.guardrail-banner-text b { font-weight: 700; }
+.btn-learn-rules { background: transparent; border: 1px solid #D97706; color: #92400E; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+/* Feed de mensajes */
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px;
+}
+
+.msg-row { display: flex; gap: 14px; max-width: 900px; width: 100%; margin: 0 auto; }
+.msg-row.user { justify-content: flex-end; }
+.msg-avatar {
+  width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: var(--f-titulos); font-weight: 800; font-size: 13px;
+}
+.msg-row.agent .msg-avatar { background: linear-gradient(135deg, var(--rojo), var(--burdeos)); color: #fff; box-shadow: 0 2px 8px rgba(176,30,36,0.3); }
+.msg-row.user .msg-avatar { background: var(--grafito); color: #fff; order: 2; }
+
+.msg-bubble {
+  background: var(--blanco); border-radius: 12px; padding: 16px 20px; box-shadow: var(--sombra-card);
+  border: 1px solid var(--linea); max-width: calc(100% - 50px);
+}
+.msg-row.user .msg-bubble {
+  background: var(--grafito); color: #fff; border-color: var(--grafito-medio); border-top-right-radius: 4px;
+}
+.msg-row.agent .msg-bubble { border-top-left-radius: 4px; }
+
+.msg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 12px; color: var(--gris-suave); }
+.msg-sender { font-family: var(--f-titulos); font-weight: 700; color: var(--grafito); }
+.msg-row.user .msg-sender { color: #E2E6EA; }
+.msg-time { font-size: 11px; }
+
+.msg-body { font-size: 14px; line-height: 1.6; color: var(--grafito); }
+.msg-row.user .msg-body { color: #F1F4F7; }
+
+/* Tipografía y Markdown en mensajes */
+.msg-body p { margin-bottom: 10px; }
+.msg-body p:last-child { margin-bottom: 0; }
+.msg-body h4 { font-family: var(--f-titulos); font-size: 15px; margin: 12px 0 6px; color: var(--rojo); }
+.msg-body ul, .msg-body ol { margin: 8px 0 12px 20px; }
+.msg-body li { margin-bottom: 4px; }
+.msg-body strong { color: var(--grafito); font-weight: 700; }
+.msg-row.user .msg-body strong { color: #fff; }
+
+.msg-callout-cii {
+  background: #F8FAFC; border-left: 4px solid var(--rojo); padding: 10px 14px; border-radius: 0 8px 8px 0;
+  margin: 10px 0; font-size: 13px; color: var(--grafito-medio);
+}
+.msg-callout-cii b { color: var(--rojo); font-family: var(--f-titulos); }
+
+.msg-citations {
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--linea);
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+.citation-pill {
+  display: inline-flex; align-items: center; gap: 5px; background: #F1F5F9; border: 1px solid #CBD5E1;
+  padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: #334155; text-decoration: none;
+  cursor: pointer; transition: var(--trans);
+}
+.citation-pill:hover { background: #E2E8F0; border-color: var(--rojo); color: var(--rojo); }
+.citation-pill svg { width: 12px; height: 12px; fill: currentColor; }
+
+.msg-actions { margin-top: 10px; display: flex; gap: 8px; }
+.btn-msg-action {
+  background: #FAFBFD; border: 1px solid var(--linea); padding: 4px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; color: var(--grafito); cursor: pointer; transition: var(--trans);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-msg-action:hover { background: #F1F4F7; border-color: var(--rojo); color: var(--rojo); }
+
+/* Barra de prompts sugeridos */
+.suggested-chips-bar {
+  padding: 8px 24px; background: var(--blanco); border-top: 1px solid var(--linea);
+  display: flex; align-items: center; gap: 8px; overflow-x: auto; white-space: nowrap;
+}
+.chip-prompt {
+  background: #F4F6F8; border: 1px solid var(--linea); border-radius: 16px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; color: var(--grafito); cursor: pointer; transition: var(--trans);
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
+}
+.chip-prompt:hover { background: #FEECEE; border-color: var(--rojo); color: var(--rojo); }
+
+/* Caja de entrada de consulta */
+.chat-input-area {
+  padding: 16px 24px; background: var(--blanco); border-top: 1px solid var(--linea);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.chat-input-wrapper {
+  display: flex; align-items: flex-end; gap: 10px; background: #F8FAFC; border: 1.5px solid #CBD5E1;
+  border-radius: 12px; padding: 8px 12px; transition: var(--trans);
+}
+.chat-input-wrapper:focus-within {
+  border-color: var(--rojo); background: #fff; box-shadow: 0 0 0 3px rgba(176,30,36,0.12);
+}
+.chat-textarea {
+  flex: 1; border: none; outline: none; background: transparent; font-size: 14px;
+  line-height: 1.5; resize: none; max-height: 140px; min-height: 40px; color: var(--grafito);
+}
+.chat-send-btn {
+  background: var(--rojo); color: #fff; border: none; border-radius: 8px; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans);
+  flex-shrink: 0;
+}
+.chat-send-btn:hover { background: var(--rojo-oscuro); transform: translateY(-1px); }
+.chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.chat-send-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+.chat-input-footer {
+  display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--gris-suave);
+}
+.input-hints { display: flex; align-items: center; gap: 12px; }
+
+/* ===== VISTA 2: LIBRETAS NOTEBOOKLM & FUENTES CII ===== */
+.view-content-padding { padding: 28px; max-width: 1200px; margin: 0 auto; width: 100%; }
+.section-headline { margin-bottom: 24px; }
+.section-headline h2 { font-family: var(--f-titulos); font-size: 22px; font-weight: 800; color: var(--grafito); }
+.section-headline p { color: var(--gris-texto); font-size: 14px; margin-top: 4px; }
+
+.notebooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; margin-top: 18px; }
+.notebook-card {
+  background: var(--blanco); border-radius: 12px; border: 1px solid var(--linea);
+  padding: 20px; box-shadow: var(--sombra-card); display: flex; flex-direction: column;
+  justify-content: space-between; transition: var(--trans); position: relative; overflow: hidden;
+}
+.notebook-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-flotante); border-color: #CBD5E1; }
+.notebook-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--rojo); }
+
+.notebook-cat { font-family: var(--f-rotulo); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--rojo); }
+.notebook-title { font-family: var(--f-titulos); font-size: 16px; font-weight: 700; margin: 6px 0 8px; color: var(--grafito); }
+.notebook-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.45; margin-bottom: 14px; }
+
+.notebook-sources-tag { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.source-tag { background: #F1F5F9; border: 1px solid #E2E8F0; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; color: #475569; }
+
+.notebook-actions { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F4F7; padding-top: 14px; }
+.btn-open-notebook {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--grafito); color: #fff;
+  padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none;
+  transition: var(--trans);
+}
+.btn-open-notebook:hover { background: var(--rojo); color: #fff; }
+.btn-copy-prompt { background: transparent; border: 1px solid var(--linea); color: var(--grafito); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--trans); }
+.btn-copy-prompt:hover { background: #F8FAFC; border-color: var(--rojo); color: var(--rojo); }
+
+/* Banner explicativo de arquitectura NotebookLM + Agente */
+.info-architecture-card {
+  background: linear-gradient(135deg, #1E2229 0%, #29323E 100%); color: #fff;
+  border-radius: 12px; padding: 24px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 300px; gap: 24px;
+}
+.info-arch-title { font-family: var(--f-titulos); font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #fff; }
+.info-arch-desc { font-size: 13px; color: #CBD5E1; line-height: 1.5; }
+.info-arch-stat-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: center; }
+.arch-stat-num { font-family: var(--f-rotulo); font-size: 28px; font-weight: 800; color: #FF666E; }
+.arch-stat-label { font-size: 12px; color: #94A3B8; text-transform: uppercase; font-weight: 600; }
+
+/* ===== VISTA 3: TABLAS Y ESQUEMAS AWP ===== */
+.tables-catalog { display: flex; flex-direction: column; gap: 24px; }
+.schema-card {
+  background: var(--blanco); border-radius: 12px; border: 1px solid var(--linea);
+  padding: 24px; box-shadow: var(--sombra-card);
+}
+.schema-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 2px solid #F1F4F7; padding-bottom: 12px; }
+.schema-title-wrap h3 { font-family: var(--f-titulos); font-size: 17px; font-weight: 800; color: var(--grafito); display: flex; align-items: center; gap: 8px; }
+.schema-badge { font-family: var(--f-rotulo); font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: #FEECEE; color: var(--rojo); }
+.schema-subtitle { font-size: 13px; color: var(--gris-texto); margin-top: 2px; }
+
+.schema-actions { display: flex; gap: 8px; }
+.btn-table-action { background: #F8FAFC; border: 1px solid var(--linea); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--trans); }
+.btn-table-action:hover { background: #F1F4F7; border-color: var(--rojo); color: var(--rojo); }
+
+/* Tablas estilizadas con identidad Salfa */
+.salfa-data-table {
+  width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;
+}
+.salfa-data-table th {
+  background: #1E2229; color: #fff; font-family: var(--f-titulos); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 14px; border: 1px solid #2F3642;
+}
+.salfa-data-table td {
+  padding: 11px 14px; border: 1px solid var(--linea); vertical-align: top;
+}
+.salfa-data-table tbody tr:nth-child(even) { background: #F8FAFC; }
+.salfa-data-table tbody tr:hover { background: #F1F5F9; }
+.pkg-tag { display: inline-block; font-family: var(--f-rotulo); font-weight: 800; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+.pkg-tag.cwa { background: #E0E7FF; color: #3730A3; }
+.pkg-tag.cwp { background: #DCFCE7; color: #166534; }
+.pkg-tag.ewp { background: #DBEAFE; color: #1E40AF; }
+.pkg-tag.pwp { background: #FEF3C7; color: #92400E; }
+.pkg-tag.iwp { background: #FEE2E2; color: #991B1B; }
+
+/* Diagrama de flujo PoC en CSS Grid */
+.poc-timeline {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px;
+}
+.poc-step {
+  background: #FAFBFD; border: 1.5px solid var(--linea); border-radius: 8px; padding: 14px;
+  position: relative; transition: var(--trans);
+}
+.poc-step:hover { border-color: var(--rojo); background: #fff; }
+.poc-step-num { font-family: var(--f-rotulo); font-size: 24px; font-weight: 800; color: var(--rojo); line-height: 1; }
+.poc-step-title { font-family: var(--f-titulos); font-weight: 700; font-size: 13px; margin: 6px 0 4px; }
+.poc-step-desc { font-size: 12px; color: var(--gris-texto); line-height: 1.4; }
+
+/* ===== VISTA 4: SIMULADOR IWP & RESTRICCIONES ===== */
+.simulator-layout { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
+.sim-sidebar { background: var(--blanco); border-radius: 12px; border: 1px solid var(--linea); padding: 20px; box-shadow: var(--sombra-card); }
+.sim-main { background: var(--blanco); border-radius: 12px; border: 1px solid var(--linea); padding: 24px; box-shadow: var(--sombra-card); display: flex; flex-direction: column; }
+
+.pkg-select-box { margin-bottom: 18px; }
+.pkg-select-box label { font-family: var(--f-titulos); font-weight: 700; font-size: 12px; display: block; margin-bottom: 6px; text-transform: uppercase; color: var(--gris-texto); }
+.custom-select {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--linea); border-radius: 8px;
+  background: #F8FAFC; font-size: 13px; font-weight: 600; color: var(--grafito); outline: none;
+}
+.custom-select:focus { border-color: var(--rojo); background: #fff; }
+
+.iwp-meta-summary { background: #F8FAFC; border: 1px solid var(--linea); border-radius: 8px; padding: 14px; margin-bottom: 18px; }
+.meta-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px dashed var(--linea); }
+.meta-row:last-child { border-bottom: none; }
+.meta-label { color: var(--gris-suave); font-weight: 600; }
+.meta-val { font-weight: 700; color: var(--grafito); }
+
+.constraint-status-card {
+  border-radius: 10px; padding: 16px; margin-bottom: 18px; text-align: center;
+  transition: var(--trans);
+}
+.constraint-status-card.blocked { background: #FEE2E2; border: 1.5px solid #F87171; color: #991B1B; }
+.constraint-status-card.ready { background: #DCFCE7; border: 1.5px solid #4ADE80; color: #166534; }
+.status-big-title { font-family: var(--f-rotulo); font-size: 20px; font-weight: 800; letter-spacing: 0.5px; }
+.status-big-sub { font-size: 12px; margin-top: 4px; }
+
+/* Lista de 7 restricciones */
+.constraint-checklist { display: flex; flex-direction: column; gap: 10px; }
+.constraint-item {
+  display: flex; align-items: center; justify-content: space-between; padding: 12px 14px;
+  border-radius: 8px; border: 1px solid var(--linea); background: #FAFBFD; transition: var(--trans);
+}
+.constraint-item:hover { background: #fff; border-color: #CBD5E1; }
+.constraint-info { display: flex; align-items: center; gap: 12px; }
+.constraint-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; }
+.constraint-icon.ok { background: #DCFCE7; color: #166534; }
+.constraint-icon.pending { background: #FEE2E2; color: #991B1B; }
+.constraint-name { font-weight: 700; font-size: 13px; color: var(--grafito); }
+.constraint-desc { font-size: 11px; color: var(--gris-texto); }
+
+.btn-toggle-constraint {
+  padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: none; transition: var(--trans);
+}
+.btn-toggle-constraint.ok { background: #DCFCE7; color: #166534; }
+.btn-toggle-constraint.pending { background: #FEE2E2; color: #991B1B; }
+
+.btn-eval-ia {
+  width: 100%; margin-top: 18px; padding: 12px; background: var(--rojo); color: #fff;
+  border: none; border-radius: 8px; font-family: var(--f-titulos); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: var(--trans); display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-eval-ia:hover { background: var(--rojo-oscuro); }
+
+/* ===== VISTA 5: CONFIGURACIÓN IA & CLAVE ===== */
+.config-container { max-width: 800px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 20px; }
+.config-card { background: var(--blanco); border-radius: 12px; border: 1px solid var(--linea); padding: 24px; box-shadow: var(--sombra-card); }
+.config-header { margin-bottom: 18px; border-bottom: 1px solid var(--linea); padding-bottom: 12px; }
+.config-header h3 { font-family: var(--f-titulos); font-size: 16px; font-weight: 800; color: var(--grafito); }
+.config-header p { font-size: 13px; color: var(--gris-texto); margin-top: 3px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label { font-family: var(--f-titulos); font-weight: 700; font-size: 12px; display: block; margin-bottom: 6px; color: var(--grafito); }
+.form-input {
+  width: 100%; padding: 10px 14px; border: 1.5px solid var(--linea); border-radius: 8px;
+  font-size: 14px; background: #F8FAFC; outline: none; transition: var(--trans);
+}
+.form-input:focus { border-color: var(--rojo); background: #fff; box-shadow: 0 0 0 3px rgba(176,30,36,0.1); }
+.form-hint { font-size: 11px; color: var(--gris-suave); margin-top: 4px; }
+
+.btn-save-cfg {
+  padding: 10px 20px; background: var(--rojo); color: #fff; border: none; border-radius: 8px;
+  font-family: var(--f-titulos); font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--trans);
+}
+.btn-save-cfg:hover { background: var(--rojo-oscuro); }
+.btn-test-cfg {
+  padding: 10px 16px; background: #F1F4F7; color: var(--grafito); border: 1px solid var(--linea);
+  border-radius: 8px; font-family: var(--f-titulos); font-size: 13px; font-weight: 600; cursor: pointer;
+  margin-left: 10px; transition: var(--trans);
+}
+.btn-test-cfg:hover { background: #E2E6EA; }
+
+/* Status pill de conexión API */
+.api-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 8px; }
+.api-status-badge.ok { background: #DCFCE7; color: #166534; }
+.api-status-badge.warn { background: #FEF3C7; color: #92400E; }
+
+/* Modal Universal Portales */
+.salfa-modal-portales {
+  position: fixed; inset: 0; z-index: 9999999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 17, 19, 0.78); backdrop-filter: blur(5px);
+  padding: 16px; animation: ddModalIn .2s ease-out forwards;
+}
+@keyframes ddModalIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.salfa-modal-portales-dialog {
+  position: relative; width: 100%; max-width: 480px; background: #fff;
+  border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 24px 60px -15px rgba(0,0,0,0.6); overflow: hidden;
+  display: flex; flex-direction: column; max-height: calc(100dvh - 40px);
+}
+.salfa-modal-portales-header {
+  padding: 16px 20px; background: #1E2229; color: #fff;
+  display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--rojo);
+}
+.salfa-modal-portales-header b {
+  display: block; font-family: var(--f-rotulo); font-size: 16px; font-weight: 800; text-transform: uppercase;
+}
+.salfa-modal-portales-header span { display: block; font-size: 12px; color: #9AA2AB; margin-top: 2px; }
+.salfa-modal-portales-header .btn-close-modal {
+  background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.salfa-modal-portales-header .btn-close-modal:hover { background: var(--rojo); }
+.salfa-modal-portales-body { padding: 8px 0; overflow-y: auto; }
+.salfa-dd-item { display: flex; align-items: center; gap: 14px; padding: 12px 20px; color: #1E2229; transition: background .15s; }
+.salfa-dd-item:hover { background: #f1f5f9; }
+.salfa-dd-item.activo { background: #fdf2f2; border-left: 4px solid var(--rojo); }
+.salfa-dd-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 7px; background: #1E2229; color: #fff; font-weight: 700; font-size: 12px; flex: none; }
+.salfa-dd-num.adm { background: var(--rojo); }
+.salfa-dd-info { flex: 1; min-width: 0; }
+.salfa-dd-info b { display: block; font-size: 13px; color: #1e293b; }
+.salfa-dd-info span { display: block; font-size: 11px; color: #64748b; }
+.salfa-dd-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
+.salfa-dd-tag.ok { background: #dcfce7; color: #166534; }
+.salfa-dd-tag.aqui { background: #fee2e2; color: #991b1b; }
+
+/* Toast */
+.toast-notice {
+  position: fixed; bottom: 20px; right: 20px; background: #1E2229; color: #fff;
+  padding: 12px 20px; border-radius: 8px; border-left: 4px solid var(--rojo);
+  box-shadow: var(--sombra-flotante); z-index: 999999; font-size: 13px; font-weight: 600;
+  display: none; animation: slideInUp 0.3s ease-out;
+}
+@keyframes slideInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .app-nav { width: 68px; }
+  .nav-btn span, .nav-badge-count, .nav-section-title, .nav-footer-box { display: none; }
+  .nav-btn { justify-content: center; padding: 12px 0; }
+  .simulator-layout { grid-template-columns: 1fr; }
+  .poc-timeline { grid-template-columns: 1fr; }
+  .info-architecture-card { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== BARRA SUPERIOR CORPORATIVA SALFA ===== -->
+<header class="salfa-topbar-p5">
+  <div class="topbar-izq">
+    <a href="../00-portal-hub/index.html" class="brand-link" title="Ir al Portal Hub Central">
+      <img src="assets/logo-salfa-montajes-mono-blanco.svg" alt="Salfa Montajes" onerror="this.src='../00-portal-hub/assets/logo-salfa-montajes-mono-blanco.svg'">
+    </a>
+    <div class="brand-sep"></div>
+    <div class="brand-portal">
+      <span class="portal-badge">08</span>
+      <span>Agente AWP · Advanced Work Packaging</span>
+    </div>
+  </div>
+
+  <div class="topbar-der">
+    <button class="btn-selector-portales" id="btnAbrirSelector" onclick="abrirSelectorPortales()">
+      <span>Pilotos Salfa</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+    </button>
+    <div class="user-pill">
+      <div class="user-avatar">SR</div>
+      <span>sjroca@salfamontajes.com</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== SUBHEADER DE CONTEXTO METODOLÓGICO Y ESTADO ===== -->
+<div class="sub-header">
+  <div class="sub-header-title">
+    <div class="title-main">
+      <span>AGENTE CONSULTOR AWP · CONSTRUCCIÓN & MONTAJE</span>
+    </div>
+    <div class="title-tagline">Tutor Metodológico CII (RT-272 · RT-319 · RT-390) & Integración con Libretas NotebookLM</div>
+  </div>
+
+  <div class="header-badges">
+    <div class="pill-guardrail" title="Política de Propiedad Intelectual activa: Este agente ofrece asistencia pedagógica y metodológica. No copia textos completos de manuales.">
+      <div class="pill-guardrail-dot"></div>
+      <span>Anti-Dumping Activo 🛡️</span>
+    </div>
+    <div class="pill-engine" id="badgeEngineStatus">
+      <span>IA: Gemini 2.5 Flash / Modo Experto CII</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LAYOUT PRINCIPAL DE LA APLICACIÓN ===== -->
+<div class="app-layout">
+  
+  <!-- BARRA LATERAL DE NAVEGACIÓN -->
+  <nav class="app-nav">
+    <div>
+      <div class="nav-section-title">Metodología & Operación</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <button class="nav-btn active" onclick="cambiarVista('chat')">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+            <span>Tutor IA Consultivo</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="cambiarVista('notebooks')">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <span>Libretas NotebookLM</span>
+            <span class="nav-badge-count" id="countNotebooks">5</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="cambiarVista('tablas')">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>
+            <span>Tablas & Esquemas CII</span>
+            <span class="nav-badge-count">6</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="cambiarVista('simulador')">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            <span>Simulador IWP & Restricciones</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="nav-section-title">Gobernanza</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <button class="nav-btn" onclick="cambiarVista('config')">
+            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            <span>Configuración IA & Clave</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- PIE DE NAVEGACIÓN -->
+    <div class="nav-footer-box">
+      <div class="nav-footer-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span>Regla de Oro CII</span>
+      </div>
+      <div>Modelo de aprendizaje y consulta interactiva. Prohibida la reproducción masiva de manuales completos.</div>
+      <div class="nav-footer-links">
+        <a href="javascript:void(0)" onclick="mostrarReglasPolitica()">Ver Política de Integridad CII ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ÁREA PRINCIPAL CON VISTAS -->
+  <main class="app-main">
+
+    <!-- ========================================== -->
+    <!-- VISTA 1: TUTOR IA CONSULTIVO (CHAT)       -->
+    <!-- ========================================== -->
+    <section class="view-panel active" id="view-chat">
+      <div class="chat-container">
+        <!-- Banner de Guardrail Anti-Dumping -->
+        <div class="guardrail-alert-banner">
+          <div class="guardrail-banner-text">
+            <span>🛡️</span>
+            <span><b>Modo Asistencia Metodológica:</b> Este agente resuelve dudas, secuencia el Path of Construction y analiza restricciones de paquetes. Para leer manuales CII íntegros, consulta tus libretas de NotebookLM vinculadas.</span>
+          </div>
+          <button class="btn-learn-rules" onclick="mostrarReglasPolitica()">Política CII</button>
+        </div>
+
+        <!-- Feed de Mensajes -->
+        <div class="chat-messages" id="chatFeed">
+          
+          <!-- Mensaje de bienvenida del Agente -->
+          <div class="msg-row agent">
+            <div class="msg-avatar">AWP</div>
+            <div class="msg-bubble">
+              <div class="msg-header">
+                <span class="msg-sender">Agente Consultor AWP · Salfa Montajes</span>
+                <span class="msg-time">Ahora</span>
+              </div>
+              <div class="msg-body">
+                <p>Hola <b>Sebastián</b>. Soy tu <b>Asistente y Tutor Metodológico de Advanced Work Packaging (AWP)</b> para Salfa Montajes.</p>
+                <p>Estoy configurado para resolver consultas operativas y conceptuales fundamentadas en las investigaciones del <b>Construction Industry Institute (CII)</b> y los procedimientos corporativos de montaje.</p>
+                
+                <div class="msg-callout-cii">
+                  <b>Principio de Operación Pedagógica:</b><br>
+                  Te ayudo a secuenciar el <i>Path of Construction (PoC)</i>, articular <i>EWP, CWP, PWP e IWP</i>, y evaluar la liberación de restricciones de cuadrilla. Cuando requieras validar la fuente documental primaria, te indicaré la referencia exacta en tus <b>Libretas de NotebookLM</b>.
+                </div>
+
+                <p>¿Qué aspecto de la metodología AWP o paquete de trabajo necesitas analizar hoy?</p>
+              </div>
+
+              <div class="msg-citations">
+                <span class="citation-pill" onclick="abrirTablas('jerarquia')">
+                  <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                  Ver Jerarquía de Paquetes
+                </span>
+                <span class="citation-pill" onclick="abrirTablas('restricciones')">
+                  <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                  Matriz de 7 Restricciones IWP
+                </span>
+                <span class="citation-pill" onclick="cambiarVista('notebooks')">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z"/></svg>
+                  Mis Libretas NotebookLM
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Barra de Prompts Sugeridos -->
+        <div class="suggested-chips-bar">
+          <span style="font-size:11px;font-weight:700;color:var(--gris-suave);text-transform:uppercase;">Consultas Rápidas:</span>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Qué es el Path of Construction (PoC) y cómo se define en ingeniería temprana?')">
+            📐 ¿Cómo definir el Path of Construction?
+          </button>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Cuáles son las 7 restricciones obligatorias antes de entregar un IWP al Capataz?')">
+            📋 Las 7 restricciones del IWP
+          </button>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Cómo interactúan y se desfasan en el tiempo el EWP, CWP, PWP e IWP?')">
+            ⏳ Desfase temporal EWP/CWP/IWP
+          </button>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Qué reglas de dimensionamiento en Horas Hombre (HH) y cuadrilla aplican a un IWP?')">
+            ⏱️ Dimensionamiento HH de un IWP
+          </button>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Qué rol cumple el Workface Planner y cómo se coordina con el Jefe de Terreno de Salfa?')">
+            👷 Rol del Workface Planner
+          </button>
+          <button class="chip-prompt" onclick="enviarPromptSugerido('¿Cuáles son los 4 niveles de madurez AWP del CII RT-390?')">
+            📈 Niveles de Madurez AWP (RT-390)
+          </button>
+        </div>
+
+        <!-- Entrada de Chat -->
+        <div class="chat-input-area">
+          <div class="chat-input-wrapper">
+            <textarea id="chatInput" class="chat-textarea" placeholder="Pregunta sobre metodología AWP, análisis de restricciones, PoC o paquetes de faena..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResizeTextarea(this)"></textarea>
+            <button class="chat-send-btn" id="btnEnviarChat" onclick="enviarConsultaChat()" title="Enviar consulta (Enter)">
+              <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+          </div>
+          <div class="chat-input-footer">
+            <div class="input-hints">
+              <span><b>Enter</b> para enviar · <b>Shift + Enter</b> para nueva línea</span>
+              <span>· Modelo: <span id="labelModeloActual">Gemini 2.5 Flash</span></span>
+            </div>
+            <div>
+              <span id="charCountNotice" style="color:var(--gris-suave);">Asistente metodológico activo</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VISTA 2: LIBRETAS NOTEBOOKLM & FUENTES CII -->
+    <!-- ========================================== -->
+    <section class="view-panel" id="view-notebooks">
+      <div class="view-content-padding">
+        <div class="section-headline">
+          <h2>Centro de Fuentes CII & Libretas NotebookLM</h2>
+          <p>Tus documentos y manuales del Construction Industry Institute (CII) residen en tus libretas privadas de Google NotebookLM. Aquí puedes gestionar los accesos directos y verificar las citas documentales primarias.</p>
+        </div>
+
+        <!-- Tarjeta de arquitectura de integración -->
+        <div class="info-architecture-card">
+          <div>
+            <div class="info-arch-title">Sinergia: Agente Salfa + Google NotebookLM</div>
+            <div class="info-arch-desc">
+              <b>¿Cómo opera el modelo?</b> El presente agente en el Portal 08 funciona como tu <b>tutor operativo y consultor metodológico en vivo</b>, aplicando las directrices de AWP sobre casos y faenas de Salfa Montajes con guardrails anti-extracción masiva. Tus <b>libretas de NotebookLM</b> contienen los PDFs originales del CII para lectura profunda, búsquedas semánticas y podcasts de audio.
+            </div>
+          </div>
+          <div class="info-arch-stat-box">
+            <div class="arch-stat-num">100%</div>
+            <div class="arch-stat-label">Fuentes CII Protegidas</div>
+            <div style="font-size:11px;color:#94A3B8;margin-top:6px;">Acceso referencial sin volcado masivo</div>
+          </div>
+        </div>
+
+        <!-- Grid de Libretas -->
+        <div class="notebooks-grid" id="gridNotebooks">
+          <!-- Renderizado dinámico desde JavaScript -->
+        </div>
+
+        <div style="margin-top:24px;text-align:right;">
+          <button class="btn-table-action" onclick="abrirModalNuevaLibreta()">+ Registrar Nueva Libreta NotebookLM</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VISTA 3: TABLAS Y ESQUEMAS AWP            -->
+    <!-- ========================================== -->
+    <section class="view-panel" id="view-tablas">
+      <div class="view-content-padding">
+        <div class="section-headline">
+          <h2>Catálogo Interactivo de Tablas & Esquemas CII</h2>
+          <p>Modelos visuales, matrices de responsabilidad y reglas cuantitativas de Advanced Work Packaging desplegadas para consulta y aprendizaje.</p>
+        </div>
+
+        <div class="tables-catalog">
+
+          <!-- TABLA 1: TAXONOMÍA Y JERARQUÍA DE PAQUETES -->
+          <div class="schema-card" id="schema-jerarquia">
+            <div class="schema-card-header">
+              <div class="schema-title-wrap">
+                <h3>Taxonomía y Jerarquía de Paquetes AWP</h3>
+                <div class="schema-subtitle">Estructura WBS y relación entre ingeniería (EWP), procura (PWP) y construcción (CWP/IWP)</div>
+              </div>
+              <div class="schema-actions">
+                <span class="schema-badge">CII RT-272</span>
+                <button class="btn-table-action" onclick="copiarTextoTabla('tbl-jerarquia')">Copiar Markdown</button>
+                <button class="btn-table-action" onclick="consultarTemaConAgente('Explícame detalladamente la relación entre CWP, EWP e IWP')">Preguntar a IA</button>
+              </div>
+            </div>
+
+            <table class="salfa-data-table" id="tbl-jerarquia">
+              <thead>
+                <tr>
+                  <th>Nivel</th>
+                  <th>Paquete</th>
+                  <th>Definición & Alcance</th>
+                  <th>Responsable</th>
+                  <th>Dimensionamiento Típico</th>
+                  <th>Desfase Requerido</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Nivel 1</b></td>
+                  <td><span class="pkg-tag cwa">CWA</span><br>Construction Work Area</td>
+                  <td>División geográfica y espacial del proyecto (ej: Edificio Molienda, Planta de Filtros, Subestación).</td>
+                  <td>Gerente de Proyecto / Construcción</td>
+                  <td>Todo el sector físico</td>
+                  <td>Definido en FEED (Fase II)</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 2</b></td>
+                  <td><span class="pkg-tag cwp">CWP</span><br>Construction Work Package</td>
+                  <td>Paquete de construcción por disciplina dentro de una CWA (ej: CWP Estructuras Molienda, CWP Piping).</td>
+                  <td>Superintendente / Jefe de Obra</td>
+                  <td>20.000 a 50.000 HH<br>(1 a 3 meses)</td>
+                  <td>Base para el Path of Construction</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 2</b></td>
+                  <td><span class="pkg-tag ewp">EWP</span><br>Engineering Work Package</td>
+                  <td>Entregables de ingeniería (planos AFC, especificaciones, listas de líneas) alineados 1:1 con el CWP.</td>
+                  <td>Líder de Disciplina Ingeniería</td>
+                  <td>10 a 50 planos / documentos</td>
+                  <td>Liberado <b>3 meses antes</b> del CWP</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 2</b></td>
+                  <td><span class="pkg-tag pwp">PWP</span><br>Procurement Work Package</td>
+                  <td>Materiales y equipos asociados a un CWP. Asegura disponibilidad física en bodega de faena.</td>
+                  <td>Adquisiciones / Cadena de Suministro</td>
+                  <td>Lotes de compra de equipos/spools</td>
+                  <td>En faena <b>1 a 2 meses antes</b> de ejecución</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 3</b></td>
+                  <td><span class="pkg-tag iwp">IWP</span><br>Installation Work Package</td>
+                  <td>Unidad básica de trabajo entregada al Capataz. Libre de restricciones de seguridad, planos y materiales.</td>
+                  <td>Workface Planner / Capataz</td>
+                  <td><b>500 a 1.000 HH</b><br>(Cuadrilla 4-6 pers, 1-2 semanas)</td>
+                  <td>Planificado <b>4 semanas antes</b> (Backlog libre)</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 3</b></td>
+                  <td><span class="pkg-tag" style="background:#F3E8FF;color:#6B21A8;">TWP</span><br>Testing Work Package</td>
+                  <td>Paquetes de pruebas (hidrostáticas, comisionamiento, torqueo de pernos, alineamiento de equipos).</td>
+                  <td>Calidad (QA-QC) / Comisionamiento</td>
+                  <td>Sistemas de prueba</td>
+                  <td>Al cierre de cada circuito IWP</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- TABLA 2: MATRIZ DE LAS 7 RESTRICCIONES CRÍTICAS DEL IWP -->
+          <div class="schema-card" id="schema-restricciones">
+            <div class="schema-card-header">
+              <div class="schema-title-wrap">
+                <h3>Matriz de las 7 Restricciones Críticas de un IWP</h3>
+                <div class="schema-subtitle">Regla de Oro CII RT-319: Ningún IWP se entrega a faena con restricciones activas</div>
+              </div>
+              <div class="schema-actions">
+                <span class="schema-badge">CII RT-319</span>
+                <button class="btn-table-action" onclick="copiarTextoTabla('tbl-restricciones')">Copiar Markdown</button>
+                <button class="btn-table-action" onclick="abrirSimuladorConPaquete('IWP-MEC-014')">Probar en Simulador</button>
+              </div>
+            </div>
+
+            <table class="salfa-data-table" id="tbl-restricciones">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Categoría de Restricción</th>
+                  <th>Elemento a Verificar en Salfa</th>
+                  <th>Responsable Despeje</th>
+                  <th>Criterio de Aprobación (Constraint-Free)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>01</b></td>
+                  <td><b>Seguridad y Permisos (HSE)</b></td>
+                  <td>Permisos de Trabajo Seguro (PTS), AST, bloqueo loto, matriz de riesgos críticos.</td>
+                  <td>Jefe HSE / Capataz</td>
+                  <td>Permiso aprobado por cliente y firmado antes del inicio.</td>
+                </tr>
+                <tr>
+                  <td><b>02</b></td>
+                  <td><b>Ingeniería y Planos (AFC)</b></td>
+                  <td>Planos versión Aprobada Para Construcción (AFC), RFIs resueltos, modelos BIM sin choques.</td>
+                  <td>Oficina Técnica / Planner</td>
+                  <td>Planos sellados AFC físicamente en la carpeta de terreno.</td>
+                </tr>
+                <tr>
+                  <td><b>03</b></td>
+                  <td><b>Materiales y Suministros (PWP)</b></td>
+                  <td>Spools, pernos, válvulas, cables, soportes fisicamente inspeccionados en bodega.</td>
+                  <td>Bodega / Logística / Planner</td>
+                  <td>100% de materiales recibidos y separados en patio de pre-armado.</td>
+                </tr>
+                <tr>
+                  <td><b>04</b></td>
+                  <td><b>Equipos y Herramientas</b></td>
+                  <td>Grúas de levante, andamios certificados, máquinas de soldar, torquímetros calibrados.</td>
+                  <td>Maquinaria / Planner</td>
+                  <td>Equipos en terreno con check list diario y certificación vigente.</td>
+                </tr>
+                <tr>
+                  <td><b>05</b></td>
+                  <td><b>Mano de Obra & Competencias</b></td>
+                  <td>Cuadrilla asignada, soldadores calificados 6G, rigger acreditado, exámenes de altura.</td>
+                  <td>Jefe de Terreno / RRHH</td>
+                  <td>Dotación completa asignada con pases de faena al día.</td>
+                </tr>
+                <tr>
+                  <td><b>06</b></td>
+                  <td><b>Frentes de Trabajo y Accesos</b></td>
+                  <td>Obras civiles entregadas (grout curado), accesos despejados, sin interferencias de otros contratos.</td>
+                  <td>Jefe de Terreno / Coordinación</td>
+                  <td>Acta de entrega de frente firmada y área libre de interferencias.</td>
+                </tr>
+                <tr>
+                  <td><b>07</b></td>
+                  <td><b>Calidad e Inspección (QA-QC)</b></td>
+                  <td>Planes de Inspección y Ensayo (PIE) cargados, dossiers de prueba y protocolos listos.</td>
+                  <td>Jefe QA-QC Salfa</td>
+                  <td>Protocolo impreso en carpeta IWP y puntos de detención (Hold Points) notificados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ESQUEMA 3: PATH OF CONSTRUCTION (POC) -->
+          <div class="schema-card">
+            <div class="schema-card-header">
+              <div class="schema-title-wrap">
+                <h3>Secuencia Temporal del Path of Construction (PoC)</h3>
+                <div class="schema-subtitle">Ruta crítica constructiva que gobierna las entregas de ingeniería y suministros</div>
+              </div>
+              <div class="schema-actions">
+                <span class="schema-badge">Metodología PoC</span>
+              </div>
+            </div>
+
+            <div class="poc-timeline">
+              <div class="poc-step">
+                <div class="poc-step-num">01</div>
+                <div class="poc-step-title">FEED / PoC Temprano</div>
+                <div class="poc-step-desc">Construcción define cómo desea montar la obra antes de que ingeniería trace los planos definitivos. Se dividen las CWAs.</div>
+              </div>
+              <div class="poc-step">
+                <div class="poc-step-num">02</div>
+                <div class="poc-step-title">Ingeniería por CWPs</div>
+                <div class="poc-step-desc">Los EWPs se emiten en paquetes orientados al montaje (no por especialidad aislada). Se congelan listas de materiales.</div>
+              </div>
+              <div class="poc-step">
+                <div class="poc-step-num">03</div>
+                <div class="poc-step-title">Procura Orientada (PWPs)</div>
+                <div class="poc-step-desc">Las órdenes de compra y fechas en faena se amarran a la fecha de montaje de cada CWP específico.</div>
+              </div>
+              <div class="poc-step">
+                <div class="poc-step-num">04</div>
+                <div class="poc-step-title">Workface Planning (IWPs)</div>
+                <div class="poc-step-desc">El planificador de terreno genera paquetes de 1-2 semanas y asegura un backlog de 3 a 4 semanas libres de trabas.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLA 4: RÚBRICA DE MADUREZ AWP (CII RT-390) -->
+          <div class="schema-card">
+            <div class="schema-card-header">
+              <div class="schema-title-wrap">
+                <h3>Niveles de Madurez AWP según CII RT-390</h3>
+                <div class="schema-subtitle">Evaluación de adopción en proyectos EPC de Salfa Montajes</div>
+              </div>
+              <div class="schema-actions">
+                <span class="schema-badge">CII RT-390</span>
+              </div>
+            </div>
+
+            <table class="salfa-data-table">
+              <thead>
+                <tr>
+                  <th>Nivel</th>
+                  <th>Denominación</th>
+                  <th>Características en Faena</th>
+                  <th>Impacto Típico CII</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Nivel 1</b></td>
+                  <td>Planificación Tradicional</td>
+                  <td>Ingeniería entrega por especialidad; terreno descubre faltantes al intentar montar. Alta tasa de interferencias.</td>
+                  <td>Línea Base Tradicional</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 2</b></td>
+                  <td>Workface Planning en Terreno</td>
+                  <td>Existe planificador de terreno que arma IWPs y despeja restricciones, pero ingeniería no se diseñó por CWPs.</td>
+                  <td>+10% a +15% Productividad HH</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 3</b></td>
+                  <td>AWP Integrado</td>
+                  <td>PoC acordado desde el día 1; EWPs y PWPs empaquetados y fechados para respaldar la secuencia de montaje.</td>
+                  <td>+25% Productividad / Cumplimiento de Plazo</td>
+                </tr>
+                <tr>
+                  <td><b>Nivel 4</b></td>
+                  <td>AWP Ecosistema Digital</td>
+                  <td>Integración 4D/5D (BIM), visualización de IWPs con estatus de materiales en tiempo real y gemelo digital.</td>
+                  <td>Reducción superior al 10% del TIC (Costo Total)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VISTA 4: SIMULADOR IWP & RESTRICCIONES    -->
+    <!-- ========================================== -->
+    <section class="view-panel" id="view-simulador">
+      <div class="view-content-padding">
+        <div class="section-headline">
+          <h2>Simulador de Diagnóstico & Liberación de IWPs</h2>
+          <p>Herramienta formativa para ensayar el rol de <b>Workface Planner</b> en Salfa Montajes. Evalúa si un paquete de trabajo cumple la regla de restricción cero antes de enviarlo a faena.</p>
+        </div>
+
+        <div class="simulator-layout">
+          <!-- PANEL IZQUIERDO: SELECCIÓN Y DATOS DEL PAQUETE -->
+          <div class="sim-sidebar">
+            <div class="pkg-select-box">
+              <label>Seleccionar Paquete de Prueba:</label>
+              <select id="selectSimPkg" class="custom-select" onchange="cargarPaqueteSimulado(this.value)">
+                <option value="IWP-MEC-014">IWP-MEC-014: Spools Rack Cañerías Molienda</option>
+                <option value="IWP-EST-021">IWP-EST-021: Montaje Vigas Principales Nave Sag</option>
+                <option value="IWP-ELE-008">IWP-ELE-008: Tendido Cable MT Sala Eléctrica</option>
+              </select>
+            </div>
+
+            <div class="iwp-meta-summary">
+              <div class="meta-row"><span class="meta-label">CWA / Área:</span><span class="meta-val" id="simCwa">CWA-03 Molienda</span></div>
+              <div class="meta-row"><span class="meta-label">CWP Padre:</span><span class="meta-val" id="simCwp">CWP-MEC-003 Piping</span></div>
+              <div class="meta-row"><span class="meta-label">Especialidad:</span><span class="meta-val" id="simEsp">Mecánica / Cañerías</span></div>
+              <div class="meta-row"><span class="meta-label">Horas Estimadas:</span><span class="meta-val" id="simHh">680 HH</span></div>
+              <div class="meta-row"><span class="meta-label">Cuadrilla:</span><span class="meta-val" id="simCuad">1 Capataz + 5 Cañistas</span></div>
+              <div class="meta-row"><span class="meta-label">Duración:</span><span class="meta-val" id="simDur">8 días hábiles</span></div>
+            </div>
+
+            <!-- Semáforo de Estado -->
+            <div class="constraint-status-card blocked" id="simStatusCard">
+              <div class="status-big-title" id="simStatusTitle">🔴 PAQUETE BLOQUEADO</div>
+              <div class="status-big-sub" id="simStatusSub">Restricciones activas detectadas. Prohibido entregar al Capataz según norma CII.</div>
+            </div>
+
+            <button class="btn-eval-ia" onclick="evaluarIwpConIa()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              <span>Pedir Diagnóstico a la IA</span>
+            </button>
+          </div>
+
+          <!-- PANEL DERECHO: CHECKLIST DE LAS 7 RESTRICCIONES -->
+          <div class="sim-main">
+            <h3 style="font-family:var(--f-titulos);font-size:16px;margin-bottom:14px;">Checklist de las 7 Restricciones (CII RT-319)</h3>
+            <div class="constraint-checklist" id="simChecklist">
+              <!-- Generado dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VISTA 5: CONFIGURACIÓN IA & GOBERNANZA    -->
+    <!-- ========================================== -->
+    <section class="view-panel" id="view-config">
+      <div class="view-content-padding">
+        <div class="section-headline">
+          <h2>Configuración de la IA del Usuario & Gobernanza</h2>
+          <p>Personaliza tu clave de acceso a la API de Google Gemini o conecta con tus credenciales de Google Workspace.</p>
+        </div>
+
+        <div class="config-container">
+          
+          <!-- TARJETA: API KEY DE GEMINI -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3>Clave de la IA del Usuario (Google Gemini API Key)</h3>
+              <p>Tu clave se almacena exclusivamente en el almacenamiento local de tu navegador (localStorage). No se comparte ni se almacena en bases de datos externas.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Google Gemini API Key:</label>
+              <input type="password" id="inputApiKey" class="form-input" placeholder="AIzaSy..." value="">
+              <div class="form-hint">Puedes obtener una clave gratuita en <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--rojo);font-weight:700;">Google AI Studio ↗</a>. Si no ingresas clave, el portal opera en <b>Modo Autónomo Local CII</b>.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Modelo Preferido:</label>
+              <select id="selectModeloIa" class="custom-select">
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recomendado: Rápido y preciso para metodología)</option>
+                <option value="gemini-2.5-pro">Gemini 2.5 Pro (Máximo razonamiento analítico para secuencias EPC)</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Compatibilidad estándar)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+              </select>
+            </div>
+
+            <div>
+              <button class="btn-save-cfg" onclick="guardarConfiguracionIa()">Guardar Configuración</button>
+              <button class="btn-test-cfg" onclick="probarConexionGemini()">Probar Conexión con Gemini</button>
+              <div id="cfgStatusBadge" class="api-status-badge warn">Modo Local Activo (Sin API Key configurada)</div>
+            </div>
+          </div>
+
+          <!-- TARJETA: GUARDRAILS Y POLÍTICA DE INTEGRIDAD -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3>Guardrails de Integridad & Propiedad Intelectual</h3>
+              <p>Reglas inmutables que gobiernan las respuestas del agente en el ecosistema Salfa.</p>
+            </div>
+
+            <div style="font-size:13px;color:var(--grafito);line-height:1.6;">
+              <ul style="margin-left:20px;">
+                <li><b>Prohibición de Volcado Masivo:</b> El agente rechaza peticiones de copia completa o transcripción íntegra de manuales CII o normas.</li>
+                <li><b>Asistencia Metodológica:</b> Todas las respuestas deben sintetizar, estructurar explicaciones pedagógicas y guiar la aplicación práctica en terreno.</li>
+                <li><b>Cita de Fuentes:</b> Cada respuesta que cite normas debe referenciar el volumen o estándar específico (RT-272, RT-319, RT-390) y sugerir la consulta en NotebookLM.</li>
+                <li><b>Despliegue de Tablas:</b> Las tablas y esquemas se muestran sólo cuando aportan a la resolución de una consulta o ante solicitud directa del usuario.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== MODAL UNIVERSAL SELECTOR DE PORTALES ===== -->
+<div class="salfa-modal-portales" id="modalPortales" style="display:none;" onclick="cerrarSelectorFuera(event)">
+  <div class="salfa-modal-portales-dialog">
+    <div class="salfa-modal-portales-header">
+      <div>
+        <b>Ecosistema de Portales Salfa Pilotos</b>
+        <span>Salfa Montajes / SalfaCorp · Entorno Oficial</span>
+      </div>
+      <button class="btn-close-modal" onclick="cerrarSelectorPortales()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="salfa-modal-portales-body">
+      <a href="../00-portal-hub/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num adm">00</span>
+        <div class="salfa-dd-info"><b>Portal Hub Central</b><span>Acceso corporativo y catálogo de pilotos</span></div>
+        <span class="salfa-dd-tag ok">Hub</span>
+      </a>
+      <a href="../01-portal-mapa-procesos/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">01</span>
+        <div class="salfa-dd-info"><b>Mapa de Procesos</b><span>Cadena de valor y procedimientos BPMN</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="../02-portal-cv/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">02</span>
+        <div class="salfa-dd-info"><b>Control de CV y Dotación</b><span>Gestión de personal y certificaciones</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="../05-portal-gestion-informacion/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">05</span>
+        <div class="salfa-dd-info"><b>Gestión de la Información</b><span>Pirámide documental, series y gobernanza</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="../06-portal-salfa-flow/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">06</span>
+        <div class="salfa-dd-info"><b>Salfa Flow · Work Management</b><span>Flujos de faena tipo Asana y tareas de área</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="../07-portal-autodesk-construction-cloud-acc/index.html" class="salfa-dd-item">
+        <span class="salfa-dd-num">07</span>
+        <div class="salfa-dd-info"><b>Autodesk Construction Cloud (ACC)</b><span>CDE Docs ISO 19650, BIM 2D/3D y RFIs</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
+      <a href="index.html" class="salfa-dd-item activo">
+        <span class="salfa-dd-num adm">08</span>
+        <div class="salfa-dd-info"><b>Agente AWP · Advanced Work Packaging</b><span>Tutor metodológico CII & NotebookLM</span></div>
+        <span class="salfa-dd-tag aqui">Aquí</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CORPORATIVO -->
+<div class="toast-notice" id="salfaToast">Mensaje del sistema</div>
+
+<script>
+// ==============================================================
+// BASE DE DATOS LOCAL Y LIBRETAS NOTEBOOKLM DEL USUARIO
+// ==============================================================
+const DEFAULT_NOTEBOOKS = [
+  {
+    id: 'nb-cii-rt272',
+    titulo: 'CII RT-272: Advanced Work Packaging (Vols. I, II y III)',
+    categoria: 'Estándar Principal CII',
+    descripcion: 'Contiene las directrices oficiales de implementación AWP, integración entre FEED, detalle y obra, y plantillas de CWP/EWP.',
+    url: 'https://notebooklm.google.com/',
+    fuentes: ['RT-272 Vol. I (Ejecutivo)', 'RT-272 Vol. II (Guía de Implementación)', 'RT-272 Vol. III (Casos de Éxito)', 'IR272-2']
+  },
+  {
+    id: 'nb-cii-rt319',
+    titulo: 'CII RT-319: Workface Planning en Terreno',
+    categoria: 'Planificación en Terreno',
+    descripcion: 'Manual operativo de desarrollo de IWPs, rol del Workface Planner, dimensionamiento de horas hombre y gestión de restricciones.',
+    url: 'https://notebooklm.google.com/',
+    fuentes: ['RT-319 WFP Guidebook', 'Matriz de 7 Restricciones', 'Protocolos de Cuadrilla']
+  },
+  {
+    id: 'nb-cii-rt390',
+    titulo: 'CII RT-390: Modelo de Madurez & Scorecard AWP',
+    categoria: 'Gobernanza & Auditoría',
+    descripcion: 'Criterios de auditoría y evaluación del nivel de madurez AWP en proyectos industriales (Niveles 1 al 4) y cálculo de ROI.',
+    url: 'https://notebooklm.google.com/',
+    fuentes: ['RT-390 Research Report', 'AWP Scorecard Excel', 'Rúbricas de Certificación']
+  },
+  {
+    id: 'nb-salfa-awp-proc',
+    titulo: 'AWP Salfa Montajes: Procedimientos y Formatos',
+    categoria: 'Corporativo Salfa',
+    descripcion: 'Adaptación de AWP al montaje minero e industrial de Salfa Montajes, flujos con bodega, ERP, ACC Docs y matrices RACI de obra.',
+    url: 'https://notebooklm.google.com/',
+    fuentes: ['Procedimiento P-AWP-001 Salfa', 'Matriz RACI de Faena', 'Formato Carátula IWP']
+  },
+  {
+    id: 'nb-salfa-iwp-catalog',
+    titulo: 'Catálogo de Restricciones & Lecciones Aprendidas',
+    categoria: 'Casuística de Terreno',
+    descripcion: 'Historial de restricciones recurrentes en faenas de minería y celulosa, tiempos de despeje y mejores prácticas con subcontratos.',
+    url: 'https://notebooklm.google.com/',
+    fuentes: ['Base de Restricciones Salfa', 'Lecciones Aprendidas Obras 2023-2025']
+  }
+];
+
+// Paquetes simulados para el módulo de diagnóstico
+const PAQUETES_SIMULADOS = {
+  'IWP-MEC-014': {
+    nombre: 'IWP-MEC-014: Spools Rack Cañerías Molienda',
+    cwa: 'CWA-03 Molienda Húmeda',
+    cwp: 'CWP-MEC-003 Piping Primario',
+    esp: 'Mecánica / Cañerías',
+    hh: '680 HH',
+    cuad: '1 Capataz + 5 Cañistas + 1 Rigger',
+    dur: '8 días hábiles',
+    restricciones: [
+      { id: 1, cat: 'Seguridad (HSE)', elem: 'Permiso de trabajo en altura > 1.8m y bloqueo de línea adyacente', ok: true },
+      { id: 2, cat: 'Ingeniería (AFC)', elem: 'Isométrico ISO-MEC-304 Rev C liberado AFC sin RFIs pendientes', ok: true },
+      { id: 3, cat: 'Materiales (PWP)', elem: 'Falta válvula de bola 6" ANSI 300 en bodega (retenida en tránsito)', ok: false },
+      { id: 4, cat: 'Equipos & Levante', elem: 'Camión pluma 25 ton con inspección vigente asignado para el martes', ok: true },
+      { id: 5, cat: 'Mano de Obra', elem: 'Cuadrilla con exámenes de altura física y soldadores 6G calificados', ok: true },
+      { id: 6, cat: 'Frente de Trabajo', elem: 'Estructura metálica base aún no tiene torqueo final aprobado (Hold Point)', ok: false },
+      { id: 7, cat: 'Calidad (QA-QC)', elem: 'Plan de Inspección y Ensayo (PIE) cargado y protocolo de torque listo', ok: true }
+    ]
+  },
+  'IWP-EST-021': {
+    nombre: 'IWP-EST-021: Montaje Vigas Principales Nave Sag',
+    cwa: 'CWA-03 Molienda Húmeda',
+    cwp: 'CWP-EST-001 Estructuras Pesadas',
+    esp: 'Estructuras Metálicas',
+    hh: '850 HH',
+    cuad: '1 Capataz + 6 Montadores + 2 Riggers',
+    dur: '10 días hábiles',
+    restricciones: [
+      { id: 1, cat: 'Seguridad (HSE)', elem: 'Plan de izaje crítico y estudio de vientos para grúa 150 ton', ok: true },
+      { id: 2, cat: 'Ingeniería (AFC)', elem: 'Plano de montaje DWG-EST-102 Rev D aprobado AFC', ok: true },
+      { id: 3, cat: 'Materiales (PWP)', elem: 'Vigas principales y pernos ASTM A325 completos en patio de acopio', ok: true },
+      { id: 4, cat: 'Equipos & Levante', elem: 'Grúa 150 ton certificada en terreno y balancín inspeccionado', ok: true },
+      { id: 5, cat: 'Mano de Obra', elem: 'Rigger acreditado nivel alta tensión y montadores certificados', ok: true },
+      { id: 6, cat: 'Frente de Trabajo', elem: 'Fundaciones civiles recibidas y pernos de anclaje topografiados', ok: true },
+      { id: 7, cat: 'Calidad (QA-QC)', elem: 'Protocolo de topografía y torque liberado', ok: true }
+    ]
+  },
+  'IWP-ELE-008': {
+    nombre: 'IWP-ELE-008: Tendido Cable MT Sala Eléctrica',
+    cwa: 'CWA-01 Infraestructura Eléctrica',
+    cwp: 'CWP-ELE-002 Fuerza & Media Tensión',
+    esp: 'Electricidad & Fuerza',
+    hh: '520 HH',
+    cuad: '1 Capataz + 4 Linieros / Eléctricos',
+    dur: '6 días hábiles',
+    restricciones: [
+      { id: 1, cat: 'Seguridad (HSE)', elem: 'Permiso de ingreso a espacio confinado / trinchera de cables pendiente', ok: false },
+      { id: 2, cat: 'Ingeniería (AFC)', elem: 'Ruta de cables en plano ELE-RUT-04 tiene RFI #42 sin responder por cliente', ok: false },
+      { id: 3, cat: 'Materiales (PWP)', elem: 'Carrete de cable 3x500 MCM disponible en bodega Salfa', ok: true },
+      { id: 4, cat: 'Equipos & Levante', elem: 'Portacarretes y winche jalacables operativos con prueba de tiro', ok: true },
+      { id: 5, cat: 'Mano de Obra', elem: 'Electricistas calificados con certificación SEC y charla de faena al día', ok: true },
+      { id: 6, cat: 'Frente de Trabajo', elem: 'Escalerillas y bandejas porta-conductores con un tramo roto sin reparar', ok: false },
+      { id: 7, cat: 'Calidad (QA-QC)', elem: 'Protocolo de aislamiento y prueba Megger listo para aplicar', ok: true }
+    ]
+  }
+};
+
+// ==============================================================
+// GESTIÓN DE CONFIGURACIÓN Y ESTADO
+// ==============================================================
+let appState = {
+  vistaActual: 'chat',
+  apiKey: localStorage.getItem('salfa_awp_gemini_key') || '',
+  modelo: localStorage.getItem('salfa_awp_gemini_model') || 'gemini-2.5-flash',
+  notebooks: JSON.parse(localStorage.getItem('salfa_awp_user_notebooks') || 'null') || DEFAULT_NOTEBOOKS,
+  paqueteSimuladoActual: 'IWP-MEC-014'
+};
+
+// ==============================================================
+// INICIALIZACIÓN
+// ==============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Configuración de formulario
+  document.getElementById('inputApiKey').value = appState.apiKey;
+  document.getElementById('selectModeloIa').value = appState.modelo;
+  document.getElementById('labelModeloActual').textContent = appState.modelo;
+
+  actualizarBadgeApiStatus();
+  renderizarNotebooks();
+  cargarPaqueteSimulado(appState.paqueteSimuladoActual);
+});
+
+// ==============================================================
+// NAVEGACIÓN ENTRE VISTAS
+// ==============================================================
+function cambiarVista(vistaId) {
+  appState.vistaActual = vistaId;
+  
+  // Actualizar botones de navegación
+  const navButtons = document.querySelectorAll('.nav-btn');
+  navButtons.forEach(btn => {
+    btn.classList.remove('active');
+    const span = btn.querySelector('span');
+    if (span) {
+      const texto = span.textContent.toLowerCase();
+      if ((vistaId === 'chat' && texto.includes('tutor')) ||
+          (vistaId === 'notebooks' && texto.includes('notebooklm')) ||
+          (vistaId === 'tablas' && texto.includes('tablas')) ||
+          (vistaId === 'simulador' && texto.includes('simulador')) ||
+          (vistaId === 'config' && texto.includes('configuración'))) {
+        btn.classList.add('active');
+      }
+    }
+  });
+
+  // Mostrar el panel adecuado
+  const panels = document.querySelectorAll('.view-panel');
+  panels.forEach(p => p.classList.remove('active'));
+
+  const activePanel = document.getElementById(`view-${vistaId}`);
+  if (activePanel) {
+    activePanel.classList.add('active');
+  }
+
+  // Scroll arriba
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function abrirTablas(subseccion) {
+  cambiarVista('tablas');
+  if (subseccion === 'jerarquia') {
+    const el = document.getElementById('schema-jerarquia');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  } else if (subseccion === 'restricciones') {
+    const el = document.getElementById('schema-restricciones');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// ==============================================================
+// ASISTENTE DE CHAT & GUARDRAILS ANTI-DUMPING
+// ==============================================================
+function autoResizeTextarea(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 140) + 'px';
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    enviarConsultaChat();
+  }
+}
+
+function enviarPromptSugerido(promptText) {
+  document.getElementById('chatInput').value = promptText;
+  enviarConsultaChat();
+}
+
+async function enviarConsultaChat() {
+  const input = document.getElementById('chatInput');
+  const prompt = input.value.trim();
+  if (!prompt) return;
+
+  // 1. EVALUAR GUARDRAIL ANTI-DUMPING EN CLIENTE
+  if (esIntentoExtraccionMasiva(prompt)) {
+    mostrarRespuestaGuardrail(prompt);
+    input.value = '';
+    autoResizeTextarea(input);
+    return;
+  }
+
+  // 2. AGREGAR MENSAJE DEL USUARIO AL FEED
+  agregarMensajeAlFeed('user', prompt);
+  input.value = '';
+  autoResizeTextarea(input);
+
+  // 3. MOSTRAR INDICADOR DE CARGA DEL AGENTE
+  const idCarga = 'msg-loading-' + Date.now();
+  agregarIndicadorCarga(idCarga);
+
+  try {
+    let respuestaTexto = '';
+    let fuenteCitada = 'CII RT-272';
+
+    // 4. GENERAR RESPUESTA (VÍA GEMINI API O MOTOR LOCAL EXPERTO)
+    if (appState.apiKey) {
+      respuestaTexto = await invocarGeminiApi(prompt);
+    } else {
+      // Simulación semántica local con base de conocimiento CII
+      await new Promise(r => setTimeout(r, 600));
+      respuestaTexto = generarRespuestaLocalExperta(prompt);
+    }
+
+    reemplazarCargaConMensaje(idCarga, respuestaTexto);
+  } catch (err) {
+    console.error('Error al generar respuesta:', err);
+    reemplazarCargaConMensaje(idCarga, `<p>⚠️ Ocurrió un inconveniente al conectar con la IA de Gemini (${err.message}). He activado el <b>Modo Autónomo Local</b> para responderte:</p>` + generarRespuestaLocalExperta(prompt));
+  }
+}
+
+// REGLA ESTRICTA DE GUARDRAIL: DETECTAR INTENTOS DE VOLCADO DE TEXTO ÍNTEGRO
+function esIntentoExtraccionMasiva(texto) {
+  const t = texto.toLowerCase();
+  const patronesBloqueados = [
+    /copia(?:r)? (?:el|todo el|los) manual(?:es)?/i,
+    /escribe(?:r)? (?:todo|el|el texto completo del) manual/i,
+    /transcribe(?:r)? (?:el|los|todo el) libro/i,
+    /vuelca(?:r)? (?:el|todo el) documento/i,
+    /dame el texto completo/i,
+    /exporta todos los documentos del cii/i,
+    /escribe todo el capitulo/i,
+    /copia integra/i
+  ];
+  return patronesBloqueados.some(rx => rx.test(t));
+}
+
+function mostrarRespuestaGuardrail(promptUsuario) {
+  agregarMensajeAlFeed('user', promptUsuario);
+  
+  const mensajeRechazoPedagogico = `
+    <div style="background:#FFF1F2;border:1px solid #FECDD3;padding:12px;border-radius:8px;margin-bottom:10px;">
+      <h4 style="color:#991B1B;margin:0 0 6px;">🛡️ Política de Propiedad Intelectual & Asistencia Pedagógica</h4>
+      <p style="color:#7F1D1D;margin:0;font-size:13px;">
+        Por política metodológica de Salfa Montajes y propiedad intelectual del <b>Construction Industry Institute (CII)</b>, este agente <b>no transcribe ni vuelca manuales o textos completos</b> ante comandos de extracción masiva.
+      </p>
+    </div>
+    <p>Este portal está concebido como un <b>modelo de asistencia consultivo para aprender y aplicar la metodología en terreno</b>. Con gusto puedo:</p>
+    <ul>
+      <li>Explicarte los fundamentos y criterios técnicos del tema que necesitas.</li>
+      <li>Desglosar los flujos entre el <i>Path of Construction (PoC)</i>, <i>EWP</i> y <i>CWP</i>.</li>
+      <li>Guiarte paso a paso en el checklist de liberación de las 7 restricciones de un <i>IWP</i>.</li>
+      <li>Citarte la sección y volumen exacto del CII (RT-272, RT-319, RT-390).</li>
+    </ul>
+    <p>Si deseas leer el manual primario completo palabra por palabra, abre directamente tu <a href="javascript:void(0)" onclick="cambiarVista('notebooks')" style="color:var(--rojo);font-weight:700;text-decoration:underline;">Libreta de NotebookLM vinculada</a>, donde tienes resguardados tus documentos originales.</p>
+  `;
+
+  agregarMensajeAlFeed('agent', mensajeRechazoPedagogico, [
+    { texto: 'Ver Mis Libretas NotebookLM', onclick: "cambiarVista('notebooks')" },
+    { texto: 'Ver Tablas y Esquemas', onclick: "cambiarVista('tablas')" }
+  ]);
+}
+
+function agregarMensajeAlFeed(tipo, contenidoHtml, citas = []) {
+  const feed = document.getElementById('chatFeed');
+  const row = document.createElement('div');
+  row.className = `msg-row ${tipo}`;
+
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const remitente = tipo === 'user' ? 'Tú (Salfa Montajes)' : 'Agente Consultor AWP';
+  const avatar = tipo === 'user' ? 'SR' : 'AWP';
+
+  let citasHtml = '';
+  if (citas && citas.length > 0) {
+    citasHtml = `<div class="msg-citations">` + citas.map(c => `
+      <span class="citation-pill" onclick="${c.onclick}">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        ${c.texto}
+      </span>
+    `).join('') + `</div>`;
+  }
+
+  row.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-bubble">
+      <div class="msg-header">
+        <span class="msg-sender">${remitente}</span>
+        <span class="msg-time">${hora}</span>
+      </div>
+      <div class="msg-body">${contenidoHtml}</div>
+      ${citasHtml}
+    </div>
+  `;
+
+  feed.appendChild(row);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function agregarIndicadorCarga(id) {
+  const feed = document.getElementById('chatFeed');
+  const row = document.createElement('div');
+  row.className = 'msg-row agent';
+  row.id = id;
+
+  row.innerHTML = `
+    <div class="msg-avatar">AWP</div>
+    <div class="msg-bubble">
+      <div class="msg-header">
+        <span class="msg-sender">Agente Consultor AWP</span>
+        <span class="msg-time">Consultando fuentes CII...</span>
+      </div>
+      <div class="msg-body" style="display:flex;align-items:center;gap:8px;color:var(--gris-texto);">
+        <div style="width:14px;height:14px;border:2px solid var(--rojo);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        <span>Sintetizando criterio metodológico con base CII RT-272 / RT-319...</span>
+      </div>
+    </div>
+  `;
+  feed.appendChild(row);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function reemplazarCargaConMensaje(idCarga, contenidoHtml) {
+  const el = document.getElementById(idCarga);
+  if (!el) return;
+
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  el.innerHTML = `
+    <div class="msg-avatar">AWP</div>
+    <div class="msg-bubble">
+      <div class="msg-header">
+        <span class="msg-sender">Agente Consultor AWP · Salfa Montajes</span>
+        <span class="msg-time">${hora}</span>
+      </div>
+      <div class="msg-body">${contenidoHtml}</div>
+      <div class="msg-citations">
+        <span class="citation-pill" onclick="cambiarVista('notebooks')">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          Verificar en mi Libreta NotebookLM
+        </span>
+        <span class="citation-pill" onclick="abrirTablas('jerarquia')">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>
+          Consultar Tabla de Paquetes
+        </span>
+      </div>
+    </div>
+  `;
+  const feed = document.getElementById('chatFeed');
+  feed.scrollTop = feed.scrollHeight;
+}
+
+// ==============================================================
+// INTEGRACIÓN CON GOOGLE GEMINI API
+// ==============================================================
+async function invocarGeminiApi(promptUsuario) {
+  const apiKey = appState.apiKey;
+  const modelo = appState.modelo || 'gemini-2.5-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent?key=${apiKey}`;
+
+  const systemInstruction = `
+Eres el AGENTE CONSULTOR Y TUTOR PEDAGÓGICO DE ADVANCED WORK PACKAGING (AWP) PARA SALFA MONTAJES (SALFACORP).
+Tu base metodológica son las publicaciones oficiales del Construction Industry Institute (CII):
+- CII RT-272 (Implementación de AWP, Volúmenes I, II y III, IR272-2).
+- CII RT-319 (Workface Planning en faena, gestión de IWPs y cuadrillas).
+- CII RT-390 (Modelo de madurez AWP, niveles 1 al 4, auditoría y scorecards).
+
+REGLA DE ORO DE INTEGRIDAD Y PROPIEDAD INTELECTUAL:
+1. TIENES ESTRICTAMENTE PROHIBIDO copiar, transcribir o volcar capítulos enteros, páginas íntegras o manuales completos del CII o de Salfa.
+2. Si el usuario te pide volcar o copiar el texto completo de un libro o procedimiento, debes rechazar cortésmente la extracción masiva y asumir tu rol pedagógico: explicar los conceptos clave, sintetizar la metodología, indicar la referencia documental formal (ej: 'CII RT-272 Vol 1, Sec 4.2') y sugerir al usuario consultar su libreta personal de NotebookLM para la lectura textual del PDF.
+3. TU ROL ES METODOLÓGICO Y FORMATIVO: responder dudas de faena, ayudar a articular el Path of Construction (PoC), explicar la jerarquía entre CWA, CWP, EWP, PWP e IWP, asesorar en el despeje de las 7 restricciones obligatorias de cuadrilla, y enseñar buenas prácticas de montaje industrial (minería, energía, celulosa).
+4. FORMATO: Responde en español chileno / técnico de ingeniería y construcción, estructurado con subtítulos, viñetas, tablas cortas de resumen si son necesarias, y citas precisas de las normas CII.
+`;
+
+  const payload = {
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: promptUsuario }]
+      }
+    ],
+    systemInstruction: {
+      parts: [{ text: systemInstruction }]
+    },
+    generationConfig: {
+      temperature: 0.2,
+      maxOutputTokens: 2048
+    }
+  };
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error?.message || `HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  const textoRes = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!textoRes) throw new Error('Respuesta vacía de la API de Gemini');
+
+  return formatearMarkdown(textoRes);
+}
+
+// Convertidor ligero de Markdown a HTML
+function formatearMarkdown(texto) {
+  let h = texto
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Encabezados
+  h = h.replace(/^### (.*$)/gim, '<h4>$1</h4>');
+  h = h.replace(/^## (.*$)/gim, '<h4>$1</h4>');
+  h = h.replace(/^# (.*$)/gim, '<h4>$1</h4>');
+
+  // Negrita e itálica
+  h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Listas con guiones
+  h = h.replace(/^\s*-\s+(.*$)/gim, '<li>$1</li>');
+  h = h.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+  // Párrafos
+  const parrafos = h.split(/\n\s*\n/);
+  return parrafos.map(p => {
+    p = p.trim();
+    if (!p) return '';
+    if (p.startsWith('<h4>') || p.startsWith('<ul>') || p.startsWith('<li>')) return p;
+    return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+}
+
+// ==============================================================
+// MOTOR LOCAL EXPERTO EN AWP (BASE DE CONOCIMIENTO CII RESIDENTE)
+// ==============================================================
+function generarRespuestaLocalExperta(prompt) {
+  const p = prompt.toLowerCase();
+
+  if (p.includes('path of construction') || p.includes('poc')) {
+    return `
+      <h4>El Path of Construction (PoC) según CII RT-272</h4>
+      <p>El <b>Path of Construction (PoC)</b> es la secuencia óptima en la que el equipo de construcción y montaje desea ejecutar la obra en terreno, definida <b>tempranamente</b> durante la etapa de ingeniería básica (FEED / Fase II).</p>
+      
+      <div class="msg-callout-cii">
+        <b>Principio Rector CII:</b> En la construcción tradicional, ingeniería diseña por sistemas y entrega lo que termina primero. En AWP, el <b>PoC gobierna la secuencia de entrega de la ingeniería</b> (EWPs) y las compras (PWPs).
+      </div>
+
+      <p><b>Pasos clave para formular el PoC en Salfa Montajes:</b></p>
+      <ol>
+        <li><b>Segmentación en CWAs:</b> Definir las áreas geográficas macro de la faena con límites claros (baterías de límites físicos).</li>
+        <li><b>Definición de CWPs:</b> Descomponer cada CWA en paquetes de construcción por disciplina de 20.000 a 50.000 HH.</li>
+        <li><b>Secuencia Lógica de Montaje:</b> Determinar la ruta crítica física (ej: Obras civiles -> Estructuras pesadas -> Equipos mecánicos mayores -> Cañerías de interconexión -> Electricidad e Instrumentación).</li>
+        <li><b>Congelamiento del Cronograma Nivel 3:</b> Alinear los hitos de entrega AFC de ingeniería con un margen mínimo de 90 días antes del inicio de montaje.</li>
+      </ol>
+      <p><i>Referencia para profundizar: Consulta tu libreta <b>CII RT-272: Advanced Work Packaging Core</b> en NotebookLM.</i></p>
+    `;
+  }
+
+  if (p.includes('7 restricci') || p.includes('restricciones') || p.includes('checklist')) {
+    return `
+      <h4>Las 7 Restricciones Críticas de un IWP (CII RT-319)</h4>
+      <p>El estándar <b>CII RT-319</b> establece la <i>Regla de Oro de Restricción Cero</i>: un paquete de instalación jamás debe entregarse al capataz si tiene trabas activas que detengan el trabajo de la cuadrilla.</p>
+      
+      <table class="salfa-data-table" style="margin:10px 0;">
+        <thead>
+          <tr><th>#</th><th>Restricción</th><th>Condición de Liberación en Salfa</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>1</b></td><td><b>Seguridad (HSE)</b></td><td>Permiso de trabajo y AST autorizados por el cliente.</td></tr>
+          <tr><td><b>2</b></td><td><b>Planos (AFC)</b></td><td>Planos AFC físicos en carpeta sin RFIs abiertos.</td></tr>
+          <tr><td><b>3</b></td><td><b>Materiales (PWP)</b></td><td>100% de elementos en bodega o pre-armado (inspeccionados).</td></tr>
+          <tr><td><b>4</b></td><td><b>Equipos / Levante</b></td><td>Grúas y herramientas especiales en terreno y certificadas.</td></tr>
+          <tr><td><b>5</b></td><td><b>Cuadrilla</b></td><td>Personal asignado con exámenes y calificaciones al día.</td></tr>
+          <tr><td><b>6</b></td><td><b>Frentes de Obra</b></td><td>Obras civiles o predecesores liberados sin interferencias.</td></tr>
+          <tr><td><b>7</b></td><td><b>Calidad (QA-QC)</b></td><td>Protocolos impresos y puntos de inspección notificados.</td></tr>
+        </tbody>
+      </table>
+      <p><i>Puedes simular este proceso de auditoría en la pestaña <b>Simulador IWP & Restricciones</b> del portal.</i></p>
+    `;
+  }
+
+  if (p.includes('dimensionamiento') || p.includes('horas') || p.includes('hh')) {
+    return `
+      <h4>Reglas de Dimensionamiento de un IWP (Installation Work Package)</h4>
+      <p>De acuerdo con la guía práctica <b>CII RT-319</b>, el dimensionamiento de un IWP debe balancear la autonomía de la cuadrilla y la capacidad de control del capataz:</p>
+      <ul>
+        <li><b>Rango de Esfuerzo:</b> Entre <b>500 y 1.000 Horas Hombre (HH)</b> por paquete.</li>
+        <li><b>Tamaño de la Cuadrilla:</b> Diseñado para un equipo típico de <b>4 a 6 trabajadores</b> (ej: 1 Capataz + 3 Cañistas + 1 Soldador + 1 Ayudante).</li>
+        <li><b>Ventana Temporal de Ejecución:</b> De <b>1 a 2 semanas hábiles</b> (5 a 10 turnos de trabajo).</li>
+        <li><b>Backlog Saludable:</b> El Workface Planner debe mantener permanentemente un colchón de <b>3 a 4 semanas de IWPs libres de restricciones</b> aprobados listos para faena.</li>
+      </ul>
+      <div class="msg-callout-cii">
+        <b>¿Por qué no paquetes de más de 1.000 HH?</b> Si el IWP es demasiado grande, se diluye la rendición de cuentas, las restricciones imprevistas quedan ocultas y el porcentaje de avance se vuelve subjetivo.
+      </div>
+    `;
+  }
+
+  if (p.includes('workface planner') || p.includes('capataz') || p.includes('rol')) {
+    return `
+      <h4>Articulación: Workface Planner vs Capataz en Salfa Montajes</h4>
+      <p>Uno de los mayores aportes del modelo AWP es <b>liberar al Capataz de labores administrativas y de búsqueda de materiales</b> para que dedique el 100% de su tiempo a la supervisión, calidad y seguridad en terreno.</p>
+      <ul>
+        <li><b>Workface Planner (Planificador de Terreno):</b> Es el facilitador proactivo. Trabaja con 3 a 4 semanas de anticipación en el Backlog. Identifica qué cuadrilla necesitará qué materiales, coordina con bodega, verifica planos AFC y remueve las 7 restricciones antes del montaje.</li>
+        <li><b>Capataz (Foreman):</b> Recibe la carpeta del IWP <i>Constraint-Free</i>. Asigna las tareas diarias a su cuadrilla, lidera la charla de seguridad, controla el rendimiento y reporta el progreso diario al final del turno.</li>
+      </ul>
+      <p><i>El Workface Planner no es el jefe del Capataz, sino su soporte estratégico para asegurar trabajo continuo sin tiempos muertos.</i></p>
+    `;
+  }
+
+  if (p.includes('madurez') || p.includes('rt-390') || p.includes('scorecard')) {
+    return `
+      <h4>Modelo de Madurez AWP según CII RT-390</h4>
+      <p>El comité <b>CII RT-390</b> clasifica la madurez de un proyecto o empresa en 4 estadios evolutivos:</p>
+      <ol>
+        <li><b>Nivel 1 · Planificación Tradicional:</b> Silos entre ingeniería, compras y construcción. Las interferencias se resuelven reactivamente en terreno.</li>
+        <li><b>Nivel 2 · Workface Planning en Terreno:</b> Se crean IWPs y existe la figura del planificador de terreno, pero ingeniería no empaquetó sus entregables según el PoC.</li>
+        <li><b>Nivel 3 · AWP Integrado:</b> Ingeniería, adquisiciones y construcción operan bajo un PoC único desde la etapa temprana. Trazabilidad completa EWP -> CWP -> IWP.</li>
+        <li><b>Nivel 4 · Ecosistema Digital AWP:</b> Integración BIM 4D/5D, gemelos digitales, estado de suministros con RFID/código de barras y control de avance en tiempo real.</li>
+      </ol>
+      <p>En Salfa Montajes, la meta estratégica de pilotaje apunta a consolidar proyectos en <b>Nivel 3 Integrado</b> con herramientas digitales en terreno.</p>
+    `;
+  }
+
+  // Respuesta general metodológica
+  return `
+    <h4>Análisis Metodológico AWP Salfa Montajes</h4>
+    <p>Comprendo tu consulta: <i>"${prompt}"</i>.</p>
+    <p>Bajo las directrices del <b>Construction Industry Institute (CII)</b>, la implementación exitosa de Advanced Work Packaging requiere articular tres pilares fundamentales:</p>
+    <ul>
+      <li><b>Alineación Temprana (Path of Construction):</b> Que la obra defina el orden de llegada antes de que ingeniería trace los planos definitivos.</li>
+      <li><b>Integridad de los Paquetes (WBS):</b> Mantener la trazabilidad estricta donde cada <i>IWP</i> se desprende de un <i>CWP</i>, y este a su vez de sus respectivos <i>EWP</i> y <i>PWP</i>.</li>
+      <li><b>Cero Restricciones en Faena:</b> Aplicar rigurosamente el checklist de las 7 restricciones para proteger la productividad de las cuadrillas.</li>
+    </ul>
+    <p>Para profundizar en los manuales de referencia de este tema, te recomiendo abrir tu libreta de <b>NotebookLM vinculada</b> correspondiente.</p>
+  `;
+}
+
+// ==============================================================
+// GESTIÓN DE LIBRETAS NOTEBOOKLM
+// ==============================================================
+function renderizarNotebooks() {
+  const contenedor = document.getElementById('gridNotebooks');
+  if (!contenedor) return;
+
+  contenedor.innerHTML = appState.notebooks.map(nb => `
+    <div class="notebook-card">
+      <div>
+        <span class="notebook-cat">${nb.categoria}</span>
+        <h3 class="notebook-title">${nb.titulo}</h3>
+        <p class="notebook-desc">${nb.descripcion}</p>
+        <div class="notebook-sources-tag">
+          ${nb.fuentes.map(f => `<span class="source-tag">${f}</span>`).join('')}
+        </div>
+      </div>
+      <div class="notebook-actions">
+        <a href="${nb.url}" target="_blank" class="btn-open-notebook">
+          <span>Abrir en NotebookLM</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+        </a>
+        <button class="btn-copy-prompt" onclick="copiarPromptParaNotebookLM('${nb.titulo}')" title="Copiar prompt de estudio para pegar en NotebookLM">
+          Copiar Prompt
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('countNotebooks').textContent = appState.notebooks.length;
+}
+
+function copiarPromptParaNotebookLM(titulo) {
+  const promptSugerido = `Actuando como experto en ${titulo}, sintetiza los 5 puntos críticos que el equipo de Salfa Montajes debe cautelar en faena para este estándar, indicando capítulos y tablas de referencia.`;
+  navigator.clipboard.writeText(promptSugerido);
+  mostrarToast('Prompt copiado al portapapeles para pegar en NotebookLM');
+}
+
+function abrirModalNuevaLibreta() {
+  const nombre = prompt('Ingresa el nombre o título de tu Libreta de NotebookLM:');
+  if (!nombre) return;
+  const url = prompt('Pega la URL de tu Libreta en NotebookLM (ej: https://notebooklm.google.com/notebook/...):', 'https://notebooklm.google.com/');
+  if (!url) return;
+
+  const nueva = {
+    id: 'nb-custom-' + Date.now(),
+    titulo: nombre,
+    categoria: 'Libreta de Usuario',
+    descripcion: 'Libreta personalizada agregada por el usuario para consulta directa de fuentes.',
+    url: url,
+    fuentes: ['Archivos cargados por el usuario']
+  };
+
+  appState.notebooks.push(nueva);
+  localStorage.setItem('salfa_awp_user_notebooks', JSON.stringify(appState.notebooks));
+  renderizarNotebooks();
+  mostrarToast('Libreta NotebookLM registrada exitosamente');
+}
+
+// ==============================================================
+// SIMULADOR DE IWP & RESTRICCIONES
+// ==============================================================
+function cargarPaqueteSimulado(idPaquete) {
+  appState.paqueteSimuladoActual = idPaquete;
+  const pkg = PAQUETES_SIMULADOS[idPaquete];
+  if (!pkg) return;
+
+  document.getElementById('simCwa').textContent = pkg.cwa;
+  document.getElementById('simCwp').textContent = pkg.cwp;
+  document.getElementById('simEsp').textContent = pkg.esp;
+  document.getElementById('simHh').textContent = pkg.hh;
+  document.getElementById('simCuad').textContent = pkg.cuad;
+  document.getElementById('simDur').textContent = pkg.dur;
+
+  renderizarChecklistSimulador(pkg);
+  actualizarSemaforoSimulador(pkg);
+}
+
+function renderizarChecklistSimulador(pkg) {
+  const contenedor = document.getElementById('simChecklist');
+  contenedor.innerHTML = pkg.restricciones.map((r, idx) => `
+    <div class="constraint-item">
+      <div class="constraint-info">
+        <div class="constraint-icon ${r.ok ? 'ok' : 'pending'}">${r.ok ? '✓' : '!'}</div>
+        <div>
+          <div class="constraint-name">${r.id}. ${r.cat}</div>
+          <div class="constraint-desc">${r.elem}</div>
+        </div>
+      </div>
+      <div>
+        <button class="btn-toggle-constraint ${r.ok ? 'ok' : 'pending'}" onclick="toggleRestriccion(${idx})">
+          ${r.ok ? 'Despejada' : 'Pendiente'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleRestriccion(indice) {
+  const pkg = PAQUETES_SIMULADOS[appState.paqueteSimuladoActual];
+  if (!pkg || !pkg.restricciones[indice]) return;
+
+  pkg.restricciones[indice].ok = !pkg.restricciones[indice].ok;
+  renderizarChecklistSimulador(pkg);
+  actualizarSemaforoSimulador(pkg);
+}
+
+function actualizarSemaforoSimulador(pkg) {
+  const card = document.getElementById('simStatusCard');
+  const title = document.getElementById('simStatusTitle');
+  const sub = document.getElementById('simStatusSub');
+
+  const pendientes = pkg.restricciones.filter(r => !r.ok);
+  if (pendientes.length === 0) {
+    card.className = 'constraint-status-card ready';
+    title.textContent = '🟢 PAQUETE LIBRE (CONSTRAINT-FREE)';
+    sub.textContent = 'Todas las restricciones despejadas. Aprobado para entrega al Capataz y ejecución de cuadrilla.';
+  } else {
+    card.className = 'constraint-status-card blocked';
+    title.textContent = `🔴 ${pendientes.length} RESTRICCIÓN(ES) PENDIENTES`;
+    sub.textContent = 'Prohibido entregar a terreno. El Workface Planner debe gestionar el despeje en el backlog.';
+  }
+}
+
+function abrirSimuladorConPaquete(idPaquete) {
+  cambiarVista('simulador');
+  document.getElementById('selectSimPkg').value = idPaquete;
+  cargarPaqueteSimulado(idPaquete);
+}
+
+function evaluarIwpConIa() {
+  const pkg = PAQUETES_SIMULADOS[appState.paqueteSimuladoActual];
+  if (!pkg) return;
+
+  const pendientes = pkg.restricciones.filter(r => !r.ok);
+  const promptEvaluacion = `Evalúa el siguiente paquete de faena bajo la metodología AWP (CII RT-319):
+Paquete: ${pkg.nombre} (${pkg.esp}, ${pkg.hh})
+Estado de Restricciones:
+${pkg.restricciones.map(r => `- ${r.cat}: ${r.elem} -> [${r.ok ? 'DESPEJADA' : 'PENDIENTE'}]`).join('\n')}
+
+Genera el diagnóstico metodológico, explica los riesgos si se iniciara así y define las acciones de despeje prioritarias para el Workface Planner.`;
+
+  cambiarVista('chat');
+  document.getElementById('chatInput').value = promptEvaluacion;
+  enviarConsultaChat();
+}
+
+// ==============================================================
+// CONFIGURACIÓN DE IA & CLAVES
+// ==============================================================
+function guardarConfiguracionIa() {
+  const key = document.getElementById('inputApiKey').value.trim();
+  const modelo = document.getElementById('selectModeloIa').value;
+
+  appState.apiKey = key;
+  appState.modelo = modelo;
+
+  localStorage.setItem('salfa_awp_gemini_key', key);
+  localStorage.setItem('salfa_awp_gemini_model', modelo);
+
+  document.getElementById('labelModeloActual').textContent = modelo;
+  actualizarBadgeApiStatus();
+  mostrarToast('Configuración de la IA guardada exitosamente');
+}
+
+function actualizarBadgeApiStatus() {
+  const badge = document.getElementById('cfgStatusBadge');
+  const badgeHeader = document.getElementById('badgeEngineStatus');
+
+  if (appState.apiKey) {
+    badge.className = 'api-status-badge ok';
+    badge.textContent = `Gemini API Conectada (${appState.modelo})`;
+    badgeHeader.innerHTML = `<span>IA: ${appState.modelo} ⚡</span>`;
+  } else {
+    badge.className = 'api-status-badge warn';
+    badge.textContent = 'Modo Autónomo Local Activo (Sin API Key configurada)';
+    badgeHeader.innerHTML = '<span>IA: Modo Experto CII (Local) 🧠</span>';
+  }
+}
+
+async function probarConexionGemini() {
+  const key = document.getElementById('inputApiKey').value.trim();
+  if (!key) {
+    alert('Ingresa primero una API Key para realizar la prueba de conexión.');
+    return;
+  }
+
+  mostrarToast('Probando conexión con Google Generative Language API...');
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`;
+    const res = await fetch(url);
+    if (res.ok) {
+      alert('✅ ¡Conexión Exitosa con Google Gemini API!\nTu clave es válida y el servicio está listo para usarse.');
+      guardarConfiguracionIa();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      alert('❌ Error al autenticar con Gemini:\n' + (err.error?.message || `Código HTTP ${res.status}`));
+    }
+  } catch (e) {
+    alert('❌ Error de red al intentar contactar la API de Google:\n' + e.message);
+  }
+}
+
+// ==============================================================
+// MODALES & UTILIDADES
+// ==============================================================
+function abrirSelectorPortales() {
+  document.getElementById('modalPortales').style.display = 'flex';
+}
+
+function cerrarSelectorPortales() {
+  document.getElementById('modalPortales').style.display = 'none';
+}
+
+function cerrarSelectorFuera(e) {
+  if (e.target.id === 'modalPortales') {
+    cerrarSelectorPortales();
+  }
+}
+
+function mostrarReglasPolitica() {
+  alert(`🛡️ POLÍTICA DE INTEGRIDAD Y PROPIEDAD INTELECTUAL (CII & SALFA)
+
+1. NATURALEZA CONSULTIVA Y PEDAGÓGICA:
+   Este portal tiene como objetivo capacitar, orientar y asistir al personal de Salfa Montajes en la aplicación del estándar Advanced Work Packaging (AWP).
+
+2. PROTECCIÓN CONTRA VOLCADO MASIVO:
+   Por acuerdos de propiedad intelectual, está estrictamente prohibido ordenar a la IA que copie, transcriba o reproduzca manuales completos del CII o de la empresa.
+
+3. ACCESO A DOCUMENTOS ORIGINALES:
+   Para lectura y estudio directo de los textos íntegros, recurre a tus libretas de Google NotebookLM vinculadas en la pestaña "Libretas NotebookLM".`);
+}
+
+function copiarTextoTabla(idTabla) {
+  const tbl = document.getElementById(idTabla);
+  if (!tbl) return;
+
+  let md = '';
+  const rows = tbl.querySelectorAll('tr');
+  rows.forEach((r, idx) => {
+    const cells = r.querySelectorAll('th, td');
+    const rowText = Array.from(cells).map(c => c.textContent.trim().replace(/\n+/g, ' ')).join(' | ');
+    md += `| ${rowText} |\n`;
+    if (idx === 0) {
+      md += `| ${Array.from(cells).map(() => '---').join(' | ')} |\n`;
+    }
+  });
+
+  navigator.clipboard.writeText(md);
+  mostrarToast('Tabla copiada en formato Markdown al portapapeles');
+}
+
+function consultarTemaConAgente(promptTema) {
+  cambiarVista('chat');
+  document.getElementById('chatInput').value = promptTema;
+  enviarConsultaChat();
+}
+
+function mostrarToast(msg) {
+  const toast = document.getElementById('salfaToast');
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3200);
+}
+</script>
+
+</body>
+</html>

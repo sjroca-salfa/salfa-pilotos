@@ -1885,6 +1885,11 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
         <div class="salfa-dd-info"><b>Agente AWP · Tutor & Metodología</b><span>Tutor CII, NotebookLM y restricciones</span></div>
         <span class="salfa-dd-tag ok">Activo</span>
       </a>
+      <a href="09-portal-salfagi-modeler/index.html" class="salfa-dd-item" data-p="09">
+        <span class="salfa-dd-num adm">09</span>
+        <div class="salfa-dd-info"><b>Salfagi Modeler · Procesos BPMN</b><span>Bizagi Compliant, BRASA 2A & Lean</span></div>
+        <span class="salfa-dd-tag ok">Activo</span>
+      </a>
       <div class="salfa-dd-item off">
         <span class="salfa-dd-num off">04</span>
         <div class="salfa-dd-info"><b>Indicadores OKR</b><span>Desarrollo estratégico</span></div>
@@ -1955,6 +1960,11 @@ var PORTALES = [
     url:'08-portal-agente-awp/index.html', key:'awp-agente',
     driveUrl:'https://drive.google.com/drive/search?q=Agente%20AWP',
     icono:'package', roles:['Administrador','Editor','Revisor','Visualizador','Colaborador'], estado:'Activo' },
+  { id:'09', num:'09', nombre:'Salfagi Modeler · Procesos BPMN', categoria:'Arquitectura de Procesos & BPMN', gerencia:'Gerencia de Operaciones / Excelencia Operacional',
+    descripcion:'Modelado, simulación y arquitectura de procesos BPMN 2.0 (AS-IS) 100% Bizagi Modeler & BRASA 2A, visor interactivo con Procedimiento Rector Lean (10000000-PRO-EST-001) y exportador nativo.',
+    url:'09-portal-salfagi-modeler/index.html', key:'salfagi',
+    driveUrl:'https://drive.google.com/drive/search?q=Salfagi%20Modeler',
+    icono:'network', roles:['Administrador','Editor','Revisor','Visualizador','Colaborador'], estado:'Activo' },
   { id:'05', num:'05', nombre:'Gestión de la Información', categoria:'Gobernanza y procesos', gerencia:'Gerencia de Operaciones / P&D',
     descripcion:'Portal de consulta del modelo de gestión de la información, series documentales (O, D, P), pirámide de niveles y código documental de Salfa Montajes.',
     url:'https://sjroca-salfa.github.io/portal-gestion-informacion/', key:'info',
@@ -2709,6 +2719,7 @@ function alternarModoEdicion(){
     }
     if(banner) banner.classList.add('on');
     grid.classList.add('modo-edicion');
+    document.querySelectorAll('.controles-reordenar-card').forEach(function(el){ el.style.display = 'flex'; });
     habilitarDnDGrid(grid);
   } else {
     if(btn){
@@ -2717,8 +2728,29 @@ function alternarModoEdicion(){
     }
     if(banner) banner.classList.remove('on');
     grid.classList.remove('modo-edicion');
+    document.querySelectorAll('.controles-reordenar-card').forEach(function(el){ el.style.display = 'none'; });
   }
 }
+
+window.moverCardHub = function(idx, dir){
+  var grid = $('gridPortales');
+  if(!grid) return;
+  var cards = Array.from(grid.querySelectorAll('.tarjeta'));
+  var targetIdx = idx + dir;
+  if(targetIdx < 0 || targetIdx >= cards.length) return;
+  if(dir < 0){
+    grid.insertBefore(cards[idx], cards[targetIdx]);
+  } else {
+    grid.insertBefore(cards[idx], cards[targetIdx].nextSibling);
+  }
+  actualizarNumerosFichas(grid);
+  Array.from(grid.querySelectorAll('.tarjeta')).forEach(function(c, i){
+    var up = c.querySelector('.btn-orden-arr');
+    var down = c.querySelector('.btn-orden-abj');
+    if(up) up.setAttribute('onclick', 'event.stopPropagation();moverCardHub('+i+',-1)');
+    if(down) down.setAttribute('onclick', 'event.stopPropagation();moverCardHub('+i+',1)');
+  });
+};
 
 function guardarOrdenPortales(){
   var grid = $('gridPortales');
@@ -2985,16 +3017,13 @@ function renderDashboard(user){
   if($('topUserRol')) $('topUserRol').textContent = (user.rol || 'Colaborador');
   if($('btnEditarOrden')) $('btnEditarOrden').style.display = (user.rol === 'Administrador' ? 'inline-flex' : 'none');
   
-  if(user.foto){
-    var chipUser = $('chipUserId');
-    if(chipUser){
-      var oldSvg = chipUser.querySelector('svg, img');
-      var fotoImg = document.createElement('img');
-      fotoImg.src = user.foto;
-      fotoImg.className = 'avatar-foto-hub';
-      fotoImg.alt = user.nombre || 'Avatar';
-      fotoImg.style.cssText = 'width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.4);flex:none';
-      if(oldSvg) oldSvg.replaceWith(fotoImg);
+  var userAvatarEl = $('userAvatarTop');
+  if(userAvatarEl){
+    var iniciales = (user.nombre ? user.nombre.split(' ').filter(Boolean).map(function(w){return w[0];}).join('') : (user.email?user.email.substring(0,2):'SR')).toUpperCase().substring(0,2);
+    if(user.foto){
+      userAvatarEl.innerHTML = '<img src="'+escapar(user.foto)+'" alt="Avatar">';
+    } else {
+      userAvatarEl.textContent = iniciales;
     }
   }
   
@@ -3023,6 +3052,10 @@ function renderDashboard(user){
     t.innerHTML=
       '<div class="t-cab"><div class="ficha">'+numAuto+'</div>'+
         '<div class="t-cab-meta"><h3>'+escapar(p.nombre)+'</h3><span class="rotulo">'+escapar(p.categoria)+'</span><span class="t-est '+cls+'">'+est+'</span></div>'+
+        '<div class="controles-reordenar-card" style="display:'+(MODO_EDICION_ORDEN?'flex':'none')+';gap:4px;margin-left:auto;align-items:center">'+
+          '<button type="button" class="btn-orden-arr" onclick="event.stopPropagation();moverCardHub('+i+',-1)" title="Subir" style="background:#1E2229;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px;width:30px;height:30px;font-size:12px;cursor:pointer;display:grid;place-items:center">▲</button>'+
+          '<button type="button" class="btn-orden-abj" onclick="event.stopPropagation();moverCardHub('+i+',1)" title="Bajar" style="background:#1E2229;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px;width:30px;height:30px;font-size:12px;cursor:pointer;display:grid;place-items:center">▼</button>'+
+        '</div>'+
         ic(p.icono,'ico')+'<span class="t-chev" aria-hidden="true"></span></div>'+
       '<div class="t-det"><div class="t-det-in">'+
       '<div class="t-cuerpo">'+p.descripcion+'</div>'+

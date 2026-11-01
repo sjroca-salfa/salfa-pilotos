@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="Definitions_SALFA_Lean_ASIS"
+                  targetNamespace="http://salfa.cl/bpmn/lean_last_planner"
+                  exporter="Bizagi / Antigravity BPMN Engine"
+                  exporterVersion="2.0">
+
+  <!-- Collaboration: Macroproceso y Procesos Relacionados -->
+  <bpmn:collaboration id="Collab_Macro_Planificacion">
+    <bpmn:participant id="Part_PROC_01" name="PROC-01: Planificación Táctica y Gestión de Tareas Last Planner" processRef="Process_PROC_01" />
+    <bpmn:participant id="Part_PROC_02" name="PROC-02: Gestión y Liberación de Restricciones" processRef="Process_PROC_02" />
+    <bpmn:messageFlow id="MsgFlow_Invocacion" name="REL-0002: Invocación por Restricción Detectada" sourceRef="CallAct_GestionRestricciones" targetRef="Start_PROC_02" />
+    <bpmn:messageFlow id="MsgFlow_Retorno" name="REL-0003: Hand-off Restricción Entregada" sourceRef="End_PROC_02" targetRef="Task_PlanTrisemanal" />
+  </bpmn:collaboration>
+
+  <!-- ==================== PROCESS 1: PROC-01 ==================== -->
+  <bpmn:process id="Process_PROC_01" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_PROC_01">
+      <bpmn:lane id="Lane_Programador" name="Programador de Obra">
+        <bpmn:flowNodeRef>Start_TimerSemanal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ActualizarP6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SincronizarOPC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CalcularKPI</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_CicloSemanal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_LastPlanner" name="Jefe de Área (Last Planner)">
+        <bpmn:flowNodeRef>Task_AperturaTareas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PullPlanning</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_TieneRestriccion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CallAct_GestionRestricciones</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PlanTrisemanal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Supervisor" name="Supervisor de Terreno">
+        <bpmn:flowNodeRef>Task_ComprometerTarea</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ControlDiarioPOD</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_TimerSemanal" name="Corte Semanal del Proyecto">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerDef_01" />
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="Task_ActualizarP6" name="Actualizar Programa Maestro en P6">
+      <bpmn:incoming>Flow_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_SincronizarOPC" name="Sincronizar P6 hacia OPC">
+      <bpmn:incoming>Flow_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:userTask id="Task_AperturaTareas" name="Desglosar Actividades en Tareas Operativas">
+      <bpmn:incoming>Flow_03</bpmn:incoming>
+      <bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:manualTask id="Task_PullPlanning" name="Realizar Pull Planning Táctico (Ventana 3 Semanas)">
+      <bpmn:incoming>Flow_04</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:manualTask>
+
+    <bpmn:exclusiveGateway id="Gateway_TieneRestriccion" name="¿Tiene Restricciones Abiertas?">
+      <bpmn:incoming>Flow_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_SiRestriccion</bpmn:outgoing>
+      <bpmn:outgoing>Flow_NoRestriccion</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:callActivity id="CallAct_GestionRestricciones" name="Invocar PROC-02: Gestión de Restricciones" calledElement="Process_PROC_02">
+      <bpmn:incoming>Flow_SiRestriccion</bpmn:incoming>
+      <bpmn:outgoing>Flow_RestriccionResuelta</bpmn:outgoing>
+    </bpmn:callActivity>
+
+    <bpmn:userTask id="Task_PlanTrisemanal" name="Programar Trisemanal y Asignar Supervisor">
+      <bpmn:incoming>Flow_NoRestriccion</bpmn:incoming>
+      <bpmn:incoming>Flow_RestriccionResuelta</bpmn:incoming>
+      <bpmn:outgoing>Flow_06</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_ComprometerTarea" name="Comprometer Tarea en OPC">
+      <bpmn:incoming>Flow_06</bpmn:incoming>
+      <bpmn:outgoing>Flow_07</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:manualTask id="Task_ControlDiarioPOD" name="Control Diario POD y Cierre de Tareas">
+      <bpmn:incoming>Flow_07</bpmn:incoming>
+      <bpmn:outgoing>Flow_08</bpmn:outgoing>
+    </bpmn:manualTask>
+
+    <bpmn:serviceTask id="Task_CalcularKPI" name="Publicar KPI en Power BI y Transferir Avance">
+      <bpmn:incoming>Flow_08</bpmn:incoming>
+      <bpmn:outgoing>Flow_09</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:endEvent id="End_CicloSemanal" name="Ciclo Semanal Cerrado">
+      <bpmn:incoming>Flow_09</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows PROC-01 -->
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="Start_TimerSemanal" targetRef="Task_ActualizarP6" />
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_ActualizarP6" targetRef="Task_SincronizarOPC" />
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="Task_SincronizarOPC" targetRef="Task_AperturaTareas" />
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="Task_AperturaTareas" targetRef="Task_PullPlanning" />
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Task_PullPlanning" targetRef="Gateway_TieneRestriccion" />
+    <bpmn:sequenceFlow id="Flow_SiRestriccion" name="SÍ" sourceRef="Gateway_TieneRestriccion" targetRef="CallAct_GestionRestricciones" />
+    <bpmn:sequenceFlow id="Flow_NoRestriccion" name="NO" sourceRef="Gateway_TieneRestriccion" targetRef="Task_PlanTrisemanal" />
+    <bpmn:sequenceFlow id="Flow_RestriccionResuelta" sourceRef="CallAct_GestionRestricciones" targetRef="Task_PlanTrisemanal" />
+    <bpmn:sequenceFlow id="Flow_06" sourceRef="Task_PlanTrisemanal" targetRef="Task_ComprometerTarea" />
+    <bpmn:sequenceFlow id="Flow_07" sourceRef="Task_ComprometerTarea" targetRef="Task_ControlDiarioPOD" />
+    <bpmn:sequenceFlow id="Flow_08" sourceRef="Task_ControlDiarioPOD" targetRef="Task_CalcularKPI" />
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Task_CalcularKPI" targetRef="End_CicloSemanal" />
+  </bpmn:process>
+
+  <!-- ==================== PROCESS 2: PROC-02 ==================== -->
+  <bpmn:process id="Process_PROC_02" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_PROC_02">
+      <bpmn:lane id="Lane_Identificador" name="Identificador de la Restricción">
+        <bpmn:flowNodeRef>Start_PROC_02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RegistrarRestriccion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fork_Vinculacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_VincularTareas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Join_Vinculacion</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_AdminObra" name="Administrador de Obra">
+        <bpmn:flowNodeRef>Task_AsignarResponsable</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ParteResponsable" name="Parte Responsable">
+        <bpmn:flowNodeRef>Task_ComprometerFecha</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_GestionarLiberacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_EntregarRestriccion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PROC_02</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_PROC_02" name="Restricción Detectada">
+      <bpmn:outgoing>Flow_P2_01</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="Task_RegistrarRestriccion" name="Registrar Restricción en OPC">
+      <bpmn:incoming>Flow_P2_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_P2_02</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:parallelGateway id="Fork_Vinculacion">
+      <bpmn:incoming>Flow_P2_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_Fork1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Fork2</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:userTask id="Task_VincularTareas" name="Vincular a Tareas Impactadas">
+      <bpmn:incoming>Flow_Fork1</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join1</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="Task_AsignarResponsable" name="Asignar Responsable y Fecha Límite">
+      <bpmn:incoming>Flow_Fork2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join2</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:parallelGateway id="Join_Vinculacion">
+      <bpmn:incoming>Flow_Join1</bpmn:incoming>
+      <bpmn:incoming>Flow_Join2</bpmn:incoming>
+      <bpmn:outgoing>Flow_P2_03</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:userTask id="Task_ComprometerFecha" name="Comprometer Fecha Prometida">
+      <bpmn:incoming>Flow_P2_03</bpmn:incoming>
+      <bpmn:outgoing>Flow_P2_04</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:manualTask id="Task_GestionarLiberacion" name="Gestionar Liberación en Faena">
+      <bpmn:incoming>Flow_P2_04</bpmn:incoming>
+      <bpmn:outgoing>Flow_P2_05</bpmn:outgoing>
+    </bpmn:manualTask>
+
+    <bpmn:userTask id="Task_EntregarRestriccion" name="Marcar Entregada en OPC">
+      <bpmn:incoming>Flow_P2_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_P2_06</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:endEvent id="End_PROC_02" name="Restricción Entregada y Tarea Liberada">
+      <bpmn:incoming>Flow_P2_06</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows PROC-02 -->
+    <bpmn:sequenceFlow id="Flow_P2_01" sourceRef="Start_PROC_02" targetRef="Task_RegistrarRestriccion" />
+    <bpmn:sequenceFlow id="Flow_P2_02" sourceRef="Task_RegistrarRestriccion" targetRef="Fork_Vinculacion" />
+    <bpmn:sequenceFlow id="Flow_Fork1" sourceRef="Fork_Vinculacion" targetRef="Task_VincularTareas" />
+    <bpmn:sequenceFlow id="Flow_Fork2" sourceRef="Fork_Vinculacion" targetRef="Task_AsignarResponsable" />
+    <bpmn:sequenceFlow id="Flow_Join1" sourceRef="Task_VincularTareas" targetRef="Join_Vinculacion" />
+    <bpmn:sequenceFlow id="Flow_Join2" sourceRef="Task_AsignarResponsable" targetRef="Join_Vinculacion" />
+    <bpmn:sequenceFlow id="Flow_P2_03" sourceRef="Join_Vinculacion" targetRef="Task_ComprometerFecha" />
+    <bpmn:sequenceFlow id="Flow_P2_04" sourceRef="Task_ComprometerFecha" targetRef="Task_GestionarLiberacion" />
+    <bpmn:sequenceFlow id="Flow_P2_05" sourceRef="Task_GestionarLiberacion" targetRef="Task_EntregarRestriccion" />
+    <bpmn:sequenceFlow id="Flow_P2_06" sourceRef="Task_EntregarRestriccion" targetRef="End_PROC_02" />
+  </bpmn:process>
+
+  <!-- ==================== BPMN DIAGRAM INTERCHANGE (BPMNDI) ==================== -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collab_Macro_Planificacion">
+      
+      <!-- Pool PROC-01 -->
+      <bpmndi:BPMNShape id="Shape_Part_PROC_01" bpmnElement="Part_PROC_01" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1380" height="420" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Programador" bpmnElement="Lane_Programador" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1350" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_LastPlanner" bpmnElement="Lane_LastPlanner" isHorizontal="true">
+        <dc:Bounds x="190" y="220" width="1350" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Supervisor" bpmnElement="Lane_Supervisor" isHorizontal="true">
+        <dc:Bounds x="190" y="360" width="1350" height="140" />
+      </bpmndi:BPMNShape>
+
+      <!-- Elements PROC-01 -->
+      <bpmndi:BPMNShape id="Shape_Start_TimerSemanal" bpmnElement="Start_TimerSemanal">
+        <dc:Bounds x="232" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ActualizarP6" bpmnElement="Task_ActualizarP6">
+        <dc:Bounds x="310" y="110" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_SincronizarOPC" bpmnElement="Task_SincronizarOPC">
+        <dc:Bounds x="470" y="110" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_AperturaTareas" bpmnElement="Task_AperturaTareas">
+        <dc:Bounds x="470" y="250" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_PullPlanning" bpmnElement="Task_PullPlanning">
+        <dc:Bounds x="630" y="250" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_TieneRestriccion" bpmnElement="Gateway_TieneRestriccion" isMarkerVisible="true">
+        <dc:Bounds x="805" y="265" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_CallAct_GestionRestricciones" bpmnElement="CallAct_GestionRestricciones" isExpanded="false">
+        <dc:Bounds x="900" y="250" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_PlanTrisemanal" bpmnElement="Task_PlanTrisemanal">
+        <dc:Bounds x="1080" y="250" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ComprometerTarea" bpmnElement="Task_ComprometerTarea">
+        <dc:Bounds x="1080" y="390" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ControlDiarioPOD" bpmnElement="Task_ControlDiarioPOD">
+        <dc:Bounds x="1250" y="390" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_CalcularKPI" bpmnElement="Task_CalcularKPI">
+        <dc:Bounds x="1250" y="110" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_CicloSemanal" bpmnElement="End_CicloSemanal">
+        <dc:Bounds x="1432" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges PROC-01 -->
+      <bpmndi:BPMNEdge id="Edge_Flow_01" bpmnElement="Flow_01">
+        <di:waypoint x="268" y="150" />
+        <di:waypoint x="310" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_02" bpmnElement="Flow_02">
+        <di:waypoint x="430" y="150" />
+        <di:waypoint x="470" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_03" bpmnElement="Flow_03">
+        <di:waypoint x="530" y="190" />
+        <di:waypoint x="530" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_04" bpmnElement="Flow_04">
+        <di:waypoint x="590" y="290" />
+        <di:waypoint x="630" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_05" bpmnElement="Flow_05">
+        <di:waypoint x="760" y="290" />
+        <di:waypoint x="805" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_SiRestriccion" bpmnElement="Flow_SiRestriccion">
+        <di:waypoint x="855" y="290" />
+        <di:waypoint x="900" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_NoRestriccion" bpmnElement="Flow_NoRestriccion">
+        <di:waypoint x="830" y="265" />
+        <di:waypoint x="830" y="230" />
+        <di:waypoint x="1145" y="230" />
+        <di:waypoint x="1145" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_RestriccionResuelta" bpmnElement="Flow_RestriccionResuelta">
+        <di:waypoint x="1030" y="290" />
+        <di:waypoint x="1080" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_06" bpmnElement="Flow_06">
+        <di:waypoint x="1145" y="330" />
+        <di:waypoint x="1145" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_07" bpmnElement="Flow_07">
+        <di:waypoint x="1210" y="430" />
+        <di:waypoint x="1250" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_08" bpmnElement="Flow_08">
+        <di:waypoint x="1315" y="390" />
+        <di:waypoint x="1315" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_09" bpmnElement="Flow_09">
+        <di:waypoint x="1380" y="150" />
+        <di:waypoint x="1432" y="150" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Pool PROC-02 -->
+      <bpmndi:BPMNShape id="Shape_Part_PROC_02" bpmnElement="Part_PROC_02" isHorizontal="true">
+        <dc:Bounds x="160" y="550" width="1380" height="420" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Identificador" bpmnElement="Lane_Identificador" isHorizontal="true">
+        <dc:Bounds x="190" y="550" width="1350" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_AdminObra" bpmnElement="Lane_AdminObra" isHorizontal="true">
+        <dc:Bounds x="190" y="690" width="1350" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_ParteResponsable" bpmnElement="Lane_ParteResponsable" isHorizontal="true">
+        <dc:Bounds x="190" y="820" width="1350" height="150" />
+      </bpmndi:BPMNShape>
+
+      <!-- Elements PROC-02 -->
+      <bpmndi:BPMNShape id="Shape_Start_PROC_02" bpmnElement="Start_PROC_02">
+        <dc:Bounds x="232" y="602" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_RegistrarRestriccion" bpmnElement="Task_RegistrarRestriccion">
+        <dc:Bounds x="310" y="580" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Fork_Vinculacion" bpmnElement="Fork_Vinculacion">
+        <dc:Bounds x="485" y="595" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_VincularTareas" bpmnElement="Task_VincularTareas">
+        <dc:Bounds x="580" y="580" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_AsignarResponsable" bpmnElement="Task_AsignarResponsable">
+        <dc:Bounds x="580" y="715" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Join_Vinculacion" bpmnElement="Join_Vinculacion">
+        <dc:Bounds x="765" y="595" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_ComprometerFecha" bpmnElement="Task_ComprometerFecha">
+        <dc:Bounds x="860" y="850" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_GestionarLiberacion" bpmnElement="Task_GestionarLiberacion">
+        <dc:Bounds x="1030" y="850" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_EntregarRestriccion" bpmnElement="Task_EntregarRestriccion">
+        <dc:Bounds x="1200" y="850" width="130" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_PROC_02" bpmnElement="End_PROC_02">
+        <dc:Bounds x="1382" y="872" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges PROC-02 -->
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_01" bpmnElement="Flow_P2_01">
+        <di:waypoint x="268" y="620" />
+        <di:waypoint x="310" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_02" bpmnElement="Flow_P2_02">
+        <di:waypoint x="440" y="620" />
+        <di:waypoint x="485" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Fork1" bpmnElement="Flow_Fork1">
+        <di:waypoint x="535" y="620" />
+        <di:waypoint x="580" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Fork2" bpmnElement="Flow_Fork2">
+        <di:waypoint x="510" y="645" />
+        <di:waypoint x="510" y="755" />
+        <di:waypoint x="580" y="755" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Join1" bpmnElement="Flow_Join1">
+        <di:waypoint x="710" y="620" />
+        <di:waypoint x="765" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Join2" bpmnElement="Flow_Join2">
+        <di:waypoint x="710" y="755" />
+        <di:waypoint x="790" y="755" />
+        <di:waypoint x="790" y="645" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_03" bpmnElement="Flow_P2_03">
+        <di:waypoint x="815" y="620" />
+        <di:waypoint x="838" y="620" />
+        <di:waypoint x="838" y="890" />
+        <di:waypoint x="860" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_04" bpmnElement="Flow_P2_04">
+        <di:waypoint x="990" y="890" />
+        <di:waypoint x="1030" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_05" bpmnElement="Flow_P2_05">
+        <di:waypoint x="1160" y="890" />
+        <di:waypoint x="1200" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_P2_06" bpmnElement="Flow_P2_06">
+        <di:waypoint x="1330" y="890" />
+        <di:waypoint x="1382" y="890" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Inter-Process Message Flows -->
+      <bpmndi:BPMNEdge id="Edge_MsgFlow_Invocacion" bpmnElement="MsgFlow_Invocacion">
+        <di:waypoint x="965" y="330" />
+        <di:waypoint x="965" y="530" />
+        <di:waypoint x="250" y="530" />
+        <di:waypoint x="250" y="602" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MsgFlow_Retorno" bpmnElement="MsgFlow_Retorno">
+        <di:waypoint x="1400" y="872" />
+        <di:waypoint x="1400" y="530" />
+        <di:waypoint x="1145" y="530" />
+        <di:waypoint x="1145" y="330" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
