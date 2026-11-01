@@ -439,12 +439,13 @@ body.modal-abierto{overflow:hidden}
   .portada{
     display:flex;
     flex-direction:column;
-    justify-content:center;
+    justify-content:flex-start;
     align-items:center;
-    height:100dvh;
-    max-height:100dvh;
-    overflow:hidden;
-    padding:max(10px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
+    min-height:100dvh;
+    height:auto;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:calc(20px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
     gap:10px;
     box-sizing:border-box;
   }
@@ -454,7 +455,7 @@ body.modal-abierto{overflow:hidden}
     align-items:center;
     text-align:center;
     gap:4px;
-    margin:0;
+    margin:6px 0 0;
     flex:none;
   }
   .portada>div:first-child .filete,
@@ -533,15 +534,40 @@ html,body{height:100%;max-width:100%;overflow-x:hidden}
 #viewLogin .ingreso p.sub{margin-bottom:clamp(12px,2.6vh,26px)}
 #viewLogin .campo{margin-bottom:clamp(10px,2vh,18px)}
 @media (max-width:860px){
-  #viewLogin.portada{grid-template-columns:minmax(0,1fr);align-content:center;gap:clamp(12px,2.6vh,28px);
-    padding:calc(14px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
-  #viewLogin .ingreso{max-width:520px}
-  #viewLogin .pie-portada{display:none}
+  #viewLogin.portada{
+    height:auto !important;
+    min-height:100dvh !important;
+    max-height:none !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    grid-template-rows:auto auto !important;
+    align-content:start !important;
+    align-items:start !important;
+    gap:14px !important;
+    padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px)) 16px !important;
+  }
+  #viewLogin.portada>div:not(.ingreso){
+    align-self:center !important;
+    margin-top:6px !important;
+    width:100% !important;
+  }
+  #viewLogin .logo-portada{width:clamp(140px,45vw,200px) !important;height:auto !important}
+  #viewLogin .filete{margin:8px auto 6px !important}
+  #viewLogin .titulo-portada{font-size:20px !important;letter-spacing:0.05em !important}
+  #viewLogin .bajada{display:none !important}
+  #viewLogin .pie-portada{display:none !important}
+  #viewLogin .ingreso{
+    max-width:100% !important;
+    align-self:start !important;
+    max-height:none !important;
+    padding:20px 18px 18px !important;
+  }
 }
 @media (max-width:600px){
-  #viewLogin .bajada{display:none}
-  #viewLogin .titulo-portada{font-size:clamp(24px,7.4vw,32px)}
-  #viewLogin .filete{margin:clamp(8px,1.6vh,16px) auto clamp(6px,1.2vh,10px)}
+  #viewLogin .bajada{display:none !important}
+  #viewLogin .titulo-portada{font-size:clamp(19px,6vw,22px) !important}
+  #viewLogin .filete{margin:6px auto !important}
 }
 @media (max-height:520px) and (orientation:landscape){
   #viewLogin.portada{grid-template-columns:minmax(0,1fr) minmax(320px,400px);align-content:normal;gap:28px}
@@ -560,13 +586,7 @@ html,body{height:100%;max-width:100%;overflow-x:hidden}
   #viewLogin .separador{margin:10px 0}
   #viewLogin .cambio{margin-top:2px}
 }
-@media (max-width:860px){
-  #viewLogin.portada{grid-template-rows:auto minmax(0,1fr);align-content:stretch;align-items:start}
-  #viewLogin.portada>div:not(.ingreso){align-self:end}
-  #viewLogin .ingreso{align-self:start;max-height:100%}
-  #viewLogin .titulo-portada{font-size:clamp(22px,min(6.4vw,4vh),36px)}
-  #viewLogin .logo-portada{width:clamp(130px,min(40vw,20vh),220px)}
-}
+
 @media (max-width:860px) and (max-height:520px) and (orientation:landscape){
   #viewLogin.portada{grid-template-columns:minmax(0,1fr) minmax(320px,400px);grid-template-rows:minmax(0,1fr);align-items:center}
   #viewLogin.portada>div:not(.ingreso){align-self:center}
@@ -820,14 +840,31 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   #viewDashboard.on{display:flex;flex-direction:column;height:auto;max-height:none;min-height:100dvh;overflow:visible}
   #viewDashboard.on > .top-v2,#viewDashboard.on > .strip-v2,#viewDashboard.on > .footer-v2{flex:none}
 
-  /* Cabecera fija, con iconos de 44 px */
-  #viewDashboard .top-v2{position:sticky;top:0;z-index:30;gap:10px;
-    padding:calc(env(safe-area-inset-top,0px) + 8px) max(14px,env(safe-area-inset-right,0px)) 8px max(14px,env(safe-area-inset-left,0px))}
-  #viewDashboard .top-v2 .logo{height:clamp(22px,5.6vw,30px);max-width:44vw}
-  #viewDashboard .top-der{gap:8px;flex:none}
-  #viewDashboard .btn-pill{min-height:44px;min-width:44px;justify-content:center;font-size:13.5px}
-  #viewDashboard .btn-pill span{display:none}
-  #viewDashboard .btn-pill svg{width:18px!important;height:18px!important}
+  /* Cabecera fija, con iconos y espacio optimizado sin solapamientos */
+  #viewDashboard .top-v2{
+    position:sticky;top:0;z-index:30;gap:8px;
+    padding:calc(env(safe-area-inset-top,0px) + 6px) max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px));
+    height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:nowrap;overflow:hidden;
+  }
+  #viewDashboard .top-izq{flex:0 0 auto;min-width:0;display:flex;align-items:center}
+  #viewDashboard .top-v2 .logo{height:20px!important;width:auto!important;max-width:130px!important;flex:none;display:block}
+  #viewDashboard .top-der{gap:5px;flex:0 0 auto;min-width:0;display:flex;align-items:center}
+  #viewDashboard .chip-top-rol,
+  #viewDashboard .top-mail,
+  #viewDashboard .btn-pill-contacto{display:none!important}
+  #viewDashboard .chip-user-id{background:none!important;border:none!important;padding:0!important;margin:0!important;max-width:none!important}
+  #viewDashboard .user-avatar-top{width:28px!important;height:28px!important;font-size:11px!important;flex:none}
+  #viewDashboard .chip-sesion-tiempo{padding:3px 7px!important;font-size:11px!important;gap:4px!important;flex:none}
+  #viewDashboard .chip-sesion-tiempo i{width:6px!important;height:6px!important}
+  #viewDashboard .chip-top-online{padding:3px 7px!important;font-size:11px!important;gap:4px!important;flex:none}
+  #viewDashboard .chip-top-online i{width:6px!important;height:6px!important}
+  #viewDashboard .chip-top-online-txt,
+  #viewDashboard .pres-drop-caret{display:none!important}
+  #viewDashboard .top-acciones{gap:4px!important;display:flex;align-items:center}
+  #viewDashboard .btn-pill{min-height:32px!important;min-width:32px!important;width:32px!important;height:32px!important;border-radius:50%!important;padding:0!important;justify-content:center!important}
+  #viewDashboard .btn-pill span{display:none!important}
+  #viewDashboard .btn-pill svg{width:15px!important;height:15px!important}
 
   /* Franja de saludo */
   #viewDashboard .strip-in-v2{flex-wrap:wrap;gap:8px 14px;
@@ -1120,187 +1157,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   border-color: #94a3b8;
 }
 
-/* ==========================================================================
-   PORTAL IN-APP VIEWER & MOBILE NAVIGATION
-   ========================================================================== */
-.in-app-portal-viewer {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--grafito);
-  z-index: 10000;
-  flex-direction: column;
-}
-.in-app-portal-viewer.on {
-  display: flex;
-}
-.in-app-topbar {
-  height: 52px;
-  background: #16181D;
-  border-bottom: 2px solid var(--rojo);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  color: #fff;
-  flex: none;
-  z-index: 10001;
-}
-.btn-volver-hub {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-family: var(--f-titulo);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.btn-volver-hub:active {
-  background: var(--rojo);
-}
-.btn-volver-hub svg {
-  width: 16px;
-  height: 16px;
-  fill: currentColor;
-}
-.in-app-title {
-  font-family: var(--f-titulo);
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: calc(100% - 210px);
-  text-align: center;
-}
-.in-app-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn-in-app-switcher, .btn-in-app-reload {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-family: var(--f-titulo);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.btn-in-app-switcher:active, .btn-in-app-reload:active {
-  background: rgba(255,255,255,0.15);
-}
-.btn-in-app-switcher svg, .btn-in-app-reload svg {
-  width: 15px;
-  height: 15px;
-  fill: currentColor;
-}
-.in-app-frame-wrap {
-  flex: 1;
-  width: 100%;
-  height: calc(100% - 52px);
-  position: relative;
-  background: #fff;
-}
-.in-app-frame-wrap iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-/* Modal Switcher In-App */
-.in-app-switcher-sheet {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #20242C;
-  border-top: 3px solid var(--rojo);
-  border-radius: 18px 18px 0 0;
-  padding: 16px;
-  z-index: 10005;
-  box-shadow: 0 -8px 30px rgba(0,0,0,0.6);
-  max-height: 80vh;
-  overflow-y: auto;
-}
-.in-app-switcher-sheet.on {
-  display: block;
-}
-.in-app-sheet-backdrop {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 10004;
-  backdrop-filter: blur(2px);
-}
-.in-app-sheet-backdrop.on {
-  display: block;
-}
-.switcher-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-}
-.switcher-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #282E37;
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 10px 14px;
-  border-radius: 10px;
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
-.switcher-item:active {
-  background: var(--rojo);
-}
-.switcher-num {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--rojo), var(--burdeos));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 12px;
-  flex: none;
-}
-.switcher-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.switcher-name {
-  font-family: var(--f-titulo);
-  font-weight: 700;
-  font-size: 13.5px;
-}
-.switcher-cat {
-  font-size: 11px;
-  color: #9AA2AB;
-}
+
 
 
 </style>
@@ -1676,7 +1533,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <div class="presencia-wrap" id="wrapPresenciaHub">
         <span class="chip-top-online" id="topPresencia" title="Colaboradores conectados en el ecosistema" style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:var(--f-rotulo);font-weight:700;font-size:12px;padding:6px 14px;border-radius:999px">
           <i class="pv" style="width:8px;height:8px;border-radius:50%;background:#3ddc84;display:inline-block;animation:d2-pv 2.4s infinite"></i>
-          <b id="topTotalOnline">1</b> en línea
+          <b id="topTotalOnline">1</b><span class="chip-top-online-txt"> en línea</span>
           <svg class="pres-drop-caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </span>
         <div class="salfa-presencia-dropdown" id="dropdownPresenciaHub">
@@ -1706,11 +1563,11 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <span>Panel Admin</span>
         </a>
-        <button type="button" class="btn-pill" onclick="abrirContacto()">
+        <button type="button" class="btn-pill btn-pill-contacto" onclick="abrirContacto()" title="Contacto de Soporte">
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>
           <span>Contacto</span>
         </button>
-        <button type="button" class="btn-pill" onclick="cerrarSesion()">
+        <button type="button" class="btn-pill btn-pill-salir" onclick="cerrarSesion()" title="Cerrar sesión">
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
           <span>Salir</span>
         </button>
@@ -3363,126 +3220,12 @@ function handleAbrirPortalClick(e, portalId, portalUrl, portalNombre) {
     return false;
   }
 
-  // 2. Si se ejecuta en pantalla móvil / PWA (<= 768px o standalone)
-  if (window.innerWidth <= 768 || window.matchMedia('(display-mode: standalone)').matches) {
-    if (e) e.preventDefault();
-    abrirVisorInApp(portalId, urlResuelta, portalNombre);
-    return false;
-  }
-
-  // 3. En navegador de escritorio normal
-  return true;
-}
-
-function abrirVisorInApp(portalId, portalUrl, portalNombre) {
-  var viewer = document.getElementById('inAppPortalViewer');
-  var frame = document.getElementById('inAppPortalFrame');
-  var title = document.getElementById('inAppPortalTitle');
-  if (!viewer || !frame) return;
-
-  title.textContent = portalNombre;
-  frame.src = portalUrl;
-  viewer.classList.add('on');
-  document.body.style.overflow = 'hidden';
-}
-
-function cerrarVisorInApp() {
-  var viewer = document.getElementById('inAppPortalViewer');
-  var frame = document.getElementById('inAppPortalFrame');
-  if (!viewer || !frame) return;
-
-  viewer.classList.remove('on');
-  frame.src = 'about:blank';
-  document.body.style.overflow = '';
-}
-
-function toggleInAppSwitcher(mostrar) {
-  var sheet = document.getElementById('inAppSwitcherSheet');
-  var backdrop = document.getElementById('inAppSheetBackdrop');
-  if (!sheet || !backdrop) return;
-
-  var debeMostrar = (typeof mostrar === 'boolean') ? mostrar : !sheet.classList.contains('on');
-  if (debeMostrar) {
-    // Renderizar lista dinámica de portales
-    var container = document.getElementById('inAppSwitcherGrid');
-    if (container) {
-      container.innerHTML = PORTALES.map(function(p) {
-        var urlR = normalizarUrlPortal(p.url);
-        return '<div class="switcher-item" onclick="cambiarPortalDesdeInApp(\''+p.id+'\', \''+urlR+'\', \''+escapar(p.nombre)+'\')">' +
-          '<div class="switcher-num">'+p.num+'</div>' +
-          '<div class="switcher-info">' +
-            '<div class="switcher-name">'+escapar(p.nombre)+'</div>' +
-            '<div class="switcher-cat">'+escapar(p.categoria)+'</div>' +
-          '</div>' +
-          '<div style="color:var(--rojo);font-size:11px;font-weight:700">Ir →</div>' +
-        '</div>';
-      }).join('');
-    }
-    sheet.classList.add('on');
-    backdrop.classList.add('on');
-  } else {
-    sheet.classList.remove('on');
-    backdrop.classList.remove('on');
-  }
-}
-
-function cambiarPortalDesdeInApp(portalId, portalUrl, portalNombre) {
-  toggleInAppSwitcher(false);
-  var frame = document.getElementById('inAppPortalFrame');
-  var title = document.getElementById('inAppPortalTitle');
-  if (frame && title) {
-    title.textContent = portalNombre;
-    frame.src = portalUrl;
-  }
-}
-
-// Botón de volver físico / gestual de Android si se ejecuta en contenedor web
-window.handleAndroidBack = function() {
-  var sheet = document.getElementById('inAppSwitcherSheet');
-  if (sheet && sheet.classList.contains('on')) {
-    toggleInAppSwitcher(false);
-    return true;
-  }
-  var viewer = document.getElementById('inAppPortalViewer');
-  if (viewer && viewer.classList.contains('on')) {
-    cerrarVisorInApp();
-    return true;
-  }
+  // 2. Navegación directa en la misma pestaña (móvil y escritorio)
+  if (e) e.preventDefault();
+  window.location.href = urlResuelta;
   return false;
-};
+}
 </script>
-
-<!-- ===== VISOR DE PORTAL INTEGRADO IN-APP (Para móviles y PWA) ===== -->
-<div id="inAppPortalViewer" class="in-app-portal-viewer">
-  <div class="in-app-topbar">
-    <button type="button" class="btn-volver-hub" onclick="cerrarVisorInApp()">
-      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      <span>Hub</span>
-    </button>
-    <div class="in-app-title" id="inAppPortalTitle">Portal Salfa</div>
-    <div class="in-app-actions">
-      <button type="button" class="btn-in-app-switcher" onclick="toggleInAppSwitcher(true)" title="Cambiar de portal">
-        <svg viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></svg>
-        <span>Portales</span>
-      </button>
-      <button type="button" class="btn-in-app-reload" onclick="var f=document.getElementById('inAppPortalFrame'); if(f) f.src=f.src;" title="Recargar">
-        <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="in-app-frame-wrap">
-    <iframe id="inAppPortalFrame" src="about:blank" frameborder="0"></iframe>
-  </div>
-</div>
-
-<!-- BottomSheet Selector de Portales In-App -->
-<div class="in-app-sheet-backdrop" id="inAppSheetBackdrop" onclick="toggleInAppSwitcher(false)"></div>
-<div class="in-app-switcher-sheet" id="inAppSwitcherSheet">
-  <div style="width:36px;height:4px;background:#555;border-radius:2px;margin:0 auto 10px;"></div>
-  <div style="font-family:var(--f-titulo);font-size:15px;font-weight:700;color:#fff;">Portales del Ecosistema</div>
-  <div style="font-size:12px;color:#8C95A0;margin-bottom:8px;">Selecciona el portal al que deseas cambiar:</div>
-  <div class="switcher-grid" id="inAppSwitcherGrid"></div>
-</div>
 
 </body>
 </html>

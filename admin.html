@@ -268,24 +268,24 @@ section.view.on{display:block}
   .content{padding:14px 12px 60px}
   .top{padding:max(10px,env(safe-area-inset-top,0px)) 12px 10px;gap:8px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(8px)}
   .top .sub{display:none}
-  .top h1{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:32vw}
-  #lnkHub{display:inline-flex!important;padding:6px 10px;font-size:12px;min-height:38px}
+  .top h1{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:24vw}
+  #lnkHub{display:inline-flex!important;padding:5px 8px;font-size:11.5px;min-height:34px;gap:4px}
   #lnkHub .tx{display:inline!important}
-  #adminUserBadge .tx{display:none}
-  #btnRef .tx{display:none}
+  #adminUserBadge{display:none!important}
+  #btnRef{display:none!important}
   .chip-admin-online{font-size:11px!important;padding:3px 8px!important}
-  .chip-admin-rol{display:none}
+  .chip-admin-rol{display:none!important}
   .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 @media (max-width:480px){
   .top h1{display:none}
-  #lnkHub .tx{font-size:11px}
-  #adminUserBadge{display:none!important}
-  #btnRef{display:none!important}
+  #lnkHub .tx{display:none!important}
+  #lnkHub{padding:6px 8px!important;min-width:34px!important;justify-content:center}
   #btnSelectorPortales span{display:none!important}
-  #btnSelectorPortales{padding:6px 8px!important;min-width:36px!important;justify-content:center}
-  .chip-admin-online b + span, .chip-admin-online{font-size:11px!important;padding:3px 7px!important}
-  .chip-sesion-tiempo{font-size:11px!important;padding:3px 7px!important}
+  #btnSelectorPortales{padding:6px 8px!important;min-width:34px!important;justify-content:center}
+  .chip-admin-online span, .chip-admin-online b + span{display:none!important}
+  .chip-admin-online{font-size:10.5px!important;padding:3px 6px!important}
+  .chip-sesion-tiempo{font-size:10.5px!important;padding:3px 6px!important}
   .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
