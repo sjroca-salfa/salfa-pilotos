@@ -632,6 +632,7 @@ section.view.on{display:block}
    API_URL: URL del servicio de administración (Apps Script, modo ANYONE).
    Vacío = modo demostración con datos ficticios. No incluir correos aquí.
    ===================================================================== */
+const API_INVITAR_URL = 'https://script.google.com/macros/s/AKfycbyOmwXlEljtQDHhJP-bnAwnao4Q8QtmmqSnKTF_5FaHW1xX_NiOf11Vhvv1csuh2zXz/exec';
 const CONFIG = { API_URL: '', DOMINIO: '@salfamontajes.com', ROL_ADMIN: 'Administrador del Sistema' };
 
 const ROLES = {
@@ -1173,6 +1174,21 @@ window.cerrarModalInvitacionConfirmadaAdmin = function() {
   if (m) m.style.display = 'none';
 };
 
+window.abrirEnGmailInvitacionAdmin = function() {
+  if (!_ultimoEmailInvitacionAdmin) return;
+  var to = encodeURIComponent(_ultimoEmailInvitacionAdmin.email);
+  var subject = encodeURIComponent('[Portales Salfa] Invitación corporativa: acceso habilitado a pilotos');
+  var body = encodeURIComponent(
+    'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n\n' +
+    'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n\n' +
+    'Puedes ingresar directamente en:\n' +
+    'https://sjroca-salfa.github.io/salfa-pilotos/\n\n' +
+    'Tus portales y roles asignados han sido configurados en la plataforma.\n\n' +
+    'Saludos cordiales,\nAdministración Portales Salfa Pilotos\nSalfa Montajes S.A.'
+  );
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + subject + '&body=' + body, '_blank');
+};
+
 window.copiarEmailInvitacionAdmin = async function() {
   var html = _ultimoEmailInvitacionAdmin.html;
   var txt = 'Invitación a Portales de Pilotaje Salfa Montajes\n\n' +
@@ -1344,11 +1360,46 @@ async function guardarModal(){
     cerrarTodo();renderTodo();
     toast(editId?'Cambios guardados':'Colaborador habilitado');
 
+    // Despachar invitación al backend real para asegurar registro en hoja y despacho de email
+    let resMailEnviado = false;
+    try {
+      const rInv = await fetch(API_INVITAR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'invitar',
+          email: c,
+          nombre: n,
+          area: a,
+          rol: r,
+          pilotos: Object.keys(perm).filter(p => perm[p] > 0),
+          rolesPorPortal: rolesPorPortal,
+          emailHtml: emailHtml
+        }),
+        redirect: 'follow'
+      });
+      const jInv = await rInv.json();
+      if (jInv && jInv.emailEnviado) resMailEnviado = true;
+    } catch(eInv) {
+      console.warn('Despacho remoto de invitación:', eInv);
+    }
+
+    toast(resMailEnviado ? 'Invitación guardada y correo enviado a ' + c : (editId ? 'Cambios guardados' : 'Colaborador habilitado'));
+
     // Mostrar modal con vista previa y botón de copiar correo
-    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n };
+    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n, emailEnviado: resMailEnviado };
     const mConf = $('#modalInvitacionConfirmadaAdmin');
     if (mConf) {
       $('#adminInvConfSub').textContent = 'Invitación para ' + n + ' (' + c + ')';
+      if ($('#adminInvEstadoEntrega')) {
+        if (resMailEnviado) {
+          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#166534;font-weight:700;">✓ Correo enviado automáticamente vía Google Workspace</span>';
+          if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'none';
+        } else {
+          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#2563eb;font-weight:700;">✓ Colaborador habilitado en base de datos. Haz clic en "Abrir en Gmail" o "Copiar correo" para despacharlo.</span>';
+          if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'block';
+        }
+      }
       $('#adminInvHtmlPreviewCard').innerHTML = emailHtml;
       mConf.style.display = 'flex';
     }
@@ -1669,10 +1720,19 @@ function cerrarSesionPorInactividadAdmin(){
         <div style="font-size:13px;color:#166534;">
           <b>Estado de entrega:</b> <span id="adminInvEstadoEntrega">Invitación registrada en la base de datos de Salfa</span>
         </div>
-        <button type="button" class="btn" onclick="copiarEmailInvitacionAdmin()" style="background:#1E2229;color:#fff;border-radius:6px;font-size:12.5px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:none;">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <span id="btnTxtCopiarInvAdmin">Copiar correo al portapapeles</span>
-        </button>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="btn" onclick="abrirEnGmailInvitacionAdmin()" style="background:#B01E24;color:#fff;border-radius:6px;font-size:12.5px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:none;font-weight:700;">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Abrir en Gmail</span>
+          </button>
+          <button type="button" class="btn" onclick="copiarEmailInvitacionAdmin()" style="background:#1E2229;color:#fff;border-radius:6px;font-size:12.5px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:none;">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="btnTxtCopiarInvAdmin">Copiar correo al portapapeles</span>
+          </button>
+        </div>
+      </div>
+      <div id="adminInvAvisoGas" style="display:none;background:#fef2f2;border:1px solid #fecaca;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#991b1b;">
+        <b>💡 Tip de Automatización:</b> Para que el servidor envíe los correos en segundo plano automáticamente sin abrir Gmail, <a href="https://script.google.com/d/17c_DQtpVsCsoewdSSFLBSDxltGdnwZSVAX-wEloQEauW_06hoihXs3GJ/edit" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;">abre el proyecto Apps Script</a> y pulsa <i>Ejecutar</i> una vez para autorizar el permiso de correo de Google.
       </div>
       <div style="font-size:12px;color:#5A6771;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Vista previa del correo para el colaborador:</div>
       <div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06);" id="adminInvHtmlPreviewCard"></div>
