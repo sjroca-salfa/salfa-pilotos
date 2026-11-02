@@ -393,10 +393,7 @@ body {
 }
 
 @media (max-width: 860px) {
-  .salfa-topbar {
-    height: 48px !important;
-    padding: 0 8px !important;
-    display: flex !important;
+  .salfa-topbar { display: none !important; height: 0 !important;
     align-items: center !important;
     justify-content: space-between !important;
     gap: 6px !important;
@@ -1218,7 +1215,7 @@ body {
 <!-- ==========================================================================
      1. COMPONENTE CANÓNICO: salfa-topbar (BARRA SUPERIOR CORPORATIVA)
      ========================================================================== -->
-<header class="salfa-topbar" id="salfaTopBar">
+<header class="salfa-topbar" id="salfaTopBar" style="display:none!important;" hidden aria-hidden="true">
   <div class="salfa-topbar-izq">
     <a id="btnVolverHub" href="../index.html" title="Volver al Hub Principal" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:12px">
       <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
