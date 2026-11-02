@@ -1344,7 +1344,7 @@ async function guardarModal(){
 
   const perm={};
   portalesOtorgables().forEach(p=>perm[p.id]=0);
-  $('#fPor .chk-fld-p').forEach(chk => {
+  $$('#fPor .chk-fld-p').forEach(chk => {
     if (chk.checked) {
       const sel = $('#selLvl_' + chk.value);
       perm[chk.value] = sel ? (+sel.value || 1) : 1;
