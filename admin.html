@@ -1167,7 +1167,7 @@ function abrirUsuario(id){
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn" data-ed="${u.id}">Editar usuario</button>
       <button class="btn" data-go="permisos" data-q="${esc(u.nombre)}">Ver permisos</button>
-      ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn" data-reenv="${u.id}">Reenviar invitación</button>`}
+      ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn" data-reenv="${u.id}">Reenviar invitación / restablecer clave</button>`}
       ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn danger" data-sus="${u.id}">${u.estado==='Suspendido'?'Reactivar acceso':'Suspender acceso'}</button>`}
     </div>`;
   $('#ov').classList.add('on');$('#drawer').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
@@ -1178,6 +1178,26 @@ function cerrarTodo(){$('#ov').classList.remove('on');$('#drawer').classList.rem
 let editId=null;
 
 var _ultimoEmailInvitacionAdmin = { html: '', email: '', nombre: '', enlace: '' };
+
+// Panel con vista previa del correo y botones "Abrir en Gmail" / "Copiar correo al portapapeles".
+// Se usa tanto al dar de alta (guardarModal) como al reenviar invitación o resetear la clave.
+function mostrarModalInvitacionAdmin(nombre, correo, emailHtml, emailEnviado, enlace){
+  _ultimoEmailInvitacionAdmin = { html: emailHtml, email: correo, nombre: nombre, emailEnviado: emailEnviado, enlace: enlace || '' };
+  const mConf = $('#modalInvitacionConfirmadaAdmin');
+  if (!mConf) return;
+  $('#adminInvConfSub').textContent = 'Invitación para ' + nombre + ' (' + correo + ')';
+  if ($('#adminInvEstadoEntrega')) {
+    if (emailEnviado) {
+      $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#166534;font-weight:700;">✓ Correo de bienvenida enviado con el enlace para crear su contraseña</span>';
+      if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'none';
+    } else {
+      $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#2563eb;font-weight:700;">✓ Colaborador habilitado en base de datos. Haz clic en "Abrir en Gmail" o "Copiar correo" para despacharlo.</span>';
+      if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'block';
+    }
+  }
+  $('#adminInvHtmlPreviewCard').innerHTML = emailHtml;
+  mConf.style.display = 'flex';
+}
 
 window.cerrarModalInvitacionConfirmadaAdmin = function() {
   var m = $('#modalInvitacionConfirmadaAdmin');
@@ -1379,29 +1399,10 @@ async function guardarModal(){
     // El backend registra al colaborador, arma el correo de bienvenida y envía el enlace para crear la contraseña.
     const resMailEnviado = !!(rGuardar && rGuardar.emailEnviado);
     if(rGuardar && rGuardar.errorMail) console.warn('Correo de invitación:', rGuardar.errorMail);
-    if(!resMailEnviado && rGuardar && rGuardar.enlace){
-      try{ await navigator.clipboard.writeText(rGuardar.enlace); toast('No se pudo enviar el correo. El enlace de invitación quedó copiado: envíalo manualmente.', true); }catch(eCopia){ prompt('No se pudo enviar el correo. Copia y envía este enlace de invitación:', rGuardar.enlace); }
-    }
-
     toast(resMailEnviado ? 'Invitación guardada y correo enviado a ' + c : (editId ? 'Cambios guardados' : 'Colaborador habilitado'));
 
-    // Mostrar modal con vista previa y botón de copiar correo
-    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n, emailEnviado: resMailEnviado, enlace: (rGuardar && rGuardar.enlace) || '' };
-    const mConf = $('#modalInvitacionConfirmadaAdmin');
-    if (mConf) {
-      $('#adminInvConfSub').textContent = 'Invitación para ' + n + ' (' + c + ')';
-      if ($('#adminInvEstadoEntrega')) {
-        if (resMailEnviado) {
-          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#166534;font-weight:700;">✓ Correo de bienvenida enviado con el enlace para crear su contraseña</span>';
-          if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'none';
-        } else {
-          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#2563eb;font-weight:700;">✓ Colaborador habilitado en base de datos. Haz clic en "Abrir en Gmail" o "Copiar correo" para despacharlo.</span>';
-          if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'block';
-        }
-      }
-      $('#adminInvHtmlPreviewCard').innerHTML = emailHtml;
-      mConf.style.display = 'flex';
-    }
+    // Panel con vista previa y botones "Abrir en Gmail" / "Copiar correo" (con el enlace real si el envío falló).
+    mostrarModalInvitacionAdmin(n, c, emailHtml, resMailEnviado, (rGuardar && rGuardar.enlace) || '');
   }catch(e){toast(e.message,true)}
 }
 
@@ -1450,15 +1451,11 @@ function enlazar(){
     if(b&&b.dataset.go){location.hash=b.dataset.go;$('#mQ').value=b.dataset.q||'';renderMatriz();return}
     if(b&&b.dataset.sus){const u=S.db.usuarios.find(x=>x.id===b.dataset.sus);u.estado=u.estado==='Suspendido'?'Activo':'Suspendido';Datos.guardarUsuario({correo:u.correo,estado:u.estado}).then(()=>{renderTodo();abrirUsuario(u.id);toast('Estado actualizado')}).catch(x=>toast(x.message,true));return}
     if(b&&b.dataset.reenv){const u=S.db.usuarios.find(x=>x.id===b.dataset.reenv);
-      Datos.guardarUsuario({correo:u.correo,nombre:u.nombre,nombres:u.nombres,apellidos:u.apellidos,area:u.area,rol:u.rol,foto:u.foto,permisos:u.perm,rolesPorPortal:u.rolesPorPortal,reenviarCorreo:true})
-        .then(async r=>{
-          if(r&&r.emailEnviado){toast('Invitación reenviada a '+u.correo);return}
-          if(r&&r.enlace){
-            try{ await navigator.clipboard.writeText(r.enlace); toast('No se pudo enviar el correo. El enlace quedó copiado: envíalo tú mismo a '+u.correo, true); }
-            catch(eCopia){ prompt('No se pudo enviar el correo. Copia y envía este enlace a '+u.correo+':', r.enlace); }
-            return;
-          }
-          toast('No se pudo enviar el correo ni generar un enlace (ya tiene contraseña creada).', true);
+      // resetearClave:true fuerza un enlace nuevo de "crear contraseña" aunque ya tenga una (la reemplaza).
+      Datos.guardarUsuario({correo:u.correo,nombre:u.nombre,nombres:u.nombres,apellidos:u.apellidos,area:u.area,rol:u.rol,foto:u.foto,permisos:u.perm,rolesPorPortal:u.rolesPorPortal,reenviarCorreo:true,resetearClave:true})
+        .then(r=>{
+          const emailHtml = generarEmailAdminHtml(u.nombre, u.correo, u.area, u.rol, u.perm, portalesOtorgables());
+          mostrarModalInvitacionAdmin(u.nombre, u.correo, emailHtml, !!(r&&r.emailEnviado), (r&&r.enlace)||'');
         })
         .catch(x=>toast(x.message,true));
       return}
