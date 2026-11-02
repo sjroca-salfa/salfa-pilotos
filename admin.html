@@ -1556,7 +1556,16 @@ function enlazar(){
   $('#mColsInfo').addEventListener('change',e=>{ if(e.target.dataset.colinfo) matrizToggleInfo(e.target.dataset.colinfo); });
   $$('th.s').forEach(th=>th.onclick=()=>{const t=th.closest('section').id==='v-usuarios'?'u':'a',o=S.orden[t];o.d=o.k===th.dataset.k?-o.d:1;o.k=th.dataset.k;t==='u'?renderUsuarios():renderActividad(false)});
   $('#btnRef').onclick=async()=>{try{if(Datos.demo)Datos.db=null;S.db=await Datos.cargar();renderTodo();toast('Datos actualizados')}catch(e){toast(e.message,true)}};
-  $('#btnOut').onclick=()=>{toast('Sesión cerrada');setTimeout(()=>location.href='index.html',700)};
+  $('#btnOut').onclick=async()=>{
+    let token;
+    try{ const s=JSON.parse(localStorage.getItem('salfa_auth_session')||sessionStorage.getItem('salfa_auth_session')||'{}'); token=s.token; }catch(e){}
+    if(token){
+      try{ await Promise.race([Datos.llamar('cerrar',{token}), new Promise(r=>setTimeout(r,1500))]); }catch(e){}
+    }
+    try{ localStorage.removeItem('salfa_auth_session'); sessionStorage.removeItem('salfa_auth_session'); }catch(e){}
+    toast('Sesión cerrada');
+    setTimeout(()=>location.href='index.html',500);
+  };
   $('#btnNuevo').onclick=()=>abrirModal();$('#mOk').onclick=guardarModal;
   document.addEventListener('click',e=>{
     const tr=e.target.closest('tr[data-u]'),b=e.target.closest('button');
