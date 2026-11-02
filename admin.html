@@ -846,6 +846,10 @@ const Datos = {
       return;
     }
     return this.llamar('admin.guardarPortal',{portal:p});
+  },
+  async reenviarInvitacion(correo){
+    if(this.demo){ return { ok:true, emailEnviado:false, enlace:'https://sjroca-salfa.github.io/salfa-pilotos/?invitacion=demo&email='+encodeURIComponent(correo) }; }
+    return this.llamar('admin.reenviarInvitacion',{correo});
   }
 };
 
@@ -1451,8 +1455,8 @@ function enlazar(){
     if(b&&b.dataset.go){location.hash=b.dataset.go;$('#mQ').value=b.dataset.q||'';renderMatriz();return}
     if(b&&b.dataset.sus){const u=S.db.usuarios.find(x=>x.id===b.dataset.sus);u.estado=u.estado==='Suspendido'?'Activo':'Suspendido';Datos.guardarUsuario({correo:u.correo,estado:u.estado}).then(()=>{renderTodo();abrirUsuario(u.id);toast('Estado actualizado')}).catch(x=>toast(x.message,true));return}
     if(b&&b.dataset.reenv){const u=S.db.usuarios.find(x=>x.id===b.dataset.reenv);
-      // resetearClave:true fuerza un enlace nuevo de "crear contraseña" aunque ya tenga una (la reemplaza).
-      Datos.guardarUsuario({correo:u.correo,nombre:u.nombre,nombres:u.nombres,apellidos:u.apellidos,area:u.area,rol:u.rol,foto:u.foto,permisos:u.perm,rolesPorPortal:u.rolesPorPortal,reenviarCorreo:true,resetearClave:true})
+      // Acción dedicada: no toca pilotos ni roles, así que no exige "elegir al menos un portal".
+      Datos.reenviarInvitacion(u.correo)
         .then(r=>{
           const emailHtml = generarEmailAdminHtml(u.nombre, u.correo, u.area, u.rol, u.perm, portalesOtorgables());
           mostrarModalInvitacionAdmin(u.nombre, u.correo, emailHtml, !!(r&&r.emailEnviado), (r&&r.enlace)||'');
