@@ -630,10 +630,10 @@ section.view.on{display:block}
 /* =====================================================================
    CONFIGURACIÓN
    API_URL: URL del servicio de administración (Apps Script, modo ANYONE).
-   Vacío = modo demostración con datos ficticios. No incluir correos aquí.
+   Todas las operaciones van al backend (hub-accesos). No incluir correos aquí.
    ===================================================================== */
 const API_INVITAR_URL = 'https://script.google.com/macros/s/AKfycbyOmwXlEljtQDHhJP-bnAwnao4Q8QtmmqSnKTF_5FaHW1xX_NiOf11Vhvv1csuh2zXz/exec';
-const CONFIG = { API_URL: '', DOMINIO: '@salfamontajes.com', ROL_ADMIN: 'Administrador del Sistema' };
+const CONFIG = { API_URL: API_INVITAR_URL, DOMINIO: '@salfamontajes.com', ROL_ADMIN: 'Administrador del Sistema' };
 
 const ROLES = {
   'Colaborador':{d:'Usa los portales asignados.'},
@@ -741,9 +741,14 @@ const Datos = {
         token = s.token;
       }catch(e){}
     }
-    const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,token,...payload}),redirect:'follow'});
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error||'Error del servicio');
+    const ctl = new AbortController(); const tm = setTimeout(()=>ctl.abort(),30000);
+    let j;
+    try{
+      const r = await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({accion,action:accion,...payload,token}),redirect:'follow',signal:ctl.signal});
+      j = await r.json();
+    }catch(e){ throw new Error('No se pudo conectar con el servicio. Revisa tu conexión e inténtalo de nuevo.'); }
+    finally{ clearTimeout(tm); }
+    if(!j.ok) throw new Error(j.error||j.mensaje||'Error del servicio');
     return j.data;
   },
   async sesion(){
@@ -751,7 +756,8 @@ const Datos = {
       const s = JSON.parse(localStorage.getItem('salfa_auth_session')||sessionStorage.getItem('salfa_auth_session'));
       if(s && (s.nombre || s.email)) return {nombre: s.nombre || (s.email?s.email.split('@')[0]:'Usuario'), rol: s.rol || CONFIG.ROL_ADMIN, correo: s.email, email: s.email, token: s.token};
     }catch(e){}
-    return {nombre:'Sebastián Roca', rol:CONFIG.ROL_ADMIN, correo:'sjroca@salfamontajes.com', email:'sjroca@salfamontajes.com'};
+    location.replace('index.html');            // sin sesión no hay consola de administración
+    return {nombre:'', rol:'', correo:'', email:''};
   },
   async cargar(){
     if(this.demo){
@@ -1353,35 +1359,18 @@ async function guardarModal(){
   const emailHtml = generarEmailAdminHtml(n, c, a, r, perm, S.db.portales);
 
   try{
-    const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:'u'+Date.now(),correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
+    const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:c,correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
     Object.assign(u,{nombre:n,nombres:nom,apellidos:ape,area:a||'Sin área',rol:r,foto:foto,perm,rolesPorPortal,emailHtml});
-    await Datos.guardarUsuario({correo:c,nombre:n,nombres:nom,apellidos:ape,area:a,rol:r,foto:foto,permisos:perm,rolesPorPortal:rolesPorPortal,emailHtml:emailHtml});
+    const rGuardar = await Datos.guardarUsuario({correo:c,nombre:n,nombres:nom,apellidos:ape,area:a,rol:r,foto:foto,permisos:perm,rolesPorPortal:rolesPorPortal});
     if(!editId){S.db.usuarios.push(u);S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:'Consola',tipo:'admin',evento:'Alta de colaborador',detalle:`Se habilitó a ${n}`})}
     cerrarTodo();renderTodo();
     toast(editId?'Cambios guardados':'Colaborador habilitado');
 
-    // Despachar invitación al backend real para asegurar registro en hoja y despacho de email
-    let resMailEnviado = false;
-    try {
-      const rInv = await fetch(API_INVITAR_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'invitar',
-          email: c,
-          nombre: n,
-          area: a,
-          rol: r,
-          pilotos: Object.keys(perm).filter(p => perm[p] > 0),
-          rolesPorPortal: rolesPorPortal,
-          emailHtml: emailHtml
-        }),
-        redirect: 'follow'
-      });
-      const jInv = await rInv.json();
-      if (jInv && jInv.emailEnviado) resMailEnviado = true;
-    } catch(eInv) {
-      console.warn('Despacho remoto de invitación:', eInv);
+    // El backend registra al colaborador, arma el correo de bienvenida y envía el enlace para crear la contraseña.
+    const resMailEnviado = !!(rGuardar && rGuardar.emailEnviado);
+    if(rGuardar && rGuardar.errorMail) console.warn('Correo de invitación:', rGuardar.errorMail);
+    if(!resMailEnviado && rGuardar && rGuardar.enlace){
+      try{ await navigator.clipboard.writeText(rGuardar.enlace); toast('No se pudo enviar el correo. El enlace de invitación quedó copiado: envíalo manualmente.', true); }catch(eCopia){ prompt('No se pudo enviar el correo. Copia y envía este enlace de invitación:', rGuardar.enlace); }
     }
 
     toast(resMailEnviado ? 'Invitación guardada y correo enviado a ' + c : (editId ? 'Cambios guardados' : 'Colaborador habilitado'));
@@ -1393,7 +1382,7 @@ async function guardarModal(){
       $('#adminInvConfSub').textContent = 'Invitación para ' + n + ' (' + c + ')';
       if ($('#adminInvEstadoEntrega')) {
         if (resMailEnviado) {
-          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#166534;font-weight:700;">✓ Correo enviado automáticamente vía Google Workspace</span>';
+          $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#166534;font-weight:700;">✓ Correo de bienvenida enviado con el enlace para crear su contraseña</span>';
           if ($('#adminInvAvisoGas')) $('#adminInvAvisoGas').style.display = 'none';
         } else {
           $('#adminInvEstadoEntrega').innerHTML = '<span style="color:#2563eb;font-weight:700;">✓ Colaborador habilitado en base de datos. Haz clic en "Abrir en Gmail" o "Copiar correo" para despacharlo.</span>';

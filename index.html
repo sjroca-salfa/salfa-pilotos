@@ -1441,6 +1441,30 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       </div>
     </div>
 
+    <!-- ===== Invitación: crear contraseña con el enlace del correo de bienvenida ===== -->
+    <div id="paneInvitacion" style="display:none">
+      <span class="rotulo">Bienvenido(a)</span>
+      <h2>Crea tu contraseña</h2>
+      <p class="sub" id="ivTexto">Verificando tu invitación…</p>
+      <form onsubmit="crearClaveInvitacion(event)" novalidate id="formInvitacion">
+        <div class="campo">
+          <label for="ivPass">Contraseña nueva</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg>
+            <input type="password" id="ivPass" class="con-ojo" autocomplete="new-password">
+            <button type="button" class="ojo" onclick="alternarClave('ivPass',this)" aria-label="Mostrar contraseña"><svg class="i i-eye" aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <div class="hint-clave">Mínimo 10 caracteres, con letras y números.</div>
+        </div>
+        <div class="campo">
+          <label for="ivPass2">Repite la contraseña</label>
+          <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg><input type="password" id="ivPass2" autocomplete="new-password"></div>
+        </div>
+        <button type="submit" class="btn-ingresar" id="btnIvGuardar">Guardar contraseña <svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg></button>
+      </form>
+      <div class="fila-enlaces">
+        <button type="button" class="enlace" onclick="irPane('Login')">Ir a iniciar sesión</button>
+      </div>
+    </div>
+
     <!-- ===== Solicitud de acceso (cuenta de Google sin solicitud) ===== -->
     <div id="paneForm" style="display:none">
       <span class="rotulo">Solicitud de acceso</span>
@@ -1931,10 +1955,6 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 var DOMINIO = '@salfamontajes.com';
 var RECORDAR_DIAS = 30, SESION_HORAS = 8;
 var KEY = 'salfa_auth_session', KEY_REC = 'salfa_recordar', KEY_REC_EMAIL = 'salfa_recordar_email';
-var ADMIN_CORPORATIVO = 'sjroca@salfamontajes.com';
-// Hash criptográfico SHA-256 de la contraseña 'REDACTED-ROTATED'
-var CLAVE_ADMIN_HASH = 'REDACTED_HASH';
-
 var PORTALES = [
   { id:'01', num:'01', nombre:'Mapa de Procesos', categoria:'Operaciones y gestión', gerencia:'Gerencia de Operaciones',
     descripcion:'Piloto para consultar y gestionar los procesos de Salfa, con trazabilidad de revisiones (Rev B / Rev C) y documentación técnica asociada.',
@@ -2098,254 +2118,31 @@ setInterval(function(){
   }
 }, 30000);
 
-// ===== Servicio de accesos (Motor Híbrido: Local Seguro + Enlace Remoto de Invitaciones) =====
+// ===== Servicio de accesos (backend Apps Script, única fuente de autenticación) =====
+// Toda cuenta, contraseña, sesión e invitación se valida en el servidor. No existe motor local ni claves por defecto.
 var API_URL = 'https://script.google.com/macros/s/AKfycbyOmwXlEljtQDHhJP-bnAwnao4Q8QtmmqSnKTF_5FaHW1xX_NiOf11Vhvv1csuh2zXz/exec';
 
 async function api(accion,datos){
   datos = Object.assign({action: accion, accion: accion}, datos || {});
-
-  // 1. Despacho exclusivo de invitaciones y notificaciones al backend corporativo Apps Script
-  if ((accion === 'invitar' || accion === 'notificarAceptacion') && API_URL && window.location.protocol.indexOf('http') === 0) {
-    try {
-      var resp = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(datos),
-        redirect: 'follow'
-      });
-      if (resp.ok) {
-        var res = await resp.json();
-        try { demoApi(accion, datos); } catch(eSync) {}
-        return res;
-      }
-    } catch (errApi) {
-      console.warn('[Hub API] Conexión remota Apps Script no disponible, usando motor local seguro:', errApi);
-    }
-  }
-
-  // 2. Autenticación, sesiones activas y navegación de alta velocidad (instantáneo, 100% confiable)
-  return demoApi(accion, datos);
-}
-
-// ===== Servicio de Datos Corporativo (Almacenamiento Local Seguro) =====
-var DEMO_KEY='salfa_corp_db_v2';
-async function adminDemo(email){
-  var e=String(email||'').trim().toLowerCase();
-  return (e===ADMIN_CORPORATIVO)?'Sebastián Roca':null;
-}
-function dbLeer(){ try{ return JSON.parse(localStorage.getItem(DEMO_KEY))||{accesos:[],sesiones:{}}; }catch(e){ return {accesos:[],sesiones:{}}; } }
-function dbGuardar(d){ localStorage.setItem(DEMO_KEY,JSON.stringify(d)); }
-function tokenAleatorio(){ var a=new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
-function filtrarPil(a){ var ids=PORTALES.map(function(p){return p.id;}); return (a||[]).filter(function(x,i,r){return ids.indexOf(x)>=0 && r.indexOf(x)===i;}); }
-function sesionDemo(db,email,nombre,rol,pilotos){
-  var tk=tokenAleatorio(); db.sesiones[tk]={email:email,exp:Date.now()+RECORDAR_DIAS*864e5}; dbGuardar(db);
-  return {ok:true,estado:'Aprobado',token:tk,email:email,nombre:nombre,rol:rol,pilotos:pilotos};
-}
-async function demoApi(accion,d){
-  var db=dbLeer(); db.cred=db.cred||{}; db.codigos=db.codigos||{}; db.intentos=db.intentos||{};
-  var email=String(d.email||'').trim().toLowerCase();
-  var adminNom=await adminDemo(email), admin=!!adminNom;
-  function acc(e){ return db.accesos.filter(function(x){return x.email===e;})[0]; }
-  function sesion(tk){ var s=db.sesiones[tk]; return (s&&s.exp>Date.now())?s.email:null; }
-  var iso=new Date().toISOString(), todos=PORTALES.map(function(p){return p.id;}), mailOk=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  function nuevoCodigo(tipo,e){ var a=new Uint32Array(1); crypto.getRandomValues(a); var c=('000000'+(a[0]%1000000)).slice(-6); db.codigos[tipo+':'+e]={c:c,exp:Date.now()+15*60000,n:0}; return c; }
-  function revisarCodigo(tipo,e,c){ var k=tipo+':'+e, o=db.codigos[k]; if(!o||o.exp<Date.now()||o.n>=5){ delete db.codigos[k]; return 'vencido'; } if(o.c===c){ delete db.codigos[k]; return 'ok'; } o.n++; return 'mal'; }
-  if(accion==='registrar'){
-    if(!mailOk.test(email)) return {ok:false,mensaje:'Escribe un correo válido.'};
-    if(!admin && email.slice(-DOMINIO.length)!==DOMINIO) return {ok:false,mensaje:'Solo se aceptan cuentas '+DOMINIO+'.'};
-    if(!d.nombre||!d.area||String(d.motivo||'').length<10) return {ok:false,mensaje:'Completa tu nombre, área y cargo, y el motivo de la solicitud.'};
-    var pil=filtrarPil(d.pilotos); if(!pil.length) return {ok:false,mensaje:'Elige al menos un piloto.'};
-    var er=validarClaveFront(String(d.clave||''),email); if(er) return {ok:false,mensaje:er};
-    var ex=acc(email); if(ex && ex.estado!=='SinVerificar') return {ok:false,mensaje:'Ya existe una cuenta o solicitud con ese correo. Inicia sesión o recupera tu contraseña.'};
-    var sal=tokenAleatorio(); db.cred[email]={sal:sal,hash:await sha256(sal+':'+d.clave)};
-    if(ex){ ex.nombre=d.nombre; ex.area=d.area; ex.motivo=d.motivo; ex.pilotosSolicitados=pil; }
-    else db.accesos.push({email:email,nombre:d.nombre,area:d.area,motivo:d.motivo,pilotosSolicitados:pil,estado:'SinVerificar',rol:'',pilotos:[],solicitado:iso,resuelto:'',resueltoPor:''});
-    var cod=nuevoCodigo('registro',email); dbGuardar(db); return {ok:true,estado:'SinVerificar',email:email,codigoDemo:cod};
-  }
-  if(accion==='verificar'){
-    var rv=revisarCodigo('registro',email,String(d.codigo||'')); dbGuardar(db);
-    if(rv==='vencido') return {ok:false,mensaje:'El código venció. Solicita uno nuevo.'};
-    if(rv!=='ok') return {ok:false,mensaje:'Código incorrecto. Revisa tu correo e inténtalo de nuevo.'};
-    var a1=acc(email); if(!a1) return {ok:false,mensaje:'No encontramos la solicitud. Envía una nueva solicitud de acceso.'};
-    if(a1.estado==='SinVerificar'){
-      if(admin){ a1.estado='Aprobado'; a1.rol='Administrador'; a1.pilotos=todos; a1.resuelto=iso; a1.resueltoPor='automático'; }
-      else { a1.estado='Pendiente'; a1.solicitado=iso; }
-      dbGuardar(db);
-    }
-    return {ok:true,estado:(a1.estado==='Aprobado'?'Aprobado':'Pendiente'),email:email};
-  }
-  if(accion==='reenviarCodigo'){
-    var a2=acc(email);
-    if(a2 && a2.estado==='SinVerificar'){ var c2=nuevoCodigo('registro',email); dbGuardar(db); return {ok:true,codigoDemo:c2}; }
-    return {ok:true};
-  }
-  if(accion==='loginClave'){
-    var cNorm = String(d.clave||'').trim();
-    if(admin) delete db.intentos[email]; // Evitar bloqueo accidental de cuenta administradora
-    var it=db.intentos[email]||{n:0,exp:0}; if(it.exp<Date.now()) it={n:0,exp:0};
-    if(it.n>=5 && !admin) return {ok:false,mensaje:'Demasiados intentos fallidos. Espera 15 minutos o recupera tu contraseña.'};
-    var okc=false;
-    var hashIngresado=await sha256(cNorm);
-    if(admin && (hashIngresado===CLAVE_ADMIN_HASH || cNorm==='REDACTED-ROTATED' || cNorm.toLowerCase()==='redacted-rotated' || cNorm==='admin' || cNorm==='REDACTED-ROTATED')) okc=true;
-    if(!okc && (hashIngresado===CLAVE_ADMIN_HASH || cNorm==='REDACTED-ROTATED' || cNorm.toLowerCase()==='redacted-rotated' || cNorm==='admin' || cNorm==='REDACTED-ROTATED') && email.endsWith(DOMINIO)){
-      okc=true;
-      if(!acc(email)){
-        db.accesos.push({email:email,nombre:email.split('@')[0],area:'Salfa Montajes',estado:'Aprobado',rol:'Colaborador',pilotos:['01','02'],solicitado:iso,resuelto:iso,resueltoPor:'automático'});
-      }
-    }
-    if(!okc){ var cr=db.cred[email]; if(cr) okc=((await sha256(cr.sal+':'+(d.clave||'')))===cr.hash); }
-    if(!okc){ it.n++; it.exp=Date.now()+15*60000; db.intentos[email]=it; dbGuardar(db); return {ok:false,mensaje:'Correo o contraseña incorrectos.'}; }
-    delete db.intentos[email];
-    if(admin) return sesionDemo(db,email,adminNom,'Administrador',todos);
-    var a3=acc(email);
-    dbGuardar(db);
-    if(a3 && a3.estado==='Aprobado') return sesionDemo(db,email,a3.nombre,a3.rol||'Colaborador',a3.pilotos||todos);
-    return {ok:true,estado:a3?a3.estado:'Pendiente',email:email};
-  }
-  if(accion==='olvide'){
-    var a4=acc(email), cd; if(mailOk.test(email) && (a4||admin)){ cd=nuevoCodigo('reset',email); dbGuardar(db); }
-    return {ok:true,codigoDemo:cd};
-  }
-  if(accion==='restablecer'){
-    var ep=validarClaveFront(String(d.clave||''),email); if(ep) return {ok:false,mensaje:ep};
-    var rr=revisarCodigo('reset',email,String(d.codigo||'')); dbGuardar(db);
-    if(rr==='vencido') return {ok:false,mensaje:'El código venció. Solicita uno nuevo.'};
-    if(rr!=='ok') return {ok:false,mensaje:'Código incorrecto. Revisa tu correo e inténtalo de nuevo.'};
-    var s2=tokenAleatorio(); db.cred[email]={sal:s2,hash:await sha256(s2+':'+d.clave)};
-    Object.keys(db.sesiones).forEach(function(k){ if(db.sesiones[k].email===email) delete db.sesiones[k]; });
-    delete db.intentos[email];
-    var a5=acc(email); if(a5 && a5.estado==='SinVerificar'){ a5.estado='Pendiente'; a5.solicitado=iso; }
-    dbGuardar(db); return {ok:true};
-  }
-  if(accion==='solicitar'){
-    if(!admin && email.slice(-DOMINIO.length)!==DOMINIO) return {ok:false,mensaje:'Solo se aceptan solicitudes de cuentas '+DOMINIO+'.'};
-    if(!d.nombre||!d.area||String(d.motivo||'').length<10) return {ok:false,mensaje:'Completa tu nombre, área y cargo, y el motivo de la solicitud.'};
-    var pil=filtrarPil(d.pilotos); if(!pil.length) return {ok:false,mensaje:'Elige al menos un piloto.'};
-    var ex=acc(email); if(ex) return {ok:true,estado:ex.estado,email:email};
-    db.accesos.push({email:email,nombre:d.nombre,area:d.area,motivo:d.motivo,pilotosSolicitados:pil,estado:'Pendiente',rol:'',pilotos:[],solicitado:new Date().toISOString(),resuelto:'',resueltoPor:''});
-    dbGuardar(db); return {ok:true,estado:'Pendiente',email:email};
-  }
-  if(accion==='validar'){
-    var em=sesion(d.token); if(!em) return {ok:false,estado:'SesionInvalida',mensaje:'Tu sesión expiró. Ingresa de nuevo.'};
-    var nomA=await adminDemo(em);
-    if(nomA) return {ok:true,estado:'Aprobado',email:em,nombre:nomA,rol:'Administrador',pilotos:PORTALES.map(function(p){return p.id;})};
-    var ac=acc(em); if(!ac||ac.estado!=='Aprobado') return {ok:false,estado:ac?ac.estado:'SinSolicitud',mensaje:'Tu acceso ya no está vigente.'};
-    return {ok:true,estado:'Aprobado',email:em,nombre:ac.nombre,rol:ac.rol,pilotos:ac.pilotos};
-  }
-  if(accion==='cerrar'){ delete db.sesiones[d.token]; dbGuardar(db); return {ok:true}; }
-  if(accion==='contacto'){
-    var cts=[]; try{ cts=JSON.parse(localStorage.getItem('salfa_demo_contactos'))||[]; }catch(e){}
-    cts.push({fecha:new Date().toISOString(),nombre:d.nombre,email:d.email,motivo:d.motivo,mensaje:d.mensaje});
-    localStorage.setItem('salfa_demo_contactos',JSON.stringify(cts)); return {ok:true};
-  }
-  var quien=sesion(d.token);
-  if(!quien||!(await adminDemo(quien))) return {ok:false,mensaje:'No tienes permiso para esta acción.'};
-    if(accion==='presenciaLatido'){
-    var presKey = 'salfa_presencia_mem_v1';
-    var pres = {}; try{ pres = JSON.parse(localStorage.getItem(presKey)) || {}; }catch(e){ pres = {}; }
-    var userMail = String(d.email || (quien||'')).toLowerCase();
-    var portal = d.portal || 'hub';
-    var pNom = d.portalNombre || (portal === 'hub' ? 'Hub de Pilotos' : portal);
-    var now = Date.now();
-    pres[userMail + '|' + portal] = {
-      email: userMail,
-      nombre: d.nombre || userMail.split('@')[0],
-      rol: d.rol || 'Colaborador',
-      portal: portal,
-      portalNombre: pNom,
-      ts: now
-    };
-    // Limpiar expirados (> 120 seg)
-    Object.keys(pres).forEach(function(k){
-      var v = pres[k];
-      var ts = typeof v === 'number' ? v : (v && v.ts);
-      if(!ts || now - ts > 120000) delete pres[k];
+  var ctl = ('AbortController' in window) ? new AbortController() : null;
+  var t = setTimeout(function(){ if(ctl) ctl.abort(); }, 30000);
+  try {
+    var resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(datos),
+      redirect: 'follow',
+      signal: ctl ? ctl.signal : undefined
     });
-    localStorage.setItem(presKey, JSON.stringify(pres));
-    return { ok: true };
-  }
-  if(accion==='presenciaEstado'){
-    var presKey = 'salfa_presencia_mem_v1';
-    var pres = {}; try{ pres = JSON.parse(localStorage.getItem(presKey)) || {}; }catch(e){ pres = {}; }
-    var now = Date.now();
-    var ports = { hub: { n: 0, ini: [] }, mapa: { n: 0, ini: [] }, cv: { n: 0, ini: [] }, awp: { n: 0, ini: [] }, okr: { n: 0, ini: [] }, info: { n: 0, ini: [] } };
-    var unicos = {};
-    var listaUsuarios = [];
-    Object.keys(pres).forEach(function(k){
-      var v = pres[k];
-      var ts = typeof v === 'number' ? v : (v && v.ts);
-      if(!ts || now - ts > 120000) return;
-      var parts = k.split('|');
-      var em = parts[0], pt = parts[1] || 'hub';
-      var nom = (typeof v === 'object' && v.nombre) ? v.nombre : (em.split('@')[0] || 'Usuario');
-      var rol = (typeof v === 'object' && v.rol) ? v.rol : 'Colaborador';
-      var pNom = (typeof v === 'object' && v.portalNombre) ? v.portalNombre : (pt === 'hub' ? 'Hub de Pilotos' : (pt === 'mapa' ? '01 · Mapa de Procesos' : (pt === 'cv' ? 'Control de CV y Competencias' : (pt === 'info' ? '05 · Gestión de Información' : pt))));
-
-      if(ports[pt]){
-        ports[pt].n++;
-        var inits = (nom.replace(/[^a-zA-Z]/g,'').slice(0,2)||'US').toUpperCase();
-        if(ports[pt].ini.length < 3) ports[pt].ini.push(inits);
-      }
-      if(!unicos[em]){
-        unicos[em] = true;
-        listaUsuarios.push({
-          email: em,
-          nombre: nom,
-          rol: rol,
-          portal: pt,
-          portalNombre: pNom,
-          ts: ts
-        });
-      }
-    });
-    if(listaUsuarios.length === 0){
-      var sAct = (typeof SESION !== 'undefined' && SESION) || (typeof leerSesion === 'function' ? leerSesion() : null) || { email: 'sjroca@salfamontajes.com', nombre: 'Sebastián', rol: 'Administrador' };
-      var nomAct = sAct.nombre || 'Sebastián';
-      listaUsuarios.push({
-        email: sAct.email || 'sjroca@salfamontajes.com',
-        nombre: nomAct,
-        rol: sAct.rol || 'Administrador',
-        portal: 'hub',
-        portalNombre: 'Hub de Pilotos',
-        ts: now
-      });
-      ports.hub = { n: 1, ini: [(nomAct.slice(0,2)||'SR').toUpperCase()] };
-    }
-    var tot = listaUsuarios.length;
-    return { ok: true, total: tot, portales: ports, usuarios: listaUsuarios };
-  }
-  if(accion==='listar') return {ok:true,solicitudes:db.accesos.filter(function(x){return x.estado!=='SinVerificar';})};
-  if(accion==='resolver'){
-    var x=acc(String(d.email).toLowerCase()); if(!x) return {ok:false,mensaje:'La solicitud no existe.'};
-    if(d.decision==='Aprobar'){
-      var ps=filtrarPil(d.pilotos); if(!ps.length) return {ok:false,mensaje:'Elige al menos un piloto para aprobar.'};
-      x.estado='Aprobado'; x.rol=d.rol||'Colaborador'; x.pilotos=ps;
-    } else {
-      x.estado=(d.decision==='Rechazar')?'Rechazado':'Revocado'; x.rol=''; x.pilotos=[];
-      Object.keys(db.sesiones).forEach(function(k){ if(db.sesiones[k].email===x.email) delete db.sesiones[k]; });
-    }
-    x.resuelto=new Date().toISOString(); x.resueltoPor=quien; dbGuardar(db); return {ok:true};
-  }
-  if(accion==='invitar'){
-    var em=String(d.email||'').trim().toLowerCase();
-    if(!em || !em.endsWith(DOMINIO)) return {ok:false,mensaje:'El correo debe pertenecer al dominio '+DOMINIO};
-    var ps=filtrarPil(d.pilotos); if(!ps.length) ps=['01'];
-    var ex=acc(em);
-    if(ex){
-      ex.estado='Aprobado'; ex.rol=d.rol||'Colaborador'; ex.pilotos=ps;
-      if(d.nombre) ex.nombre=d.nombre; if(d.area) ex.area=d.area;
-      ex.resuelto=new Date().toISOString(); ex.resueltoPor=quien;
-    } else {
-      db.accesos.push({email:em, nombre:d.nombre||em.split('@')[0], area:d.area||'Salfa Montajes', estado:'Aprobado', rol:d.rol||'Colaborador', pilotos:ps, solicitado:new Date().toISOString(), resuelto:new Date().toISOString(), resueltoPor:quien});
-    }
-    dbGuardar(db);
-    return {ok:true, mensaje:'Colaborador '+em+' habilitado con éxito.'};
-  }
-  return {ok:false,mensaje:'Acción no válida.'};
+    if(!resp.ok) return { ok:false, red:true, mensaje:'El servicio de accesos no respondió (' + resp.status + '). Inténtalo de nuevo.' };
+    return await resp.json();
+  } catch(err) {
+    return { ok:false, red:true, mensaje:'No se pudo conectar con el servicio de accesos. Revisa tu conexión e inténtalo de nuevo.' };
+  } finally { clearTimeout(t); }
 }
 
 // ===== Pantallas del ingreso =====
-var PANES=['Login','Registro','Verificar','Olvide','Restablecer','Form','Estado'];
+var PANES=['Login','Registro','Verificar','Olvide','Restablecer','Invitacion','Form','Estado'];
 var CRED={idToken:'',email:'',nombre:'',foto:''};
 var CTX={email:''};
 var SESION=null;
@@ -2354,7 +2151,7 @@ var GLOGO='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M
 function irPane(p){
   PANES.forEach(function(n){ var e=$('pane'+n); if(e) e.style.display=(n===p)?'block':'none'; });
   error('');
-  var f={Login:'lgEmail',Registro:'rgNombre',Olvide:'olEmail',Verificar:'vfCodigo',Restablecer:'rsCodigo'}[p];
+  var f={Login:'lgEmail',Registro:'rgNombre',Olvide:'olEmail',Verificar:'vfCodigo',Restablecer:'rsCodigo',Invitacion:'ivPass'}[p];
   // El cursor se coloca solo en equipos con mouse; en celulares evita abrir el teclado sin querer
   if(f && window.matchMedia('(hover:hover)').matches) setTimeout(function(){ var e=$(f); if(e) e.focus(); },60);
 }
@@ -2497,13 +2294,8 @@ async function iniciarSesionClave(ev){
     error('Usa tu correo corporativo '+DOMINIO); return;
   }
   if(!clave){
-    if(email === ADMIN_CORPORATIVO){
-      clave = 'REDACTED-ROTATED';
-      if($('lgPass')) $('lgPass').value = 'REDACTED-ROTATED';
-    } else {
-      var gp=$('g-pass'); if(gp){ void gp.offsetWidth; gp.classList.add('error'); }
-      error('Ingresa tu contraseña.'); return;
-    }
+    var gp=$('g-pass'); if(gp){ void gp.offsetWidth; gp.classList.add('error'); }
+    error('Ingresa tu contraseña.'); return;
   }
   var btn=$('btnIngresarSubmit'); if(btn) btn.classList.add('cargando');
   CRED={idToken:'',email:email,nombre:'',foto:''};
@@ -2550,7 +2342,7 @@ function procesarLogin(r){
                    rol:r.rol,pilotos:r.pilotos||[],rolesPorPortal:r.rolesPorPortal||{},foto:CRED.foto}, $('chkRecordar').checked);
       // Notificar al administrador cuando el usuario acepta la invitación
       if(r.aceptoInvitacion === false || !r.ultimoIngreso){
-        api('notificarAceptacion', { email: r.email||CRED.email, nombre: r.nombre||CRED.nombre }).catch(function(){});
+        api('notificarAceptacion', { token: r.token }).catch(function(){});
       }
     }, 700);
   } else if(r.estado==='SinSolicitud'){ abrirFormulario(); }
@@ -2652,6 +2444,49 @@ async function restablecerClave(ev){
   if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo cambiar la contraseña.'); return; }
   toast('Contraseña actualizada. Ya puedes iniciar sesión.');
   $('lgEmail').value=CTX.email; $('lgPass').value=''; irPane('Login');
+}
+
+// ===== Invitación: enlace de un solo uso del correo de bienvenida =====
+var INV = { email:'', token:'' };
+function leerParamsInvitacion(){
+  try{
+    var q = new URLSearchParams(location.search);
+    var t = (q.get('invitacion')||'').trim(), e = (q.get('email')||'').trim().toLowerCase();
+    if(/^[a-f0-9]{64}$/.test(t) && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) return { email:e, token:t };
+  }catch(err){}
+  return null;
+}
+function limpiarParamsInvitacion(){
+  try{ history.replaceState(null,'',location.pathname); }catch(e){}
+}
+async function abrirInvitacion(p){
+  INV = p;
+  irPane('Invitacion');
+  $('formInvitacion').style.display = 'none';
+  $('ivTexto').textContent = 'Verificando tu invitación…';
+  var r = await api('invitacionEstado',{ email:p.email, token:p.token });
+  if(!r || !r.ok){
+    $('ivTexto').textContent = (r && r.mensaje) || 'No se pudo verificar la invitación.';
+    return;
+  }
+  $('ivTexto').textContent = 'Hola' + (r.nombre ? ' ' + r.nombre : '') + ', crea la contraseña con la que ingresarás a ' + p.email + '.';
+  $('formInvitacion').style.display = 'block';
+  var f = $('ivPass'); if(f && window.matchMedia('(hover:hover)').matches) setTimeout(function(){ f.focus(); },60);
+}
+async function crearClaveInvitacion(ev){
+  ev.preventDefault(); error('');
+  var c1=$('ivPass').value, c2=$('ivPass2').value;
+  var e1=validarClaveFront(c1,INV.email); if(e1){ error(e1); return; }
+  if(c1!==c2){ error('Las contraseñas no coinciden.'); return; }
+  cargando(true,'Guardando tu contraseña…');
+  var r=await api('establecerClave',{ email:INV.email, token:INV.token, clave:c1 });
+  cargando(false);
+  if(!r || !r.ok){ error((r&&r.mensaje)||'No se pudo guardar la contraseña.'); return; }
+  limpiarParamsInvitacion();
+  $('ivPass').value=''; $('ivPass2').value='';
+  toast('Contraseña creada. Ya puedes iniciar sesión.');
+  $('lgEmail').value=INV.email; $('lgPass').value=''; INV={email:'',token:''};
+  irPane('Login');
 }
 
 // ===== Solicitud de acceso (cuenta de Google que aún no tiene solicitud) =====
@@ -3457,7 +3292,6 @@ async function guardarInvitar(ev){
     rol: rolGlobal,
     rolesPorPortal: rolesPorPortal,
     pilotos: pilotos,
-    emailHtml: emailHtml,
     token: (SESION ? SESION.token : '')
   });
 
@@ -3622,13 +3456,15 @@ document.addEventListener('keydown',function(e){
 
 // ===== Arranque =====
 window.addEventListener('DOMContentLoaded',async function(){
+  var inv=leerParamsInvitacion();
+  if(inv){ iniciarBrasas(); prepararIngreso(); abrirInvitacion(inv); return; }
   var s=leerSesion();
   if(s && (API_OK||MODO_DEMO)){
     cargando(true,'Verificando acceso…');
     var r=await api('validar',{token:s.token});
     cargando(false);
     if(r && r.ok && r.estado==='Aprobado'){
-      s.rol=r.rol; s.pilotos=r.pilotos||[]; s.nombre=r.nombre||s.nombre; s.email=r.email||s.email;
+      s.rol=r.rol; s.pilotos=r.pilotos||[]; s.rolesPorPortal=r.rolesPorPortal||{}; s.nombre=r.nombre||s.nombre; s.email=r.email||s.email;
       guardarSesion(s,s.recordar,true);
       renderDashboard(s); return;
     }
