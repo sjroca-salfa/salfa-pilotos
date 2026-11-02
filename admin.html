@@ -1177,7 +1177,7 @@ function cerrarTodo(){$('#ov').classList.remove('on');$('#drawer').classList.rem
 /* ---------- Modal de alta/edición ---------- */
 let editId=null;
 
-var _ultimoEmailInvitacionAdmin = { html: '', email: '', nombre: '' };
+var _ultimoEmailInvitacionAdmin = { html: '', email: '', nombre: '', enlace: '' };
 
 window.cerrarModalInvitacionConfirmadaAdmin = function() {
   var m = $('#modalInvitacionConfirmadaAdmin');
@@ -1188,11 +1188,17 @@ window.abrirEnGmailInvitacionAdmin = function() {
   if (!_ultimoEmailInvitacionAdmin) return;
   var to = encodeURIComponent(_ultimoEmailInvitacionAdmin.email);
   var subject = encodeURIComponent('[Portales Salfa] Invitación corporativa: acceso habilitado a pilotos');
+  // Si el correo automático falló, hay que mandar el enlace CON el token (crea la contraseña).
+  // Si el correo automático ya se envió, este es solo un respaldo y basta con el acceso general.
+  var enlace = _ultimoEmailInvitacionAdmin.enlace || 'https://sjroca-salfa.github.io/salfa-pilotos/';
+  var instruccion = _ultimoEmailInvitacionAdmin.enlace
+    ? 'Para crear tu contraseña, entra a este enlace (vence en 72 horas):'
+    : 'Puedes ingresar directamente en:';
   var body = encodeURIComponent(
     'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n\n' +
     'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n\n' +
-    'Puedes ingresar directamente en:\n' +
-    'https://sjroca-salfa.github.io/salfa-pilotos/\n\n' +
+    instruccion + '\n' +
+    enlace + '\n\n' +
     'Tus portales y roles asignados han sido configurados en la plataforma.\n\n' +
     'Saludos cordiales,\nAdministración Portales Salfa Pilotos\nSalfa Montajes S.A.'
   );
@@ -1201,10 +1207,12 @@ window.abrirEnGmailInvitacionAdmin = function() {
 
 window.copiarEmailInvitacionAdmin = async function() {
   var html = _ultimoEmailInvitacionAdmin.html;
+  var enlace = _ultimoEmailInvitacionAdmin.enlace || 'https://sjroca-salfa.github.io/salfa-pilotos/';
   var txt = 'Invitación a Portales de Pilotaje Salfa Montajes\n\n' +
     'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n' +
     'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n' +
-    'Accede desde: https://sjroca-salfa.github.io/salfa-pilotos/ con tu correo ' + _ultimoEmailInvitacionAdmin.email;
+    (_ultimoEmailInvitacionAdmin.enlace ? 'Crea tu contraseña aquí (vence en 72 horas): ' : 'Accede desde: ') + enlace +
+    (_ultimoEmailInvitacionAdmin.enlace ? '' : (' con tu correo ' + _ultimoEmailInvitacionAdmin.email));
   try {
     if (navigator.clipboard && window.ClipboardItem) {
       var blobHtml = new Blob([html], { type: 'text/html' });
@@ -1378,7 +1386,7 @@ async function guardarModal(){
     toast(resMailEnviado ? 'Invitación guardada y correo enviado a ' + c : (editId ? 'Cambios guardados' : 'Colaborador habilitado'));
 
     // Mostrar modal con vista previa y botón de copiar correo
-    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n, emailEnviado: resMailEnviado };
+    _ultimoEmailInvitacionAdmin = { html: emailHtml, email: c, nombre: n, emailEnviado: resMailEnviado, enlace: (rGuardar && rGuardar.enlace) || '' };
     const mConf = $('#modalInvitacionConfirmadaAdmin');
     if (mConf) {
       $('#adminInvConfSub').textContent = 'Invitación para ' + n + ' (' + c + ')';
