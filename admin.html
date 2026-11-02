@@ -603,7 +603,6 @@ section.view.on{display:block}
       <div class="fld"><label class="rot" for="fAre">Área / cargo</label><input class="inp" id="fAre" placeholder="Ej.: Planificación y Desarrollo"></div>
       <div class="fld"><label class="rot" for="fFoto">Fotografía / Avatar (URL)</label><input class="inp" id="fFoto" placeholder="https://lh3.googleusercontent.com/..."></div>
     </div>
-    <div class="fld"><label class="rot" for="fRol">Rol</label><select class="sel" id="fRol"></select><div class="help" id="fRolH"></div></div>
     <div class="fld"><span class="rot" style="display:block;margin-bottom:5px;color:var(--gris)">Portales habilitados</span><div id="fPor" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;"></div></div>
   </div>
   <footer><button class="btn" id="mCan">Cancelar</button><button class="btn pri" id="mOk">Guardar y habilitar</button></footer>
@@ -858,11 +857,11 @@ const TITULOS = {resumen:['Resumen','Estado del ecosistema de portales'],usuario
 
 const tagEst = e=>({Activo:'ok',Suspendido:'bad',Pendiente:'pend'}[e]||'off');
 const tagRol = r=>r===CONFIG.ROL_ADMIN?'adm':'off';
-const nPor = u=>S.db.portales.filter(p=>u.perm[p.id]>0).length;
-// Pilotos realmente habilitables (CONFIG.PILOTOS en el backend usa ids de 2 dígitos '01'..'09').
-// El catálogo de Portales puede traer además entradas heredadas (p.ej. 'hub', 'mapa', 'cv') que
-// solo sirven para el panel "Catálogo de portales"; no son permisos reales en la Matriz.
-const portalesOtorgables = ()=>S.db.portales.filter(p=>/^\d{2}$/.test(p.id));
+const nPor = u=>portalesOtorgables().filter(p=>u.perm[p.id]>0).length;
+// Pilotos realmente habilitables: siempre los que manda el backend en pilotosOficiales (fijos,
+// desde CONFIG.PORTALES_INFO). El catálogo de "Portales" (S.db.portales) es editable y solo sirve
+// para el panel "Catálogo de portales"; no debe usarse para otorgar permisos reales.
+const portalesOtorgables = ()=>S.db.pilotosOficiales || S.db.portales.filter(p=>/^\d{2}$/.test(p.id));
 
 function spark(arr,w=96,h=26){
   const m=Math.max(1,...arr);const bw=w/arr.length;
@@ -1300,8 +1299,6 @@ function abrirModal(id){
   $('#fAre').value=u?u.area:'';
   $('#fFoto').value=u?(u.foto || ''):'';
   $('#fErr').textContent='';
-  $('#fRol').innerHTML=Object.keys(ROLES).filter(r=>r!==CONFIG.ROL_ADMIN||(u&&u.rol===r)).map(r=>`<option${u&&u.rol===r?' selected':''}>${r}</option>`).join('');
-  $('#fRolH').textContent=ROLES[$('#fRol').value].d;
 
   $('#fPor').innerHTML = portalesOtorgables().map(p => {
     const lvl = (u && u.perm && u.perm[p.id]) || 0;
@@ -1337,7 +1334,7 @@ async function guardarModal(){
         nom=$('#fNom').value.trim(),
         ape=($('#fApe')?$('#fApe').value.trim():''),
         a=$('#fAre').value.trim(),
-        r=$('#fRol').value,
+        r=(editId&&S.db.usuarios.find(x=>x.id===editId)?.rol)||'Colaborador',
         foto=($('#fFoto')?$('#fFoto').value.trim():'');
   if(!c.endsWith(CONFIG.DOMINIO)||c.length<=CONFIG.DOMINIO.length){$('#fErr').textContent='Ingresa un correo con dominio '+CONFIG.DOMINIO;return}
   if(!nom){$('#fErr').textContent='Ingresa el nombre del colaborador';return}
@@ -1435,7 +1432,6 @@ function enlazar(){
   $('#btnRef').onclick=async()=>{try{if(Datos.demo)Datos.db=null;S.db=await Datos.cargar();renderTodo();toast('Datos actualizados')}catch(e){toast(e.message,true)}};
   $('#btnOut').onclick=()=>{toast('Sesión cerrada');setTimeout(()=>location.href='index.html',700)};
   $('#btnNuevo').onclick=()=>abrirModal();$('#mOk').onclick=guardarModal;
-  $('#fRol').onchange=()=>$('#fRolH').textContent=ROLES[$('#fRol').value].d;
   document.addEventListener('click',e=>{
     const tr=e.target.closest('tr[data-u]'),b=e.target.closest('button');
     if(b&&b.dataset.mov!==undefined){moverPortal(+b.dataset.mov,+b.dataset.dir);return;}
