@@ -859,6 +859,10 @@ const TITULOS = {resumen:['Resumen','Estado del ecosistema de portales'],usuario
 const tagEst = e=>({Activo:'ok',Suspendido:'bad',Pendiente:'pend'}[e]||'off');
 const tagRol = r=>r===CONFIG.ROL_ADMIN?'adm':'off';
 const nPor = u=>S.db.portales.filter(p=>u.perm[p.id]>0).length;
+// Pilotos realmente habilitables (CONFIG.PILOTOS en el backend usa ids de 2 dígitos '01'..'09').
+// El catálogo de Portales puede traer además entradas heredadas (p.ej. 'hub', 'mapa', 'cv') que
+// solo sirven para el panel "Catálogo de portales"; no son permisos reales en la Matriz.
+const portalesOtorgables = ()=>S.db.portales.filter(p=>/^\d{2}$/.test(p.id));
 
 function spark(arr,w=96,h=26){
   const m=Math.max(1,...arr);const bw=w/arr.length;
@@ -965,9 +969,9 @@ function renderUsuarios(){
 }
 
 function renderMatriz(){
-  const d=S.db,q=$('#mQ').value.toLowerCase();
-  $('#mHead').innerHTML='<tr><th>Colaborador</th>'+d.portales.map(p=>`<th>${esc(p.nombre)}</th>`).join('')+'</tr>';
-  $('#mBody').innerHTML=d.usuarios.filter(u=>!q||(u.nombre+u.correo).toLowerCase().includes(q)).map(u=>`<tr data-u="${u.id}" class="${S.cambios[u.id]?'chg':''}"><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.rol)}</span></div></div></td>`+d.portales.map(p=>{const v=S.cambios[u.id]?.[p.id]??u.perm[p.id];return `<td><select data-u="${u.id}" data-p="${p.id}" data-v="${v}" aria-label="${esc(u.nombre)} en ${esc(p.nombre)}">${NIVELES.map((n,i)=>`<option value="${i}"${i===v?' selected':''}>${n}</option>`).join('')}</select></td>`}).join('')+'</tr>').join('');
+  const d=S.db,q=$('#mQ').value.toLowerCase(),portales=portalesOtorgables();
+  $('#mHead').innerHTML='<tr><th>Colaborador</th>'+portales.map(p=>`<th>${esc(p.nombre)}</th>`).join('')+'</tr>';
+  $('#mBody').innerHTML=d.usuarios.filter(u=>!q||(u.nombre+u.correo).toLowerCase().includes(q)).map(u=>`<tr data-u="${u.id}" class="${S.cambios[u.id]?'chg':''}"><td><div class="who"><div class="av">${ini(u.nombre)}</div><div><b>${esc(u.nombre)}</b><span>${esc(u.rol)}</span></div></div></td>`+portales.map(p=>{const v=S.cambios[u.id]?.[p.id]??u.perm[p.id];return `<td><select data-u="${u.id}" data-p="${p.id}" data-v="${v}" aria-label="${esc(u.nombre)} en ${esc(p.nombre)}">${NIVELES.map((n,i)=>`<option value="${i}"${i===v?' selected':''}>${n}</option>`).join('')}</select></td>`}).join('')+'</tr>').join('');
   actualizarBarra();
 }
 function actualizarBarra(){
@@ -1050,7 +1054,7 @@ function renderUsuariosPanel(){
 function efectivo(u,pid){return S.cambios[u.id]?.[pid]??u.perm[pid]}
 function renderCobertura(anim=true){
   const d=S.db;
-  $('#pCob').innerHTML=d.portales.map(p=>{
+  $('#pCob').innerHTML=portalesOtorgables().map(p=>{
     const n=[0,0,0,0];d.usuarios.forEach(u=>n[efectivo(u,p.id)]++);const con=n[1]+n[2]+n[3],t=d.usuarios.length||1;
     return `<div class="kpi${p.id==='hub'?' hl':''}"><span class="rot">${esc(p.nombre)}</span><div class="v" data-to="${con}" data-f="n">${anim?0:con}</div><div class="d">de ${t} con acceso</div><div class="stack" role="img" aria-label="Ver ${n[1]}, Editar ${n[2]}, Aprobar ${n[3]}">${[1,2,3].map(i=>`<i class="v${i}" style="width:${n[i]/t*100}%${anim?'':';animation:none'}"></i>`).join('')}</div><div class="lg"><span>Ver ${n[1]}</span><span>Editar ${n[2]}</span><span>Aprobar ${n[3]}</span></div></div>`}).join('');
   if(anim)$$('#pCob .v').forEach(countUp);
@@ -1164,6 +1168,7 @@ function abrirUsuario(id){
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn" data-ed="${u.id}">Editar usuario</button>
       <button class="btn" data-go="permisos" data-q="${esc(u.nombre)}">Ver permisos</button>
+      ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn" data-reenv="${u.id}">Reenviar invitación</button>`}
       ${u.rol===CONFIG.ROL_ADMIN?'':`<button class="btn danger" data-sus="${u.id}">${u.estado==='Suspendido'?'Reactivar acceso':'Suspender acceso'}</button>`}
     </div>`;
   $('#ov').classList.add('on');$('#drawer').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
@@ -1298,7 +1303,7 @@ function abrirModal(id){
   $('#fRol').innerHTML=Object.keys(ROLES).filter(r=>r!==CONFIG.ROL_ADMIN||(u&&u.rol===r)).map(r=>`<option${u&&u.rol===r?' selected':''}>${r}</option>`).join('');
   $('#fRolH').textContent=ROLES[$('#fRol').value].d;
 
-  $('#fPor').innerHTML = S.db.portales.map(p => {
+  $('#fPor').innerHTML = portalesOtorgables().map(p => {
     const lvl = (u && u.perm && u.perm[p.id]) || 0;
     const chk = lvl > 0;
     const defLvl = lvl > 0 ? lvl : 1;
@@ -1341,7 +1346,7 @@ async function guardarModal(){
   if(!editId&&S.db.usuarios.some(u=>u.correo===c)){$('#fErr').textContent='Ese correo ya tiene un acceso registrado';return}
 
   const perm={};
-  S.db.portales.forEach(p=>perm[p.id]=0);
+  portalesOtorgables().forEach(p=>perm[p.id]=0);
   $('#fPor .chk-fld-p').forEach(chk => {
     if (chk.checked) {
       const sel = $('#selLvl_' + chk.value);
@@ -1356,7 +1361,7 @@ async function guardarModal(){
     }
   });
 
-  const emailHtml = generarEmailAdminHtml(n, c, a, r, perm, S.db.portales);
+  const emailHtml = generarEmailAdminHtml(n, c, a, r, perm, portalesOtorgables());
 
   try{
     const u=editId?S.db.usuarios.find(x=>x.id===editId):{id:c,correo:c,estado:'Activo',dias:Array(30).fill(0),visitas:0,minutos:0,acciones:0,ultimo:null,ultimoPortal:'—',creado:Date.now()};
@@ -1412,7 +1417,7 @@ function iniciarFiltros(){
   $('#uRol').innerHTML='<option value="">Todos los roles</option>'+Object.keys(ROLES).map(r=>`<option>${r}</option>`).join('');
   $('#aPor').innerHTML='<option value="">Todos los portales</option>'+d.portales.map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
   $('#bPor').innerHTML='<option value="">Todos los portales</option>'+d.portales.map(p=>`<option>${esc(p.nombre)}</option>`).join('');
-  $('#mBulk').innerHTML='<option value="">Asignación masiva…</option>'+d.portales.flatMap(p=>NIVELES.map((n,i)=>`<option value="${p.id}|${i}">${esc(p.nombre)} → ${n} (usuarios visibles)</option>`)).join('');
+  $('#mBulk').innerHTML='<option value="">Asignación masiva…</option>'+portalesOtorgables().flatMap(p=>NIVELES.map((n,i)=>`<option value="${p.id}|${i}">${esc(p.nombre)} → ${n} (usuarios visibles)</option>`)).join('');
 }
 
 function enlazar(){
@@ -1440,6 +1445,11 @@ function enlazar(){
     if(b&&b.dataset.tab){S.solTab=b.dataset.tab;renderSolicitudesPanel();return}
     if(b&&b.dataset.go){location.hash=b.dataset.go;$('#mQ').value=b.dataset.q||'';renderMatriz();return}
     if(b&&b.dataset.sus){const u=S.db.usuarios.find(x=>x.id===b.dataset.sus);u.estado=u.estado==='Suspendido'?'Activo':'Suspendido';Datos.guardarUsuario({correo:u.correo,estado:u.estado}).then(()=>{renderTodo();abrirUsuario(u.id);toast('Estado actualizado')}).catch(x=>toast(x.message,true));return}
+    if(b&&b.dataset.reenv){const u=S.db.usuarios.find(x=>x.id===b.dataset.reenv);
+      Datos.guardarUsuario({correo:u.correo,nombre:u.nombre,nombres:u.nombres,apellidos:u.apellidos,area:u.area,rol:u.rol,foto:u.foto,permisos:u.perm,rolesPorPortal:u.rolesPorPortal,reenviarCorreo:true})
+        .then(r=>toast(r&&r.emailEnviado?'Invitación reenviada a '+u.correo:'No se pudo enviar el correo'+(r&&r.enlace?'; copia el enlace desde la consola':'')))
+        .catch(x=>toast(x.message,true));
+      return}
     if(b&&b.dataset.sol){const s=S.db.solicitudes.find(x=>x.id===b.dataset.sol),ok=b.dataset.ok==='1';Datos.resolverSolicitud(s.id,ok).then(()=>{S.db.solicitudes=S.db.solicitudes.filter(x=>x!==s);(S.db.historial=S.db.historial||[]).unshift({...s,resolucion:ok?'Aprobada':'Rechazada',fechaRes:Date.now()});S.db.bitacora.unshift({fecha:Date.now(),usuario:'Administrador del Sistema',correo:'',portal:s.portal,tipo:'admin',evento:ok?'Solicitud aprobada':'Solicitud rechazada',detalle:`${s.nombre} · ${s.portal}`});renderSolicitudesPanel();renderResumen();toast(ok?'Solicitud aprobada':'Solicitud rechazada')}).catch(x=>toast(x.message,true));return}
     if(tr&&!b&&!e.target.closest('select'))abrirUsuario(tr.dataset.u);
   });

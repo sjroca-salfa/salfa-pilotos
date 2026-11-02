@@ -1364,15 +1364,12 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
           <label for="rgPass2">Repite la contraseña</label>
           <div class="caja"><svg class="i i-lock" aria-hidden="true"><use href="#i-lock"/></svg><input type="password" id="rgPass2" autocomplete="new-password"></div>
         </div>
-        <fieldset class="campo">
-          <legend>Pilotos que necesitas</legend>
-          <div class="pil-chk" id="rgPilotos"></div>
-        </fieldset>
         <div class="campo">
-          <label for="rgMotivo">¿Para qué necesitas el acceso?</label>
-          <textarea id="rgMotivo" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás y en qué área o proyecto colaboras."></textarea>
+          <label for="rgMotivo">¿Para qué requieres acceso?</label>
+          <textarea id="rgMotivo" maxlength="100" rows="3" placeholder="Cuéntanos brevemente para qué necesitas acceso (máx. 100 caracteres)."></textarea>
         </div>
         <button type="submit" class="btn-ingresar">Enviar Solicitud de Acceso <svg class="i i-arrow-right" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+        <button type="button" class="btn-sec" onclick="irPane('Login')">Cancelar</button>
       </form>
       <p class="cambio" style="margin-top:20px;text-align:center">¿Ya tienes acceso habilitado? <button type="button" class="enlace fuerte" onclick="irPane('Login')">Inicia sesión</button></p>
     </div>
@@ -1479,13 +1476,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
           <label for="solArea">Área y cargo</label>
           <div class="caja"><svg class="i i-briefcase" aria-hidden="true"><use href="#i-briefcase"/></svg><input type="text" id="solArea" required maxlength="80" placeholder="Ej.: Ingeniería · Jefe de proyecto" autocomplete="organization-title"></div>
         </div>
-        <fieldset class="campo">
-          <legend>Pilotos que necesitas</legend>
-          <div class="pil-chk" id="solPilotos"></div>
-        </fieldset>
         <div class="campo">
-          <label for="solMotivo">¿Para qué necesitas el acceso?</label>
-          <textarea id="solMotivo" required minlength="10" maxlength="500" rows="3" placeholder="Cuéntanos brevemente el uso que le darás."></textarea>
+          <label for="solMotivo">¿Para qué requieres acceso?</label>
+          <textarea id="solMotivo" required minlength="10" maxlength="100" rows="3" placeholder="Cuéntanos brevemente para qué necesitas acceso (máx. 100 caracteres)."></textarea>
         </div>
         <button type="submit" class="btn-ingresar" id="btnEnviar">Enviar solicitud <svg class="i i-send" aria-hidden="true"><use href="#i-send"/></svg></button>
         <button type="button" class="btn-sec" onclick="volverIngreso()">Cancelar</button>
@@ -2170,15 +2163,6 @@ function validarClaveFront(clave,email){
   if(local.length>=4 && clave.toLowerCase().indexOf(local)>=0) return 'La contraseña no puede contener tu correo.';
   return '';
 }
-function pilotosCheck(idDestino){
-  $(idDestino).innerHTML=PORTALES.map(function(p){
-    return '<label><input type="checkbox" value="'+p.id+'"> '+p.id+' · '+escapar(p.nombre)+'</label>';
-  }).join('');
-}
-function elegidos(idDestino){
-  return Array.prototype.map.call($(idDestino).querySelectorAll('input:checked'),function(i){return i.value;});
-}
-
 function mostrarEstado(estado,texto){
   var M={
     Pendiente:{i:'hourglass',c:'pend',t:'Cuenta en revisión',x:'Tu cuenta '+CRED.email+' está pendiente de aprobación. Un administrador la revisa y te avisaremos por correo cuando se resuelva.'},
@@ -2219,7 +2203,6 @@ function prepararIngreso(){
     b.style.display='block';
     b.textContent='El servicio de accesos aún no está activado en este sitio, por lo que todavía no es posible ingresar ni registrarse. Avisa al administrador del Hub.';
   }
-  pilotosCheck('rgPilotos');
   irPane('Login');
 }
 
@@ -2356,7 +2339,7 @@ async function registrarse(ev){
   var nombre=$('rgNombre').value.trim();
   var apellidos=($('rgApellidos')?$('rgApellidos').value.trim():'');
   var email=$('rgEmail').value.trim().toLowerCase(), area=$('rgArea').value.trim();
-  var clave=$('rgPass').value, clave2=$('rgPass2').value, motivo=$('rgMotivo').value.trim(), pilotos=elegidos('rgPilotos');
+  var clave=$('rgPass').value, clave2=$('rgPass2').value, motivo=$('rgMotivo').value.trim();
   if(!nombre){ error('Escribe tu nombre.'); $('rgNombre').focus(); return; }
   if(!apellidos){ error('Escribe tus apellidos.'); if($('rgApellidos')) $('rgApellidos').focus(); return; }
   var nombreCompleto = (nombre + ' ' + apellidos).trim();
@@ -2364,10 +2347,9 @@ async function registrarse(ev){
   if(!area){ error('Escribe tu área y cargo.'); $('rgArea').focus(); return; }
   var e1=validarClaveFront(clave,email); if(e1){ error(e1); $('rgPass').focus(); return; }
   if(clave!==clave2){ error('Las contraseñas no coinciden.'); $('rgPass2').focus(); return; }
-  if(!pilotos.length){ error('Elige al menos un piloto.'); return; }
-  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué necesitas el acceso.'); $('rgMotivo').focus(); return; }
+  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué requieres el acceso.'); $('rgMotivo').focus(); return; }
   cargando(true,'Creando tu cuenta…');
-  var r=await api('registrar',{nombre:nombreCompleto,nombres:nombre,apellidos:apellidos,email:email,area:area,motivo:motivo,pilotos:pilotos,clave:clave});
+  var r=await api('registrar',{nombre:nombreCompleto,nombres:nombre,apellidos:apellidos,email:email,area:area,motivo:motivo,clave:clave});
   cargando(false);
   if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo crear la cuenta.'); return; }
   CRED.email=email; $('rgPass').value=''; $('rgPass2').value='';
@@ -2494,18 +2476,15 @@ function abrirFormulario(){
   $('formCuenta').textContent='Cuenta: '+CRED.email;
   $('solNombre').value=CRED.nombre||'';
   $('solArea').value=''; $('solMotivo').value='';
-  pilotosCheck('solPilotos');
   irPane('Form');
 }
 async function enviarSolicitud(ev){
   ev.preventDefault(); error('');
   var nombre=$('solNombre').value.trim(), area=$('solArea').value.trim(), motivo=$('solMotivo').value.trim();
-  var pilotos=elegidos('solPilotos');
   if(!nombre||!area){ error('Completa tu nombre y tu área y cargo.'); return; }
-  if(!pilotos.length){ error('Elige al menos un piloto.'); return; }
-  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué necesitas el acceso.'); return; }
+  if(motivo.length<10){ error('Cuéntanos con algo más de detalle para qué requieres el acceso.'); return; }
   cargando(true,'Enviando solicitud…');
-  var r=await api('solicitar',{idToken:CRED.idToken,email:CRED.email,nombre:nombre,area:area,motivo:motivo,pilotos:pilotos});
+  var r=await api('solicitar',{idToken:CRED.idToken,email:CRED.email,nombre:nombre,area:area,motivo:motivo});
   cargando(false);
   if(!r||!r.ok){ error((r&&r.mensaje)||'No se pudo enviar la solicitud.'); return; }
   mostrarEstado(r.estado==='Pendiente'?'Enviada':r.estado);
