@@ -602,7 +602,7 @@ section.view.on{display:block}
 
     </main>
     <footer class="pie-corporativo" style="padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--gris);flex-wrap:wrap">
-      <span>Salfa Montajes · Consola Central de Administración · Portales de pilotaje</span>
+      <span>Salfa Montajes · Consola Central de Administración · Portales de prototipos</span>
       <span>Nivel de Seguridad: Confidencial · Información de uso interno</span>
     </footer>
   </div>
@@ -889,10 +889,10 @@ const TITULOS = {resumen:['Resumen','Estado del ecosistema de portales'],usuario
 const tagEst = e=>({Activo:'ok',Suspendido:'bad',Pendiente:'pend'}[e]||'off');
 const tagRol = r=>r===CONFIG.ROL_ADMIN?'adm':'off';
 const nPor = u=>portalesOtorgables().filter(p=>u.perm[p.id]>0).length;
-// Pilotos realmente habilitables: siempre los que manda el backend en pilotosOficiales (fijos,
+// Prototipos realmente habilitables: siempre los que manda el backend en prototiposOficiales (fijos,
 // desde CONFIG.PORTALES_INFO). El catálogo de "Portales" (S.db.portales) es editable y solo sirve
 // para el panel "Catálogo de portales"; no debe usarse para otorgar permisos reales.
-const portalesOtorgables = ()=>S.db.pilotosOficiales || S.db.portales.filter(p=>/^\d{2}$/.test(p.id));
+const portalesOtorgables = ()=>S.db.prototiposOficiales || S.db.portales.filter(p=>/^\d{2}$/.test(p.id));
 
 function spark(arr,w=96,h=26){
   const m=Math.max(1,...arr);const bw=w/arr.length;
@@ -1305,7 +1305,7 @@ window.cerrarModalInvitacionConfirmadaAdmin = function() {
 window.abrirEnGmailInvitacionAdmin = function() {
   if (!_ultimoEmailInvitacionAdmin) return;
   var to = encodeURIComponent(_ultimoEmailInvitacionAdmin.email);
-  var subject = encodeURIComponent('[Portales Salfa] Invitación corporativa: acceso habilitado a pilotos');
+  var subject = encodeURIComponent('[Portales Salfa] Invitación corporativa: acceso habilitado a prototipos');
   // Si el correo automático falló, hay que mandar el enlace CON el token (crea la contraseña).
   // Si el correo automático ya se envió, este es solo un respaldo y basta con el acceso general.
   var enlace = _ultimoEmailInvitacionAdmin.enlace || 'https://sjroca-salfa.github.io/salfa-pilotos/';
@@ -1314,11 +1314,11 @@ window.abrirEnGmailInvitacionAdmin = function() {
     : 'Puedes ingresar directamente en:';
   var body = encodeURIComponent(
     'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n\n' +
-    'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n\n' +
+    'Has sido habilitado en los Portales de Prototipos de Salfa Montajes.\n\n' +
     instruccion + '\n' +
     enlace + '\n\n' +
     'Tus portales y roles asignados han sido configurados en la plataforma.\n\n' +
-    'Saludos cordiales,\nAdministración Portales Salfa Pilotos\nSalfa Montajes S.A.'
+    'Saludos cordiales,\nAdministración Portales Salfa Prototipos\nSalfa Montajes S.A.'
   );
   window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + subject + '&body=' + body, '_blank');
 };
@@ -1326,9 +1326,9 @@ window.abrirEnGmailInvitacionAdmin = function() {
 window.copiarEmailInvitacionAdmin = async function() {
   var html = _ultimoEmailInvitacionAdmin.html;
   var enlace = _ultimoEmailInvitacionAdmin.enlace || 'https://sjroca-salfa.github.io/salfa-pilotos/';
-  var txt = 'Invitación a Portales de Pilotaje Salfa Montajes\n\n' +
+  var txt = 'Invitación a Portales de Prototipos Salfa Montajes\n\n' +
     'Hola ' + _ultimoEmailInvitacionAdmin.nombre + ':\n' +
-    'Has sido habilitado en los Portales de Pilotaje de Salfa Montajes.\n' +
+    'Has sido habilitado en los Portales de Prototipos de Salfa Montajes.\n' +
     (_ultimoEmailInvitacionAdmin.enlace ? 'Crea tu contraseña aquí (vence en 72 horas): ' : 'Accede desde: ') + enlace +
     (_ultimoEmailInvitacionAdmin.enlace ? '' : (' con tu correo ' + _ultimoEmailInvitacionAdmin.email));
   try {
@@ -1375,12 +1375,12 @@ function generarEmailAdminHtml(nombre, email, area, rolGlobal, perm, portales) {
     '<div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.1);border-top:6px solid #B01E24;">' +
       '<div style="background:#1E2229;padding:22px 26px;text-align:center;">' +
         '<h1 style="margin:0;color:#ffffff;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase;">SALFA MONTAJES</h1>' +
-        '<div style="margin-top:4px;color:#E23B42;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Ecosistema de Portales de Pilotaje</div>' +
+        '<div style="margin-top:4px;color:#E23B42;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Ecosistema de Portales de Prototipos</div>' +
       '</div>' +
       '<div style="padding:26px 28px;">' +
         '<h2 style="margin:0 0 10px;color:#1E2229;font-size:18px;">¡Hola ' + esc(nombre) + '!</h2>' +
         '<p style="margin:0 0 18px;font-size:14px;color:#4B5563;line-height:1.6;">' +
-          'Has sido habilitado formalmente en el ecosistema de <b>Portales de Pilotaje de Salfa Montajes</b>' +
+          'Has sido habilitado formalmente en el ecosistema de <b>Portales de Prototipos de Salfa Montajes</b>' +
           (area ? ' para el área de <b>' + esc(area) + '</b>.' : '.') +
           ' A continuación se detallan los portales asignados, tu perfil y lo que puedes hacer en cada uno:' +
         '</p>' +
@@ -1398,7 +1398,7 @@ function generarEmailAdminHtml(nombre, email, area, rolGlobal, perm, portales) {
         '</table>' +
         '<div style="text-align:center;margin:28px 0 22px;">' +
           '<a href="' + urlHub + '" target="_blank" rel="noopener" style="display:inline-block;padding:13px 30px;background:#B01E24;color:#ffffff;text-decoration:none;font-weight:700;font-size:13.5px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(176,30,36,0.4);">' +
-            'Ingresar a los Portales de Pilotaje →' +
+            'Ingresar a los Portales de Prototipos →' +
           '</a>' +
         '</div>' +
         '<div style="background:#F8FAFC;border-left:4px solid #B01E24;padding:14px 16px;border-radius:0 8px 8px 0;margin:18px 0 0;font-size:12.5px;color:#475569;line-height:1.55;">' +
@@ -1577,7 +1577,7 @@ function enlazar(){
     if(b&&b.dataset.go){location.hash=b.dataset.go;$('#mQ').value=b.dataset.q||'';renderMatriz();return}
     if(b&&b.dataset.sus){const u=S.db.usuarios.find(x=>x.id===b.dataset.sus);u.estado=u.estado==='Suspendido'?'Activo':'Suspendido';Datos.guardarUsuario({correo:u.correo,estado:u.estado}).then(()=>{renderTodo();abrirUsuario(u.id);toast('Estado actualizado')}).catch(x=>toast(x.message,true));return}
     if(b&&b.dataset.reenv){const u=S.db.usuarios.find(x=>x.id===b.dataset.reenv);
-      // Acción dedicada: no toca pilotos ni roles, así que no exige "elegir al menos un portal".
+      // Acción dedicada: no toca prototipos ni roles, así que no exige "elegir al menos un portal".
       Datos.reenviarInvitacion(u.correo)
         .then(r=>{
           const emailHtml = generarEmailAdminHtml(u.nombre, u.correo, u.area, u.rol, u.perm, portalesOtorgables());
@@ -1790,7 +1790,7 @@ function cerrarSesionPorInactividadAdmin(){
   <div class="salfa-modal-portales-dialog">
     <div class="salfa-modal-portales-header">
       <div>
-        <b>Ecosistema Salfa Pilotos</b>
+        <b>Ecosistema Salfa Prototipos</b>
         <span>Acceso directo entre portales</span>
       </div>
       <button type="button" class="btn-close-modal" onclick="salfaCerrarMenuPortales()" title="Cerrar ventana">✕</button>
@@ -1798,7 +1798,7 @@ function cerrarSesionPorInactividadAdmin(){
     <div class="salfa-modal-portales-body">
       <a href="index.html" class="salfa-dd-item">
         <span class="salfa-dd-num">HUB</span>
-        <div class="salfa-dd-info"><b>Hub Central de Pilotos</b><span>Portal principal de acceso</span></div>
+        <div class="salfa-dd-info"><b>Hub Central de Prototipos</b><span>Portal principal de acceso</span></div>
         <span class="salfa-dd-tag ok">Hub</span>
       </a>
       <a href="https://sjroca-salfa.github.io/portal-mapa-procesos/" class="salfa-dd-item" data-p="01">
