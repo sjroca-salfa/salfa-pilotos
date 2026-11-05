@@ -1684,6 +1684,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <span>Consola Central de Administración</span>
         </a>
+        <button type="button" class="btn-pill" onclick="cerrarModalUserMenu();abrirCambiarClave();" style="background:#f8fafc;color:#1E2229;border:1px solid #cbd5e1;justify-content:center;padding:10px;font-size:13px;border-radius:8px;cursor:pointer;">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Cambiar mi contraseña</span>
+        </button>
         <button type="button" class="btn-pill" onclick="cerrarModalUserMenu();abrirContacto();" style="background:#f8fafc;color:#1E2229;border:1px solid #cbd5e1;justify-content:center;padding:10px;font-size:13px;border-radius:8px;cursor:pointer;">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           <span>Contacto Soporte P&D</span>
@@ -1693,6 +1697,48 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
           <span>Cerrar Sesión</span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Contraseña (Sesión activa) -->
+<div class="salfa-modal-portales" id="modalCambiarClave" style="display:none;" onclick="if(event.target===this)cerrarModalCambiarClave()">
+  <div class="salfa-modal-portales-dialog" style="max-width:440px;">
+    <div class="salfa-modal-portales-header" style="background:#1E2229;color:#fff;border-bottom:3px solid #B01E24;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#B01E24;stroke-width:2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <h3 style="margin:0;font-size:16px;color:#fff;font-weight:700;">Cambiar mi contraseña</h3>
+      </div>
+      <button type="button" class="btn-close-modal" onclick="cerrarModalCambiarClave()" title="Cerrar">✕</button>
+    </div>
+    <div class="salfa-modal-portales-body" style="padding:18px 20px;">
+      <p style="margin:0 0 14px;font-size:13px;color:#64748b;">Ingresa tu nueva contraseña para acceder a los Portales de Salfa.</p>
+      <form onsubmit="guardarNuevaClave(event)" novalidate>
+        <div class="campo" style="margin-bottom:12px;">
+          <label for="chClaveActual" style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#1e293b;">Contraseña actual</label>
+          <div class="in" style="position:relative;">
+            <input type="password" id="chClaveActual" style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;" placeholder="Tu clave actual (ej. temporal)">
+          </div>
+        </div>
+        <div class="campo" style="margin-bottom:12px;">
+          <label for="chClaveNueva" style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#1e293b;">Nueva contraseña</label>
+          <div class="in" style="position:relative;">
+            <input type="password" id="chClaveNueva" required style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;" placeholder="Mínimo 10 caracteres con letras y números">
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px;">Debe tener al menos 10 caracteres e incluir letras y números.</div>
+        </div>
+        <div class="campo" style="margin-bottom:16px;">
+          <label for="chClaveNueva2" style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#1e293b;">Repetir nueva contraseña</label>
+          <div class="in" style="position:relative;">
+            <input type="password" id="chClaveNueva2" required style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;" placeholder="Repite la nueva contraseña">
+          </div>
+        </div>
+        <div id="chAvisoError" style="display:none;color:#dc2626;font-size:12px;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:6px;border:1px solid #fecaca;"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <button type="button" class="btn-pill" onclick="cerrarModalCambiarClave()" style="padding:8px 14px;border:1px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer;">Cancelar</button>
+          <button type="submit" id="btnGuardarNuevaClave" class="btn-pill rojo" style="padding:8px 16px;border-radius:6px;cursor:pointer;background:#B01E24;color:#fff;border:none;">Guardar contraseña</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -2143,10 +2189,10 @@ setInterval(function(){
 // Toda cuenta, contraseña, sesión e invitación se valida en el servidor. No existe motor local ni claves por defecto.
 var API_URL = 'https://script.google.com/macros/s/AKfycbyOmwXlEljtQDHhJP-bnAwnao4Q8QtmmqSnKTF_5FaHW1xX_NiOf11Vhvv1csuh2zXz/exec';
 
-async function api(accion,datos){
+async function api(accion,datos,reintento){
   datos = Object.assign({action: accion, accion: accion}, datos || {});
   var ctl = ('AbortController' in window) ? new AbortController() : null;
-  var t = setTimeout(function(){ if(ctl) ctl.abort(); }, 30000);
+  var t = setTimeout(function(){ if(ctl) ctl.abort(); }, 45000);
   try {
     var resp = await fetch(API_URL, {
       method: 'POST',
@@ -2158,7 +2204,14 @@ async function api(accion,datos){
     if(!resp.ok) return { ok:false, red:true, mensaje:'El servicio de accesos no respondió (' + resp.status + '). Inténtalo de nuevo.' };
     return await resp.json();
   } catch(err) {
-    return { ok:false, red:true, mensaje:'No se pudo conectar con el servicio de accesos. Revisa tu conexión e inténtalo de nuevo.' };
+    if(!reintento && (err.name === 'AbortError' || err.name === 'TypeError')){
+      // Reintento automático único en caso de cold start de Apps Script
+      return await api(accion, datos, true);
+    }
+    var msg = (err && err.name === 'AbortError')
+      ? 'El servicio de accesos tardó en responder. Por favor presiona Ingresar nuevamente.'
+      : 'No se pudo conectar con el servicio de accesos. Revisa tu conexión e inténtalo de nuevo.';
+    return { ok:false, red:true, mensaje: msg };
   } finally { clearTimeout(t); }
 }
 
@@ -3060,6 +3113,64 @@ window.abrirModalUserMenu = function() {
 window.cerrarModalUserMenu = function() {
   var modal = $('modalUserMenu');
   if (modal) modal.style.display = 'none';
+};
+
+window.abrirCambiarClave = function() {
+  $('chClaveActual').value = '';
+  $('chClaveNueva').value = '';
+  $('chClaveNueva2').value = '';
+  $('chAvisoError').style.display = 'none';
+  $('modalCambiarClave').style.display = 'flex';
+};
+
+window.cerrarModalCambiarClave = function() {
+  var modal = $('modalCambiarClave');
+  if (modal) modal.style.display = 'none';
+};
+
+window.guardarNuevaClave = async function(ev) {
+  ev.preventDefault();
+  var errEl = $('chAvisoError');
+  errEl.style.display = 'none';
+  var cAct = $('chClaveActual').value;
+  var c1 = $('chClaveNueva').value;
+  var c2 = $('chClaveNueva2').value;
+  var s = SESION || leerSesion();
+  if (!s || !s.token) {
+    errEl.textContent = 'Sesión no válida o expirada. Inicia sesión nuevamente.';
+    errEl.style.display = 'block';
+    return;
+  }
+  var valErr = validarClaveFront(c1, s.email);
+  if (valErr) {
+    errEl.textContent = valErr;
+    errEl.style.display = 'block';
+    return;
+  }
+  if (c1 !== c2) {
+    errEl.textContent = 'Las contraseñas no coinciden.';
+    errEl.style.display = 'block';
+    return;
+  }
+  var btn = $('btnGuardarNuevaClave');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  try {
+    var r = await api('cambiarClave', { token: s.token, claveActual: cAct, claveNueva: c1 });
+    if (!r || !r.ok) {
+      errEl.textContent = (r && r.mensaje) || 'No se pudo cambiar la contraseña.';
+      errEl.style.display = 'block';
+      return;
+    }
+    cerrarModalCambiarClave();
+    toast('¡Tu contraseña ha sido actualizada con éxito!');
+  } catch (e) {
+    errEl.textContent = 'Error de conexión. Inténtalo de nuevo.';
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar contraseña';
+  }
 };
 
 var _ultimoEmailInvitacionGenerado = { html: '', texto: '', email: '', nombre: '' };
